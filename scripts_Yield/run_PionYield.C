@@ -4,7 +4,7 @@
 #include <string>
 #include <stdio.h>
 
-void run_pionYield_all(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_cut = 5, Int_t pscal = 1)
+void run_PionYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_cut = 5, Int_t pscal = 1)
 {
   // Get RunNumber, MaxEvent, and current threshold if not provided.
   if(RunNumber == 0) {
@@ -37,7 +37,7 @@ void run_pionYield_all(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t thresho
   myfile1.close();
 
   //Begin Scaler Efficiency Calculation
-  TString rootFileNameString = Form("/u/group/c-kaonlt/hallc_replay_lt/UTIL_PION/ROOTfiles/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent);
+  TString rootFileNameString = Form("/u/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent);
   TString threshold = Form("%f",threshold_cut);
   TString runNum = Form("%d",RunNumber);
   TString prescal = Form("%d", pscal);
@@ -51,16 +51,16 @@ void run_pionYield_all(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t thresho
 
   //Begin Counting Good Pion Events
   TChain ch("T");
-  ch.Add(Form("/u/group/c-kaonlt/hallc_replay_lt/UTIL_PION/ROOTfiles/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent));
+  ch.Add(Form("/u/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent));
   TString option = Form("%i",RunNumber);
 
   TProof *proof = TProof::Open("workers=4");
   //proof->SetProgressDialog(0);  
   ch.SetProof();
-  ch.Process("PionYield_all.C+",option);
+  ch.Process("PionYield.C+",option);
   proof->Close();
   
   TChain sc("TSH");
-  sc.Add(Form("/u/group/c-kaonlt/hallc_replay_lt/UTIL_PION/ROOTfiles/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent));
+  sc.Add(Form("/u/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent));
   sc.Process("HMS_Scalers.C+",option);
 }

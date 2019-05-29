@@ -30,7 +30,6 @@
 #include <TMath.h>
 #include <TPaveText.h>
 #include <TGaxis.h>
-#include <TArc.h>
 
 void PionYield::Begin(TTree * /*tree*/)
 {
@@ -469,32 +468,9 @@ void PionYield::Terminate()
   phithreepi->SetLineColor(kBlack); phithreepi->SetLineWidth(2); phithreepi->Draw();  
   TPaveText *ptphithreepi = new TPaveText(0.419517,0.00514928,0.487128,0.0996315,"NDC");
   ptphithreepi->AddText("#phi = #frac{3#pi}{2}"); ptphithreepi->Draw();
-  
-  /*
-  TArc *arc1 = new TArc();
-  arc1->SetFillStyle(0); arc1->SetLineWidth(2);arc1->DrawArc(0,0,0.575/(10),0.,360.,"same");
-  TArc *arc2 = new TArc();
-  arc2->SetFillStyle(0); arc2->SetLineWidth(2);arc2->DrawArc(0,0,0.575*2/(10),0.,360.,"same");
-  TArc *arc3 = new TArc();
-  arc3->SetFillStyle(0); arc3->SetLineWidth(2);arc3->DrawArc(0,0,0.575*3/(10),0.,360.,"same");
-  TArc *arc4 = new TArc();
-  arc4->SetFillStyle(0); arc4->SetLineWidth(2);arc4->DrawArc(0,0,0.575*4/(10),0.,360.,"same");
-  TArc *arc5 = new TArc();
-  arc5->SetFillStyle(0); arc5->SetLineWidth(2);arc5->DrawArc(0,0,0.575*5/(10),0.,360.,"same");
-  TArc *arc6 = new TArc();
-  arc6->SetFillStyle(0); arc6->SetLineWidth(2);arc6->DrawArc(0,0,0.575*6/(10),0.,360.,"same");
-  TArc *arc7 = new TArc();
-  arc7->SetFillStyle(0); arc7->SetLineWidth(2);arc7->DrawArc(0,0,0.575*7/(10),0.,360.,"same");
-  TArc *arc8 = new TArc();
-  arc8->SetFillStyle(0); arc8->SetLineWidth(2);arc8->DrawArc(0,0,0.575*8/(10),0.,360.,"same");
-  TArc *arc9 = new TArc();
-  arc9->SetFillStyle(0); arc9->SetLineWidth(2);arc9->DrawArc(0,0,0.575*9/(10),0.,360.,"same");
-  TArc *arc10 = new TArc();
-  arc10->SetFillStyle(0); arc10->SetLineWidth(2);arc10->DrawArc(0,0,0.575*10/(10),0.,360.,"same");
-  */
-  // This may not work but saves a lot of effort from the above...
-  TArc **Arc[10]  = new TArc();
-  for (Double_t k = 0; k < 10; k++){
+
+  for (Int_t k = 0; k < 10; k++){
+    Arc[k] = new TArc();
     Arc[k]->SetFillStyle(0);
     Arc[k]->SetLineWidth(2);
     Arc[k]->DrawArc(0,0,0.575*(k+1)/(10),0.,360.,"same");
@@ -516,10 +492,10 @@ void PionYield::Terminate()
   Double_t BinWidth = h1mmisspi->GetBinWidth(2); 
   cKine->Update();
   TLine *NeutronMass_Full = new TLine(0.939565,gPad->GetUymin(),0.939565,gPad->GetUymax()); 
-  NeutronMass_Full->SetLineColor(kRed); LambdaMass_Full->SetLineWidth(2); NeutronMass_Full->SetLineStyle(2);
+  NeutronMass_Full->SetLineColor(kRed); NeutronMass_Full->SetLineWidth(2); NeutronMass_Full->SetLineStyle(2);
   NeutronMass_Full->Draw();
   TPaveText *ptNeutronEvt = new TPaveText(0.58934,0.715354,0.80000,0.81576,"NDC");
-  ptNeutronEvt->AddText(Form("#Neutron Events: %.0f",Gauss_Fit->Integral(0.89, 1.0) / BinWdith));
+  ptNeutronEvt->AddText(Form("#Neutron Events: %.0f",Gauss_Fit->Integral(0.89, 1.0) / BinWidth));
   ptNeutronEvt->Draw();
   
   //Start output of .root file with all histograms
