@@ -4,6 +4,8 @@ A selection of various utility and analysis scripts associated with the Pion exp
 
 Included are the associated run lists as .csv files as well as shell scripts for running the analysis code and for submitting batch jobs to the JLab iFarm.
 
+Copy the files in the DBASE directory to DBASE/COIN/ in your main replay folder.
+
 ##############################################################################
 			SCIENTIFIC MOTIVATION
 ##############################################################################
