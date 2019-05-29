@@ -51,7 +51,8 @@ void PionYield::SlaveBegin(TTree * /*tree*/)
 
   TString option = GetOption();
 
-  h1missKcut_CT   = new TH2F("h1missKcut_CT","Kaon Missing mass vs Coincidence Time;Time (ns);Mass (GeV/c^{2})^{2}",400,-10,10,100,0.8,1.8);
+  h2missKcut_CT   = new TH2F("h1missKcut_CT","Kaon Missing mass vs Coincidence Time;Time (ns);Mass (GeV/c^{2})^{2}",400,-10,10,100,0.8,1.8);
+  h2misspicut_CT   = new TH2F("h1misspicut_CT","Pion Missing mass vs Coincidence Time;Time (ns);Mass (GeV/c^{2})^{2}",400,-10,10,100,0.8,1.8);
 
   h2ROC1_Coin_Beta_noID_kaon = new TH2F("ROC1_Coin_Beta_noCut_kaon","Kaon Coincident Time vs #beta for ROC1 (w/ particle ID);Time (ns);#beta",800,-40,40,200,0.0,2.0);
   h2ROC1_Coin_Beta_kaon = new TH2F("ROC1_Coin_Beta_kaon","Kaon Coincident Time vs #beta for ROC1;Time (ns);#beta",800,-40,40,200,0.0,2.0);
@@ -117,7 +118,8 @@ void PionYield::SlaveBegin(TTree * /*tree*/)
 
   h3SHMS_HGC              = new TH3F("SHMS_HGC","SHMS HGC Distribution of NPE in X-Y Mirror Plane;X Position (cm);Y Position (cm);NPE",100,-50,50,100,-50,50,100,0.1,35);
 
-  GetOutputList()->Add(h1missKcut_CT);
+  GetOutputList()->Add(h2missKcut_CT);
+  GetOutputList()->Add(h2misspicut_CT);
   GetOutputList()->Add(h2ROC1_Coin_Beta_noID_kaon);
   GetOutputList()->Add(h2ROC1_Coin_Beta_kaon);
   GetOutputList()->Add(h2ROC1_Coin_Beta_noID_pion);
@@ -188,22 +190,20 @@ Bool_t PionYield::Process(Long64_t entry)
 
   fReader.SetEntry(entry);
 
+  // Fill some histograms before applying any cuts
   h1EDTM->Fill(*pEDTM);
-  
   h2HMS_electron->Fill(H_cal_etotnorm[0],H_cer_npeSum[0]);
   h1SHMS_electron->Fill(P_cal_etotnorm[0]);
-
   h2SHMS_AERO_HGC->Fill(P_aero_npeSum[0],P_hgcer_npeSum[0]);
   h2SHMS_CAL_HGC->Fill(P_cal_etotnorm[0],P_hgcer_npeSum[0]);
   h1SHMS_delta->Fill(P_gtr_dp[0]);
   h1HMS_delta->Fill(H_gtr_dp[0]);
-
   h1SHMS_th->Fill(P_gtr_th[0]);
   h1SHMS_ph->Fill(P_gtr_ph[0]);
   h1HMS_th->Fill(H_gtr_th[0]);
   h1HMS_ph->Fill(H_gtr_ph[0]);
 
-  // Need to double check MMp/MMk formulae are correct, try doing this pn paper
+  // Need to double check MMp/MMk formulae are correct, try doing this on paper!
   Double_t MMp = sqrt(pow(emiss[0] + sqrt(pow(0.13957018,2) + pow(P_gtr_p[0],2)) - sqrt(pow(0.93828,2) + pow(P_gtr_p[0],2)),2)-pow(pmiss[0],2)); // Calculate missing mass under condition that hadron is a proton
   Double_t MMPi = sqrt(pow(emiss[0],2)-pow(pmiss[0],2)); // Calculate missing mass under condition that hadron is a pion
   Double_t MMK = sqrt(pow(emiss[0] + sqrt(pow(0.13957018,2) + pow(P_gtr_p[0],2)) - sqrt(pow(0.493677,2) + pow(P_gtr_p[0],2)),2)-pow(pmiss[0],2)); // Calculate missing mass under condition that hadron is a kaon
@@ -214,11 +214,9 @@ Bool_t PionYield::Process(Long64_t entry)
 
   if (H_cal_etotnorm[0] < 0.7 || H_cer_npeSum[0] < 1.5) return kTRUE; // Check HMS sees an electron
   if (P_cal_etotnorm[0] > 0.6) return kTRUE; // Check SHMS doesn't see a positron
-
   if (TMath::Abs(H_gtr_dp[0]) > 10.0) return kTRUE;
   if (P_gtr_dp[0] > 20.0 || P_gtr_dp[0] < -10.0) return kTRUE; // Cut on delta
-
-  if (TMath::Abs(P_gtr_th[0]) > 0.040) return kTRUE;
+  if (TMath::Abs(P_gtr_th[0]) > 0.040) return kTRUE; // Cut on theta/phi for SHMS/HMS
   if (TMath::Abs(P_gtr_ph[0]) > 0.024) return kTRUE;
   if (TMath::Abs(H_gtr_th[0]) > 0.080) return kTRUE;
   if (TMath::Abs(H_gtr_ph[0]) > 0.035) return kTRUE;
@@ -234,14 +232,13 @@ Bool_t PionYield::Process(Long64_t entry)
   h1HMS_th_cut->Fill(H_gtr_th[0]);
   h1HMS_ph_cut->Fill(H_gtr_ph[0]);
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-  if (P_aero_npeSum[0] > 1.5 && P_hgcer_npeSum[0] < 1.5) { //Event identified as Kaon
+  //Event identified as Kaon
+  if (P_aero_npeSum[0] > 1.5 && P_hgcer_npeSum[0] < 1.5) {
     h2ROC1_Coin_Beta_noID_kaon->Fill((CTime_eKCoinTime_ROC1[0] - 43),P_gtr_beta[0]); 
 
     if (abs(P_gtr_beta[0]-1.00) > 0.1) return kTRUE;
 
-    h1missKcut_CT->Fill( CTime_eKCoinTime_ROC1[0] - 43, MMK);
+    h2missKcut_CT->Fill( CTime_eKCoinTime_ROC1[0] - 43, MMK);
 
     if ( (CTime_eKCoinTime_ROC1[0] - 43) > -1.0 && (CTime_eKCoinTime_ROC1[0] - 43) < 1.5) {
       h2ROC1_Coin_Beta_kaon->Fill((CTime_eKCoinTime_ROC1[0] - 43),P_gtr_beta[0]);
@@ -256,11 +253,13 @@ Bool_t PionYield::Process(Long64_t entry)
     }
 
   }
-
-if (P_hgcer_npeSum[0] > 1.5) { //Event identified as Pion
+//Event identified as Pion
+  if (P_hgcer_npeSum[0] > 1.5) { 
     h2ROC1_Coin_Beta_noID_pion->Fill((CTime_ePiCoinTime_ROC1[0] - 43.2),P_gtr_beta[0]);
     
     if (abs(P_gtr_beta[0]-1.00) > 0.15) return kTRUE;
+
+    h2misspicut_CT->Fill( CTime_eKCoinTime_ROC1[0] - 43, MMPi);
   
     if (abs((CTime_ePiCoinTime_ROC1[0] - 43.2)) < 1.25) {
       h2ROC1_Coin_Beta_pion->Fill((CTime_ePiCoinTime_ROC1[0] - 43.2),P_gtr_beta[0]);
@@ -278,20 +277,16 @@ if (P_hgcer_npeSum[0] > 1.5) { //Event identified as Pion
       h1mmisspi_remove->Fill(MMPi);
     }
   }
-
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////
-  if (P_aero_npeSum[0] < 1.5 && P_hgcer_npeSum[0] < 1.5) { //Event identified as Proton
+  //Event identified as Proton
+  if (P_aero_npeSum[0] < 1.5 && P_hgcer_npeSum[0] < 1.5) {
     h2ROC1_Coin_Beta_noID_proton->Fill((CTime_epCoinTime_ROC1[0] - 43.5),P_gtr_beta[0]);
-    
     if (abs(P_gtr_beta[0]-1.00) > 0.1) return kTRUE;
-  
     if (abs((CTime_epCoinTime_ROC1[0] - 43.5)) < 1.0) {
       h2ROC1_Coin_Beta_proton->Fill((CTime_epCoinTime_ROC1[0] - 43.5),P_gtr_beta[0]);
       h2SHMSp_kaon_cut->Fill(P_aero_npeSum[0],P_hgcer_npeSum[0]);
       h2SHMSp_pion_cut->Fill(P_cal_etotnorm[0],P_hgcer_npeSum[0]);
       h1mmissp_cut->Fill(MMp);
     }
-
     if (abs((CTime_epCoinTime_ROC1[0] - 43.5)) > 6.0 && abs((CTime_epCoinTime_ROC1[0] - 43.5)) < 20.0) {
       h1mmissp_rand->Fill(MMp);
       h1mmissp_remove->Fill(MMp);
@@ -306,12 +301,10 @@ void PionYield::SlaveTerminate()
   // The SlaveTerminate() function is called after all entries or objects
   // have been processed. When running with PROOF SlaveTerminate() is called
   // on each slave server.
-
 }
 
 void PionYield::Terminate()
 {
-
   Info("Terminate", "Outputting Good Pion Selection");
 
   TString option = GetOption();
@@ -327,54 +320,52 @@ void PionYield::Terminate()
   h1mmisspi_remove->Add(h1mmisspi_cut,h1mmisspi_rand,1,-1);
   h1mmissp_remove->Add(h1mmissp_cut,h1mmissp_rand,1,-1);
   
-  TF1 *Back_Fit = new TF1("Back_Fit","[A] + [B]*x",0.85,1.0);
-  h1mmissK_remove->Fit("Back_Fit","RMQN");
+  TF1 *Back_Fit = new TF1("Back_Fit","[A] + [B]*x",0.9,1.1);
+  h1mmisspi_remove->Fit("Back_Fit","RMQN");
   
-  TF1 *GausBack = new TF1("GausBack","[Constant]*exp(-0.5*((x-[Mean])/[Sigma])*((x-[Mean])/[Sigma])) + [A] + [B]*x",0.85,1.0);
-  GausBack->FixParameter(0,Back_Fit->GetParameter(0));
-  GausBack->FixParameter(1,Back_Fit->GetParameter(1));  
-  GausBack->SetParameter(2,500);
+  TF1 *GausBack = new TF1("GausBack","[Constant]*exp(-0.5*((x-[Mean])/[Sigma])*((x-[Mean])/[Sigma])) + [A] + [B]*x",0.92,0.96);
+  GausBack->FixParameter(0,Back_Fit->GetParameter(0)); // Intercept
+  GausBack->FixParameter(1,Back_Fit->GetParameter(1));  // Gradient
+  GausBack->SetParameter(2, 2000); // Amplitdue
   GausBack->SetParameter(3,0.94); // Mean of Guassian, expect ~0.940 GeV
-  GausBack->SetParameter(4,0.004);
-  GausBack->SetParLimits(2,0,5000);
-  GausBack->SetParLimits(3,1.10,1.13);
-  GausBack->SetParLimits(4,0.001,0.01);
-  h1mmissK_remove->Fit("GausBack","RMQN");
+  GausBack->SetParameter(4,0.004); // Std dev
+  GausBack->SetParLimits(2,0,50000);
+  GausBack->SetParLimits(3,0.92,0.96);
+  GausBack->SetParLimits(4,0.001,0.02);
+  h1mmisspi_remove->Fit("GausBack","RMQN");
 
-  TF1 *Gauss_Fit = new TF1("Gauss_Fit","[Constant]*exp(-0.5*((x-[Mean])/[Sigma])*((x-[Mean])/[Sigma]))",0.85,1.0);
+  TF1 *Gauss_Fit = new TF1("Gauss_Fit","[Constant]*exp(-0.5*((x-[Mean])/[Sigma])*((x-[Mean])/[Sigma]))",0.92,0.96);
   Gauss_Fit->FixParameter(0,GausBack->GetParameter(2));
   Gauss_Fit->FixParameter(1,GausBack->GetParameter(3));
   Gauss_Fit->FixParameter(2,GausBack->GetParameter(4));
 
-  TH1F *h1mmissK_noback = (TH1F*) h1mmissK_remove->Clone();
-  h1mmissK_noback->Add(Back_Fit,-1);
+  TH1F *h1mmisspi_noback = (TH1F*) h1mmisspi_remove->Clone();
+  h1mmisspi_noback->Add(Back_Fit,-1);
 
   //Fit the Neutron Missing Mass
-  TF1 *Neutron_Fit = new TF1("Neutron_Fit","[0]*exp(-0.5*((x-[1])/[2])*((x-[1])/[2]))",0.9,1.0);
+  TF1 *Neutron_Fit = new TF1("Neutron_Fit","[0]*exp(-0.5*((x-[1])/[2])*((x-[1])/[2]))",0.92, 0.96);
   Neutron_Fit->SetParName(0,"Amplitude");
   Neutron_Fit->SetParName(1,"Mean");
   Neutron_Fit->SetParName(2,"Sigma");
-  Neutron_Fit->SetParLimits(0,0.0,10000.0);
-  Neutron_Fit->SetParLimits(1,0.928,0.948);
+  Neutron_Fit->SetParLimits(0,0.0,50000.0);
+  Neutron_Fit->SetParLimits(1,0.92,0.96);
   Neutron_Fit->SetParLimits(2,0.0,0.1);
-  Neutron_Fit->SetParameter(0,100);
-  Neutron_Fit->SetParameter(1,1.1075);
+  Neutron_Fit->SetParameter(0,2000);
+  Neutron_Fit->SetParameter(1,0.94);
   Neutron_Fit->SetParameter(2,0.011);
-  h1mmissK_remove->Fit("Neutron_Fit","RMQN");
+  h1mmisspi_remove->Fit("Neutron_Fit","RMQN");
 
-  TF1 *Neutron_Fit_Full = new TF1("Neutron_Fit_Full","[0]*exp(-0.5*((x-[1])/[2])*((x-[1])/[2]))",0.9,1.0);
+  TF1 *Neutron_Fit_Full = new TF1("Neutron_Fit_Full","[0]*exp(-0.5*((x-[1])/[2])*((x-[1])/[2]))",0.92,0.98);
   Neutron_Fit_Full->SetParName(0,"Amplitude");
   Neutron_Fit_Full->SetParName(1,"Mean");
   Neutron_Fit_Full->SetParName(2,"Sigma");
   Neutron_Fit_Full->SetParameter(0,Neutron_Fit->GetParameter(0));
   Neutron_Fit_Full->SetParameter(1,Neutron_Fit->GetParameter(1));
   Neutron_Fit_Full->SetParameter(2,Neutron_Fit->GetParameter(2));
+
   TString foutname = "../OUTPUT/Kinematics_1uA_allPlots";
-
   TString outputpng = foutname + ".png";
-
   TString outputpng_coin = foutname + "_coin.png";
-
   TString outputpdf = foutname + ".pdf";
   
   TCanvas *cCuts = new TCanvas("Cuts","Summary of Common Cuts");
@@ -426,23 +417,24 @@ void PionYield::Terminate()
   Neutron_Fit_Full->SetLineColor(kGreen); Neutron_Fit_Full->SetLineWidth(1);
   Neutron_Fit_Full->Draw("same");
   Back_Fit->SetLineColor(kRed); Back_Fit->SetLineWidth(1);
-  Back_Fit->DrawClone("same");
+  Back_Fit->Draw("same");
   GausBack->SetLineColor(kBlue); GausBack->SetLineWidth(3);
-  GausBack->DrawClone("same");  
+  GausBack->Draw("same");  
   cID->Print(outputpdf);
   
   TCanvas *cCoinTime = new TCanvas("cCoinTime","Summary of coincidence time and random");
   cCoinTime->Divide(2,2);
   cCoinTime->cd(1);
-  h1mmissK_cut->Draw();
-  h1mmissK_rand->Draw("same");
-  h1mmissK_rand->SetLineColor(2);
+  h1mmisspi_cut->Draw();
+  h1mmisspi_rand->Draw("same");
+  h1mmisspi_rand->SetLineColor(2);
   cCoinTime->cd(2);
-  h1mmissK_rand->Draw();
+  h1mmisspi_rand->Draw();
   cCoinTime->cd(3);
-  h1mmissK_remove->Draw();
+  h1mmisspi_remove->Draw();
+  Back_Fit->Draw("SAME");
   cCoinTime->cd(4);
-  h1missKcut_CT->Draw("COLZ");
+  h2misspicut_CT->Draw("Colz");
   cCoinTime->Print(outputpng_coin);
   cCoinTime->Print(outputpdf);
 
@@ -483,27 +475,24 @@ void PionYield::Terminate()
   cKine->cd(2); h1epsilon->Draw();
   h1epsilon->SetTitleOffset(1.0,"Y");
   cKine->cd(4); h1mmisspi_remove->Draw("hist"); 
-  Neutron_Fit_Full->SetLineColor(kGreen); Neutron_Fit_Full->SetLineWidth(2);
-  Gauss_Fit->SetLineColor(kBlack); Gauss_Fit->SetLineWidth(1);
-  Gauss_Fit->DrawClone("same"); 
+  Neutron_Fit_Full->SetLineColor(kRed); Neutron_Fit_Full->SetLineWidth(2); Neutron_Fit_Full->Draw("same");
+  Gauss_Fit->SetLineColor(kBlack); Gauss_Fit->SetLineWidth(2); Gauss_Fit->SetLineStyle(2); Gauss_Fit->Draw("same"); 
   cKine->Update();
-  h1mmisspi_remove->SetTitleOffset(1.0,"Y"); /*h1mmissK_remove->SetAxisRange(1.0,1.25,"X");*/// h1mmissK_remove->SetAxisRange(0.0,gPad->GetUymax(),"Y");
-  // Hopefully this works! Stops any errors in reported #events due to people adjusting bin width
-  Double_t BinWidth = h1mmisspi->GetBinWidth(2); 
+  h1mmisspi_remove->SetTitleOffset(1.0,"Y");
+  Double_t BinWidth = h1mmisspi_remove->GetBinWidth(2); 
   cKine->Update();
   TLine *NeutronMass_Full = new TLine(0.939565,gPad->GetUymin(),0.939565,gPad->GetUymax()); 
-  NeutronMass_Full->SetLineColor(kRed); NeutronMass_Full->SetLineWidth(2); NeutronMass_Full->SetLineStyle(2);
+  NeutronMass_Full->SetLineColor(kBlue); NeutronMass_Full->SetLineWidth(2); NeutronMass_Full->SetLineStyle(2);
   NeutronMass_Full->Draw();
   TPaveText *ptNeutronEvt = new TPaveText(0.58934,0.715354,0.80000,0.81576,"NDC");
   ptNeutronEvt->AddText(Form("#Neutron Events: %.0f",Gauss_Fit->Integral(0.89, 1.0) / BinWidth));
   ptNeutronEvt->Draw();
-  
-  //Start output of .root file with all histograms
-  
+    
   // Save TCanvas
   cKine->Print(outputpng);
   cKine->Print(outputpdf + ')');
-
+  
+  //Start output of .root file with all histograms
   TFile *Histogram_file = new TFile(Form("../HISTOGRAMS/PionLT_Run%i.root",option.Atoi()),"RECREATE");
   TDirectory *DCuts = Histogram_file->mkdir("Spectrometer Delta and Calorimeter Cuts"); DCuts->cd();
   h1HMS_delta->Write("HMS Delta Before Cuts"); h1HMS_delta_cut->Write("HMS Delta After Cuts");
@@ -535,7 +524,7 @@ void PionYield::Terminate()
   h2SHMSK_pion_cut->Write("SHMS HGC vs CAL, with cuts");
   h2ROC1_Coin_Beta_noID_kaon->Write("Kaon-Electron Coincidence Time, no cuts");
   h2ROC1_Coin_Beta_kaon->Write("Kaon-Electron Coincidence Time, with cuts");
-  h1missKcut_CT->Write("Kaon-Electron Coincidence Time vs Missing Mass");
+  h2missKcut_CT->Write("Kaon-Electron Coincidence Time vs Missing Mass");
   h1mmissK->Write("Kaon Missing Mass, no cuts");
   h1mmissK_remove->Write("Kaon Missing Mass, with cuts");
 
@@ -546,6 +535,7 @@ void PionYield::Terminate()
   h2SHMSpi_pion_cut->Write("SHMS HGC vs CAL, with cuts");
   h2ROC1_Coin_Beta_noID_pion->Write("Pion-Electron Coincidence Time, no cuts");
   h2ROC1_Coin_Beta_pion->Write("Pion-Electron Coincidence Time, with cuts");
+  h2misspicut_CT->Write("Pion-Electron Coincidence Time vs Missing Mass");
   h1mmisspi->Write("Pion Missing Mass, no cuts");
   h1mmisspi_remove->Write("Pion Missing Mass, with cuts");
 
@@ -568,22 +558,6 @@ void PionYield::Terminate()
   TDirectory *DEDTM = Histogram_file->mkdir("Accepted EDTM Events"); DEDTM->cd();
   EDTM->Write("EDTM TDC Time");
 
-  /*TDirectory *DHGCER = Histogram_file->mkdir("SHMS HGCER Info"); DHGCER->cd();
-    SHMS_HGC_pyx->Write("SHMS HGCER X vs Y vs NPE");*/
   Histogram_file->Close();
   
-  //cout << Form("Number of good kaon events: %.0f +/- %.0f\n",200*Lambda_Fit_Full->Integral(1.0,1.25),sqrt(200*Lambda_Fit_Full->Integral(1.0,1.25)));
-  //cout << Form("Number of good kaon events: %.0f +/- %.0f\n",h1mmissK_remove->Integral(h1mmissK_remove->GetXaxis()->FindBin(1.06),h1mmissK_remove->GetXaxis()->FindBin(1.16)));
-
-  // values for controlling format
-  /*
-  const string sep = "	" ;
-  const int total_width = 154;
-  const string line = sep + string( total_width-1, '-' ) + '|' ;
-
-
-  ofstream myfile1;
-  myfile1.open ("kaonyieldVar", fstream::app);
-  myfile1 << Form("%.0f     %.0f     %.0f     ", 200*Lambda_Fit_Full->Integral(1.0,1.25), sqrt(200*Lambda_Fit_Full->Integral(1.0,1.25)), EDTM->GetEntries());
-  myfile1.close();*/
 }
