@@ -38,7 +38,6 @@ void HMS_Scalers::Begin(TTree * /*tree*/)
 
   /*TString option = GetOption();
     Current = option.Atoi();*/
-  Info("Begin", "Starting scalar corrections");
   //Info("Begin", Form("Threshold current is taken as: %s",option.Data()));
 }
 
@@ -223,6 +222,8 @@ void HMS_Scalers::Terminate()
   // a query. It always runs on the client, it can be used to present
   // the results graphically or save the results to file.
   
+  // Commenting out dump to screen for now, definitely should not be there whilst batch running
+  /*
   cout << "\n\nUsed current threshold value: 5 uA" << endl;
 
   for (Int_t ibcm = 0; ibcm < NBCM; ibcm++) {
@@ -262,7 +263,8 @@ void HMS_Scalers::Terminate()
   }
   
   cout << "\n\n" << Form("EDTM Events: %.0f", EDTM_sum) << endl;
-  
+  */
+
   TString option = GetOption();
   ofstream myfile1;
   myfile1.open (Form("../OUTPUT/scalers_Run%i.txt",option.Atoi()), fstream::app);
