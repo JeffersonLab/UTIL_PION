@@ -1,8 +1,10 @@
 # UTIL_PION
 
-A selection of various utility and analysis scripts associated with the Pion experiments, E12-06-101 andE12-07-105.
+A selection of various utility and analysis scripts associated with the Pion experiments, E12-06-101 and E12-07-105.
 
 Included are the associated run lists as .csv files as well as shell scripts for running the analysis code and for submitting batch jobs to the JLab iFarm.
+
+Copy the files in the DBASE directory to DBASE/COIN/ in your main replay folder.
 
 ##############################################################################
 			SCIENTIFIC MOTIVATION

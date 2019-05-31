@@ -7,3 +7,7 @@
 *.png
 *.pdf
 *.nfs*
+OUTPUT
+
+HISTOGRAMS/
+OUTPUT/
