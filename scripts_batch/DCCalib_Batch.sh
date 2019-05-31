@@ -5,7 +5,7 @@
 ### If you want to run with LESS than all of the events, provide a third argument with # events
 
 # The path to your hallc replay directory, change as needed
-REPLAYPATH="/u/group/c-kaonlt/USERS/${USER}/hallc_replay_lt"
+REPLAYPATH="/group/c-kaonlt/USERS/${USER}/hallc_replay_lt"
 RUNNUMBER=$1
 OPT=$2
 ### Check the extra folders you'll need exist, if they don't then make them
@@ -60,8 +60,8 @@ source /site/12gev_phys/softenv.sh 2.1
 
 # Initialize hcana, change if not running on the farm!
 # Change this path if you're not on the JLab farm!
-cd "/u/group/c-kaonlt/hcana/"
-source "/u/group/c-kaonlt/hcana/setup.sh"
+cd "/group/c-kaonlt/hcana/"
+source "/group/c-kaonlt/hcana/setup.sh"
 cd "$REPLAYPATH"
 source "$REPLAYPATH/setup.sh"
 
