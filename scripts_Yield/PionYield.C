@@ -21,7 +21,6 @@
 // root> T->Process("PionYield.C")
 // root> T->Process("PionYield.C","some options")
 // root> T->Process("PionYield.C+")
-//
 
 #include "PionYield.h"
 #include <TStyle.h>
@@ -243,7 +242,7 @@ Bool_t PionYield::Process(Long64_t entry)
   }
 
   //Event identified as Pion
-  if (P_hgcer_npeSum[0] > 1.5) { 
+  if (P_hgcer_npeSum[0] > 1.5 && P_aero_npeSum[0] > 1.5) { 
     h2ROC1_Coin_Beta_noID_pion->Fill((CTime_ePiCoinTime_ROC1[0] - 43.2),P_gtr_beta[0]);
     if (abs(P_gtr_beta[0]-1.00) > 0.15) return kTRUE;
     h2misspicut_CT->Fill( CTime_eKCoinTime_ROC1[0] - 43, MMPi);
