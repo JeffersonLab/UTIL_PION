@@ -79,15 +79,15 @@ void PionYield::SlaveBegin(TTree * /*tree*/)
   h1HMS_delta            = new TH1F("HMS_delta","HMS #delta;#delta;Counts",100,-50,50);
   h1HMS_delta_cut        = new TH1F("HMS_delta_cut","HMS #delta Cut;#delta;Counts",100,-50,50);
 
-  h1SHMS_th              = new TH1F("SHMS_th","SHMS Theta Acceptance;#theta;Counts",100,-0.1,0.1);
-  h1SHMS_th_cut          = new TH1F("SHMS_th_cut","SHMS Theta Acceptance with Cut;#theta;Counts",100,-0.1,0.1);
-  h1SHMS_ph              = new TH1F("SHMS_ph","SHMS Theta Acceptance;#phi;Counts",100,-0.1,0.1);
-  h1SHMS_ph_cut          = new TH1F("SHMS_ph_cut","SHMS Theta Acceptance with Cut;#phi;Counts",100,-0.1,0.1);
+  h1SHMS_th              = new TH1F("SHMS_th","SHMS #theta Acceptance;#theta;Counts",100,-0.1,0.1);
+  h1SHMS_th_cut          = new TH1F("SHMS_th_cut","SHMS #theta Acceptance with Cut;#theta;Counts",100,-0.1,0.1);
+  h1SHMS_ph              = new TH1F("SHMS_ph","SHMS #phi Acceptance;#phi;Counts",100,-0.1,0.1);
+  h1SHMS_ph_cut          = new TH1F("SHMS_ph_cut","SHMS #phi Acceptance with Cut;#phi;Counts",100,-0.1,0.1);
 
-  h1HMS_th              = new TH1F("HMS_th","HMS Theta Acceptance;#theta;Counts",100,-0.1,0.1);
-  h1HMS_th_cut          = new TH1F("HMS_th_cut","HMS Theta Acceptance with Cut;#theta;Counts",100,-0.1,0.1);
-  h1HMS_ph              = new TH1F("HMS_ph","HMS Theta Acceptance;#phi;Counts",100,-0.1,0.1);
-  h1HMS_ph_cut          = new TH1F("HMS_ph_cut","HMS Theta Acceptance with Cut;#phi;Counts",100,-0.1,0.1);
+  h1HMS_th              = new TH1F("HMS_th","HMS #theta Acceptance;#theta;Counts",100,-0.1,0.1);
+  h1HMS_th_cut          = new TH1F("HMS_th_cut","HMS #theta Acceptance with Cut;#theta;Counts",100,-0.1,0.1);
+  h1HMS_ph              = new TH1F("HMS_ph","HMS #phi Acceptance;#phi;Counts",100,-0.1,0.1);
+  h1HMS_ph_cut          = new TH1F("HMS_ph_cut","HMS #phi Acceptance with Cut;#phi;Counts",100,-0.1,0.1);
 
   h1mmissK                = new TH1F("mmissK","Kaon Missing mass;Mass (GeV/c^{2});Counts",200,0.8,2.0);
   h1mmissK_rand           = new TH1F("mmissK_rand","Kaon Missing mass from Random Coincidence;Mass (GeV/c^{2});Counts",200,0.8,1.8);
@@ -345,7 +345,7 @@ void PionYield::Terminate()
   Neutron_Fit_Full->SetParameter(2,Neutron_Fit->GetParameter(2));
 
   // Provide a full path?
-  TString foutname = "../OUTPUT/Pion_Kinematics_1uA_allPlots";
+  TString foutname = Form("../OUTPUT/Pion_Kinematics_Run%i_AllPlots", option.Atoi());
   TString outputpng = foutname + ".png";
   TString outputpng_coin = foutname + "_coin.png";
   TString outputpdf = foutname + ".pdf";
@@ -533,7 +533,7 @@ void PionYield::Terminate()
   h2WvsQ2->Write("W vs Q2");
   h2tvsph_q->Write("t vs phi");
   h1epsilon->Write("epsilon");
-  h1mmisspi_remove->Write("Kaon Missing Mass, with cuts");
+  h1mmisspi_remove->Write("Pion Missing Mass, with cuts");
 
   TDirectory *DEDTM = Histogram_file->mkdir("Accepted EDTM Events"); DEDTM->cd();
   EDTM->Write("EDTM TDC Time");
