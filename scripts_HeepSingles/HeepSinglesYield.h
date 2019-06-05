@@ -25,12 +25,18 @@ class HeepSinglesYield : public TSelector {
 
   TH1F           *EventType;
 
-  TH1F           *TRIG1; 
-  TH1F           *TRIG3; 
-  TH1F           *TRIG5;
-  TH1F           *TRIG1_cut; 
-  TH1F           *TRIG3_cut; 
-  TH1F           *TRIG5_cut; 
+  TH1F           *TRIG1ROC1; 
+  TH1F           *TRIG3ROC1; 
+  TH1F           *TRIG5ROC1;
+  TH1F           *TRIG1ROC1_cut; 
+  TH1F           *TRIG3ROC1_cut; 
+  TH1F           *TRIG5ROC1_cut; 
+  TH1F           *TRIG1ROC2; 
+  TH1F           *TRIG3ROC2; 
+  TH1F           *TRIG5ROC2;
+  TH1F           *TRIG1ROC2_cut; 
+  TH1F           *TRIG3ROC2_cut; 
+  TH1F           *TRIG5ROC2_cut; 
 
   TH1F           *HMS_delta;
   TH1F           *HMS_delta_cut;
@@ -38,14 +44,18 @@ class HeepSinglesYield : public TSelector {
   TH1F           *HMS_th_cut;
   TH1F           *HMS_ph;
   TH1F           *HMS_ph_cut;
-  TH1F           *h_etotnorm_before;
-  TH1F           *h_etotnorm_cut;
-  TH1F           *h_cer_before;
-  TH1F           *h_cer_cut;
-  TH2F           *h_cal_cer_before;
-  TH2F           *h_cal_cer_cut;
+  TH1F           *HMS_etotnorm_before;
+  TH1F           *HMS_etotnorm_cut;
+  TH1F           *HMS_cer_before;
+  TH1F           *HMS_cer_cut;
+  TH2F           *HMS_cal_cer_before;
+  TH2F           *HMS_cal_cer_cut;
+
   TH1F           *HMS_W_Dist;
   TH1F           *HMS_ph_q_Dist;
+  TH1F           *HMS_xpfp_Dist;
+  TH2F           *HMS_W_xpfp;
+  TH2F           *HMS_W_Q2;
 
   TH1F           *SHMS_delta;
   TH1F           *SHMS_delta_cut;
@@ -53,10 +63,22 @@ class HeepSinglesYield : public TSelector {
   TH1F           *SHMS_th_cut;
   TH1F           *SHMS_ph;
   TH1F           *SHMS_ph_cut;
-  TH1F           *p_etotnorm_before;
-  TH1F           *p_etotnorm_cut;
+  TH1F           *SHMS_etotnorm_before;
+  TH2F           *SHMS_Cal_HGC_before;
+  TH2F           *SHMS_Cal_Aero_before;
+  TH2F           *SHMS_Aero_HGC_before;
+  TH1F           *SHMS_etotnorm_cut;
+  TH2F           *SHMS_Cal_HGC_cut;
+  TH2F           *SHMS_Cal_Aero_cut;
+  TH2F           *SHMS_Aero_HGC_cut;
+
   TH1F           *SHMS_W_Dist;
   TH1F           *SHMS_ph_q_Dist;
+  TH1F           *SHMS_xpfp_Dist;
+  TH2F           *SHMS_W_xpfp;
+  TH2F           *SHMS_W_Q2;
+  TH2F           *SHMS_W_HGC;
+  TH1F           *SHMS_delta_test;
 
   // Readers to access the data (delete the ones you do not need).
   TTreeReaderArray<Double_t> P_gtr_beta         = {fReader, "P.gtr.beta"};
@@ -74,16 +96,18 @@ class HeepSinglesYield : public TSelector {
   TTreeReaderArray<Double_t> P_gtr_dp           = {fReader, "P.gtr.dp"};
   TTreeReaderArray<Double_t> H_gtr_p            = {fReader, "H.gtr.p"};
   TTreeReaderArray<Double_t> P_gtr_p            = {fReader, "P.gtr.p"}; 
-  
+  TTreeReaderArray<Double_t> H_xpfp             = {fReader, "H.dc.xp_fp"};
+  TTreeReaderArray<Double_t> P_xpfp             = {fReader, "P.dc.xp_fp"};
+
   // Kinematics
   TTreeReaderArray<Double_t> HMSQ2                 = {fReader, "H.kin.primary.Q2"};
   TTreeReaderArray<Double_t> HMSW                  = {fReader, "H.kin.primary.W"};
   TTreeReaderArray<Double_t> HMSepsilon            = {fReader, "H.kin.primary.epsilon"};
   TTreeReaderArray<Double_t> HMSph_q               = {fReader, "H.kin.primary.ph_q"};  
-  TTreeReaderArray<Double_t> SHMSQ2                 = {fReader, "P.kin.primary.Q2"};
-  TTreeReaderArray<Double_t> SHMSW                  = {fReader, "P.kin.primary.W"};
-  TTreeReaderArray<Double_t> SHMSepsilon            = {fReader, "P.kin.primary.epsilon"};
-  TTreeReaderArray<Double_t> SHMSph_q               = {fReader, "P.kin.primary.ph_q"};  
+  TTreeReaderArray<Double_t> SHMSQ2                = {fReader, "P.kin.primary.Q2"};
+  TTreeReaderArray<Double_t> SHMSW                 = {fReader, "P.kin.primary.W"};
+  TTreeReaderArray<Double_t> SHMSepsilon           = {fReader, "P.kin.primary.epsilon"};
+  TTreeReaderArray<Double_t> SHMSph_q              = {fReader, "P.kin.primary.ph_q"};  
   
   TTreeReaderValue<Int_t>    EvtType            = {fReader, "fEvtHdr.fEvtType"};
  
@@ -137,7 +161,7 @@ class HeepSinglesYield : public TSelector {
 
   TTreeReaderValue<Double_t> pEDTM              = {fReader, "T.coin.pEDTM_tdcTime"};
 
-  HeepSinglesYield(TTree * /*tree*/ =0) {EventType=0, TRIG1=0, TRIG3=0, TRIG5=0, TRIG1_cut=0, TRIG3_cut=0, TRIG5_cut=0, HMS_delta=0, HMS_delta_cut=0, HMS_th=0, HMS_th_cut=0, HMS_ph=0, HMS_ph_cut=0, SHMS_delta=0, SHMS_delta_cut=0, SHMS_th=0, SHMS_th_cut=0, SHMS_ph=0, SHMS_ph_cut=0, h_etotnorm_before=0, h_etotnorm_cut=0, h_cer_before=0, h_cer_cut=0, h_cal_cer_before =0, h_cal_cer_cut=0, HMS_W_Dist=0, HMS_ph_q_Dist=0, SHMS_W_Dist=0, SHMS_ph_q_Dist=0, p_etotnorm_before=0, p_etotnorm_cut=0;}
+  HeepSinglesYield(TTree * /*tree*/ =0) {EventType=0, TRIG1ROC1=0, TRIG3ROC1=0, TRIG5ROC1=0, TRIG1ROC1_cut=0, TRIG3ROC1_cut=0, TRIG5ROC1_cut=0, TRIG1ROC2=0, TRIG3ROC2=0, TRIG5ROC2=0, TRIG1ROC2_cut=0, TRIG3ROC2_cut=0, TRIG5ROC2_cut=0, HMS_delta=0, HMS_delta_cut=0, HMS_th=0, HMS_th_cut=0, HMS_ph=0, HMS_ph_cut=0, HMS_etotnorm_before=0, HMS_etotnorm_cut=0, HMS_cer_before=0, HMS_cer_cut=0, HMS_cal_cer_before =0, HMS_cal_cer_cut=0, HMS_W_Dist=0, HMS_ph_q_Dist=0, HMS_xpfp_Dist=0, HMS_W_xpfp=0, HMS_W_Q2=0, SHMS_delta=0, SHMS_delta_cut=0, SHMS_th=0, SHMS_th_cut=0, SHMS_ph=0, SHMS_ph_cut=0, SHMS_etotnorm_before=0, SHMS_Cal_HGC_before=0, SHMS_Cal_Aero_before=0, SHMS_Aero_HGC_before=0, SHMS_etotnorm_cut=0, SHMS_Cal_HGC_cut=0, SHMS_Cal_Aero_cut=0, SHMS_Aero_HGC_cut=0, SHMS_W_Dist=0, SHMS_ph_q_Dist=0, SHMS_xpfp_Dist=0, SHMS_W_xpfp=0, SHMS_W_Q2=0, SHMS_W_Dist=0, SHMS_ph_q_Dist=0, SHMS_xpfp_Dist=0, SHMS_W_xpfp=0, SHMS_W_Q2=0, SHMS_W_HGC=0;}
   virtual ~HeepSinglesYield() { }
   virtual Int_t   Version() const { return 2; }
   virtual void    Begin(TTree *tree);

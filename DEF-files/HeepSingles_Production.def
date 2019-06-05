@@ -20,6 +20,8 @@ block P.dc.2v1.nhit
 block P.dc.2x2.nhit
 block P.dc.2u2.nhit
 block P.dc.2v2.nhit
+block P.dc.x_fp
+block P.dc.xp_fp
 block H.hod.goodscinhit
 block H.hod.betanotrack
 block H.dc.ntrack
@@ -35,6 +37,8 @@ block H.dc.2v1.nhit
 block H.dc.2x2.nhit
 block H.dc.2u2.nhit
 block H.dc.2v2.nhit
+block H.dc.x_fp
+block H.dc.xp_fp
 block H.cal.etotnorm
 block H.cer.npeSum
 block P.cal.etotnorm
