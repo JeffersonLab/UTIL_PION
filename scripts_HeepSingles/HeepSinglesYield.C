@@ -338,6 +338,65 @@ void HeepSinglesYield::Terminate()
   // a query. It always runs on the client, it can be used to present
   // the results graphically or save the results to file.
   TString option = GetOption();
+
+  //Start of Canvas Painting  
+  TCanvas *cHMSCuts = new TCanvas("HMSCuts","Summary of HMS Cuts");
+  cHMSCuts->Divide(4,2);
+  cHMSCuts->cd(1); HMS_delta->Draw();
+  cHMSCuts->cd(2); HMS_delta_cut->Draw();
+  cHMSCuts->cd(3); HMS_th->Draw();
+  cHMSCuts->cd(4); HMS_th_cut->Draw();
+  cHMSCuts->cd(5); HMS_ph->Draw();
+  cHMSCuts->cd(6); HMS_ph_cut->Draw();
+  cHMSCuts->cd(7); HMS_cal_cer_before->Draw("COLZ");
+  cHMSCuts->cd(8); HMS_cal_cer_cut->Draw("COLZ");
+  TCanvas *cSHMSCuts = new TCanvas("SHMSCuts","Summary of SHMS Cuts");
+  cSHMSCuts->Divide(4,3);
+  cSHMSCuts->cd(1); SHMS_delta->Draw();
+  cSHMSCuts->cd(2); SHMS_delta_cut->Draw();
+  cSHMSCuts->cd(3); SHMS_th->Draw();
+  cSHMSCuts->cd(4); SHMS_th_cut->Draw();
+  cSHMSCuts->cd(5); SHMS_ph->Draw();
+  cSHMSCuts->cd(6); SHMS_ph_cut->Draw();
+  cSHMSCuts->cd(7); SHMS_Cal_HGC_before->Draw("COLZ");
+  cSHMSCuts->cd(8); SHMS_Cal_HGC_cut->Draw("COLZ");
+  cSHMSCuts->cd(9); SHMS_Cal_Aero_before->Draw("COLZ");
+  cSHMSCuts->cd(10); SHMS_Cal_Aero_cut->Draw("COLZ");
+  cSHMSCuts->cd(11); SHMS_Aero_HGC_before->Draw("COLZ");
+  cSHMSCuts->cd(12); SHMS_Aero_HGC_cut->Draw("COLZ");
+  TString foutname = Form("../OUTPUT/HeepSingles_Run%i",option.Atoi());
+  TString outputpdf = foutname + ".pdf";
+  TCanvas *cHMS = new TCanvas("cHMS","Summary of HMS Events");
+  cHMS->Divide(2,2);
+  cHMS->cd(1); HMS_W_Dist->Draw("hist");
+  cHMS->Update();
+  TLine *Proton_Mass = new TLine(0.938272, 0, 0.938272, gPad->GetUymax()); 
+  Proton_Mass->SetLineColor(kRed); Proton_Mass->SetLineWidth(2); Proton_Mass->SetLineStyle(2);
+  Proton_Mass->Draw("SAME");
+  cHMS->cd(2); HMS_W_xpfp->Draw("COLZ");
+  cHMS->Update();
+  TLine *Proton_Mass2 = new TLine(0.938272, gPad->GetUymin(), 0.938272, gPad->GetUymax()); // This looks stupid and I hate it, but without it drawing the line screws up. Thanks root.
+  Proton_Mass2->SetLineColor(kRed); Proton_Mass2->SetLineWidth(2); Proton_Mass2->SetLineStyle(2);
+  Proton_Mass2->Draw("SAME");
+  cHMS->cd(3); HMS_ph_q_Dist->Draw();
+  cHMS->cd(4); HMS_W_Q2->SetTitleOffset(0.8,"Y"); HMS_W_Q2->Draw("COLZ");
+  cHMS->Print(outputpdf + '(');
+  TCanvas *cSHMS = new TCanvas("cSHMS","Summary of HMS Events");
+  cSHMS->Divide(2,2);
+  cSHMS->cd(1); SHMS_W_Dist->Draw("hist");
+  cSHMS->Update();
+  TLine *Proton_Mass3 = new TLine(0.938272, 0, 0.938272, gPad->GetUymax()); 
+  Proton_Mass3->SetLineColor(kRed); Proton_Mass3->SetLineWidth(2); Proton_Mass3->SetLineStyle(2);
+  Proton_Mass3->Draw("SAME");
+  cSHMS->cd(2); SHMS_W_xpfp->Draw("COLZ");
+  cSHMS->Update();
+  TLine *Proton_Mass4 = new TLine(0.938272, gPad->GetUymin(), 0.938272,gPad->GetUymax()); // This looks stupid and I hate it, but without it drawing the line screws up. Thanks root.
+  Proton_Mass4->SetLineColor(kRed); Proton_Mass4->SetLineWidth(2); Proton_Mass4->SetLineStyle(2);
+  Proton_Mass4->Draw("SAME");
+  cSHMS->cd(3); SHMS_ph_q_Dist->Draw();
+  cSHMS->cd(4); SHMS_W_Q2->SetTitleOffset(0.8,"Y"); SHMS_W_Q2->Draw("COLZ");
+  cSHMS->Print(outputpdf + ')');
+
   TFile *Histogram_file = new TFile(Form("../HISTOGRAMS/PionLT_HeepSingles_Run%i.root",option.Atoi()),"RECREATE");
 
   TDirectory *DTiming = Histogram_file->mkdir("Timing and Event Type Summary"); DTiming->cd();
