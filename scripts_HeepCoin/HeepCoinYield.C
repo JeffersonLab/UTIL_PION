@@ -31,6 +31,7 @@
 #include <TLine.h>
 #include <TMath.h>
 #include <TPaveText.h>
+#include <TGaxis.h>
 
 void HeepCoinYield::Begin(TTree * /*tree*/)
 {
@@ -91,10 +92,7 @@ void HeepCoinYield::SlaveBegin(TTree * /*tree*/)
   h1pxmiss                = new TH1F("pxmiss","Plot of P_{miss,x};P_{miss,x} GeV/c;Counts",1000,-1.0,1.0);
   h1pymiss                = new TH1F("pymiss","Plot of P_{miss,y};P_{miss,y} GeV/c;Counts",1000,-1.0,1.0);
   h1pzmiss                = new TH1F("pzmiss","Plot of P_{miss,z};P_{miss,z} GeV/c;Counts",1000,-1.0,1.0);
-
-  ////////
-  h1emiss                 = new TH1F("emiss","Plot of E_{miss};E_{miss} GeV/;Counts",1000,-1.0,1.0);
-  ///////
+  h1emiss                 = new TH1F("emiss","Plot of E_{miss};E_{miss}/GeV;Counts",1000,-1.0,1.0);
 
   h1EDTM                  = new TH1F("EDTM","EDTM Time;EDTM TDC Time;Counts",10000,-5000,5000);
 
@@ -133,9 +131,7 @@ void HeepCoinYield::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(h1pymiss);
   GetOutputList()->Add(h1pzmiss);
   GetOutputList()->Add(h1EDTM);
-  /////
   GetOutputList()->Add(h1emiss);
-  /////
 }
 
 Bool_t HeepCoinYield::Process(Long64_t entry)
@@ -158,8 +154,6 @@ Bool_t HeepCoinYield::Process(Long64_t entry)
 
   fReader.SetEntry(entry);
 
-  //if (*fEvtType != 4) return kTRUE;
-
   h1EDTM->Fill(*pEDTM);
   
   h2HMS_electron->Fill(H_cal_etotnorm[0],H_cer_npeSum[0]);
@@ -181,11 +175,9 @@ Bool_t HeepCoinYield::Process(Long64_t entry)
   if (H_cal_etotnorm[0] < 0.7 || H_cer_npeSum[0] < 1.5) return kTRUE;
   // if (H_cal_etotnorm[0] < 0.9 || H_cer_npeSum[0] < 1.5) return kTRUE;
   if (P_cal_etotnorm[0] > 0.6) return kTRUE;
-
   if (TMath::Abs(H_gtr_dp[0]) > 10.0) return kTRUE;
   if (P_gtr_dp[0] > 20.0 || P_gtr_dp[0] < -10.0) return kTRUE;
   // if (P_gtr_dp[0] > 10.0 || P_gtr_dp[0] < -22.0) return kTRUE;
-
   if (TMath::Abs(P_gtr_th[0]) > 0.040) return kTRUE;
   if (TMath::Abs(P_gtr_ph[0]) > 0.024) return kTRUE;
   if (TMath::Abs(H_gtr_th[0]) > 0.080) return kTRUE;
@@ -203,12 +195,9 @@ Bool_t HeepCoinYield::Process(Long64_t entry)
   h1HMS_ph_cut->Fill(H_gtr_ph[0]);
 
   if (P_aero_npeSum[0] < 1.5 && P_hgcer_npeSum[0] < 1.5) { //Event identified as Proton
-    h2ROC1_Coin_Beta_noID_proton->Fill((CTime_epCoinTime_ROC1[0] - 43.5),P_gtr_beta[0]);
-    
+    h2ROC1_Coin_Beta_noID_proton->Fill((CTime_epCoinTime_ROC1[0] - 43.5),P_gtr_beta[0]); 
     if (abs(P_gtr_beta[0]-1.00) > 0.15) return kTRUE;
-
     h1misspcut_CT->Fill( CTime_epCoinTime_ROC1[0] - 43.5, sqrt(pow(emiss[0],2)-pow(pmiss[0],2)));
-
     if (abs((CTime_epCoinTime_ROC1[0] - 43.5)) < 2.0) {
       h2ROC1_Coin_Beta_proton->Fill((CTime_epCoinTime_ROC1[0] - 43.5),P_gtr_beta[0]);
       h2SHMSp_kaon_cut->Fill(P_aero_npeSum[0],P_hgcer_npeSum[0]);
@@ -223,18 +212,13 @@ Bool_t HeepCoinYield::Process(Long64_t entry)
       h1pxmiss->Fill(pmiss_x[0]);
       h1pymiss->Fill(pmiss_y[0]);
       h1pzmiss->Fill(pmiss_z[0]);
-      /////
       h1emiss->Fill(emiss[0]);
-      /////
    }
-
     if (abs((CTime_epCoinTime_ROC1[0] - 43.5)) > 3.0 && abs((CTime_epCoinTime_ROC1[0] - 43.5)) < 25.0) {
       h1mmissp_rand->Fill(pow(emiss[0],2)-pow(pmiss[0],2));
       h1mmissp_remove->Fill(pow(emiss[0],2)-pow(pmiss[0],2));
-
     }
   }
-
   return kTRUE;
 }
 
@@ -243,7 +227,6 @@ void HeepCoinYield::SlaveTerminate()
   // The SlaveTerminate() function is called after all entries or objects
   // have been processed. When running with PROOF SlaveTerminate() is called
   // on each slave server.
-
 }
 
 void HeepCoinYield::Terminate()
@@ -257,29 +240,28 @@ void HeepCoinYield::Terminate()
   TH1F* EDTM = dynamic_cast<TH1F*> (GetOutputList()->FindObject("EDTM"));
   TH2F* HMS_electron = dynamic_cast<TH2F*> (GetOutputList()->FindObject("HMS_electron"));
   TH2F* HMS_electron_cut = dynamic_cast<TH2F*> (GetOutputList()->FindObject("HMS_electron_cut"));
-
   h1mmissp_rand->Scale(1/11);
   h1mmissp_remove->Add(h1mmissp_cut,h1mmissp_rand,1,-1);
 
-  //Fit the Lambda Missing Mass
-  TF1 *Lambda_Fit = new TF1("Lambda_Fit","[0]*exp(-0.5*((x-[1])/[2])*((x-[1])/[2]))",-0.5,0.5);
-  Lambda_Fit->SetParName(0,"Amplitude");
-  Lambda_Fit->SetParName(1,"Mean");
-  Lambda_Fit->SetParName(2,"Sigma");
-  Lambda_Fit->SetParLimits(0,0.0,10000.0);
-  Lambda_Fit->SetParLimits(1,-0.5,0.5);
-  Lambda_Fit->SetParLimits(2,0.0,0.1);
-  Lambda_Fit->SetParameter(0,100);
-  Lambda_Fit->SetParameter(1,0.0);
-  Lambda_Fit->SetParameter(2,0.011);
-  h1mmissp_remove->Fit("Lambda_Fit","RMQN");
-  TF1 *Lambda_Fit_Full = new TF1("Lambda_Fit_Full","[0]*exp(-0.5*((x-[1])/[2])*((x-[1])/[2]))",-0.5,0.5);
-  Lambda_Fit_Full->SetParName(0,"Amplitude");
-  Lambda_Fit_Full->SetParName(1,"Mean");
-  Lambda_Fit_Full->SetParName(2,"Sigma");
-  Lambda_Fit_Full->SetParameter(0,Lambda_Fit->GetParameter(0));
-  Lambda_Fit_Full->SetParameter(1,Lambda_Fit->GetParameter(1));
-  Lambda_Fit_Full->SetParameter(2,Lambda_Fit->GetParameter(2));
+  //Fit the Heep missing mass
+  TF1 *Heep_Fit = new TF1("Heep_Fit","[0]*exp(-0.5*((x-[1])/[2])*((x-[1])/[2]))",-0.5,0.5);
+  Heep_Fit->SetParName(0,"Amplitude");
+  Heep_Fit->SetParName(1,"Mean");
+  Heep_Fit->SetParName(2,"Sigma");
+  Heep_Fit->SetParLimits(0,0.0,10000.0);
+  Heep_Fit->SetParLimits(1,-0.5,0.5); // For HeepCOIN we expect there to be NO missing mass
+  Heep_Fit->SetParLimits(2,0.0,0.1);
+  Heep_Fit->SetParameter(0,100);
+  Heep_Fit->SetParameter(1,0.0);
+  Heep_Fit->SetParameter(2,0.011);
+  h1mmissp_remove->Fit("Heep_Fit","RMQN");
+  TF1 *Heep_Fit_Full = new TF1("Heep_Fit_Full","[0]*exp(-0.5*((x-[1])/[2])*((x-[1])/[2]))",-0.5,0.5);
+  Heep_Fit_Full->SetParName(0,"Amplitude");
+  Heep_Fit_Full->SetParName(1,"Mean");
+  Heep_Fit_Full->SetParName(2,"Sigma");
+  Heep_Fit_Full->SetParameter(0,Heep_Fit->GetParameter(0));
+  Heep_Fit_Full->SetParameter(1,Heep_Fit->GetParameter(1));
+  Heep_Fit_Full->SetParameter(2,Heep_Fit->GetParameter(2));
 
   //Start of Canvas Painting  
   TCanvas *cCuts = new TCanvas("Cuts","Summary of Common Cuts");
@@ -334,19 +316,17 @@ void HeepCoinYield::Terminate()
   cpID->cd(7); h1mmissp->Draw();
   cpID->cd(8); h1mmissp_remove->Draw("hist");
 
-  TString foutname = Form("../OUTPUT/Kinematics_Run%i",option.Atoi());
+  TString foutname = Form("../OUTPUT/HeepCoin_Run%i",option.Atoi());
   TString outputpdf = foutname + ".pdf";
 
   TCanvas *cKine = new TCanvas("Kine","Summary of Higher Order Kinemaics");
   cKine->Divide(2,2);
   cKine->cd(1); h2WvsQ2->Draw("Colz"); 
   h2WvsQ2->SetTitleOffset(1.0,"Y");
-  cKine->cd(3); h2tvsph_q->Draw("SURF1 POL");
+  cKine->cd(3); h2tvsph_q->Draw("SURF2 POL");
   gPad->SetTheta(90); gPad->SetPhi(180);
   TPaveText *tvsphi_title = new TPaveText(0.0277092,0.89779,0.096428,0.991854,"NDC");
   tvsphi_title->AddText("t vs #phi"); tvsphi_title->Draw();
-  TLine *phizero = new TLine(0,0,1,0); 
-  phizero->SetLineColor(kBlack); phizero->SetLineWidth(2); phizero->Draw();  
   TPaveText *ptphizero = new TPaveText(0.923951,0.513932,0.993778,0.574551,"NDC");
   ptphizero->AddText("#phi = 0"); ptphizero->Draw();
   TLine *phihalfpi = new TLine(0,0,0,1); 
@@ -361,6 +341,16 @@ void HeepCoinYield::Terminate()
   phithreepi->SetLineColor(kBlack); phithreepi->SetLineWidth(2); phithreepi->Draw();  
   TPaveText *ptphithreepi = new TPaveText(0.419517,0.00514928,0.487128,0.0996315,"NDC");
   ptphithreepi->AddText("#phi = #frac{3#pi}{2}"); ptphithreepi->Draw();
+  for (Int_t k = 0; k < 10; k++){
+    Arc[k] = new TArc();
+    Arc[k]->SetFillStyle(0);
+    Arc[k]->SetLineWidth(2);
+    Arc[k]->DrawArc(0,0,0.575*(k+1)/(10),0.,360.,"same");
+  }
+  TGaxis *tradius = new TGaxis(0,0,0.575,0,0,2,10,"-+");
+  tradius->SetLineColor(2);tradius->SetLabelColor(2);tradius->Draw();
+  TLine *phizero = new TLine(0,0,1,0); 
+  phizero->SetLineColor(kBlack); phizero->SetLineWidth(2); phizero->Draw(); 
   cKine->cd(2); h1epsilon->Draw();
   h1epsilon->SetTitleOffset(1.0,"Y");
   cKine->cd(4); h1mmissp_remove->Draw("hist");
@@ -368,7 +358,7 @@ void HeepCoinYield::Terminate()
   h1mmissp_remove->SetTitleOffset(1.0,"Y"); h1mmissp_remove->SetAxisRange(0.0,gPad->GetUymax(),"Y");
   cKine->Update();
   TLine *MissMass_Full = new TLine(0.0,gPad->GetUymin(),0.0,gPad->GetUymax()); 
-  MissMass_Full->SetLineColor(kBlack); MissMass_Full->SetLineWidth(3);
+  MissMass_Full->SetLineColor(kBlack); MissMass_Full->SetLineWidth(2); MissMass_Full->SetLineStyle(2);
   MissMass_Full->Draw();
   TPaveText *ptProtonEvt = new TPaveText(0.527698,0.652567,0.738421,0.791456,"NDC");
   ptProtonEvt->AddText(Form("# of proton Events: %.0f",h1mmissp_remove->Integral(h1mmissp_remove->GetXaxis()->FindBin(-0.02),h1mmissp_remove->GetXaxis()->FindBin(0.05))));
@@ -425,9 +415,7 @@ void HeepCoinYield::Terminate()
   h1pxmiss->Write("Missing Momentum x");
   h1pymiss->Write("Missing Momentum y");
   h1pzmiss->Write("Missing Momentum z");
-  //////
   h1emiss->Write("Missing energy");
-  //////
   TDirectory *DEDTM = Histogram_file->mkdir("Accepted EDTM Events"); DEDTM->cd();
   EDTM->Write("EDTM TDC Time");
   Histogram_file->Close();

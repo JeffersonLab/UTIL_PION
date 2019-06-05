@@ -11,10 +11,9 @@
 #include <TMath.h>
 #include <TH2.h>
 #include <TF1.h>
-
+#include <TArc.h>
 
 // Headers needed by this particular selector
-
 
 class HeepCoinYield : public TSelector {
  public :
@@ -70,7 +69,8 @@ class HeepCoinYield : public TSelector {
   /////
 
   TH1F           *h1EDTM;
-  
+
+  TArc           *Arc[10];  
 
   // Readers to access the data (delete the ones you do not need).
   TTreeReaderArray<Double_t> CTime_epCoinTime_ROC1  = {fReader, "CTime.epCoinTime_ROC1"};
