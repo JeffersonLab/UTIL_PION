@@ -13,7 +13,7 @@ batch="${USER}_Job.txt"
 
 ##Input run numbers##                                                                      
 ##Point this to the location of your input run list, see templates folder for examples ##                                                                                                                       
-inputFile="/u/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/UTIL_PION/batch/inputRuns"
+inputFile="/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/UTIL_PION/batch/inputRuns"
 
 ## Tape stub                                                                                                                                                                                                      
 MSSstub='/mss/hallc/spring17/raw/coin_all_%05d.dat'
@@ -54,7 +54,7 @@ while true; do
                 echo "OS: centos7" >> ${batch}
                 echo "CPU: 1" >> ${batch} ### hcana is single core, setting CPU higher will lower priority and gain you nothing!
 		echo "INPUT_FILES: ${tape_file}" >> ${batch}
-                echo "COMMAND:/u/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/UTIL_PION/batch_scripts/SCRIPT.sh${runNum}" >> ${batch} ### Insert your script at end!                                            
+                echo "COMMAND:/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/UTIL_PION/batch_scripts/SCRIPT.sh${runNum}" >> ${batch} ### Insert your script at end!                                            
                 echo "MAIL: ${USER}@jlab.org" >> ${batch} ## Consider commenting out for large runs unless you enjoy 1k email spam
                 echo "Submitting batch"
                 eval "jsub ${batch} 2>/dev/null"

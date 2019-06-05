@@ -1,4 +1,4 @@
-void replay_production_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
+void replay_production_coin_HeepSingles (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -172,11 +172,10 @@ void replay_production_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
 
   // Add Physics Module to calculate primary (scattered electrons) beam kinematics
   THcPrimaryKine* hkin_primary = new THcPrimaryKine("H.kin.primary", "HMS Single Arm Kinematics", "H", "H.rb");
+  THcPrimaryKine* pkin_primary = new THcPrimaryKine("P.kin.primary", "SHMS Single Arm Kinematics", "P", "P.rb");
   gHaPhysics->Add(hkin_primary);
-  // Add Physics Module to calculate secondary (scattered hadrons) beam kinematics
-  THcSecondaryKine* pkin_secondary = new THcSecondaryKine("P.kin.secondary", "SHMS Single Arm Kinematics", "P", "H.kin.primary");
-  gHaPhysics->Add(pkin_secondary);
-  
+  gHaPhysics->Add(pkin_primary);
+    
   //=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=
   // Global Objects & Event Handlers
   //=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=
@@ -246,9 +245,9 @@ void replay_production_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Define output ROOT file
   analyzer->SetOutFile(ROOTFileName.Data());
   // Define DEF-file+
-  analyzer->SetOdefFile("UTIL_PION/DEF-files/coin_production.def");
+  analyzer->SetOdefFile("UTIL_PION/DEF-files/HeepSingles_Production.def");
   // Define cuts file
-  analyzer->SetCutFile("DEF-files/COIN/PRODUCTION/CUTS/coin_production_cuts.def");  // optional
+  analyzer->SetCutFile("UTIL_PION/DEF-files/HeepSingles_Production_Cuts.def");  // optional
   //analyzer->SetCutFile("UTIL_KAONLT/DEF-files/coin_production_cuts.def");  // optional
   // File to record accounting information for cuts
   analyzer->SetSummaryFile(Form("REPORT_OUTPUT/COIN/PRODUCTION/summary_production_%d_%d.report", RunNumber, MaxEvent)); // optional
