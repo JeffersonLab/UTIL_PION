@@ -159,11 +159,6 @@ Bool_t HeepSinglesYield::Process(Long64_t entry)
   if (*T_coin_pTRIG3_ROC2_tdcTime!=0.0) TRIG3ROC2->Fill(*T_coin_pTRIG3_ROC2_tdcTime);
   if (*T_coin_pTRIG5_ROC2_tdcTime!=0.0) TRIG5ROC2->Fill(*T_coin_pTRIG5_ROC2_tdcTime);
 
-  Double_t HMS_DC1_Sum = (H_dc_1x1_nhit[0] + H_dc_1u2_nhit[0] + H_dc_1u1_nhit[0] + H_dc_1v1_nhit[0] + H_dc_1x2_nhit[0] + H_dc_1v2_nhit[0]);
-  Double_t HMS_DC2_Sum = (H_dc_2x1_nhit[0] + H_dc_2u2_nhit[0] + H_dc_2u1_nhit[0] + H_dc_2v1_nhit[0] + H_dc_2x2_nhit[0] + H_dc_2v2_nhit[0]);
-  Double_t SHMS_DC1_Sum = (P_dc_1x1_nhit[0] + P_dc_1u2_nhit[0] + P_dc_1u1_nhit[0] + P_dc_1v1_nhit[0] + P_dc_1x2_nhit[0] + P_dc_1v2_nhit[0]);
-  Double_t SHMS_DC2_Sum = (P_dc_2x1_nhit[0] + P_dc_2u2_nhit[0] + P_dc_2u1_nhit[0] + P_dc_2v1_nhit[0] + P_dc_2x2_nhit[0] + P_dc_2v2_nhit[0]);
-
   if(*EvtType==1){ // SHMS single
     SHMS_delta->Fill(P_gtr_dp[0]);
     SHMS_th->Fill(P_gtr_th[0]);
@@ -173,11 +168,6 @@ Bool_t HeepSinglesYield::Process(Long64_t entry)
     SHMS_Cal_Aero_before->Fill(P_cal_etotnorm[0], P_aero_npeSum[0]);
     SHMS_Aero_HGC_before->Fill(P_aero_npeSum[0], P_hgcer_npeSum[0]);    
     
-    // Check we actually have a good track
-    if(P_hod_goodscinhit[0] != 1) return kTRUE;
-    if(P_hod_betanotrack[0] < 0.5 || P_hod_betanotrack[0] > 1.5) return kTRUE;
-    if(SHMS_DC1_Sum > 20) return kTRUE;
-    if(SHMS_DC2_Sum > 20) return kTRUE; 
     // Cut on delta, theta and phi for the track
     if (TMath::Abs(P_gtr_dp[0]) > 4) return kTRUE;
     if (TMath::Abs(P_gtr_th[0]) > 0.080) return kTRUE;
@@ -210,11 +200,6 @@ Bool_t HeepSinglesYield::Process(Long64_t entry)
     HMS_cer_before->Fill(H_cer_npeSum[0]);
     HMS_cal_cer_before->Fill(H_cal_etotnorm[0], H_cer_npeSum[0]);
 
-    // Check we have a good track
-    if(H_hod_goodscinhit[0] != 1) return kTRUE;
-    if(H_hod_betanotrack[0] < 0.8 || H_hod_betanotrack[0] > 1.3) return kTRUE; 
-    if(HMS_DC1_Sum > 20) return kTRUE;
-    if(HMS_DC2_Sum > 20) return kTRUE;
     // Cut on delta, theta and phi
     if (TMath::Abs(H_gtr_dp[0]) > 4.0) return kTRUE;
     if (TMath::Abs(H_gtr_th[0]) > 0.080) return kTRUE;
@@ -256,9 +241,9 @@ Bool_t HeepSinglesYield::Process(Long64_t entry)
     SHMS_Aero_HGC_before->Fill(P_aero_npeSum[0], P_hgcer_npeSum[0]);
     
     // Set flag for HMS event passing all cuts
-    if(H_hod_goodscinhit[0] == 1 && H_hod_betanotrack[0] > 0.8 && H_hod_betanotrack[0] < 1.3 && HMS_DC1_Sum <20 && HMS_DC2_Sum <20 && TMath::Abs(H_gtr_dp[0]) < 4.0 && TMath::Abs(H_gtr_th[0]) < 0.080 && TMath::Abs(H_gtr_ph[0]) < 0.035 && H_cer_npeSum[0] > 1.5 && H_cal_etotnorm[0] < 0.7) GoodHMS = kTRUE;
+    if(TMath::Abs(H_gtr_dp[0]) < 4.0 && TMath::Abs(H_gtr_th[0]) < 0.080 && TMath::Abs(H_gtr_ph[0]) < 0.035 && H_cer_npeSum[0] > 1.5 && H_cal_etotnorm[0] < 0.7) GoodHMS = kTRUE;
     // Set flag for SHMS events passing all cuts
-    if(P_hod_goodscinhit[0] == 1 && P_hod_betanotrack[0] > 0.5 && P_hod_betanotrack[0] < 1.5 && SHMS_DC1_Sum < 20 && SHMS_DC2_Sum < 20 && TMath::Abs(P_gtr_dp[0]) < 4 && TMath::Abs(P_gtr_th[0]) < 0.080 && TMath::Abs(P_gtr_ph[0]) < 0.035 && P_cal_etotnorm[0] > 0.7 && P_aero_npeSum[0] > 1.5 && P_hgcer_npeSum[0] > 1.5) GoodSHMS = kTRUE;
+    if(TMath::Abs(P_gtr_dp[0]) < 4 && TMath::Abs(P_gtr_th[0]) < 0.080 && TMath::Abs(P_gtr_ph[0]) < 0.035 && P_cal_etotnorm[0] > 0.7 && P_aero_npeSum[0] > 1.5 && P_hgcer_npeSum[0] > 1.5) GoodSHMS = kTRUE;
   
     if(GoodHMS == kFALSE && GoodSHMS == kFALSE) return kTRUE;
     else if (GoodHMS == kTRUE && GoodSHMS == kTRUE){
@@ -338,6 +323,65 @@ void HeepSinglesYield::Terminate()
   // a query. It always runs on the client, it can be used to present
   // the results graphically or save the results to file.
   TString option = GetOption();
+
+  //Start of Canvas Painting  
+  TCanvas *cHMSCuts = new TCanvas("HMSCuts","Summary of HMS Cuts");
+  cHMSCuts->Divide(4,2);
+  cHMSCuts->cd(1); HMS_delta->Draw();
+  cHMSCuts->cd(2); HMS_delta_cut->Draw();
+  cHMSCuts->cd(3); HMS_th->Draw();
+  cHMSCuts->cd(4); HMS_th_cut->Draw();
+  cHMSCuts->cd(5); HMS_ph->Draw();
+  cHMSCuts->cd(6); HMS_ph_cut->Draw();
+  cHMSCuts->cd(7); HMS_cal_cer_before->Draw("COLZ");
+  cHMSCuts->cd(8); HMS_cal_cer_cut->Draw("COLZ");
+  TCanvas *cSHMSCuts = new TCanvas("SHMSCuts","Summary of SHMS Cuts");
+  cSHMSCuts->Divide(4,3);
+  cSHMSCuts->cd(1); SHMS_delta->Draw();
+  cSHMSCuts->cd(2); SHMS_delta_cut->Draw();
+  cSHMSCuts->cd(3); SHMS_th->Draw();
+  cSHMSCuts->cd(4); SHMS_th_cut->Draw();
+  cSHMSCuts->cd(5); SHMS_ph->Draw();
+  cSHMSCuts->cd(6); SHMS_ph_cut->Draw();
+  cSHMSCuts->cd(7); SHMS_Cal_HGC_before->Draw("COLZ");
+  cSHMSCuts->cd(8); SHMS_Cal_HGC_cut->Draw("COLZ");
+  cSHMSCuts->cd(9); SHMS_Cal_Aero_before->Draw("COLZ");
+  cSHMSCuts->cd(10); SHMS_Cal_Aero_cut->Draw("COLZ");
+  cSHMSCuts->cd(11); SHMS_Aero_HGC_before->Draw("COLZ");
+  cSHMSCuts->cd(12); SHMS_Aero_HGC_cut->Draw("COLZ");
+  TString foutname = Form("../OUTPUT/HeepSingles_Run%i",option.Atoi());
+  TString outputpdf = foutname + ".pdf";
+  TCanvas *cHMS = new TCanvas("cHMS","Summary of HMS Events");
+  cHMS->Divide(2,2);
+  cHMS->cd(1); HMS_W_Dist->Draw("hist");
+  cHMS->Update();
+  TLine *Proton_Mass = new TLine(0.938272, 0, 0.938272, gPad->GetUymax()); 
+  Proton_Mass->SetLineColor(kRed); Proton_Mass->SetLineWidth(2); Proton_Mass->SetLineStyle(2);
+  Proton_Mass->Draw("SAME");
+  cHMS->cd(2); HMS_W_xpfp->Draw("COLZ");
+  cHMS->Update();
+  TLine *Proton_Mass2 = new TLine(0.938272, gPad->GetUymin(), 0.938272, gPad->GetUymax()); // This looks stupid and I hate it, but without it drawing the line screws up. Thanks root.
+  Proton_Mass2->SetLineColor(kRed); Proton_Mass2->SetLineWidth(2); Proton_Mass2->SetLineStyle(2);
+  Proton_Mass2->Draw("SAME");
+  cHMS->cd(3); HMS_ph_q_Dist->Draw();
+  cHMS->cd(4); HMS_W_Q2->SetTitleOffset(0.8,"Y"); HMS_W_Q2->Draw("COLZ");
+  cHMS->Print(outputpdf + '(');
+  TCanvas *cSHMS = new TCanvas("cSHMS","Summary of HMS Events");
+  cSHMS->Divide(2,2);
+  cSHMS->cd(1); SHMS_W_Dist->Draw("hist");
+  cSHMS->Update();
+  TLine *Proton_Mass3 = new TLine(0.938272, 0, 0.938272, gPad->GetUymax()); 
+  Proton_Mass3->SetLineColor(kRed); Proton_Mass3->SetLineWidth(2); Proton_Mass3->SetLineStyle(2);
+  Proton_Mass3->Draw("SAME");
+  cSHMS->cd(2); SHMS_W_xpfp->Draw("COLZ");
+  cSHMS->Update();
+  TLine *Proton_Mass4 = new TLine(0.938272, gPad->GetUymin(), 0.938272,gPad->GetUymax()); // This looks stupid and I hate it, but without it drawing the line screws up. Thanks root.
+  Proton_Mass4->SetLineColor(kRed); Proton_Mass4->SetLineWidth(2); Proton_Mass4->SetLineStyle(2);
+  Proton_Mass4->Draw("SAME");
+  cSHMS->cd(3); SHMS_ph_q_Dist->Draw();
+  cSHMS->cd(4); SHMS_W_Q2->SetTitleOffset(0.8,"Y"); SHMS_W_Q2->Draw("COLZ");
+  cSHMS->Print(outputpdf + ')');
+
   TFile *Histogram_file = new TFile(Form("../HISTOGRAMS/PionLT_HeepSingles_Run%i.root",option.Atoi()),"RECREATE");
 
   TDirectory *DTiming = Histogram_file->mkdir("Timing and Event Type Summary"); DTiming->cd();
