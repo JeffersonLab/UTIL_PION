@@ -159,11 +159,6 @@ Bool_t HeepSinglesYield::Process(Long64_t entry)
   if (*T_coin_pTRIG3_ROC2_tdcTime!=0.0) TRIG3ROC2->Fill(*T_coin_pTRIG3_ROC2_tdcTime);
   if (*T_coin_pTRIG5_ROC2_tdcTime!=0.0) TRIG5ROC2->Fill(*T_coin_pTRIG5_ROC2_tdcTime);
 
-  Double_t HMS_DC1_Sum = (H_dc_1x1_nhit[0] + H_dc_1u2_nhit[0] + H_dc_1u1_nhit[0] + H_dc_1v1_nhit[0] + H_dc_1x2_nhit[0] + H_dc_1v2_nhit[0]);
-  Double_t HMS_DC2_Sum = (H_dc_2x1_nhit[0] + H_dc_2u2_nhit[0] + H_dc_2u1_nhit[0] + H_dc_2v1_nhit[0] + H_dc_2x2_nhit[0] + H_dc_2v2_nhit[0]);
-  Double_t SHMS_DC1_Sum = (P_dc_1x1_nhit[0] + P_dc_1u2_nhit[0] + P_dc_1u1_nhit[0] + P_dc_1v1_nhit[0] + P_dc_1x2_nhit[0] + P_dc_1v2_nhit[0]);
-  Double_t SHMS_DC2_Sum = (P_dc_2x1_nhit[0] + P_dc_2u2_nhit[0] + P_dc_2u1_nhit[0] + P_dc_2v1_nhit[0] + P_dc_2x2_nhit[0] + P_dc_2v2_nhit[0]);
-
   if(*EvtType==1){ // SHMS single
     SHMS_delta->Fill(P_gtr_dp[0]);
     SHMS_th->Fill(P_gtr_th[0]);
@@ -173,11 +168,6 @@ Bool_t HeepSinglesYield::Process(Long64_t entry)
     SHMS_Cal_Aero_before->Fill(P_cal_etotnorm[0], P_aero_npeSum[0]);
     SHMS_Aero_HGC_before->Fill(P_aero_npeSum[0], P_hgcer_npeSum[0]);    
     
-    // Check we actually have a good track
-    if(P_hod_goodscinhit[0] != 1) return kTRUE;
-    if(P_hod_betanotrack[0] < 0.5 || P_hod_betanotrack[0] > 1.5) return kTRUE;
-    if(SHMS_DC1_Sum > 20) return kTRUE;
-    if(SHMS_DC2_Sum > 20) return kTRUE; 
     // Cut on delta, theta and phi for the track
     if (TMath::Abs(P_gtr_dp[0]) > 4) return kTRUE;
     if (TMath::Abs(P_gtr_th[0]) > 0.080) return kTRUE;
@@ -210,11 +200,6 @@ Bool_t HeepSinglesYield::Process(Long64_t entry)
     HMS_cer_before->Fill(H_cer_npeSum[0]);
     HMS_cal_cer_before->Fill(H_cal_etotnorm[0], H_cer_npeSum[0]);
 
-    // Check we have a good track
-    if(H_hod_goodscinhit[0] != 1) return kTRUE;
-    if(H_hod_betanotrack[0] < 0.8 || H_hod_betanotrack[0] > 1.3) return kTRUE; 
-    if(HMS_DC1_Sum > 20) return kTRUE;
-    if(HMS_DC2_Sum > 20) return kTRUE;
     // Cut on delta, theta and phi
     if (TMath::Abs(H_gtr_dp[0]) > 4.0) return kTRUE;
     if (TMath::Abs(H_gtr_th[0]) > 0.080) return kTRUE;
@@ -256,9 +241,9 @@ Bool_t HeepSinglesYield::Process(Long64_t entry)
     SHMS_Aero_HGC_before->Fill(P_aero_npeSum[0], P_hgcer_npeSum[0]);
     
     // Set flag for HMS event passing all cuts
-    if(H_hod_goodscinhit[0] == 1 && H_hod_betanotrack[0] > 0.8 && H_hod_betanotrack[0] < 1.3 && HMS_DC1_Sum <20 && HMS_DC2_Sum <20 && TMath::Abs(H_gtr_dp[0]) < 4.0 && TMath::Abs(H_gtr_th[0]) < 0.080 && TMath::Abs(H_gtr_ph[0]) < 0.035 && H_cer_npeSum[0] > 1.5 && H_cal_etotnorm[0] < 0.7) GoodHMS = kTRUE;
+    if(TMath::Abs(H_gtr_dp[0]) < 4.0 && TMath::Abs(H_gtr_th[0]) < 0.080 && TMath::Abs(H_gtr_ph[0]) < 0.035 && H_cer_npeSum[0] > 1.5 && H_cal_etotnorm[0] < 0.7) GoodHMS = kTRUE;
     // Set flag for SHMS events passing all cuts
-    if(P_hod_goodscinhit[0] == 1 && P_hod_betanotrack[0] > 0.5 && P_hod_betanotrack[0] < 1.5 && SHMS_DC1_Sum < 20 && SHMS_DC2_Sum < 20 && TMath::Abs(P_gtr_dp[0]) < 4 && TMath::Abs(P_gtr_th[0]) < 0.080 && TMath::Abs(P_gtr_ph[0]) < 0.035 && P_cal_etotnorm[0] > 0.7 && P_aero_npeSum[0] > 1.5 && P_hgcer_npeSum[0] > 1.5) GoodSHMS = kTRUE;
+    if(TMath::Abs(P_gtr_dp[0]) < 4 && TMath::Abs(P_gtr_th[0]) < 0.080 && TMath::Abs(P_gtr_ph[0]) < 0.035 && P_cal_etotnorm[0] > 0.7 && P_aero_npeSum[0] > 1.5 && P_hgcer_npeSum[0] > 1.5) GoodSHMS = kTRUE;
   
     if(GoodHMS == kFALSE && GoodSHMS == kFALSE) return kTRUE;
     else if (GoodHMS == kTRUE && GoodSHMS == kTRUE){

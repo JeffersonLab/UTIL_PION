@@ -47,6 +47,10 @@ block T.coin.pTRIG1_ROC2_tdcTime
 block T.coin.pTRIG3_ROC2_tdcTime
 block T.coin.pTRIG5_ROC2_tdcTime
 block T.coin.pEDTM_tdcTime
+block H.kin.primary.*
+block P.kin.primary.*
+block H.kin.secondary.*
+block P.kin.secondary.*
 
 begin epics
 IBC3H00CRCUR4
