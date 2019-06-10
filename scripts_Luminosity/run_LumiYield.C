@@ -93,6 +93,6 @@ void run_LumiYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_c
   proof->Close();
   
   TChain sc("TSH");
-  sc.Add(Form("/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent));
+  sc.Add(rootFileNameString);
   sc.Process("Scalers.C+",option);
 }
