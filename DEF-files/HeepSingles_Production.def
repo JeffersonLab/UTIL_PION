@@ -57,7 +57,6 @@ block T.helicity.helrep
 block T.helicity.mps
 block T.coin.pRF*
 block T.coin.hRF*
-block T.helicity.hel
 
 begin epics
 

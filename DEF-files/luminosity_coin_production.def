@@ -51,6 +51,8 @@ block H.kin.primary.*
 block P.kin.primary.*
 block H.kin.secondary.*
 block P.kin.secondary.*
+block T.helicity.hel
+block T.helicity.helprep
 
 begin epics
 IBC3H00CRCUR4

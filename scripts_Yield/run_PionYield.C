@@ -3,9 +3,12 @@
 #include <fstream>
 #include <string>
 #include <stdio.h>
+#include <TSystem.h>
 
 void run_PionYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_cut = 5, Int_t pscal = 1)
 {
+  TString Hostname = gSystem->HostName();
+  TString rootFileNameString;
   // Get RunNumber, MaxEvent, and current threshold if not provided.
   if(RunNumber == 0) {
     cout << "Enter a Run Number (-1 to exit): ";
@@ -37,7 +40,15 @@ void run_PionYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_c
   myfile1.close();
 
   //Begin Scaler Efficiency Calculation
-  TString rootFileNameString = Form("/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent);
+  if(Hostname.Contains("farm")){
+    rootFileNameString = Form("/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent);
+  }
+  else if (Hostname.Contains("cdaq")){
+    rootFileNameString = Form("/home/cdaq/hallc-online/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent);
+  }
+  else if (Hostname.Contains("phys.uregina.ca")){
+    rootFileNameString = Form("/home/${USER}/work/JLab/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent);
+  }
   TString threshold = Form("%f",threshold_cut);
   TString runNum = Form("%d",RunNumber);
   TString prescal = Form("%d", pscal);
@@ -45,13 +56,9 @@ void run_PionYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_c
   TString line2 = "coin_cut t(\"" + rootFileNameString + "\")";
   TString line3 = "t.Loop(\"" + runNum + "\"," + threshold + "," + prescal + ")";
 
-  //gROOT->ProcessLine(line1);
-  //gROOT->ProcessLine(line2);
-  //gROOT->ProcessLine(line3);
-
   //Begin Counting Good Pion Events
   TChain ch("T");
-  ch.Add(Form("/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent));
+  ch.Add(rootFileNameString);
   TString option = Form("%i",RunNumber);
 
   TProof *proof = TProof::Open("workers=4");
@@ -61,6 +68,6 @@ void run_PionYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_c
   proof->Close();
   
   TChain sc("TSH");
-  sc.Add(Form("/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent));
+  sc.Add(rootFileNameString);
   sc.Process("HMS_Scalers.C+",option);
 }

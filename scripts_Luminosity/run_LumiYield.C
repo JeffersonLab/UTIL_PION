@@ -1,12 +1,15 @@
-
 #include <TProof.h>
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <stdio.h>
+#include <TSystem.h>
 
 void run_LumiYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_cut = 5, Int_t pscal = 1)
-{
+{ 
+  TString Hostname = gSystem->HostName();
+  TString rootFileNameString;
+  TString ReportFileNameString;
   // Get RunNumber, MaxEvent, and current threshold if not provided.
   if(RunNumber == 0) {
     cout << "Enter a Run Number (-1 to exit): ";
@@ -32,8 +35,21 @@ void run_LumiYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_c
     if( pscal<=0 ) return;
   }
 
+  if(Hostname.Contains("farm")){
+    rootFileNameString = Form("/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent);
+    ReportFileNameString = Form("/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/UTIL_PIONT/REPORT_OUTPUT/COIN/PRODUCTION/PionLT_replay_coin_production_%i_%i.report",RunNumber,MaxEvent)
+  }
+  else if (Hostname.Contains("cdaq")){
+    rootFileNameString = Form("/home/cdaq/hallc-online/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent);
+    ReportFileNameString = Form("/home/cdaq/hallc-online/hallc_replay_lt/UTIL_PIONT/REPORT_OUTPUT/COIN/PRODUCTION/PionLT_replay_coin_production_%i_%i.report",RunNumber,MaxEvent)
+  }
+  else if (Hostname.Contains("phys.uregina.ca")){
+    rootFileNameString = Form("/home/${USER}/work/JLab/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent);
+    ReportFileNameString = Form("/home/${USER}/work/JLab/hallc_replay_lt/UTIL_PIONT/REPORT_OUTPUT/COIN/PRODUCTION/PionLT_replay_coin_production_%i_%i.report",RunNumber,MaxEvent)
+  }
+
   fstream REPORT_file;
-  REPORT_file.open (Form("/u/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/UTIL_PIONT/REPORT_OUTPUT/COIN/PRODUCTION/PionLT_replay_coin_production_%i_%i.report",RunNumber,MaxEvent));
+  REPORT_file.open (ReportFileNameString);
   Int_t line_num = 0;
   string line;
   TString line_PS1;
@@ -67,7 +83,7 @@ void run_LumiYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_c
 
   //Begin Counting Good Kaon Events
   TChain ch("T");
-  ch.Add(Form("/u/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent));
+  ch.Add(rootFileNameString);
   TString option = Form("%i.%i",PS1,PS3);
 
   TProof *proof = TProof::Open("workers=4");
@@ -77,6 +93,6 @@ void run_LumiYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_c
   proof->Close();
   
   TChain sc("TSH");
-  sc.Add(Form("/u/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent));
+  sc.Add(Form("/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent));
   sc.Process("Scalers.C+",option);
 }
