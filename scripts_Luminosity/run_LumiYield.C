@@ -37,15 +37,15 @@ void run_LumiYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_c
 
   if(Hostname.Contains("farm")){
     rootFileNameString = Form("/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent);
-    ReportFileNameString = Form("/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/UTIL_PIONT/REPORT_OUTPUT/COIN/PRODUCTION/PionLT_replay_coin_production_%i_%i.report",RunNumber,MaxEvent)
+    ReportFileNameString = Form("/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/UTIL_PIONT/REPORT_OUTPUT/COIN/PRODUCTION/PionLT_replay_coin_production_%i_%i.report",RunNumber,MaxEvent);
   }
   else if (Hostname.Contains("cdaq")){
     rootFileNameString = Form("/home/cdaq/hallc-online/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent);
-    ReportFileNameString = Form("/home/cdaq/hallc-online/hallc_replay_lt/UTIL_PIONT/REPORT_OUTPUT/COIN/PRODUCTION/PionLT_replay_coin_production_%i_%i.report",RunNumber,MaxEvent)
+    ReportFileNameString = Form("/home/cdaq/hallc-online/hallc_replay_lt/UTIL_PIONT/REPORT_OUTPUT/COIN/PRODUCTION/PionLT_replay_coin_production_%i_%i.report",RunNumber,MaxEvent);
   }
   else if (Hostname.Contains("phys.uregina.ca")){
     rootFileNameString = Form("/home/${USER}/work/JLab/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent);
-    ReportFileNameString = Form("/home/${USER}/work/JLab/hallc_replay_lt/UTIL_PIONT/REPORT_OUTPUT/COIN/PRODUCTION/PionLT_replay_coin_production_%i_%i.report",RunNumber,MaxEvent)
+    ReportFileNameString = Form("/home/${USER}/work/JLab/hallc_replay_lt/UTIL_PIONT/REPORT_OUTPUT/COIN/PRODUCTION/PionLT_replay_coin_production_%i_%i.report",RunNumber,MaxEvent);
   }
 
   fstream REPORT_file;
