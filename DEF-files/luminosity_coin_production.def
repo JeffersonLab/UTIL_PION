@@ -40,12 +40,7 @@ block H.dc.2x2.nhit
 block H.dc.2u2.nhit
 block H.dc.2v2.nhit
 block H.bcm.*
-block T.coin.pTRIG1_ROC1_tdcTime
-block T.coin.pTRIG3_ROC1_tdcTime
-block T.coin.pTRIG5_ROC1_tdcTime
-block T.coin.pTRIG1_ROC2_tdcTime
-block T.coin.pTRIG3_ROC2_tdcTime
-block T.coin.pTRIG5_ROC2_tdcTime
+block T.coin.pTRIG*
 block T.coin.pEDTM_tdcTime
 block H.kin.primary.*
 block P.kin.primary.*
