@@ -21,9 +21,9 @@ void Scalers::SlaveBegin(TTree * /*tree*/)
   // When running with PROOF SlaveBegin() is called on each slave server.
   // The tree argument is deprecated (on PROOF 0 is passed).
   TString option = GetOption();
-  TString PS1_temp = option(0,option.Index("."));
+  TString PS2_temp = option(0,option.Index("."));
   TString PS3_temp = option(option.Index(".")+1,option.Length());
-  PS1 = PS1_temp.Atof();
+  PS2 = PS2_temp.Atof();
   PS3 = PS3_temp.Atof();
 
   bcm_name[0] = "BCM1 ";
@@ -191,13 +191,13 @@ void Scalers::Terminate()
   // the results graphically or save the results to file.
   
   TString option = GetOption();
-  TString PS1_temp = option(0,option.Index("."));
+  TString PS2_temp = option(0,option.Index("."));
   TString PS3_temp = option(option.Index(".")+1,option.Length());
-  PS1 = PS1_temp.Atof();
+  PS2 = PS2_temp.Atof();
   PS3 = PS3_temp.Atof();
-  cout << Form("Using prescale factors: PS1 %.0f, PS3 %.0f\n",PS1,PS3);
+  cout << Form("Using prescale factors: PS2 %.0f, PS3 %.0f\n",PS2,PS3);
   cout << "\n\nUsed current threshold value: 5 uA" << endl;
-  if(PS1 == 0) PS1 = 1;
+  if(PS2 == 0) PS2 = 1;
   if(PS3 == 0) PS3 = 1;
   for (Int_t ibcm = 0; ibcm < NBCM; ibcm++) {
     cout << Form("%s charge: %.3f uC, Beam over threshold for %.3f s", bcm_name[ibcm].c_str(), charge_sum[ibcm], time_sum[ibcm]) << endl;
@@ -205,7 +205,7 @@ void Scalers::Terminate()
 
   cout <<"\n";
 
-  cout << Form("L1ACC counts: %.0f, %s Prescaled Pretrigger Counts: %.0f, %s Prescaled Pretrigger Counts: %.0f\nComputer Livetime: %f +/- %f", acctrig_sum, trig_name[0].c_str(), trig_sum[0]/PS1, trig_name[2].c_str(), trig_sum[2]/PS3, acctrig_sum/((trig_sum[0]/PS1) + (trig_sum[2]/PS3)), (acctrig_sum/((trig_sum[0]/PS1) + (trig_sum[2]/PS3)))*sqrt((1/(trig_sum[0]/PS1))+(1/(trig_sum[2]/PS3))+(1/acctrig_sum))) << endl;
+  cout << Form("L1ACC counts: %.0f, %s Prescaled Pretrigger Counts: %.0f, %s Prescaled Pretrigger Counts: %.0f\nComputer Livetime: %f +/- %f", acctrig_sum, trig_name[1].c_str(), trig_sum[1]/PS2, trig_name[2].c_str(), trig_sum[2]/PS3, acctrig_sum/((trig_sum[1]/PS2) + (trig_sum[2]/PS3)), (acctrig_sum/((trig_sum[1]/PS2) + (trig_sum[2]/PS3)))*sqrt((1/(trig_sum[1]/PS2))+(1/(trig_sum[2]/PS3))+(1/acctrig_sum))) << endl;
   
   cout << Form("HMS Electronic livetime: %f +/- %f",1 - ((6/5)*(PRE_sum[1]-PRE_sum[2])/(PRE_sum[1])), (PRE_sum[1]-PRE_sum[2])/(PRE_sum[1]) * sqrt( (sqrt(PRE_sum[1]) + sqrt(PRE_sum[2]))/(PRE_sum[1] - PRE_sum[2]) + (sqrt(PRE_sum[1])/PRE_sum[1]) )) << endl;
 
@@ -221,12 +221,12 @@ void Scalers::Terminate()
 		  //Charge
 		  charge_sum[3],
 		  //
-		  trig_sum[0],
+		  trig_sum[1],
 		  //
 		  trig_sum[2],
 		  //CPU LT
-		  acctrig_sum/((trig_sum[0]/PS1) + (trig_sum[2]/PS3)),
-		  (acctrig_sum/((trig_sum[0]/PS1) + (trig_sum[2]/PS3)))*sqrt((1/(trig_sum[0]/PS1))+(1/(trig_sum[2]/PS3))+(1/acctrig_sum)),
+		  acctrig_sum/((trig_sum[1]/PS2) + (trig_sum[2]/PS3)),
+		  (acctrig_sum/((trig_sum[1]/PS2) + (trig_sum[2]/PS3)))*sqrt((1/(trig_sum[1]/PS2))+(1/(trig_sum[2]/PS3))+(1/acctrig_sum)),
 		  //HMS elec LT
 		  1 - ((6/5)*(PRE_sum[1]-PRE_sum[2])/(PRE_sum[1])),
 		  (PRE_sum[1]-PRE_sum[2])/(PRE_sum[1]) * sqrt( (sqrt(PRE_sum[1]) + sqrt(PRE_sum[2]))/(PRE_sum[1] - PRE_sum[2]) + (sqrt(PRE_sum[1])/PRE_sum[1]) ),

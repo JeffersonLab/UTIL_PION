@@ -36,25 +36,25 @@ for line in f:
     for index, obj in enumerate(psList) :
         if (psList[index] in data[0]) : 
             if (index == 0) :  
-                ps1_tmp = data[1].split(" ")
+                ps2_tmp = data[1].split(" ")
             if (index == 1) : 
                 ps3_tmp = data[1].split(" ")
             if (index == 2) :
                 ps5_tmp = data[1].split(" ")
-ps1=float(ps1_tmp[1])
+ps2=float(ps2_tmp[1])
 ps3=float(ps3_tmp[1])
 ps5=float(ps5_tmp[1])
 i=0
 for index in psActual:
-    if (float(index) == ps1) :
-        PS1 = str(psValue[i])
+    if (float(index) == ps2) :
+        PS2 = str(psValue[i])
     if (float(index) == ps3) :
         PS3 = str(psValue[i])
     if (float(index) == ps5) :
         PS5 = str(psValue[i])
     i=i+1
-fout.write(str(PS1) + "\n")
-fout.write(str(ps1) + "\n")
+fout.write(str(PS2) + "\n")
+fout.write(str(ps2) + "\n")
 fout.write(str(PS3) + "\n")
 fout.write(str(ps3) + "\n")
 fout.write(str(PS5) + "\n")
@@ -112,22 +112,22 @@ f.close()
 report_5="OUTPUT/scalers_Run%s.txt" % (runNum)
 f    = open(report_5)
 
-scalList = ['SHMS_pTRIG1 Pre-scaled Pre-triggers','SHMS_pTRIG3 Pre-scaled Pre-triggers', 'SHMS_pTRIG5 Pre-triggers']
+scalList = ['SHMS_pTRIG2 Pre-scaled Pre-triggers','SHMS_pTRIG3 Pre-scaled Pre-triggers', 'SHMS_pTRIG5 Pre-triggers']
 
 for line in f:
     data = line.split(':')
     for index, obj in enumerate(scalList) :
         if (scalList[index] in data[0]) :
             if(index == 0) :  
-                ptrig1_tmp = data[1].split(" ")
+                ptrig2_tmp = data[1].split(" ")
             if(index == 1) :  
                 ptrig3_tmp = data[1].split(" ")
             if(index == 2) :  
                 ptrig5_tmp = data[1].split(" ")
-ptrig1=float(ptrig1_tmp[3])
+ptrig2=float(ptrig2_tmp[3])
 ptrig3=float(ptrig3_tmp[3])
 ptrig5=float(ptrig5_tmp[3])
-fout.write(str(ptrig1) + "\n")
+fout.write(str(ptrig2) + "\n")
 fout.write(str(ptrig3) + "\n")
 fout.write(str(ptrig5))
 f.close()

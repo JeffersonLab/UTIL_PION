@@ -248,7 +248,7 @@ void replay_production_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Define DEF-file+
   analyzer->SetOdefFile("UTIL_PION/DEF-files/coin_production.def");
   // Define cuts file
-  analyzer->SetCutFile("DEF-files/COIN/PRODUCTION/CUTS/coin_production_cuts.def");  // optional
+  analyzer->SetCutFile("UTIL_PION/DEF-files/COIN/PRODUCTION/CUTS/coin_production_cuts.def");  // optional
   //analyzer->SetCutFile("UTIL_KAONLT/DEF-files/coin_production_cuts.def");  // optional
   // File to record accounting information for cuts
   analyzer->SetSummaryFile(Form("REPORT_OUTPUT/COIN/PRODUCTION/summary_production_%d_%d.report", RunNumber, MaxEvent)); // optional

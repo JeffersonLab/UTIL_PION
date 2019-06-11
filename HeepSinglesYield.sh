@@ -32,12 +32,30 @@ elif [[ "${HOSTNAME}" = *"phys.uregina.ca"* ]]; then
 fi
 cd $REPLAYPATH
 
-eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts_Replay/replay_production_coin_HeepSingles.C($RUNNUMBER,$MAXEVENTS)\""
-sleep 15
+eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts_Replay/replay_production_coin_HeepSingles.C($RUNNUMBER,$MAXEVENTS)\"" | tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/COIN/PRODUCTION/PionLT_output_coin_production_${RUNNUMBER}_${MAXEVENTS}.report 
+sleep 5
 cd "$REPLAYPATH/UTIL_PION/scripts_HeepSingles/"
 if [[ "${HOSTNAME}" = *"farm"* && "${HOSTNAME}" != *"ifarm"* ]]; then
     root -l -b -q "run_HeepSinglesYield.C($RUNNUMBER,$MAXEVENTS,5,1)"
 else
     root -l "run_HeepSinglesYield.C($RUNNUMBER,$MAXEVENTS,5,1)"
+fi
+cd "$REPLAYPATH/UTIL_PION"
+python reportSummary_lumi.py $RUNNUMBER $MAXEVENTS
+emacs output.txt
+mv output.txt OUTPUT/scalers_Run$RUNNUMBER.txt
+if [[ -e "OUTPUT/scalers_Run$RUNNUMBER.txt" ]]; then
+    while true; do
+	read -p "Would you like to update the run list as well? (Please answer yes or no) " yn
+	case $yn in
+            [Yy]* ) break;;
+            [Nn]* ) exit;;
+            * ) echo "Please answer yes or no.";;
+	    esac
+    done
+    read -p "What type of production was this run? (e.g. Prod, Heep, ect.)" runType
+    read -p "What was the target? (Dummy, LH2 ..?)" target
+    fillrunList="./fill_runList_lumi $RUNNUMBER $runType $target"
+    eval ${fillrunList}
 fi
 exit 1

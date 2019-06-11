@@ -36,7 +36,7 @@ if [ ! -d "$REPLAYPATH/UTIL_PION/REPORT_OUTPUT/" ]; then
 fi
 cd $REPLAYPATH
 
-#eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts_Replay/replay_production_coin_Lumi.C($RUNNUMBER,$MAXEVENTS)\"" | tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/COIN/PRODUCTION/PionLT_output_coin_production_${RUNNUMBER}_${MAXEVENTS}.report 
+eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts_Replay/replay_production_coin_Lumi.C($RUNNUMBER,$MAXEVENTS)\"" | tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/COIN/PRODUCTION/PionLT_output_coin_production_${RUNNUMBER}_${MAXEVENTS}.report 
 sleep 5
 cd "$REPLAYPATH/UTIL_PION/scripts_Luminosity/"
 if [[ "${HOSTNAME}" = *"farm"* && "${HOSTNAME}" != *"ifarm"* ]]; then
@@ -45,7 +45,7 @@ else
     root -l "run_LumiYield.C($RUNNUMBER,$MAXEVENTS,5,1)"
 fi
 cd "$REPLAYPATH/UTIL_PION"
-python reportSummary.py $RUNNUMBER $MAXEVENTS
+python reportSummary_lumi.py $RUNNUMBER $MAXEVENTS
 emacs output.txt
 mv output.txt OUTPUT/scalers_Run$RUNNUMBER.txt
 if [[ -e "OUTPUT/scalers_Run$RUNNUMBER.txt" ]]; then
