@@ -25,16 +25,16 @@ void HeepSinglesYield::SlaveBegin(TTree * /*tree*/)
 
   EventType   = new TH1F("Event_Type" ,"Counts for each Event Type",20,0,10); 
 
-  TRIG1ROC1     = new TH1F("TRIG1ROC1","ROC1 pTRIG1 counts",4000,-1000.0,2000.0);
+  TRIG2ROC1     = new TH1F("TRIG2ROC1","ROC1 pTRIG2 counts",4000,-1000.0,2000.0);
   TRIG3ROC1     = new TH1F("TRIG3ROC1","ROC1 pTRIG3 counts",4000,-1000.0,2000.0);
   TRIG5ROC1     = new TH1F("TRIG5ROC1","ROC1 pTRIG5 counts",4000,0.0,1000.0);
-  TRIG1ROC1_cut = new TH1F("TRIG1ROC1_cut","ROC1 pTRIG1 counts",4000,-1000.0,1000.0);
+  TRIG2ROC1_cut = new TH1F("TRIG2ROC1_cut","ROC1 pTRIG2 counts",4000,-1000.0,1000.0);
   TRIG3ROC1_cut = new TH1F("TRIG3ROC1_cut","ROC1 pTRIG3 counts",4000,0.0,1000.0);
   TRIG5ROC1_cut = new TH1F("TRIG5ROC1_cut","ROC1 pTRIG5 counts",4000,0.0,1000.0);
-  TRIG1ROC2     = new TH1F("TRIG1ROC2","ROC2 pTRIG1 counts",4000,-1000.0,2000.0);
+  TRIG2ROC2     = new TH1F("TRIG2ROC2","ROC2 pTRIG2 counts",4000,-1000.0,2000.0);
   TRIG3ROC2     = new TH1F("TRIG3ROC2","ROC2 pTRIG3 counts",4000,-1000.0,2000.0);
   TRIG5ROC2     = new TH1F("TRIG5ROC2","ROC2 pTRIG5 counts",4000,0.0,1000.0);
-  TRIG1ROC2_cut = new TH1F("TRIG1ROC2_cut","ROC2 pTRIG1 counts",4000,-1000.0,1000.0);
+  TRIG2ROC2_cut = new TH1F("TRIG2ROC2_cut","ROC2 pTRIG2 counts",4000,-1000.0,1000.0);
   TRIG3ROC2_cut = new TH1F("TRIG3ROC2_cut","ROC2 pTRIG3 counts",4000,0.0,1000.0);
   TRIG5ROC2_cut = new TH1F("TRIG5ROC2_cut","ROC2 pTRIG5 counts",4000,0.0,1000.0);
 
@@ -78,16 +78,16 @@ void HeepSinglesYield::SlaveBegin(TTree * /*tree*/)
   SHMS_W_HGC = new TH2F("SHMS_W_HGC", "SHMS NPE_{HGC}(W); W/GeV; HGC NPE", 200, 0.2, 1.6, 100, 0, 50);
 
   GetOutputList()->Add(EventType);
-  GetOutputList()->Add(TRIG1ROC1);
+  GetOutputList()->Add(TRIG2ROC1);
   GetOutputList()->Add(TRIG3ROC1);
   GetOutputList()->Add(TRIG5ROC1);
-  GetOutputList()->Add(TRIG1ROC1_cut);
+  GetOutputList()->Add(TRIG2ROC1_cut);
   GetOutputList()->Add(TRIG3ROC1_cut);
   GetOutputList()->Add(TRIG5ROC1_cut);
-  GetOutputList()->Add(TRIG1ROC2);
+  GetOutputList()->Add(TRIG2ROC2);
   GetOutputList()->Add(TRIG3ROC2);
   GetOutputList()->Add(TRIG5ROC2);
-  GetOutputList()->Add(TRIG1ROC2_cut);
+  GetOutputList()->Add(TRIG2ROC2_cut);
   GetOutputList()->Add(TRIG3ROC2_cut);
   GetOutputList()->Add(TRIG5ROC2_cut);
 
@@ -152,10 +152,10 @@ Bool_t HeepSinglesYield::Process(Long64_t entry)
   fReader.SetEntry(entry);
   
   EventType->Fill(*EvtType); 
-  if (*T_coin_pTRIG1_ROC1_tdcTime!=0.0) TRIG1ROC1->Fill(*T_coin_pTRIG1_ROC1_tdcTime);
+  if (*T_coin_pTRIG2_ROC1_tdcTime!=0.0) TRIG2ROC1->Fill(*T_coin_pTRIG2_ROC1_tdcTime);
   if (*T_coin_pTRIG3_ROC1_tdcTime!=0.0) TRIG3ROC1->Fill(*T_coin_pTRIG3_ROC1_tdcTime);
   if (*T_coin_pTRIG5_ROC1_tdcTime!=0.0) TRIG5ROC1->Fill(*T_coin_pTRIG5_ROC1_tdcTime);
-  if (*T_coin_pTRIG1_ROC2_tdcTime!=0.0) TRIG1ROC2->Fill(*T_coin_pTRIG1_ROC2_tdcTime); 
+  if (*T_coin_pTRIG2_ROC2_tdcTime!=0.0) TRIG2ROC2->Fill(*T_coin_pTRIG2_ROC2_tdcTime); 
   if (*T_coin_pTRIG3_ROC2_tdcTime!=0.0) TRIG3ROC2->Fill(*T_coin_pTRIG3_ROC2_tdcTime);
   if (*T_coin_pTRIG5_ROC2_tdcTime!=0.0) TRIG5ROC2->Fill(*T_coin_pTRIG5_ROC2_tdcTime);
 
@@ -188,8 +188,8 @@ Bool_t HeepSinglesYield::Process(Long64_t entry)
     SHMS_W_xpfp->Fill(SHMSW[0], P_xpfp[0]);
     SHMS_W_Q2->Fill(SHMSW[0], SHMSQ2[0]);
     SHMS_W_HGC->Fill(SHMSW[0], P_hgcer_npeSum[0]);
-    TRIG1ROC1_cut->Fill(*T_coin_pTRIG1_ROC1_tdcTime);
-    TRIG1ROC2_cut->Fill(*T_coin_pTRIG1_ROC2_tdcTime);
+    TRIG2ROC1_cut->Fill(*T_coin_pTRIG2_ROC1_tdcTime);
+    TRIG2ROC2_cut->Fill(*T_coin_pTRIG2_ROC2_tdcTime);
   }
   
   if(*EvtType==2){ // HMS single
@@ -386,16 +386,16 @@ void HeepSinglesYield::Terminate()
 
   TDirectory *DTiming = Histogram_file->mkdir("Timing and Event Type Summary"); DTiming->cd();
   EventType->Write();
-  TRIG1ROC1->Write();
+  TRIG2ROC1->Write();
   TRIG3ROC1->Write();
   TRIG5ROC1->Write();
-  TRIG1ROC1_cut->Write();
+  TRIG2ROC1_cut->Write();
   TRIG3ROC1_cut->Write();
   TRIG5ROC1_cut->Write();
-  TRIG1ROC2->Write();
+  TRIG2ROC2->Write();
   TRIG3ROC2->Write();
   TRIG5ROC2->Write();
-  TRIG1ROC2_cut->Write();
+  TRIG2ROC2_cut->Write();
   TRIG3ROC2_cut->Write();
   TRIG5ROC2_cut->Write();
 
