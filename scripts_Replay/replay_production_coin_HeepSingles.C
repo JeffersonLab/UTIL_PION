@@ -254,7 +254,6 @@ void replay_production_coin_HeepSingles (Int_t RunNumber = 0, Int_t MaxEvent = 0
   // Start the actual analysis.
   analyzer->Process(run);
   // Create report file from template	       
-  //analyzer->PrintReport("UTIL_PION/TEMPLATES/COIN/coin_production.template",
-  //Form("/home/trottar/ResearchNP/ROOTAnalysis/REPORT_OUTPUT/COIN/PRODUCTION/KaonLT_replay_coin_production_%d_%d.report", RunNumber, MaxEvent));  // optional
-
+  // Create report file from template	       
+  analyzer->PrintReport("UTIL_PION/TEMPLATES/COIN/coin_production.template", Form("UTIL_PION/REPORT_OUTPUT/COIN/PRODUCTION/PionLT_replay_coin_production_%d_%d.report", RunNumber, MaxEvent)); // optional}
 }

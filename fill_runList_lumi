@@ -13,7 +13,7 @@ SHMSMOMENT=$(sed -n -e 's/^.*ppcentral = //p' $KINFILE | tail -1)
 HMSANGLE=$(sed -n -e 's/^.*htheta_lab = //p' $KINFILE | tail -1)
 HMSMOMENT=$(sed -n -e 's/^.*hpcentral = //p' $KINFILE | tail -1)
 EBEAM=$(sed -n -e 's/^.*gpbeam = //p' $KINFILE | tail -1)
-python runlistGatherer.py $RUNNUMBER $RUNTYPE $TARGET
+python runlistGatherer_lumi.py $RUNNUMBER $RUNTYPE $TARGET
 inputFile="tmp"
 if [[ -e "output.txt" ]]; then
     echo "Please close report file for replay and try again!"
@@ -42,7 +42,7 @@ echo "HMS angle: $HMSANGLE"
 echo "Target: $TARGET"
 echo "Beam energy: $EBEAM"
 echo "Current: ${tmp[0]}"
-echo "PS1 : ${tmp[1]}"
+echo "PS2 : ${tmp[1]}"
 echo "PS3 : ${tmp[3]}"
 echo "PS5 : ${tmp[5]}"
 echo "HMS rate [kHz]: ${tmp[7]}"
