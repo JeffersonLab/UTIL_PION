@@ -7,6 +7,8 @@ block P.gtr.*
 block P.hod.goodscinhit
 block P.hod.betanotrack
 block P.dc.ntrack
+block P.dc.x*
+block P.dc.y*
 block P.dc.1x1.nhit
 block P.dc.1u1.nhit
 block P.dc.1v1.nhit
@@ -27,6 +29,8 @@ block H.tr.*
 block H.hod.goodscinhit
 block H.hod.betanotrack
 block H.dc.ntrack
+block H.dc.x*
+block H.dc.y*
 block H.dc.1x1.nhit
 block H.dc.1u1.nhit
 block H.dc.1v1.nhit
