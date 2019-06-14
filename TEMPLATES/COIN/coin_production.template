@@ -286,8 +286,6 @@ DSUM :  H.DSUM.scaler}  [ {(H.DSUM.scaler/H.1MHz.scalerTime)/1000.:%.3f} kHz ]
 
 ptrig                          : {SHMS_event.npassed}
 
-
-
 ****************************
 * Calorimeter Efficiencies *
 ****************************
