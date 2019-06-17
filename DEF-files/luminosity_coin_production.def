@@ -1,5 +1,13 @@
 block P.cal.etotnorm
 block P.cal.etottracknorm
+block P.cal.pr.goodPosAdcPulseInt
+block P.cal.pr.goodNegAdcPulseInt
+block P.cal.fly.goodAdcPulseInt
+block P.hgcer.npe
+block P.cal.nclust
+block P.cal.ntracks
+block P.cal.fly.nclust
+block P.cal.fly.ntracks
 block P.aero.npeSum
 block P.hgcer.npeSum   
 block P.tr.*
