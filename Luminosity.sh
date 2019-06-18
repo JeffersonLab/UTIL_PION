@@ -35,7 +35,17 @@ if [ ! -d "$REPLAYPATH/UTIL_PION/REPORT_OUTPUT/" ]; then
     mkdir "$REPLAYPATH/UTIL_PION/REPORT_OUTPUT/COIN/PRODUCTION"
 fi
 cd $REPLAYPATH
-
+# Create a BCM parameter file for the run if one doesn't exist already
+if [ ! -f "REPLAYPATH/PARAM/HMS/BCM/CALIB/bcmcurrent_$RUNNUMBER.param" ]; then 
+    eval "$REPLAYPATH/hcana -q \"SCRIPTS/COIN/SCALERS/replay_coin_scalers.C($RUNNUMBER,-1)\""
+    cd "$REPLAYPATH/CALIBRATION/bcm_current_map/"
+    if [ ! -f "$REPLAYPATH/CALIBRATION/bcm_current_map/ScalerCalib_C.so" ]; then
+	root -b -l -q "ScalerCalib.C+"
+    fi
+    root -b -l -q "run.C(\"$REPLAYPATH/ROOTfiles/coin_replay_scalers_${RUNNUMBER}_-1.root\")"
+    mv bcmcurrent_$RUNNUMBER.param $REPLAYPATH/PARAM/HMS/BCM/CALIB/bcmcurrent_$RUNNUMBER.param
+    cd $REPLAYPATH
+fi
 eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts_Replay/replay_production_coin_Lumi.C($RUNNUMBER,$MAXEVENTS)\"" | tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/COIN/PRODUCTION/PionLT_output_coin_production_${RUNNUMBER}_${MAXEVENTS}.report 
 sleep 5
 cd "$REPLAYPATH/UTIL_PION/scripts_Luminosity/"
