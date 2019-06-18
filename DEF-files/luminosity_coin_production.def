@@ -9,7 +9,8 @@ block P.cal.ntracks
 block P.cal.fly.nclust
 block P.cal.fly.ntracks
 block P.aero.npeSum
-block P.hgcer.npeSum   
+block P.hgcer.npeSum 
+block P.hod.beta  
 block P.tr.*
 block P.gtr.*
 block P.hod.goodscinhit
@@ -34,6 +35,16 @@ block H.cal.etottracknorm
 block H.cer.npeSum
 block H.gtr.*
 block H.tr.*
+block H.hod.beta
+block H.cal.1pr.goodNegAdcPulseInt
+block H.cal.1pr.goodPosAdcPulseInt
+block H.cal.2ta.goodNegAdcPulseInt
+block H.cal.2ta.goodPosAdcPulseInt
+block H.cal.3ta.goodNegAdcPulseInt
+block H.cal.3ta.goodPosAdcPulseInt
+block H.cal.4ta.goodNegAdcPulseInt
+block H.cal.4ta.goodPosAdcPulseInt
+block H.cal.nclust
 block H.hod.goodscinhit
 block H.hod.betanotrack
 block H.dc.ntrack
