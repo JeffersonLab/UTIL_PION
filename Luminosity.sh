@@ -37,7 +37,7 @@ fi
 cd $REPLAYPATH
 # Create a BCM parameter file for the run if one doesn't exist already
 if [ ! -f "$REPLAYPATH/PARAM/HMS/BCM/CALIB/bcmcurrent_$RUNNUMBER.param" ]; then 
-    eval "$REPLAYPATH/hcana -q \"SCRIPTS/COIN/SCALERS/replay_coin_scalers.C($RUNNUMBER,-1)\""
+    eval "$REPLAYPATH/hcana -l -q \"SCRIPTS/COIN/SCALERS/replay_coin_scalers.C($RUNNUMBER,-1)\""
     cd "$REPLAYPATH/CALIBRATION/bcm_current_map/"
     if [ ! -f "$REPLAYPATH/CALIBRATION/bcm_current_map/ScalerCalib_C.so" ]; then
 	root -b -l -q "ScalerCalib.C+"
