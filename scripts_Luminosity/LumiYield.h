@@ -22,7 +22,7 @@ class LumiYield : public TSelector {
 
   Bool_t          fFullShow = kFALSE;
 
-  Double_t        PS1;
+  Double_t        PS2;
   Double_t        PS3;
 
   TH1F           *h_ecut_before;
@@ -63,10 +63,10 @@ class LumiYield : public TSelector {
   TH1F           *EDTM;
   TH1F           *HMS_EDTM;
   TH1F           *SHMS_EDTM;
-  TH1F           *TRIG1;
+  TH1F           *TRIG2;
   TH1F           *TRIG3;
   TH1F           *TRIG5;
-  TH1F           *TRIG1_cut;
+  TH1F           *TRIG2_cut;
   TH1F           *TRIG3_cut;
   TH1F           *TRIG5_cut;
 
@@ -125,17 +125,17 @@ class LumiYield : public TSelector {
   TTreeReaderArray<Double_t> P_dc_2v2_nhit           = {fReader, "P.dc.2v2.nhit"};
 
   TTreeReaderValue<Double_t> H_bcm_bcm4b_AvgCurrent       = {fReader, "H.bcm.bcm4b.AvgCurrent"};
-  TTreeReaderValue<Double_t> T_coin_pTRIG1_ROC1_tdcTime   = {fReader, "T.coin.pTRIG1_ROC1_tdcTime"};
+  TTreeReaderValue<Double_t> T_coin_pTRIG2_ROC1_tdcTime   = {fReader, "T.coin.pTRIG2_ROC1_tdcTime"};
   TTreeReaderValue<Double_t> T_coin_pTRIG3_ROC1_tdcTime   = {fReader, "T.coin.pTRIG3_ROC1_tdcTime"};
   TTreeReaderValue<Double_t> T_coin_pTRIG5_ROC1_tdcTime   = {fReader, "T.coin.pTRIG5_ROC1_tdcTime"};
-  TTreeReaderValue<Double_t> T_coin_pTRIG1_ROC2_tdcTime   = {fReader, "T.coin.pTRIG1_ROC2_tdcTime"};
+  TTreeReaderValue<Double_t> T_coin_pTRIG2_ROC2_tdcTime   = {fReader, "T.coin.pTRIG2_ROC2_tdcTime"};
   TTreeReaderValue<Double_t> T_coin_pTRIG3_ROC2_tdcTime   = {fReader, "T.coin.pTRIG3_ROC2_tdcTime"};
   TTreeReaderValue<Double_t> T_coin_pTRIG5_ROC2_tdcTime   = {fReader, "T.coin.pTRIG5_ROC2_tdcTime"};
   TTreeReaderValue<Double_t> T_coin_pEDTM_tdcTime         = {fReader, "T.coin.pEDTM_tdcTime"};
   
   TTreeReaderValue<Int_t> EvtType                    = {fReader, "fEvtHdr.fEvtType"};
 
-  LumiYield(TTree * /*tree*/ =0) {h_ecut_before = 0, h_ecut_after = 0, h_ecut_eff = 0, h_dp_before = 0, h_dp_after = 0, h_th_before = 0, h_th_after = 0, h_ph_before = 0, h_ph_after =0, h_show_before=0, h_show_after=0, h_track_before=0, h_track_after=0, h_etrack_before=0, h_etrack_after=0, p_ecut_before = 0, p_ecut_after = 0, p_ecut_eff = 0, p_dp_before = 0, p_dp_after = 0, p_th_before = 0, p_th_after = 0, p_ph_before = 0, p_ph_after =0, p_show_before=0, p_show_after=0, p_track_before=0, p_track_after=0, p_etrack_before=0, p_etrack_after=0, bcm_before=0, bcm_after=0, EventType=0, EDTM=0, SHMS_EDTM=0, HMS_EDTM=0, TRIG1=0,TRIG3=0,TRIG5=0, TRIG1_cut=0,TRIG3_cut=0,TRIG5_cut=0;}
+  LumiYield(TTree * /*tree*/ =0) {h_ecut_before = 0, h_ecut_after = 0, h_ecut_eff = 0, h_dp_before = 0, h_dp_after = 0, h_th_before = 0, h_th_after = 0, h_ph_before = 0, h_ph_after =0, h_show_before=0, h_show_after=0, h_track_before=0, h_track_after=0, h_etrack_before=0, h_etrack_after=0, p_ecut_before = 0, p_ecut_after = 0, p_ecut_eff = 0, p_dp_before = 0, p_dp_after = 0, p_th_before = 0, p_th_after = 0, p_ph_before = 0, p_ph_after =0, p_show_before=0, p_show_after=0, p_track_before=0, p_track_after=0, p_etrack_before=0, p_etrack_after=0, bcm_before=0, bcm_after=0, EventType=0, EDTM=0, SHMS_EDTM=0, HMS_EDTM=0, TRIG2=0,TRIG3=0,TRIG5=0, TRIG2_cut=0,TRIG3_cut=0,TRIG5_cut=0;}
   virtual ~LumiYield() { }
   virtual Int_t   Version() const { return 2; }
   virtual void    Begin(TTree *tree);

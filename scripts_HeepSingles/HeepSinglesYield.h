@@ -25,16 +25,16 @@ class HeepSinglesYield : public TSelector {
 
   TH1F           *EventType;
 
-  TH1F           *TRIG1ROC1; 
+  TH1F           *TRIG2ROC1; 
   TH1F           *TRIG3ROC1; 
   TH1F           *TRIG5ROC1;
-  TH1F           *TRIG1ROC1_cut; 
+  TH1F           *TRIG2ROC1_cut; 
   TH1F           *TRIG3ROC1_cut; 
   TH1F           *TRIG5ROC1_cut; 
-  TH1F           *TRIG1ROC2; 
+  TH1F           *TRIG2ROC2; 
   TH1F           *TRIG3ROC2; 
   TH1F           *TRIG5ROC2;
-  TH1F           *TRIG1ROC2_cut; 
+  TH1F           *TRIG2ROC2_cut; 
   TH1F           *TRIG3ROC2_cut; 
   TH1F           *TRIG5ROC2_cut; 
 
@@ -152,16 +152,16 @@ class HeepSinglesYield : public TSelector {
   TTreeReaderArray<Double_t> P_dc_2v2_nhit           = {fReader, "P.dc.2v2.nhit"};
 
   // Timing
-  TTreeReaderValue<Double_t> T_coin_pTRIG1_ROC1_tdcTime   = {fReader, "T.coin.pTRIG1_ROC1_tdcTime"}; 
+  TTreeReaderValue<Double_t> T_coin_pTRIG2_ROC1_tdcTime   = {fReader, "T.coin.pTRIG2_ROC1_tdcTime"}; 
   TTreeReaderValue<Double_t> T_coin_pTRIG3_ROC1_tdcTime   = {fReader, "T.coin.pTRIG3_ROC1_tdcTime"}; 
   TTreeReaderValue<Double_t> T_coin_pTRIG5_ROC1_tdcTime   = {fReader, "T.coin.pTRIG5_ROC1_tdcTime"}; 
-  TTreeReaderValue<Double_t> T_coin_pTRIG1_ROC2_tdcTime   = {fReader, "T.coin.pTRIG1_ROC2_tdcTime"}; 
+  TTreeReaderValue<Double_t> T_coin_pTRIG2_ROC2_tdcTime   = {fReader, "T.coin.pTRIG2_ROC2_tdcTime"}; 
   TTreeReaderValue<Double_t> T_coin_pTRIG3_ROC2_tdcTime   = {fReader, "T.coin.pTRIG3_ROC2_tdcTime"}; 
   TTreeReaderValue<Double_t> T_coin_pTRIG5_ROC2_tdcTime   = {fReader, "T.coin.pTRIG5_ROC2_tdcTime"}; 
 
   TTreeReaderValue<Double_t> pEDTM              = {fReader, "T.coin.pEDTM_tdcTime"};
 
-  HeepSinglesYield(TTree * /*tree*/ =0) {EventType=0, TRIG1ROC1=0, TRIG3ROC1=0, TRIG5ROC1=0, TRIG1ROC1_cut=0, TRIG3ROC1_cut=0, TRIG5ROC1_cut=0, TRIG1ROC2=0, TRIG3ROC2=0, TRIG5ROC2=0, TRIG1ROC2_cut=0, TRIG3ROC2_cut=0, TRIG5ROC2_cut=0, HMS_delta=0, HMS_delta_cut=0, HMS_th=0, HMS_th_cut=0, HMS_ph=0, HMS_ph_cut=0, HMS_etotnorm_before=0, HMS_etotnorm_cut=0, HMS_cer_before=0, HMS_cer_cut=0, HMS_cal_cer_before =0, HMS_cal_cer_cut=0, HMS_W_Dist=0, HMS_ph_q_Dist=0, HMS_xpfp_Dist=0, HMS_W_xpfp=0, HMS_W_Q2=0, SHMS_delta=0, SHMS_delta_cut=0, SHMS_th=0, SHMS_th_cut=0, SHMS_ph=0, SHMS_ph_cut=0, SHMS_etotnorm_before=0, SHMS_Cal_HGC_before=0, SHMS_Cal_Aero_before=0, SHMS_Aero_HGC_before=0, SHMS_etotnorm_cut=0, SHMS_Cal_HGC_cut=0, SHMS_Cal_Aero_cut=0, SHMS_Aero_HGC_cut=0, SHMS_W_Dist=0, SHMS_ph_q_Dist=0, SHMS_xpfp_Dist=0, SHMS_W_xpfp=0, SHMS_W_Q2=0, SHMS_W_Dist=0, SHMS_ph_q_Dist=0, SHMS_xpfp_Dist=0, SHMS_W_xpfp=0, SHMS_W_Q2=0, SHMS_W_HGC=0;}
+  HeepSinglesYield(TTree * /*tree*/ =0) {EventType=0, TRIG2ROC1=0, TRIG3ROC1=0, TRIG5ROC1=0, TRIG2ROC1_cut=0, TRIG3ROC1_cut=0, TRIG5ROC1_cut=0, TRIG2ROC2=0, TRIG3ROC2=0, TRIG5ROC2=0, TRIG2ROC2_cut=0, TRIG3ROC2_cut=0, TRIG5ROC2_cut=0, HMS_delta=0, HMS_delta_cut=0, HMS_th=0, HMS_th_cut=0, HMS_ph=0, HMS_ph_cut=0, HMS_etotnorm_before=0, HMS_etotnorm_cut=0, HMS_cer_before=0, HMS_cer_cut=0, HMS_cal_cer_before =0, HMS_cal_cer_cut=0, HMS_W_Dist=0, HMS_ph_q_Dist=0, HMS_xpfp_Dist=0, HMS_W_xpfp=0, HMS_W_Q2=0, SHMS_delta=0, SHMS_delta_cut=0, SHMS_th=0, SHMS_th_cut=0, SHMS_ph=0, SHMS_ph_cut=0, SHMS_etotnorm_before=0, SHMS_Cal_HGC_before=0, SHMS_Cal_Aero_before=0, SHMS_Aero_HGC_before=0, SHMS_etotnorm_cut=0, SHMS_Cal_HGC_cut=0, SHMS_Cal_Aero_cut=0, SHMS_Aero_HGC_cut=0, SHMS_W_Dist=0, SHMS_ph_q_Dist=0, SHMS_xpfp_Dist=0, SHMS_W_xpfp=0, SHMS_W_Q2=0, SHMS_W_Dist=0, SHMS_ph_q_Dist=0, SHMS_xpfp_Dist=0, SHMS_W_xpfp=0, SHMS_W_Q2=0, SHMS_W_HGC=0;}
   virtual ~HeepSinglesYield() { }
   virtual Int_t   Version() const { return 2; }
   virtual void    Begin(TTree *tree);

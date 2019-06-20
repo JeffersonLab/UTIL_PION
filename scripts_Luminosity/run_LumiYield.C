@@ -52,14 +52,14 @@ void run_LumiYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_c
   REPORT_file.open (ReportFileNameString);
   Int_t line_num = 0;
   string line;
-  TString line_PS1;
+  TString line_PS2;
   TString line_PS3;
 
   if (REPORT_file.is_open()) {
     while (getline(REPORT_file,line)) {
       line_num++;
-      if (line_num == 90) {
-	line_PS1 = line;
+      if (line_num == 91) {
+	line_PS2 = line;
       }
       if (line_num == 92) {
 	line_PS3 = line;
@@ -68,13 +68,13 @@ void run_LumiYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_c
   }
   
   REPORT_file.close();
-  line_PS1 = line_PS1(13,line_PS1.Length());
+  line_PS2 = line_PS2(13,line_PS2.Length());
   line_PS3 = line_PS3(13,line_PS3.Length());
 
-  Int_t PS1 = line_PS1.Atoi();
+  Int_t PS2 = line_PS2.Atoi();
   Int_t PS3 = line_PS3.Atoi();
 
-  cout << Form("Using prescale factors: PS1 %i, PS3 %i\n",PS1,PS3);
+  cout << Form("Using prescale factors: PS2 %i, PS3 %i\n",PS2,PS3);
 
   ofstream myfile1;
   myfile1.open ("Yield_Data.dat", fstream::app);
@@ -84,7 +84,7 @@ void run_LumiYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_c
   //Begin Counting Good Kaon Events
   TChain ch("T");
   ch.Add(rootFileNameString);
-  TString option = Form("%i.%i",PS1,PS3);
+  TString option = Form("%i.%i",PS2,PS3);
 
   TProof *proof = TProof::Open("workers=4");
   //proof->SetProgressDialog(0);  
