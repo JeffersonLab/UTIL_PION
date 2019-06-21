@@ -76,4 +76,4 @@ if [[ "${HOSTNAME}" = *"cdaq"* ]]; then
 	eval ${fillrunList}
     fi
 fi
-exit 1
+exit 0
