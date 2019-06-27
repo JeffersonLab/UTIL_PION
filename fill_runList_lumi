@@ -4,7 +4,7 @@ RUNNUMBER=$1
 RUNTYPE=$2
 TARGET=$3
 RUNLIST="pion_runlist_summer19.csv"
-KINFILE="../DBASE/COIN/standard_pion.kinematics"
+KINFILE="../DBASE/COIN/standard.kinematics"
 SCALERFILE="OUTPUT/scalers_Run$RUNNUMBER.txt"
 REPORTFILE="../REPORT_OUTPUT/COIN/PRODUCTION/PionLT_replay_coin_production_${RUNNUMBER}_-1.report"
 MONITORFILE="../MON_OUTPUT/REPORT/reportMonitor_shms_${RUNNUMBER}_50000.txt"
@@ -67,5 +67,5 @@ while true; do
     esac
 done
 read -p "Enter neutron events and any other comments: " comment
-echo -e "$RUNNUMBER\t$RUNTYPE\t$SHMSMOMENT\t$SHMSANGLE\t\t$HMSMOMENT\t$HMSANGLE\t\t$TARGET\t$EBEAM\t${tmp[0]}\t${tmp[1]}\t${tmp[3]}\t${tmp[5]}\t${tmp[7]}\t\t${tmp[8]}\t\t${tmp[9]}\t\t${tmp[10]}\t\t${tmp[11]}\t${tmp[12]}\t\t\t!$comment" >> $RUNLIST
+echo -e "$RUNNUMBER\t$RUNTYPE\t$SHMSMOMENT\t$SHMSANGLE\t\t$HMSMOMENT\t$HMSANGLE\t\t$TARGET\t$EBEAM\t${tmp[0]}\t${tmp[1]}\t${tmp[3]}\t${tmp[5]}\t${tmp[7]}\t\t${tmp[8]}\t\t${tmp[9]}\t\t${tmp[10]}\t\t${tmp[11]}\t\t${tmp[12]}\t\t\t!$comment" >> $RUNLIST
     
