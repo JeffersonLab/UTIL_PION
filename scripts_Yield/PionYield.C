@@ -448,7 +448,8 @@ void PionYield::Terminate()
     Arc[k]->SetLineWidth(2);
     Arc[k]->DrawArc(0,0,0.575*(k+1)/(10),0.,360.,"same"); 
   }
-  TGaxis *tradius = new TGaxis(0,0,0.575,0,0,0.05,10,"-+");
+  //make sure that if you change range on the t-phi you change this tradius aswell. The sixth input is the range on the ruler on the t-phi plot. hienricn 2019/06/29
+  TGaxis *tradius = new TGaxis(0,0,0.575,0,0,0.1,10,"-+"); 
   tradius->SetLineColor(2);tradius->SetLabelColor(2);tradius->Draw();
   TLine *phizero = new TLine(0,0,0.6,0); 
   phizero->SetLineColor(kBlack); phizero->SetLineWidth(2); phizero->Draw();
