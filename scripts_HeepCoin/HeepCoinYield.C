@@ -173,13 +173,11 @@ Bool_t HeepCoinYield::Process(Long64_t entry)
   h1mmissp->Fill(sqrt(pow(emiss[0],2)-pow(pmiss[0],2)));
 
   if (H_cal_etotnorm[0] < 0.7 || H_cer_npeSum[0] < 1.5) return kTRUE;
-  // if (H_cal_etotnorm[0] < 0.9 || H_cer_npeSum[0] < 1.5) return kTRUE;
   if (P_cal_etotnorm[0] > 0.6) return kTRUE;
   if (TMath::Abs(H_gtr_dp[0]) > 10.0) return kTRUE;
   if (P_gtr_dp[0] > 20.0 || P_gtr_dp[0] < -10.0) return kTRUE;
-  // if (P_gtr_dp[0] > 10.0 || P_gtr_dp[0] < -22.0) return kTRUE;
   if (TMath::Abs(P_gtr_th[0]) > 0.040) return kTRUE;
-  if (TMath::Abs(P_gtr_ph[0]) > 0.024) return kTRUE;
+  if (TMath::Abs(P_gtr_ph[0]) > 0.03) return kTRUE;
   if (TMath::Abs(H_gtr_th[0]) > 0.080) return kTRUE;
   if (TMath::Abs(H_gtr_ph[0]) > 0.035) return kTRUE;
 

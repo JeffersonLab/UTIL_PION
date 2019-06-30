@@ -1,0 +1,9 @@
+# ............................................................................. 2.758 GeV HeeP and Lumi Runs ..................................................................................................................
+
+Run	Type	P_SHMS	Theta_SHMS      P_HMS	Theta_HMS	Target	Ebeam	Current	PS2	PS3	PS5	HMS-Rate(kHz)	SHMS-Rate(kHz)	COIN-Rate(kHz)	Charge(mC)	Raw-coin	SHMS_h_tracking	        Comment
+
+
+
+# ............................................................................. 2.758 GeV Production ..........................................................................................................................
+
+Run	Type	P_SHMS	Theta_SHMS      P_HMS	Theta_HMS	Target	Ebeam	Current	PS1	PS3	PS5	HMS-Rate(kHz)	SHMS-Rate(kHz)	COIN-Rate(kHz)	Charge(mC)	Raw-coin	SHMS_h_tracking	        Comment

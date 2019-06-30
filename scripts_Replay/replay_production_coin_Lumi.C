@@ -1,4 +1,4 @@
-void replay_production_coin_HeepSingles (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
+void replay_production_coin_Lumi (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -11,7 +11,7 @@ void replay_production_coin_HeepSingles (Int_t RunNumber = 0, Int_t MaxEvent = 0
     cin >> MaxEvent;
     if(MaxEvent == 0) {
       cerr << "...Invalid entry\n";
-      //exit;
+      exit;
     }
   }
 
@@ -20,13 +20,12 @@ void replay_production_coin_HeepSingles (Int_t RunNumber = 0, Int_t MaxEvent = 0
   vector<TString> pathList;
   pathList.push_back(".");
   pathList.push_back("./raw");
+  pathList.push_back("./raw_volatile");
   pathList.push_back("./raw/../raw.copiedtotape");
   pathList.push_back("./cache");
-  pathList.push_back("./raw_volatile");
 
   //const char* RunFileNamePattern = "raw/coin_all_%05d.dat";
   const char* ROOTFileNamePattern = "ROOTfilesPion/PionLT_coin_replay_production_%d_%d.root";
-  
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
   gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard.database");
@@ -39,8 +38,8 @@ void replay_production_coin_HeepSingles (Int_t RunNumber = 0, Int_t MaxEvent = 0
   gHcParms->Load("PARAM/HMS/GEN/h_fadc_debug.param");
   gHcParms->Load("PARAM/SHMS/GEN/p_fadc_debug.param");
   // Load params for BCM
-  // const char* CurrentFileNamePattern = "PARAM/HMS/BCM/CALIB/bcmcurrent_%d.param";
-  // gHcParms->Load(Form(CurrentFileNamePattern, RunNumber));
+  const char* CurrentFileNamePattern = "PARAM/HMS/BCM/CALIB/bcmcurrent_%d.param";
+  gHcParms->Load(Form(CurrentFileNamePattern, RunNumber));
 
   // Load the Hall C detector map
   gHcDetectorMap = new THcDetectorMap();
@@ -58,9 +57,6 @@ void replay_production_coin_HeepSingles (Int_t RunNumber = 0, Int_t MaxEvent = 0
   SHMS->AddEvtType(6);
   SHMS->AddEvtType(7);
   gHaApps->Add(SHMS);
-  // Add Noble Gas Cherenkov to SHMS apparatus
-  //THcCherenkov* pngcer = new THcCherenkov("ngcer", "Noble Gas Cherenkov");
-  //SHMS->AddDetector(pngcer);
   // Add drift chambers to SHMS apparatus
   THcDC* pdc = new THcDC("dc", "Drift Chambers");
   SHMS->AddDetector(pdc);
@@ -127,10 +123,6 @@ void replay_production_coin_HeepSingles (Int_t RunNumber = 0, Int_t MaxEvent = 0
   // Add Cherenkov to HMS apparatus
   THcCherenkov* hcer = new THcCherenkov("cer", "Heavy Gas Cherenkov");
   HMS->AddDetector(hcer);
-  // Add Aerogel Cherenkov to HMS apparatus
-  // THcAerogel* haero = new THcAerogel("aero", "Aerogel");
-  // HMS->AddDetector(haero);
-  // Add calorimeter to HMS apparatus
   THcShower* hcal = new THcShower("cal", "Calorimeter");
   HMS->AddDetector(hcal);
 
@@ -151,8 +143,8 @@ void replay_production_coin_HeepSingles (Int_t RunNumber = 0, Int_t MaxEvent = 0
   THcHodoEff* heff = new THcHodoEff("hhodeff", "HMS hodo efficiency", "H.hod");
   gHaPhysics->Add(heff);
   // Add BCM Current check
-  // THcBCMCurrent* hbc = new THcBCMCurrent("H.bcm", "BCM current check");
-  // gHaPhysics->Add(hbc);
+  THcBCMCurrent* hbc = new THcBCMCurrent("H.bcm", "BCM current check");
+  gHaPhysics->Add(hbc);
 
   // Add event handler for scaler events
   THcScalerEvtHandler *hscaler = new THcScalerEvtHandler("H", "Hall C scaler event type 4");  
@@ -170,12 +162,17 @@ void replay_production_coin_HeepSingles (Int_t RunNumber = 0, Int_t MaxEvent = 0
   // Kinematics Modules
   //=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=
 
-  // Add Physics Module to calculate primary (scattered electrons) beam kinematics
+  // Add Physics Module to calculate primary (scattered electrons) beam kinematics 
   THcPrimaryKine* hkin_primary = new THcPrimaryKine("H.kin.primary", "HMS Single Arm Kinematics", "H", "H.rb");
   THcPrimaryKine* pkin_primary = new THcPrimaryKine("P.kin.primary", "SHMS Single Arm Kinematics", "P", "P.rb");
   gHaPhysics->Add(hkin_primary);
   gHaPhysics->Add(pkin_primary);
-    
+ // Add Physics Module to calculate secondary (scattered hadrons) beam kinematics
+  THcSecondaryKine* hkin_secondary = new THcSecondaryKine("H.kin.secondary", "HMS Single Arm Kinematics", "H", "P.kin.primary");
+  THcSecondaryKine* pkin_secondary = new THcSecondaryKine("P.kin.secondary", "SHMS Single Arm Kinematics", "P", "H.kin.primary");
+  gHaPhysics->Add(hkin_secondary);
+  gHaPhysics->Add(pkin_secondary);
+
   //=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=
   // Global Objects & Event Handlers
   //=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=
@@ -245,13 +242,14 @@ void replay_production_coin_HeepSingles (Int_t RunNumber = 0, Int_t MaxEvent = 0
   // Define output ROOT file
   analyzer->SetOutFile(ROOTFileName.Data());
   // Define DEF-file+
-  analyzer->SetOdefFile("UTIL_PION/DEF-files/HeepSingles_Production.def");
+  analyzer->SetOdefFile("UTIL_PION/DEF-files/luminosity_coin_production.def");
   // Define cuts file
-  analyzer->SetCutFile("UTIL_PION/DEF-files/HeepSingles_Production_Cuts.def");  // optional
+  analyzer->SetCutFile("UTIL_PION/DEF-files/luminosity_coin_production_cuts.def");  // optional
   // File to record accounting information for cuts
-  analyzer->SetSummaryFile(Form("REPORT_OUTPUT/COIN/PRODUCTION/summary_production_%d_%d.report", RunNumber, MaxEvent)); // optional
+  analyzer->SetSummaryFile(Form("UTIL_PION/REPORT_OUTPUT/COIN/PRODUCTION/summary_production_%d_%d.report", RunNumber, MaxEvent));  // optional
   // Start the actual analysis.
   analyzer->Process(run);
   // Create report file from template	       
   analyzer->PrintReport("UTIL_PION/TEMPLATES/COIN/coin_production.template", Form("UTIL_PION/REPORT_OUTPUT/COIN/PRODUCTION/PionLT_replay_coin_production_%d_%d.report", RunNumber, MaxEvent)); // optional}
+  
 }
