@@ -270,7 +270,7 @@ void LumiYield::Terminate()
   if(PS3 == 0) PS3 = 1;
   cout << Form("Total number of events: %.0f\n",EventType->GetEntries());
   cout << Form("Number of EDTM  Events: %.0f\n",(PS2*SHMS_EDTM->Integral() + PS3*HMS_EDTM->Integral()));
-  cout << Form("Number of TRIG1 Events: %.0f\n",(PS2*TRIG2_cut->Integral()));
+  cout << Form("Number of TRIG2 Events: %.0f\n",(PS2*TRIG2_cut->Integral()));
   cout << Form("Number of TRIG3 Events: %.0f\n",(PS3*TRIG3_cut->Integral()));
   //cout << Form("Number of TRIG5 Events: %.0f\n\n",TRIG5->Integral());
 

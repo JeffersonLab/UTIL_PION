@@ -46,6 +46,7 @@ if [ ! -f "$REPLAYPATH/PARAM/HMS/BCM/CALIB/bcmcurrent_$RUNNUMBER.param" ]; then
     mv bcmcurrent_$RUNNUMBER.param $REPLAYPATH/PARAM/HMS/BCM/CALIB/bcmcurrent_$RUNNUMBER.param
     cd $REPLAYPATH
 fi
+sleep 10
 if [ ! -f "$REPLAYPATH/ROOTfilesPion/PionLT_coin_replay_production_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
     eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts_Replay/replay_production_coin_Lumi.C($RUNNUMBER,$MAXEVENTS)\"" | tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/COIN/PRODUCTION/PionLT_output_coin_production_${RUNNUMBER}_${MAXEVENTS}.report 
 fi

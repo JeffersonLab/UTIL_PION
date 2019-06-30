@@ -58,10 +58,10 @@ void run_LumiYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_c
   if (REPORT_file.is_open()) {
     while (getline(REPORT_file,line)) {
       line_num++;
-      if (line_num == 91) {
+      if (line_num == 92) {
 	line_PS2 = line;
       }
-      if (line_num == 92) {
+      if (line_num == 93) {
 	line_PS3 = line;
       }
     }
