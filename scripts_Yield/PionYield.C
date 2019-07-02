@@ -104,8 +104,9 @@ void PionYield::SlaveBegin(TTree * /*tree*/)
   h1mmissp_cut            = new TH1F("mmissp_cut","Proton Missing mass with Cuts;Mass (GeV/c^{2});Counts",200,0.0,2.0);
   h1mmissp_remove         = new TH1F("mmissp_remove","Proton Missing mass with Cuts (Random Subtracted);Mass (GeV/c^{2});Counts",200,0.0,2.0);
 
-  h2WvsQ2                 = new TH2F("WvsQ2","Q2 vs W;Q2;W",200,0.2,0.65,200,2,2.35);
-  h2tvsph_q               = new TH2F("tvsph_q",";#phi;t",12,-3.14,3.14,16,0.0,0.1); // Increased Ymax to 0.1 SK 28/6/19
+  //  h2WvsQ2                 = new TH2F("WvsQ2","Q2 vs W;Q2;W",200,1.0,1.8,200,1.8,2.4);
+  h2WvsQ2                 = new TH2F("WvsQ2","Q2 vs W;Q2;W",200,1.0,2.0,200,1.8,2.4);
+  h2tvsph_q               = new TH2F("tvsph_q",";#phi;t",12,-3.14,3.14,16,0.0,0.4); // Increased Ymax to 0.1 SK 28/6/19
   h1epsilon               = new TH1F("epsilon","Plot of Epsilon;#epsilon;Counts",100,0.0,1.0);
 
   h1EDTM                  = new TH1F("EDTM","EDTM Time;EDTM TDC Time;Counts",10000,-5000,5000);
@@ -205,7 +206,8 @@ Bool_t PionYield::Process(Long64_t entry)
   // Cuts that all particle species share in common
   // if (P_cal_etotnorm[0] > 0.6) return kTRUE; // Check SHMS doesn't see a positron
   if (H_cal_etotnorm[0] < 0.4 || H_cer_npeSum[0] < 1.5) return kTRUE; // Check HMS sees an electron
-  if (H_gtr_dp[0] > 17.0 || H_gtr_dp[0] < -13.0) return kTRUE;
+  //  if (H_gtr_dp[0] > 17.0 || H_gtr_dp[0] < -13.0) return kTRUE;
+  if (H_gtr_dp[0] > 8.0 || H_gtr_dp[0] < -8.0) return kTRUE; // add HMS delta cuts
   if (P_gtr_dp[0] > 20.0 || P_gtr_dp[0] < -10.0) return kTRUE; // Cut on delta
   if (TMath::Abs(P_gtr_th[0]) > 0.060) return kTRUE; // Cut on theta/phi for SHMS/HMS, broadened from 0.4/0.024 to current values
   if (TMath::Abs(P_gtr_ph[0]) > 0.040) return kTRUE; // Without these we see too much crap in the t-phi plot
@@ -449,7 +451,7 @@ void PionYield::Terminate()
     Arc[k]->DrawArc(0,0,0.575*(k+1)/(10),0.,360.,"same"); 
   }
   //make sure that if you change range on the t-phi you change this tradius aswell. The sixth input is the range on the ruler on the t-phi plot. hienricn 2019/06/29
-  TGaxis *tradius = new TGaxis(0,0,0.575,0,0,0.1,10,"-+"); 
+  TGaxis *tradius = new TGaxis(0,0,0.575,0,0,0.4,10,"-+"); 
   tradius->SetLineColor(2);tradius->SetLabelColor(2);tradius->Draw();
   TLine *phizero = new TLine(0,0,0.6,0); 
   phizero->SetLineColor(kBlack); phizero->SetLineWidth(2); phizero->Draw();
