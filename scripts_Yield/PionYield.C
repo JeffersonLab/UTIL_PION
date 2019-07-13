@@ -105,7 +105,7 @@ void PionYield::SlaveBegin(TTree * /*tree*/)
   h1mmissp_remove         = new TH1F("mmissp_remove","Proton Missing mass with Cuts (Random Subtracted);Mass (GeV/c^{2});Counts",200,0.0,2.0);
 
   //  h2WvsQ2                 = new TH2F("WvsQ2","Q2 vs W;Q2;W",200,1.0,1.8,200,1.8,2.4);
-  h2WvsQ2                 = new TH2F("WvsQ2","Q2 vs W;Q2;W",200,1.0,2.0,200,1.8,2.4);
+  h2WvsQ2                 = new TH2F("WvsQ2","Q2 vs W;Q2;W",200,0.1,1.0,200,1.8,2.4);
   h2tvsph_q               = new TH2F("tvsph_q",";#phi;t",12,-3.14,3.14,16,0.0,0.4); // Increased Ymax to 0.1 SK 28/6/19
   h1epsilon               = new TH1F("epsilon","Plot of Epsilon;#epsilon;Counts",100,0.0,1.0);
 
