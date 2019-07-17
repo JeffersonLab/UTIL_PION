@@ -4,7 +4,7 @@
 #include <string>
 #include <stdio.h>
 
-void Q1p45W2p02Right1()
+void Q1p45W2p02Right()
 {
   TChain ch("T");
   ch.Add("/net/cdaq/cdaql1data/cdaq/hallc-online/ROOTfiles/PionLT_coin_replay_production_8573_-1.root");
