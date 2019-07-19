@@ -105,7 +105,7 @@ void PionYield::SlaveBegin(TTree * /*tree*/)
   h1mmissp_remove         = new TH1F("mmissp_remove","Proton Missing mass with Cuts (Random Subtracted);Mass (GeV/c^{2});Counts",200,0.0,2.0);
 
   //  h2WvsQ2                 = new TH2F("WvsQ2","Q2 vs W;Q2;W",200,1.0,1.8,200,1.8,2.4);
-  h2WvsQ2                 = new TH2F("WvsQ2","Q2 vs W;Q2;W",200,0.1,1.0,200,1.8,2.4);
+  h2WvsQ2                 = new TH2F("WvsQ2","Q2 vs W;Q2;W",200,0.1,2.,200,1.8,2.4);
   h2tvsph_q               = new TH2F("tvsph_q",";#phi;t",12,-3.14,3.14,16,0.0,0.4); // Increased Ymax to 0.1 SK 28/6/19
   h1epsilon               = new TH1F("epsilon","Plot of Epsilon;#epsilon;Counts",100,0.0,1.0);
 
@@ -351,7 +351,7 @@ void PionYield::Terminate()
   TString outputpng_coin = foutname + "_coin.png";
   TString outputpdf = foutname + ".pdf";
   
-  TCanvas *cCuts = new TCanvas("Cuts","Summary of Common Cuts");
+  TCanvas *cCuts = new TCanvas("Cuts","Summary of Common Cuts",100,0,1000,900);
   cCuts->Divide(2,4);
   cCuts->cd(1); h1HMS_delta->Draw();
   cCuts->cd(2); h1HMS_delta_cut->Draw();
@@ -363,7 +363,7 @@ void PionYield::Terminate()
   cCuts->cd(8); h1SHMS_electron_cut->Draw();
   cCuts->Print(outputpdf + '(');
 
-  TCanvas *cAngles = new TCanvas("Angles","Summary of Angular Cuts");
+  TCanvas *cAngles = new TCanvas("Angles","Summary of Angular Cuts",200,50,1000,900);
   cAngles->Divide(2,4);
   cAngles->cd(1); h1HMS_th->Draw();
   cAngles->cd(2); h1HMS_th_cut->Draw();
@@ -375,7 +375,7 @@ void PionYield::Terminate()
   cAngles->cd(8); h1SHMS_ph_cut->Draw();
   cAngles->Print(outputpdf);
 
-  TCanvas *cID = new TCanvas("ID","Summary of Pion Particle ID Cuts");
+  TCanvas *cID = new TCanvas("ID","Summary of Pion Particle ID Cuts",300,100,1000,900);
   cID->Divide(2,4);
   cID->cd(1); h2SHMS_AERO_HGC->Draw("Colz");
   cID->cd(2); h2SHMSpi_kaon_cut->Draw("Colz");
@@ -405,7 +405,7 @@ void PionYield::Terminate()
   GausBack->Draw("same");  
   cID->Print(outputpdf);
   
-  TCanvas *cCoinTime = new TCanvas("cCoinTime","Summary of coincidence time and random");
+  TCanvas *cCoinTime = new TCanvas("cCoinTime","Summary of coincidence time and random",400,150,1000,900);
   cCoinTime->Divide(2,2);
   cCoinTime->cd(1);
   h1mmisspi_cut->Draw();
@@ -421,7 +421,7 @@ void PionYield::Terminate()
   cCoinTime->Print(outputpng_coin);
   cCoinTime->Print(outputpdf);
 
-  TCanvas *cKine = new TCanvas("Kine","Summary of Higher Order Kinematics");
+  TCanvas *cKine = new TCanvas("Kine","Summary of Higher Order Kinematics",500,200,1000,900);
   cKine->Divide(2,2);
   cKine->cd(1); h2WvsQ2->Draw("Colz"); 
   h2WvsQ2->SetTitleOffset(1.0,"Y");
@@ -467,7 +467,7 @@ void PionYield::Terminate()
   TLine *NeutronMass_Full = new TLine(0.939565,gPad->GetUymin(),0.939565,gPad->GetUymax()); 
   NeutronMass_Full->SetLineColor(kBlue); NeutronMass_Full->SetLineWidth(2); NeutronMass_Full->SetLineStyle(2);
   NeutronMass_Full->Draw();
-  TPaveText *ptNeutronEvt = new TPaveText(0.58934,0.715354,0.80000,0.81576,"NDC");
+  TPaveText *ptNeutronEvt = new TPaveText(0.58934,0.715354,0.95,0.81576,"NDC");
   TAxis *MMAxis = h1mmisspi_remove->GetXaxis();
   Int_t BinLow = MMAxis->FindBin(0.92);
   Int_t BinHigh = MMAxis->FindBin(0.98);
