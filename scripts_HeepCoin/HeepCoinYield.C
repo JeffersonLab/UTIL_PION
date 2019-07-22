@@ -79,10 +79,10 @@ void HeepCoinYield::SlaveBegin(TTree * /*tree*/)
   h1HMS_ph              = new TH1F("HMS_ph","HMS Phi Acceptance;#phi;Counts",100,-0.1,0.1);
   h1HMS_ph_cut          = new TH1F("HMS_ph_cut","HMS Phi Acceptance with Cut;#phi;Counts",100,-0.1,0.1);
 
-  h1mmissp                = new TH1F("mmissp","Proton Missing Mass Squared;Mass (GeV/c^{2})^{2};Counts",200,-0.5,0.5);
-  h1mmissp_rand           = new TH1F("mmissp_rand","Proton Missing Mass Squared from Random Coincidence;Mass (GeV/c^{2})^{2};Counts",200,-0.5,0.5);
-  h1mmissp_cut            = new TH1F("mmissp_cut","Proton Missing Mass Squared with Cuts;Mass (GeV/c^{2})^{2};Counts",200,-0.5,0.5);
-  h1mmissp_remove         = new TH1F("mmissp_remove","Proton Missing Mass Squared with Cuts (inc. Rand);Mass (GeV/c^{2})^{2};Counts",200,-0.5,0.5);
+  h1mmissp                = new TH1F("mmissp","Proton Missing Mass Squared;Mass (GeV/c^{2})^{2};Counts",200,-0.1,0.1);
+  h1mmissp_rand           = new TH1F("mmissp_rand","Proton Missing Mass Squared from Random Coincidence;Mass (GeV/c^{2})^{2};Counts",200,-0.1,0.1);
+  h1mmissp_cut            = new TH1F("mmissp_cut","Proton Missing Mass Squared with Cuts;Mass (GeV/c^{2})^{2};Counts",200,-0.1,0.1);
+  h1mmissp_remove         = new TH1F("mmissp_remove","Proton Missing Mass Squared with Cuts (inc. Rand);Mass (GeV/c^{2})^{2};Counts",200,-0.1,0.1);
 
   h2WvsQ2                 = new TH2F("WvsQ2","Q^{2} vs W;Q^{2};W",400,1,4,100,0.5,1.5);
   h2tvsph_q               = new TH2F("tvsph_q",";#phi;t",25,-3.14,3.14,16,-1.0,-0.5); //this seems to have negitive values of -t (as in t is positive to begin with) heinricn 2019/06/30
