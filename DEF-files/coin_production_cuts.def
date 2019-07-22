@@ -48,3 +48,4 @@ HMS_ELEC              H.cal.etotnorm>.35&&H.cer.npeSum>1.2
 GOOD_EVENT           COIN_TRACK_FOUND&&AEROGEL_PION&&DELTA_SHMS&&DELTA_HMS&&HMS_ELEC
 
 Physics_master GOOD_EVENT
+#Physics_master COIN_TRACK_FOUND
