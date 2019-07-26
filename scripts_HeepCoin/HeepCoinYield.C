@@ -79,13 +79,13 @@ void HeepCoinYield::SlaveBegin(TTree * /*tree*/)
   h1HMS_ph              = new TH1F("HMS_ph","HMS Phi Acceptance;#phi;Counts",100,-0.1,0.1);
   h1HMS_ph_cut          = new TH1F("HMS_ph_cut","HMS Phi Acceptance with Cut;#phi;Counts",100,-0.1,0.1);
 
-  h1mmissp                = new TH1F("mmissp","Proton Missing Mass Squared;Mass (GeV/c^{2})^{2};Counts",200,-0.5,0.5);
-  h1mmissp_rand           = new TH1F("mmissp_rand","Proton Missing Mass Squared from Random Coincidence;Mass (GeV/c^{2})^{2};Counts",200,-0.5,0.5);
-  h1mmissp_cut            = new TH1F("mmissp_cut","Proton Missing Mass Squared with Cuts;Mass (GeV/c^{2})^{2};Counts",200,-0.5,0.5);
-  h1mmissp_remove         = new TH1F("mmissp_remove","Proton Missing Mass Squared with Cuts (inc. Rand);Mass (GeV/c^{2})^{2};Counts",200,-0.5,0.5);
+  h1mmissp                = new TH1F("mmissp","Proton Missing Mass Squared;Mass (GeV/c^{2})^{2};Counts",200,-0.1,0.1);
+  h1mmissp_rand           = new TH1F("mmissp_rand","Proton Missing Mass Squared from Random Coincidence;Mass (GeV/c^{2})^{2};Counts",200,-0.1,0.1);
+  h1mmissp_cut            = new TH1F("mmissp_cut","Proton Missing Mass Squared with Cuts;Mass (GeV/c^{2})^{2};Counts",200,-0.1,0.1);
+  h1mmissp_remove         = new TH1F("mmissp_remove","Proton Missing Mass Squared with Cuts (inc. Rand);Mass (GeV/c^{2})^{2};Counts",200,-0.1,0.1);
 
-  h2WvsQ2                 = new TH2F("WvsQ2","Q^{2} vs W;Q^{2};W",400,0.0,10.0,100,0.5,2.0);
-  h2tvsph_q               = new TH2F("tvsph_q",";#phi;t",25,-1.0,1.0,10,-1.0,1.0);
+  h2WvsQ2                 = new TH2F("WvsQ2","Q^{2} vs W;Q^{2};W",400,1,4,100,0.5,1.5);
+  h2tvsph_q               = new TH2F("tvsph_q",";#phi;t",25,-3.14,3.14,16,-1.0,-0.5); //this seems to have negitive values of -t (as in t is positive to begin with) heinricn 2019/06/30
   h1epsilon               = new TH1F("epsilon","Plot of Epsilon;#epsilon;Counts",100,0.0,1.0);
 
   h1pmiss                 = new TH1F("pmiss","Plot of P_{miss};P_{miss} GeV/c;Counts",1000,-1.0,1.0);
@@ -172,16 +172,15 @@ Bool_t HeepCoinYield::Process(Long64_t entry)
 
   h1mmissp->Fill(sqrt(pow(emiss[0],2)-pow(pmiss[0],2)));
 
-  if (H_cal_etotnorm[0] < 0.7 || H_cer_npeSum[0] < 1.5) return kTRUE;
-  // if (H_cal_etotnorm[0] < 0.9 || H_cer_npeSum[0] < 1.5) return kTRUE;
-  if (P_cal_etotnorm[0] > 0.6) return kTRUE;
-  if (TMath::Abs(H_gtr_dp[0]) > 10.0) return kTRUE;
-  if (P_gtr_dp[0] > 20.0 || P_gtr_dp[0] < -10.0) return kTRUE;
-  // if (P_gtr_dp[0] > 10.0 || P_gtr_dp[0] < -22.0) return kTRUE;
-  if (TMath::Abs(P_gtr_th[0]) > 0.040) return kTRUE;
-  if (TMath::Abs(P_gtr_ph[0]) > 0.024) return kTRUE;
-  if (TMath::Abs(H_gtr_th[0]) > 0.080) return kTRUE;
-  if (TMath::Abs(H_gtr_ph[0]) > 0.035) return kTRUE;
+  // Cuts that all particle species share in common
+  // if (P_cal_etotnorm[0] > 0.6) return kTRUE; // Check SHMS doesn't see a positron
+  if (H_cal_etotnorm[0] < 0.4 || H_cer_npeSum[0] < 1.5) return kTRUE; // Check HMS sees an electron
+  if (H_gtr_dp[0] > 17.0 || H_gtr_dp[0] < -13.0) return kTRUE;
+  if (P_gtr_dp[0] > 20.0 || P_gtr_dp[0] < -10.0) return kTRUE; // Cut on delta
+  if (TMath::Abs(P_gtr_th[0]) > 0.060) return kTRUE; // Cut on theta/phi for SHMS/HMS, broadened from 0.4/0.024 to current values
+  if (TMath::Abs(P_gtr_ph[0]) > 0.040) return kTRUE; // Without these we see too much crap in the t-phi plot
+  if (TMath::Abs(H_gtr_th[0]) > 0.080) return kTRUE; // Keep them in, they will need tweaking in future
+  if (TMath::Abs(H_gtr_ph[0]) > 0.045) return kTRUE;
 
   h2HMS_electron_cut->Fill(H_cal_etotnorm[0],H_cer_npeSum[0]);
   h1SHMS_electron_cut->Fill(P_cal_etotnorm[0]);
@@ -196,9 +195,10 @@ Bool_t HeepCoinYield::Process(Long64_t entry)
 
   if (P_aero_npeSum[0] < 1.5 && P_hgcer_npeSum[0] < 1.5) { //Event identified as Proton
     h2ROC1_Coin_Beta_noID_proton->Fill((CTime_epCoinTime_ROC1[0] - 43.5),P_gtr_beta[0]); 
-    if (abs(P_gtr_beta[0]-1.00) > 0.15) return kTRUE;
+    if (abs(P_gtr_beta[0]-1.00) > 0.2) return kTRUE; // changed cut to be slightly wider (from +- 0.15) heinricn 19/06/30
     h1misspcut_CT->Fill( CTime_epCoinTime_ROC1[0] - 43.5, sqrt(pow(emiss[0],2)-pow(pmiss[0],2)));
-    if (abs((CTime_epCoinTime_ROC1[0] - 43.5)) < 2.0) {
+    if (abs((CTime_epCoinTime_ROC1[0] - 43.5) - 1) < 2.0) //shifted right by 1ns heinricn 19/06/30
+    {
       h2ROC1_Coin_Beta_proton->Fill((CTime_epCoinTime_ROC1[0] - 43.5),P_gtr_beta[0]);
       h2SHMSp_kaon_cut->Fill(P_aero_npeSum[0],P_hgcer_npeSum[0]);
       h2SHMSp_pion_cut->Fill(P_cal_etotnorm[0],P_hgcer_npeSum[0]);
@@ -307,7 +307,7 @@ void HeepCoinYield::Terminate()
   cpID->cd(2); h2SHMSp_kaon_cut->Draw("Colz");
   cpID->cd(3); h2SHMSp_pion->Draw("Colz");
   cpID->cd(4); h2SHMSp_pion_cut->Draw("Colz");
-  cpID->cd(5); h2ROC1_Coin_Beta_noID_proton->Draw("Colz");
+  cpID->cd(5); h2ROC1_Coin_Beta_noID_proton->Draw("Colz"); /******************************************************/
   TLine *LowerRand = new TLine(3.0,0.0,3.0,2.0);
   LowerRand->SetLineColor(kRed); LowerRand->SetLineWidth(1); LowerRand->Draw(); 
   TLine *UpperRand = new TLine(15.0,0.0,15.0,2.0);
@@ -347,7 +347,7 @@ void HeepCoinYield::Terminate()
     Arc[k]->SetLineWidth(2);
     Arc[k]->DrawArc(0,0,0.575*(k+1)/(10),0.,360.,"same");
   }
-  TGaxis *tradius = new TGaxis(0,0,0.575,0,0,2,10,"-+");
+  TGaxis *tradius = new TGaxis(0,0,0.575,0,-1.0,-0.5,10,"-+");
   tradius->SetLineColor(2);tradius->SetLabelColor(2);tradius->Draw();
   TLine *phizero = new TLine(0,0,1,0); 
   phizero->SetLineColor(kBlack); phizero->SetLineWidth(2); phizero->Draw(); 

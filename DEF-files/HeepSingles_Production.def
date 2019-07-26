@@ -1,6 +1,3 @@
-block CTime.eKCoinTime_ROC1
-block CTime.ePiCoinTime_ROC1
-block CTime.epCoinTime_ROC1      
 block H.gtr.*
 block P.gtr.*
 block H.tr.*
@@ -20,8 +17,8 @@ block P.dc.2v1.nhit
 block P.dc.2x2.nhit
 block P.dc.2u2.nhit
 block P.dc.2v2.nhit
-block P.dc.x_fp
-block P.dc.xp_fp
+block P.dc.x*
+block P.dc.y*
 block H.hod.goodscinhit
 block H.hod.betanotrack
 block H.dc.ntrack
@@ -37,8 +34,8 @@ block H.dc.2v1.nhit
 block H.dc.2x2.nhit
 block H.dc.2u2.nhit
 block H.dc.2v2.nhit
-block H.dc.x_fp
-block H.dc.xp_fp
+block H.dc.x*
+block H.dc.y*
 block H.cal.etotnorm
 block H.cer.npeSum
 block P.cal.etotnorm
@@ -53,12 +50,13 @@ block T.coin.pTRIG*
 block T.coin.pTRIG5_ROC2_tdcTime
 block T.coin.pEDTM_tdcTime
 block T.helicity.hel
-block T.helicity.helrep
-block T.helicity.mps
 block T.coin.pRF*
 block T.coin.hRF*
-block T.helicity.hel
 
 begin epics
-
+ibcm1
+ibcm2
+iunser
+itov3out
+itov4out
 end epics

@@ -24,7 +24,7 @@ void LumiYield::SlaveBegin(TTree * /*tree*/)
   // The tree argument is deprecated (on PROOF 0 is passed).
 
   TString option = GetOption();
-  TString PS1_temp = option(0,option.Index("."));
+  TString PS2_temp = option(0,option.Index("."));
   TString PS3_temp = option(option.Index(".")+1,option.Length());
    
   h_ecut_before = new TH1F("h_ecut_before","HMS CER counts before electron cut",100,0.0,20);
@@ -63,10 +63,10 @@ void LumiYield::SlaveBegin(TTree * /*tree*/)
   EDTM  = new TH1F("EDTM","EDTM counts",4000,-1000.0,2000.0);
   HMS_EDTM  = new TH1F("HMS_EDTM","HMS EDTM counts",4000,-1000.0,1000.0);
   SHMS_EDTM = new TH1F("SHMS_EDTM","SHMS EDTM counts",4000,-1000.0,2000.0);
-  TRIG1     = new TH1F("TRIG1","pTRIG1 counts",4000,-1000.0,2000.0);
+  TRIG2     = new TH1F("TRIG2","pTRIG2 counts",4000,-1000.0,2000.0);
   TRIG3     = new TH1F("TRIG3","pTRIG3 counts",4000,-1000.0,2000.0);
   TRIG5     = new TH1F("TRIG5","pTRIG5 counts",4000,0.0,1000.0);
-  TRIG1_cut = new TH1F("TRIG1_cut","pTRIG1 counts",4000,-1000.0,1000.0);
+  TRIG2_cut = new TH1F("TRIG2_cut","pTRIG1 counts",4000,-1000.0,1000.0);
   TRIG3_cut = new TH1F("TRIG3_cut","pTRIG3 counts",4000,0.0,1000.0);
   TRIG5_cut = new TH1F("TRIG5_cut","pTRIG5 counts",4000,0.0,1000.0);
   
@@ -101,10 +101,10 @@ void LumiYield::SlaveBegin(TTree * /*tree*/)
   GetOutputList()->Add(EDTM);
   GetOutputList()->Add(HMS_EDTM);
   GetOutputList()->Add(SHMS_EDTM);
-  GetOutputList()->Add(TRIG1);
+  GetOutputList()->Add(TRIG2);
   GetOutputList()->Add(TRIG3);
   GetOutputList()->Add(TRIG5);
-  GetOutputList()->Add(TRIG1_cut);
+  GetOutputList()->Add(TRIG2_cut);
   GetOutputList()->Add(TRIG3_cut);
   GetOutputList()->Add(TRIG5_cut);
 }
@@ -136,7 +136,7 @@ Bool_t LumiYield::Process(Long64_t entry)
   bcm_after->Fill(*H_bcm_bcm4b_AvgCurrent);
 
   if (*T_coin_pEDTM_tdcTime!=0.0) EDTM->Fill(*T_coin_pEDTM_tdcTime);
-  if (*T_coin_pTRIG1_ROC2_tdcTime!=0.0) TRIG1->Fill(*T_coin_pTRIG1_ROC2_tdcTime);
+  if (*T_coin_pTRIG2_ROC2_tdcTime!=0.0) TRIG2->Fill(*T_coin_pTRIG2_ROC2_tdcTime);
   if (*T_coin_pTRIG3_ROC2_tdcTime!=0.0) TRIG3->Fill(*T_coin_pTRIG3_ROC2_tdcTime);
   if (*T_coin_pTRIG5_ROC2_tdcTime!=0.0) TRIG5->Fill(*T_coin_pTRIG5_ROC2_tdcTime);
   EventType->Fill(*EvtType);
@@ -148,7 +148,7 @@ Bool_t LumiYield::Process(Long64_t entry)
 
   if (*EvtType==1) // Event was an SHMS Single
     {
-      TRIG1_cut->Fill(*T_coin_pTRIG1_ROC2_tdcTime);
+      TRIG2_cut->Fill(*T_coin_pTRIG2_ROC2_tdcTime);
     
       //Tracking efficiency calculation, fiducial cut region based off
       //DEF-files/SHMS/PRODUCTION/CUTS/pstackana_reconstruct_cuts.def file
@@ -259,18 +259,18 @@ void LumiYield::Terminate()
   printf("\n\n");
   
   TString option = GetOption();
-  TString PS1_temp = option(0,option.Index("."));
+  TString PS2_temp = option(0,option.Index("."));
   TString PS3_temp = option(option.Index(".")+1,option.Length());
-  PS1 = PS1_temp.Atof();
+  PS2 = PS2_temp.Atof();
   PS3 = PS3_temp.Atof();
 
   Info("Terminate","Selection rules have been applied, plotting results");
-  cout << Form("Using prescale factors: PS1 %.0f, PS3 %.0f\n",PS1,PS3);
-  if(PS1 == 0) PS1 = 1;
+  cout << Form("Using prescale factors: PS2 %.0f, PS3 %.0f\n",PS2,PS3);
+  if(PS2 == 0) PS2 = 1;
   if(PS3 == 0) PS3 = 1;
   cout << Form("Total number of events: %.0f\n",EventType->GetEntries());
-  cout << Form("Number of EDTM  Events: %.0f\n",(PS1*SHMS_EDTM->Integral() + PS3*HMS_EDTM->Integral()));
-  cout << Form("Number of TRIG1 Events: %.0f\n",(PS1*TRIG1_cut->Integral()));
+  cout << Form("Number of EDTM  Events: %.0f\n",(PS2*SHMS_EDTM->Integral() + PS3*HMS_EDTM->Integral()));
+  cout << Form("Number of TRIG2 Events: %.0f\n",(PS2*TRIG2_cut->Integral()));
   cout << Form("Number of TRIG3 Events: %.0f\n",(PS3*TRIG3_cut->Integral()));
   //cout << Form("Number of TRIG5 Events: %.0f\n\n",TRIG5->Integral());
 
@@ -279,7 +279,7 @@ void LumiYield::Terminate()
   cout << Form("Calculated electron tracking efficiency: %f +/- %f\n",h_etrack_after->GetEntries()/h_etrack_before->GetEntries(),(h_etrack_after->GetEntries()/h_etrack_before->GetEntries())*sqrt((1/h_etrack_after->GetEntries()) + (1/h_etrack_before->GetEntries())));
   cout << Form("Calculated HMS Cherenkov efficiency: %f +/- %f\n\n",h_ecut_eff->GetEntries()/h_ecut_after->GetEntries(),(h_ecut_eff->GetEntries()/h_ecut_after->GetEntries())*sqrt((1/h_ecut_eff->GetEntries()) + (1/h_ecut_after->GetEntries())));
 
-  cout << Form("Number of SHMS good events: %.0f",(PS1*p_ecut_eff->GetEntries())) << "  +/- " << sqrt(PS1*p_ecut_eff->GetEntries()) << endl;
+  cout << Form("Number of SHMS good events: %.0f",(PS2*p_ecut_eff->GetEntries())) << "  +/- " << sqrt(PS2*p_ecut_eff->GetEntries()) << endl;
   cout << Form("Calculated tracking efficiency: %f +/- %f\n",p_track_after->GetEntries()/p_track_before->GetEntries(),(p_track_after->GetEntries()/p_track_before->GetEntries())*sqrt((1/p_track_after->GetEntries()) + (1/p_track_before->GetEntries())));
   cout << Form("Calculated electron tracking efficiency: %f +/- %f\n",p_etrack_after->GetEntries()/p_etrack_before->GetEntries(),(p_etrack_after->GetEntries()/p_etrack_before->GetEntries())*sqrt((1/p_etrack_after->GetEntries()) + (1/p_etrack_before->GetEntries())));
    
@@ -345,7 +345,7 @@ void LumiYield::Terminate()
   c_EventType->cd(2);
   EDTM->Draw();
   c_EventType->cd(3);
-  TRIG1->Draw();
+  TRIG2->Draw();
   c_EventType->cd(4);
   TRIG3->Draw();
  
@@ -366,8 +366,8 @@ void LumiYield::Terminate()
 		  p_etrack_after->GetEntries()/p_etrack_before->GetEntries(),(p_etrack_after->GetEntries()/p_etrack_before->GetEntries())*sqrt((1/p_etrack_after->GetEntries()) + (1/p_etrack_before->GetEntries())),
 		  //Accept EDTM
 		  (SHMS_EDTM->Integral() + HMS_EDTM->Integral()),
-		  //PS1
-		  PS1,
+		  //PS2
+		  PS2,
 		  //PS3
 		  PS3);;
   myfile1.close();
