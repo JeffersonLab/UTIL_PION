@@ -104,8 +104,9 @@ void PionYield::SlaveBegin(TTree * /*tree*/)
   h1mmissp_cut            = new TH1F("mmissp_cut","Proton Missing mass with Cuts;Mass (GeV/c^{2});Counts",200,0.0,2.0);
   h1mmissp_remove         = new TH1F("mmissp_remove","Proton Missing mass with Cuts (Random Subtracted);Mass (GeV/c^{2});Counts",200,0.0,2.0);
 
-  h2WvsQ2                 = new TH2F("WvsQ2","Q2 vs W;Q2;W",200,0.2,0.65,200,2,2.35);
-  h2tvsph_q               = new TH2F("tvsph_q",";#phi;t",12,-3.14,3.14,16,0.0,0.1); // Increased Ymax to 0.1 SK 28/6/19
+  //  h2WvsQ2                 = new TH2F("WvsQ2","Q2 vs W;Q2;W",200,1.0,1.8,200,1.8,2.4);
+  h2WvsQ2                 = new TH2F("WvsQ2","Q2 vs W;Q2;W",200,1,3,200,1.8,2.4);
+  h2tvsph_q               = new TH2F("tvsph_q",";#phi;t",12,-3.14,3.14,16,0.0,0.4); // Increased Ymax to 0.1 SK 28/6/19
   h1epsilon               = new TH1F("epsilon","Plot of Epsilon;#epsilon;Counts",100,0.0,1.0);
 
   h1EDTM                  = new TH1F("EDTM","EDTM Time;EDTM TDC Time;Counts",10000,-5000,5000);
@@ -205,7 +206,8 @@ Bool_t PionYield::Process(Long64_t entry)
   // Cuts that all particle species share in common
   // if (P_cal_etotnorm[0] > 0.6) return kTRUE; // Check SHMS doesn't see a positron
   if (H_cal_etotnorm[0] < 0.4 || H_cer_npeSum[0] < 1.5) return kTRUE; // Check HMS sees an electron
-  if (H_gtr_dp[0] > 17.0 || H_gtr_dp[0] < -13.0) return kTRUE;
+  //  if (H_gtr_dp[0] > 17.0 || H_gtr_dp[0] < -13.0) return kTRUE;
+  if (H_gtr_dp[0] > 8.0 || H_gtr_dp[0] < -8.0) return kTRUE; // add HMS delta cuts
   if (P_gtr_dp[0] > 20.0 || P_gtr_dp[0] < -10.0) return kTRUE; // Cut on delta
   if (TMath::Abs(P_gtr_th[0]) > 0.060) return kTRUE; // Cut on theta/phi for SHMS/HMS, broadened from 0.4/0.024 to current values
   if (TMath::Abs(P_gtr_ph[0]) > 0.040) return kTRUE; // Without these we see too much crap in the t-phi plot
@@ -349,7 +351,7 @@ void PionYield::Terminate()
   TString outputpng_coin = foutname + "_coin.png";
   TString outputpdf = foutname + ".pdf";
   
-  TCanvas *cCuts = new TCanvas("Cuts","Summary of Common Cuts");
+  TCanvas *cCuts = new TCanvas("Cuts","Summary of Common Cuts",100,0,1000,900);
   cCuts->Divide(2,4);
   cCuts->cd(1); h1HMS_delta->Draw();
   cCuts->cd(2); h1HMS_delta_cut->Draw();
@@ -361,7 +363,7 @@ void PionYield::Terminate()
   cCuts->cd(8); h1SHMS_electron_cut->Draw();
   cCuts->Print(outputpdf + '(');
 
-  TCanvas *cAngles = new TCanvas("Angles","Summary of Angular Cuts");
+  TCanvas *cAngles = new TCanvas("Angles","Summary of Angular Cuts",200,50,1000,900);
   cAngles->Divide(2,4);
   cAngles->cd(1); h1HMS_th->Draw();
   cAngles->cd(2); h1HMS_th_cut->Draw();
@@ -373,7 +375,7 @@ void PionYield::Terminate()
   cAngles->cd(8); h1SHMS_ph_cut->Draw();
   cAngles->Print(outputpdf);
 
-  TCanvas *cID = new TCanvas("ID","Summary of Pion Particle ID Cuts");
+  TCanvas *cID = new TCanvas("ID","Summary of Pion Particle ID Cuts",300,100,1000,900);
   cID->Divide(2,4);
   cID->cd(1); h2SHMS_AERO_HGC->Draw("Colz");
   cID->cd(2); h2SHMSpi_kaon_cut->Draw("Colz");
@@ -403,7 +405,7 @@ void PionYield::Terminate()
   GausBack->Draw("same");  
   cID->Print(outputpdf);
   
-  TCanvas *cCoinTime = new TCanvas("cCoinTime","Summary of coincidence time and random");
+  TCanvas *cCoinTime = new TCanvas("cCoinTime","Summary of coincidence time and random",400,150,1000,900);
   cCoinTime->Divide(2,2);
   cCoinTime->cd(1);
   h1mmisspi_cut->Draw();
@@ -419,7 +421,7 @@ void PionYield::Terminate()
   cCoinTime->Print(outputpng_coin);
   cCoinTime->Print(outputpdf);
 
-  TCanvas *cKine = new TCanvas("Kine","Summary of Higher Order Kinematics");
+  TCanvas *cKine = new TCanvas("Kine","Summary of Higher Order Kinematics",500,200,1000,900);
   cKine->Divide(2,2);
   cKine->cd(1); h2WvsQ2->Draw("Colz"); 
   h2WvsQ2->SetTitleOffset(1.0,"Y");
@@ -449,7 +451,7 @@ void PionYield::Terminate()
     Arc[k]->DrawArc(0,0,0.575*(k+1)/(10),0.,360.,"same"); 
   }
   //make sure that if you change range on the t-phi you change this tradius aswell. The sixth input is the range on the ruler on the t-phi plot. hienricn 2019/06/29
-  TGaxis *tradius = new TGaxis(0,0,0.575,0,0,0.1,10,"-+"); 
+  TGaxis *tradius = new TGaxis(0,0,0.575,0,0,0.4,10,"-+"); 
   tradius->SetLineColor(2);tradius->SetLabelColor(2);tradius->Draw();
   TLine *phizero = new TLine(0,0,0.6,0); 
   phizero->SetLineColor(kBlack); phizero->SetLineWidth(2); phizero->Draw();
@@ -465,7 +467,7 @@ void PionYield::Terminate()
   TLine *NeutronMass_Full = new TLine(0.939565,gPad->GetUymin(),0.939565,gPad->GetUymax()); 
   NeutronMass_Full->SetLineColor(kBlue); NeutronMass_Full->SetLineWidth(2); NeutronMass_Full->SetLineStyle(2);
   NeutronMass_Full->Draw();
-  TPaveText *ptNeutronEvt = new TPaveText(0.58934,0.715354,0.80000,0.81576,"NDC");
+  TPaveText *ptNeutronEvt = new TPaveText(0.58934,0.715354,0.95,0.81576,"NDC");
   TAxis *MMAxis = h1mmisspi_remove->GetXaxis();
   Int_t BinLow = MMAxis->FindBin(0.92);
   Int_t BinHigh = MMAxis->FindBin(0.98);
