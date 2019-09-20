@@ -12,6 +12,7 @@
 #include <TH1.h>
 #include <TH2.h>
 #include <TNtuple.h>
+#include <TLine.h>
 
 const Double_t tdc_nsperch = 0.09766;   //TDC Conv. ns/channel 
 
@@ -38,9 +39,51 @@ TString HMSDC_Name;
 TString HMSCal_Name;
 TString HMSHodo_Name;
 
-// Header file for the classes stored in the TTree if any.
+// Double arrays to store time window values once determined
+Double_t HMSCer_tMin[2];
+Double_t HMSCer_tMax[2];
+Double_t HMSDC_tMin[12];
+Double_t HMSDC_tMax[12];
+Double_t HMSCAL_tMin[4][2][13];
+Double_t HMSCAL_tMax[4][2][13];
+Double_t HMSHODO_tMin[4][2][16];
+Double_t HMSHODO_tMax[4][2][16];
 
-// Fixed size dimensions of array or collections stored in the TTree if any.
+Double_t SHMSHGC_tMin[4];
+Double_t SHMSHGC_tMax[4];
+Double_t SHMSAERO_tMin[2][7];
+Double_t SHMSAERO_tMax[2][7];
+Double_t SHMSDC_tMin[12];
+Double_t SHMSDC_tMax[12];
+Double_t SHMSHODO_tMin[4][2][21];
+Double_t SHMSHODO_tMax[4][2][21];
+Double_t SHMSPRSH_tMin[2][14];
+Double_t SHMSPRSH_tMax[2][14];
+Double_t SHMSCAL_tMin[14][16];
+Double_t SHMSCAL_tMax[14][16];
+
+// Arrays of lines to store time window values once determined
+TLine *LHMSCer_tMin[2];
+TLine *LHMSCer_tMax[2];
+TLine *LHMSDC_tMin[12];
+TLine *LHMSDC_tMax[12];
+TLine *LHMSCAL_tMin[4][2][13];
+TLine *LHMSCAL_tMax[4][2][13];
+TLine *LHMSHODO_tMin[4][2][16];
+TLine *LHMSHODO_tMax[4][2][16];
+
+TLine *LSHMSHGC_tMin[4];
+TLine *LSHMSHGC_tMax[4];
+TLine *LSHMSAERO_tMin[2][7];
+TLine *LSHMSAERO_tMax[2][7];
+TLine *LSHMSDC_tMin[12];
+TLine *LSHMSDC_tMax[12];
+TLine *LSHMSHODO_tMin[4][2][21];
+TLine *LSHMSHODO_tMax[4][2][21];
+TLine *LSHMSPRSH_tMin[2][14];
+TLine *LSHMSPRSH_tMax[2][14];
+TLine *LSHMSCAL_tMin[14][16];
+TLine *LSHMSCAL_tMax[14][16];
 
 class DetTCuts_Coin : public TSelector {
 public :
