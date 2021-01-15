@@ -39,14 +39,14 @@ elif ("skynet" in HOST[1]):
     REPLAYPATH = "/home/%s/Work/JLab/hallc_replay_lt" % USER[1]
 
 # Add more path setting as needed in a similar manner
-OUTPATH = "%s/UTIL_KAONLT/scripts/demo/OUTPUT" % REPLAYPATH
-CUTPATH = "%s/UTIL_KAONLT/DB/CUTS" % REPLAYPATH
-sys.path.insert(0, '%s/UTIL_KAONLT/bin/python/' % REPLAYPATH)
+OUTPATH = "%s/UTIL_PION/scripts/demo/OUTPUT" % REPLAYPATH
+CUTPATH = "%s/UTIL_PION/DB/CUTS" % REPLAYPATH
+sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
 import kaonlt as klt # Import kaonlt module, need the path setting line above prior to importing this
 
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 # Construct the name of the rootfile based upon the info we provided
-rootName = "%s/UTIL_KAONLT/ROOTfiles/%s_%s_%s.root" % (REPLAYPATH, ROOTPrefix, runNum, MaxEvent)
+rootName = "%s/UTIL_PION/ROOTfiles/%s_%s_%s.root" % (REPLAYPATH, ROOTPrefix, runNum, MaxEvent)
 
 # Read stuff from the main event tree, here we're just going to get some quantities for the acceptance for the HMS/SHMS
 e_tree = up.open(rootName)["T"]
@@ -64,7 +64,7 @@ P_gtr_dp = e_tree.array("P.gtr.dp")
 
 r = klt.pyRoot()
 # Specify the file which contains the cuts we want to use
-fout = '%s/UTIL_KAONLT/DB/CUTS/run_type/demo.cuts' % REPLAYPATH
+fout = '%s/UTIL_PION/DB/CUTS/run_type/demo.cuts' % REPLAYPATH
 # read in cuts file and make dictionary
 c = klt.pyPlot(REPLAYPATH,DEBUG=False) # Switch False to True to enable DEBUG mode
 readDict = c.read_dict(fout,runNum)
