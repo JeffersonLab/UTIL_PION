@@ -1,0 +1,169 @@
+Stephen Kay - University of Regina
+05/11/20
+stephen.kay@uregina.ca
+
+This folder contains a series of scripts which can be utilised to determine the cointime peak position for pions, kaons and protons.
+
+This is a two step process (with an additional two steps if you want to analyse a whole kinematic at once and make a new param file). 
+
+##################################################
+############# Step 1 - Python Script #############
+##################################################
+
+Note - to execute the script you must be using a relatively new version of ROOT (>6.14, I use 6.18.04) and Python 3.4.3. You will also need a local installation of all of the imported package in the script. Typically, when running on the farm this means you will need to ass root_numpy and root_pandas. Execute
+
+pip install --user root_numpy                                                                                        
+pip install --user root_pandas
+
+from the command line if you do not have these installed already.
+
+The first step is to run the python script in /src, src/CoinTimePeak.py. This script is run via
+
+python3 CoinTimePeak.py ROOTPrefix runNum MaxEvent
+
+ROOTPrefix - Prefix of the replay ROOTfile name, omitting the final _ before the run number, assumed ROOTfiles are in the path - UTIL_KAONLT/ROOTfiles
+runNum - The run number of the replay ROOTfile
+MaxEvent - Max number of events in the replay ROOTfile
+
+e.g. if your replay is Kaon_coin_replay_production_8540_-1.root, you would execute the script via -
+
+python3 CoinTimePeak.py Kaon_coin_replay_production 8540 -1
+
+The output of this file is a trimmed .root file stored in UTIL_KAOLT/scripts/CoinTimePeak/OUTPUT with the name runNum_MaxEvent_CTPeak_Data.root. This rootfile includes trees which store info for Pi/K/p candidates, including branches that can be used to check the PID cut are OK if desired. For further analysis, only the following trees from this ROOTfile are used -
+
+Pions_All
+Kaons_All
+Protons_All
+
+These trees simply contains a branch with the Contime values for events that passed PID cuts for these particle species.
+
+#######################################################
+############# Step 2 - ROOT Fitting Macro #############
+#######################################################
+
+The second step is to execute a quick ROOT fitting macro, PlotCoinPeak.C, on our output from the python script. 
+
+The script is executed via
+
+root -b -l -q 'PlotCoinPeak.C("InputFile", "OutputfileName")'
+
+InputFile - This is simply the output of the python script, it is expected this file is in UTIL_KAOLT/scripts/CoinTimePeak/OUTPUT
+OutputfileName - This is the name of the desired output file (which again will be saved to UTIL_KAOLT/scripts/CoinTimePeak/OUTPUT)
+E.g. if we wanted to run on our output from the example above we would run
+
+root -b -l -q 'PlotCoinPeak.C("8540_-1_CTPeak_Data.root", "8540_Test")' 
+
+Note, run without -b/-l/-q if desired, this just trims down junk to screen from the farm.
+
+This script simply fills histograms of the Cointime data for each particle species and fits a simple Gaussian to the prompt peak in the data. This is achieved by forcing some constraints on the fitting ranges. 
+
+The mean of the gaussian fit is initially set to be equal to the value of the bin with the largest number of entries (e.g. GetBinCenter(h1_CT_Pions->GetMaximumBin()) )
+For any run with anything more than a few events, this will almost certainly be a bin which roughly corresponds to the position of the coincidence time peak. 
+The mean of the fit is only allowed to vary within +/- 0.5 of this value. 
+
+The amplitude of the Gaussian fit is also restricted to vary between 1/2 and 2x the number of entries in the bin with the larget number of entries (e.g.GetBinContent(h1_CT_Pions->GetMaximumBin())).
+Finally, the standard deviation of the fit is limited to vary between 0.1 and 2. 
+
+A fit is applied to each particle species ONLY in the range (InitialMeanVal-1) to (InitialMeanVal+1). Without this, minuit has a tendency to produce broad, flat peaks.
+
+The resulting three fits are saved to a .pdf and .root file with names based upon the specified OutputfileName provided as an argument. E.g. in our example we would get
+
+8540_Test.pdf and 8540_Test.root
+
+The script will also print to screen a list of numbers, these correspond to 
+
+RunNumber, PionPeakPos, PionPeakPosError, PionPeakFWHM, PionPeakFWHMError, KaonPeakPos, KaonPeakPosError, KaonPeakFWHM, KaonPeakFWHMError, ProtonPeakPos, ProtonPeakPosError, ProtonPeakFWHM, ProtonPeakFWHMError
+
+The intention is that these can be piped to a .csv file rather than the screen. This is done in the optional third step which processes an entire kinematic.
+
+#####################################################
+############# Processing Multiple Files #############
+#####################################################
+
+To carry out steps 1 and 2 on a large sequence of runs, it is advisable to submit them to the iFarm for processing. A script is provided in the UTIL_BATCH repo which will -
+
+1. Replay the run
+2. Execute the python script on the file (Step 1 above)
+3. Plot the CT peak information for the run (Step 2)
+
+This script is found in UTIL_BATCH/Analysis_Scripts/CTPeak_Analysis.sh.
+
+This script can be used in a batch submission script to submit a job for a large series of runs, such a script has already been created and can be found in 
+
+UTIL_BATCH/batch_scripts/run_batch_CTPeak_Analysis.sh
+
+See this file for more info on how to execute it.
+
+###################################################################
+############# Step 3a - (Optional) Kinematic Analysis #############
+###################################################################
+
+To examine trends in sequences of runs (such as across a kinematic setting), an additional shell script and root macro are also provided. 
+The shell script checks all of the runs in a list have been analysed (Steps 1+2 have been completed for the file) and compiles a .csv file containing the relevant data for all of the runs in a kinematic (CT peak position, width e.t.c.)
+
+The shell script, AnalyseKinematic_CTPeak.sh is executed via
+
+./AnalyseKinematic_CTPeak.sh KINEMATIC_LIST
+
+where KINEMATIC_LIST is a text file in the Kinematics folder. This file should be a simple list of run numbers (omitting the leading 0 and with NO trailing space), one run number per line.
+
+When running the file, the user will be prompted to respond (Y/N) as to whether they want to automatically create a farm job to analyse any missing runs from the list provided.
+
+The shell script will check that each run number in the file has been replayed and that Steps 1 and 2 have been carried out on the file. 
+If the user responded "Y" to the initial prompt, the script will submit any missing analyses as a farm job. 
+If the user responded "N" and some runs were not analysed, a second Y/N prompt will appear asking if they wish to manually execute the python script (and root macro) on the run in question. 
+
+If all of the run numbers are found, the shell script will create a .csv file containing CT information for every run in the file. This file will be created in OUTPUT and named
+
+KINEMATIC_LIST_Output.csv
+
+The format of this file is that each line is the information, comma separated, about the CT peak for a single run, e.g. the header for the .csv is
+
+Run_Start,Run_End,Bunch_Spacing,Coin_Offset,nSkip,nWindows,Pion_Prompt_Peak,Kaon_Prompt_Peak,Proton_Prompt_Peak,RF_Offset
+
+The shell script then feeds this file to the PlotKinematic.C root macro, which can also be executed manually via
+
+root -b -l -q PlotKinematic.C'("KINEMATIC_LIST")'
+
+where KINEMATIC_LIST is identical to the input format for the shell script. The root macro will look for a file in OUTPUT called KINEMATIC_LIST_Output.csv, i.e. what our shell script produced for us.
+
+This macro simply produces plots of the CT peak position (and width) for all three particle species as a function of run number. It will output a .root and .pdf file of these plots. They will be produced in OUTPUT with the name
+
+KINEMATIC_LIST_CTPeakPlots.pdf
+KINEMATIC_LIST_CTPeakPlots.root
+
+These plots also include the error on these parameters in the plot. Note that the graphs are autoscaled in y so can occassionally be misleading as to how much the CTPeak position shifts between runs. Check the y axis scale carefully!
+
+###############################################################
+############# Step 3b - (Optional) New Param File #############
+###############################################################
+
+One of the reasons you may wish to do any of this analysis at all is to get more accurate prompt/random timing windows for Physics analysis.
+In my Physics analysis, I determine the prompt and random timing windows based upon several parameters, one of which is the position of the prompt coin time peak. 
+These parameters are all contained in a .csv file which the python script reads in to determine cut values. This parameter file can be found in
+
+UTIL_KAONLT/DB/PARAM/Timing_Parameters.csv
+
+Timing_Parameters.csv is just a soft (symbolic) link to a .csv file containing the information you wish to use in your analysis.
+For the physics analysis of production data, accurate prompt/random windows are needed, to get these to be as accurate as possible, a run by run determination of the CTpeak is preferable. Luckily, we just produced all of this above!
+The Paramfile.py script is a short Python script which will construct a new parameter file for use in further physics analysis. It is executed via
+
+Paramfile.py KINEMATICS_LIST OLD_PARAM_FILE
+
+KINEMATICS_LIST - This is just a list of all of the kinematics for which we want to make a new param file, again, this is just a text file in OUTPUT where each line is a kinematic/setting, the produced param file will be based upon the
+name of this list, e.g. if we specified TEST_LIST as our Kinematics list we would produce TEST_LIST_TimingParamFile.csv as an output.
+An example list might read
+
+Q0p375W2p2left2_highe
+Q0p375W2p2center_highe
+Q0p375W2p2left1_highe
+
+for example. For this script to run, we would have needed to process these 3 kinematics using the script in Step 3a.
+
+OLD_PARAM_FILE - This is the name of the old timing parameter file we want to base our new one on. The purpose of this is to inherit the other parameters needed to determine the prompt/random windows. e.g. the bunch spacing
+The script looks for OLD_PARAM_FILE.csv in UTIL_KAONLT/DB/PARAM/ so say your old file was UTIL_KAONLT/DB/PARAM/Original_Param.csv, you would simply provide Original_Param as the argument here
+
+Once executed, the script will construct a new param file, line by line, for all of the runs in all of the kinematics you requested. The produced output will be of the form KINEMATICS_LIST_TimingParamFile.csv in this directory. 
+The produced output is sorted by run number (low to high). If you wish to use this file subsequently to generate your timing cuts, move it to UTIL_KAONLT/DB/PARAM/ and change the sym link to point to your file.
+
+### NOTE ### - This python script also requires the packages (and versions) listed in Step 1
