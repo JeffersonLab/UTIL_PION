@@ -3,6 +3,8 @@ Stephen Kay - University of Regina
 
 A selection of demo python scripts that carry out some simple processes using the new analysis framework.
 
+### IMPORTANT - SETUP INFO ###
+
 Before running ensure you are using ROOT 6.18.04 -
 
 source /apps/root/6.18.04/setroot_CUE.csh
@@ -16,6 +18,36 @@ pip install --user root_numpy --user
 pip install --user root_pandas --user
 
 if you have not done so previously.
+
+### IMPORTANT - SYM LINKS/PATHING ###
+
+BY DEFAULT
+
+YOU MUST HAVE A FOLDER OR SYMLINK CALLED - ROOTfiles - IN THE FIRST LEVEL OF THE UTIL_PION DIRECTORY
+YOU MUST ALSO HAVE A FOLDER OR SYMLINK CALLED - OUTPUT - IN THE SAME DIRECTORY AS THIS README
+
+Create a sym link via "ln -s $PATH $LINK_NAME"
+
+e.g. ln -s /volatile/hallc/c-kaonlt/ROOTfiles ROOTfiles 
+would make a sym link called ROOTfiles which points to the folder /volatile/hallc/c-kaonlt/ROOTfiles
+
+Further (less shouty explanation) follows -
+
+The scripts will look for an input ROOTFILE in the directory specified on line 49. Modify this as you please, but it is set up to avoid hard coding a path to a single file.
+This directory is constructed based on some pre-set environments - PLEASE CHECK THIS PATH AND THAT YOUR RELEVANT ENVIRONMENT IS LISTED
+
+By default, it is assumed that you have a sym link (or folder) called ROOTfiles in the first level of the UTIL_PION directory
+A sym link is preferable as the (assumed default) /group/ path is not intended for large file storage.
+
+The output of the script will go to a sym link (or folder) in the same directory as this README.
+
+Example - You are running on the JLab ifarm,
+the script will look for your speicified ROOTfile in 
+/group/c-kaonlt/USERS/{USERNAME}/hallc_replay_lt/UTIL_PION/ROOTfiles
+and output to
+/hallc_replay_lt/UTIL_PION/ROOTfiles/UTIL_PION/scripts/demo/OUTPUT
+
+### Running the scripts ###
 
 Execute the scripts via -
 

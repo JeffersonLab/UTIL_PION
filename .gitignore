@@ -9,6 +9,8 @@
 *.nfs*
 OUTPUT
 
+ROOTfiles
+ROOTfiles*
 HISTOGRAMS/
 OUTPUT/
 REPORT_OUTPUT

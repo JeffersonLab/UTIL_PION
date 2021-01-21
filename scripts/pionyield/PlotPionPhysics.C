@@ -114,9 +114,9 @@ void PlotPionPhysics(string InFilename = "", string OutFilename = "")
   Cut_Pr->Draw("MMpi >> h1_MMpi_Prompt", "", "goff");
   Cut_Rn->Draw("MMpi >> h1_MMpi_Random", "", "goff");
   Cut_Rn->Draw("MMpi  >> h1_MMpi_Random_Scaled", "", "goff");
-  Cut_All->Draw("CTime_eKCoinTime_ROC1 >> h1_CT_All", "", "goff");
-  Cut_Pr->Draw("CTime_eKCoinTime_ROC1 >> h1_CT_Prompt", "", "goff");
-  Cut_Rn->Draw("CTime_eKCoinTime_ROC1 >> h1_CT_Random", "", "goff");
+  Cut_All->Draw("CTime_ePiCoinTime_ROC1 >> h1_CT_All", "", "goff");
+  Cut_Pr->Draw("CTime_ePiCoinTime_ROC1 >> h1_CT_Prompt", "", "goff");
+  Cut_Rn->Draw("CTime_ePiCoinTime_ROC1 >> h1_CT_Random", "", "goff");
   Cut_Pr->Draw("epsilon >> h1_Epsilon", "", "goff");
  
   h1_MMpi_Random_Scaled->Scale(1.0/nWindows);

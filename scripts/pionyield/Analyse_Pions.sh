@@ -5,7 +5,7 @@
 # Configfilename should be the file based in UTIL_KAONLT/CONFIG (Not the full path, just the actual filename)
 
 echo "Starting analysis of Pion events"
-echo "I take as arguments the run Number and max number of events!"
+echo "I take as arguments the run prefix, run number and max number of events!"
 RUNPREFIX=$1
 if [[ -z "$1" ]]; then
     echo "I need a Run Prefix!"
