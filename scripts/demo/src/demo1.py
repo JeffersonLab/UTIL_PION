@@ -47,7 +47,23 @@ import kaonlt as klt # Import kaonlt module, need the path setting line above pr
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 # Construct the name of the rootfile based upon the info we provided
 rootName = "%s/UTIL_PION/ROOTfiles/%s_%s_%s.root" % (REPLAYPATH, ROOTPrefix, runNum, MaxEvent)
-
+if os.path.exists(OUTPATH):
+    if os.path.islink(OUTPATH):
+        pass
+    elif os.path.isdir(OUTPATH):
+        pass
+    else:
+        print ("%s exists but is not a directory or sym link, check your directory/link and try again" % (OUTPATH))
+        sys.exit(2)
+else:
+    print("Output path not found, please make a sym link or directory called OUTPUT in UTIL_PION/scripts/demo to store output")
+    sys.exit(3)
+print ("Attempting to process %s" %(rootName))
+if os.path.isfile(rootName):
+    print ("%s exists, attempting to process" % (rootName))
+else:
+    print ("%s not found - do you have the correct sym link/folder set up?" % (rootName))
+    sys.exit(4)
 # Read stuff from the main event tree, here we're just going to get some quantities for the acceptance for the HMS/SHMS
 e_tree = up.open(rootName)["T"]
 # HMS info
