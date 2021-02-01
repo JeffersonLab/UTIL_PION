@@ -1,4 +1,4 @@
-B65;5604;1c#! /usr/bin/python
+#! /usr/bin/python
 
 # 09/10/20 - Stephen Kay, University of Regina
 
