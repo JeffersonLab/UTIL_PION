@@ -18,10 +18,10 @@ RunNumber=sys.argv[1]
 MaxEvent=sys.argv[2]
 # MaxEvent=50000
 
-report = "/u/group/c-kaonlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/REPORT_OUTPUT/COIN/PRODUCTION/Lumi_coin_replay_production_Offline_%s_%s.report" % (RunNumber,MaxEvent)
+report = "/u/group/c-pionlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/REPORT_OUTPUT/COIN/PRODUCTION/Lumi_coin_replay_production_Offline_%s_%s.report" % (RunNumber,MaxEvent)
 
 f = open(report)
-fout = open("/u/group/c-kaonlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/scripts_Luminosity/Yield_Data.dat","a")
+fout = open("/u/group/c-pionlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/scripts_Luminosity/Yield_Data.dat","a")
 
 psList = ['Ps1_factor','Ps3_factor','Ps5_factor']
 
@@ -60,15 +60,15 @@ option = "%s.%s" % (PS1,PS3)
 # proof = TProof.Open("workers=4")
 
 ch = TChain("T")
-ch.Add("/u/group/c-kaonlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/ROOTfiles/Lumi_coin_replay_production_Offline_%s_%s.root" % (RunNumber,MaxEvent))
+ch.Add("/u/group/c-pionlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/ROOTfiles/Lumi_coin_replay_production_Offline_%s_%s.root" % (RunNumber,MaxEvent))
 
 sc = TChain("TSH")
-sc.Add("/u/group/c-kaonlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/ROOTfiles/Lumi_coin_replay_production_Offline_%s_%s.root" % (RunNumber,MaxEvent))
+sc.Add("/u/group/c-pionlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/ROOTfiles/Lumi_coin_replay_production_Offline_%s_%s.root" % (RunNumber,MaxEvent))
 
 # ch.SetProof()
 # sc.SetProof()
 
-ch.Process("/u/group/c-kaonlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/scripts_Luminosity/LumiYield.C+",option)
-sc.Process("/u/group/c-kaonlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/scripts_Luminosity/Scalers.C+",option)
+ch.Process("/u/group/c-pionlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/scripts_Luminosity/LumiYield.C+",option)
+sc.Process("/u/group/c-pionlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/scripts_Luminosity/Scalers.C+",option)
 
 # proof.Close()

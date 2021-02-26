@@ -37,7 +37,7 @@ void run_KaonYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_c
   myfile1.close();
 
   //Begin Scaler Efficiency Calculation
-  TString rootFileNameString = Form("/u/group/c-kaonlt/USERS/trottar/hallc_replay_kaonlt/UTIL_KAONLT/ROOTfiles/KaonLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent);
+  TString rootFileNameString = Form("/u/group/c-pionlt/USERS/trottar/hallc_replay_kaonlt/UTIL_KAONLT/ROOTfiles/KaonLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent);
   TString threshold = Form("%f",threshold_cut);
   TString runNum = Form("%d",RunNumber);
   TString prescal = Form("%d", pscal);
@@ -51,7 +51,7 @@ void run_KaonYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_c
 
   //Begin Counting Good Kaon Events
   TChain ch("T");
-  ch.Add(Form("/u/group/c-kaonlt/USERS/trottar/hallc_replay_kaonlt/UTIL_KAONLT/ROOTfiles/KaonLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent));
+  ch.Add(Form("/u/group/c-pionlt/USERS/trottar/hallc_replay_kaonlt/UTIL_KAONLT/ROOTfiles/KaonLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent));
   TString option = Form("%i",RunNumber);
 
   TProof *proof = TProof::Open("workers=4");
@@ -61,6 +61,6 @@ void run_KaonYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_c
   proof->Close();
   
   TChain sc("TSH");
-  sc.Add(Form("/u/group/c-kaonlt/USERS/trottar/hallc_replay_kaonlt/UTIL_KAONLT/ROOTfiles/KaonLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent));
+  sc.Add(Form("/u/group/c-pionlt/USERS/trottar/hallc_replay_kaonlt/UTIL_KAONLT/ROOTfiles/KaonLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent));
   sc.Process("HMS_Scalers.C+",option);
 }

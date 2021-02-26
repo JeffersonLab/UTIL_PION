@@ -30,7 +30,7 @@ MaxEvent=sys.argv[2]
 # HOST = subprocess.getstatusoutput("hostname")
 
 # if ("farm" in HOST[1]):
-#     REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
+#     REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
 # elif ("lark" in HOST[1]):
 #     REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
 

@@ -26,11 +26,11 @@ fi
 
 # Set path depending upon hostname. Change or add more as needed  
 if [[ "${HOSTNAME}" = *"farm"* ]]; then  
-    REPLAYPATH="/group/c-kaonlt/USERS/${USER}/hallc_replay_lt"
+    REPLAYPATH="/group/c-pionlt/USERS/${USER}/hallc_replay_lt"
     cd "$REPLAYPATH"
     source "$REPLAYPATH/setup.sh"
 elif [[ "${HOSTNAME}" = *"qcd"* ]]; then
-    REPLAYPATH="/group/c-kaonlt/USERS/${USER}/hallc_replay_lt"
+    REPLAYPATH="/group/c-pionlt/USERS/${USER}/hallc_replay_lt"
     cd "$REPLAYPATH"
     source "$REPLAYPATH/setup.sh" 
 elif [[ "${HOSTNAME}" = *"cdaq"* ]]; then
@@ -41,16 +41,16 @@ fi
 UTILPATH="${REPLAYPATH}/UTIL_PION"
 cd "${UTILPATH}/scripts"
 
-if [ ! -f "${UTILPATH}/scripts/pionyield/OUTPUT/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
+if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
     python3 ${UTILPATH}/scripts/pionyield/src/Pionyield.py ${RUNPREFIX} ${RUNNUMBER} ${MAXEVENTS}
-else echo "Analysed root file already found in ${UTILPATH}/scripts/pionyield/OUTPUT/ - Skipped python script step"
+else echo "Analysed root file already found in ${UTILPATH}/OUTPUT/Analysis/PionLT/ - Skipped python script step"
 fi
 
-if [ ! -f "${UTILPATH}/scripts/pionyield/OUTPUT/Pion_Histos_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
+if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/Pion_Histos_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
     root -b -l -q "${UTILPATH}/scripts/pionyield/PlotPionPhysics.C(\"${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root\", \"Pion_Histos_${RUNNUMBER}_${MAXEVENTS}\")"
-elif [ ! -f "${UTILPATH}/scripts/pionyield/OUTPUT/Pion_Histos_${RUNNUMBER}_${MAXEVENTS}.pdf" ]; then
+elif [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/Pion_Histos_${RUNNUMBER}_${MAXEVENTS}.pdf" ]; then
     root -b -l -q "${UTILPATH}/scripts/pionyield/PlotPionPhysics.C(\"${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root\", \"Pion_Histos_${RUNNUMBER}_${MAXEVENTS}\")"
-else echo "Pion plots already found in - ${UTILPATH}/scripts/pionyield/OUTPUT/Pion_Histos_${RUNNUMBER}_${MAXEVENTS}.root and .pdf - Plotting macro skipped"
+else echo "Pion plots already found in - ${UTILPATH}/OUTPUT/Analysis/PionLT/Pion_Histos_${RUNNUMBER}_${MAXEVENTS}.root and .pdf - Plotting macro skipped"
 fi
 exit 0
 

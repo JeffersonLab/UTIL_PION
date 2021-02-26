@@ -26,19 +26,22 @@ if you have not done so previously.
 
 Ensure that these are installed with ROOT 6.18.04 active or the scripts will not run!
 
+If you get errors complaining that root_numpy was installed with ROOT 6.14.04 (or ANY errors like this), you either didn't install the packages (or run the script) with 6.18.04 active. 
+Uninstall any problematic packages and reinstall them with the correct ROOT version active.
+
 ### IMPORTANT - SYM LINKS/PATHING ###
 
 BY DEFAULT
 
 YOU MUST HAVE A FOLDER OR SYMLINK CALLED - ROOTfiles - IN THE FIRST LEVEL OF THE UTIL_PION DIRECTORY
-YOU MUST ALSO HAVE A FOLDER OR SYMLINK CALLED - OUTPUT - IN THE SAME DIRECTORY AS THIS README
+YOU MUST ALSO HAVE A FOLDER OR SYMLINK CALLED - OUTPUT - IN THE FIRST LEVEL OF THE UTIL_PION DIRECTORY
 
-Create a sym link via "ln -s $PATH $LINK_NAME"
+If you ran the new setup scripts, these should already be present. Change the OUTPUT pathing in the python script as you see fit.
+
+If you didn't, you can create a sym link via "ln -s $PATH $LINK_NAME"
 
 e.g. ln -s /volatile/hallc/c-kaonlt/ROOTfiles ROOTfiles 
 would make a sym link called ROOTfiles which points to the folder /volatile/hallc/c-kaonlt/ROOTfiles
-
-NB - I will be updating the UTIL repos with a setup script in future to automatically make the sym links for you
 
 Further (less shouty explanation) follows -
 
@@ -52,9 +55,9 @@ The output of the script will go to a sym link (or folder) in the same directory
 
 Example - You are running on the JLab ifarm,
 the script will look for your speicified ROOTfile in 
-/group/c-kaonlt/USERS/{USERNAME}/hallc_replay_lt/UTIL_PION/ROOTfiles
+/group/c-pionlt/USERS/{USERNAME}/hallc_replay_lt/UTIL_PION/ROOTfiles/Analysis/General
 and output to
-/hallc_replay_lt/UTIL_PION/ROOTfiles/UTIL_PION/scripts/demo/OUTPUT
+/group/c-pionlt/USERS/{USERNAME}/hallc_replay_lt/UTIL_PION/OUTPUT/Analysis/General
 
 ### Running the scripts ###
 

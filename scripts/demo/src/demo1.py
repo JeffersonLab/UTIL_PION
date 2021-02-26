@@ -4,7 +4,7 @@
 
 # A short python demo script demonstrating opening up a root file, using uproot to grab some info and then save it as a new rootfile
 
-# Import relevant packages, there's more than we need here but there's no harm in that
+# Import relevant packages
 import uproot as up
 import numpy as np
 import root_numpy as rnp
@@ -25,28 +25,28 @@ if len(sys.argv)-1!=3:
 ROOTPrefix = sys.argv[1]
 runNum = sys.argv[2]
 MaxEvent = sys.argv[3]
-print (ROOTPrefix, runNum, MaxEvent)
 
 USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
 HOST = subprocess.getstatusoutput("hostname")
 if ("farm" in HOST[1]):
-    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
+    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
 elif ("qcd" in HOST[1]):
-    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
+    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
 elif ("phys.uregina" in HOST[1]):
     REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
 elif ("skynet" in HOST[1]):
     REPLAYPATH = "/home/%s/Work/JLab/hallc_replay_lt" % USER[1]
 
 # Add more path setting as needed in a similar manner
-OUTPATH = "%s/UTIL_PION/scripts/demo/OUTPUT" % REPLAYPATH
+OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/General" % REPLAYPATH
 CUTPATH = "%s/UTIL_PION/DB/CUTS" % REPLAYPATH
 sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
 import kaonlt as klt # Import kaonlt module, need the path setting line above prior to importing this
 
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 # Construct the name of the rootfile based upon the info we provided
-rootName = "%s/UTIL_PION/ROOTfiles/%s_%s_%s.root" % (REPLAYPATH, ROOTPrefix, runNum, MaxEvent)
+rootName = "%s/UTIL_PION/ROOTfiles/Analysis/General/%s_%s_%s.root" % (REPLAYPATH, ROOTPrefix, runNum, MaxEvent)
+print ("Attempting to process %s" %(rootName))
 if os.path.exists(OUTPATH):
     if os.path.islink(OUTPATH):
         pass
@@ -56,14 +56,14 @@ if os.path.exists(OUTPATH):
         print ("%s exists but is not a directory or sym link, check your directory/link and try again" % (OUTPATH))
         sys.exit(2)
 else:
-    print("Output path not found, please make a sym link or directory called OUTPUT in UTIL_PION/scripts/demo to store output")
+    print("Output path not found, please check the OUTPATH variable in the script and check it looks OK")
     sys.exit(3)
-print ("Attempting to process %s" %(rootName))
 if os.path.isfile(rootName):
     print ("%s exists, attempting to process" % (rootName))
 else:
     print ("%s not found - do you have the correct sym link/folder set up?" % (rootName))
     sys.exit(4)
+print("Output path checks out, outputting to %s" % (OUTPATH))
 # Read stuff from the main event tree, here we're just going to get some quantities for the acceptance for the HMS/SHMS
 e_tree = up.open(rootName)["T"]
 # HMS info

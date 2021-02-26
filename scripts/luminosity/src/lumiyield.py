@@ -27,7 +27,7 @@ USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
 HOST = subprocess.getstatusoutput("hostname")
 
 if ("farm" in HOST[1]):
-    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
+    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
 elif ("lark" in HOST[1]):
     REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
 elif ("trottar" in HOST[1]):
@@ -35,10 +35,10 @@ elif ("trottar" in HOST[1]):
 
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 
-filename = "%s/UTIL_KAONLT/scripts/luminosity/OUTPUTS/lumi_data.csv" % REPLAYPATH
-rootName = "%s/UTIL_KAONLT/ROOTfiles/coin_replay_Full_Lumi_%s_%s.root" % (REPLAYPATH,runNum,MaxEvent)
-# report = "/u/group/c-kaonlt/USERS/%s/kaonlt/REPORT_OUTPUT/coin_replay_Full_Lumi_%s_%s.report" % (USER[1],runNum,MaxEvent)
-report = "%s/UTIL_KAONLT/REPORT_OUTPUT/replay_coin_Lumi_%s_%s.report" % (REPLAYPATH,runNum,MaxEvent)
+filename = "%s/UTIL_PION/OUTPUT/Analysis/Lumi/lumi_data.csv" % REPLAYPATH
+rootName = "%s/UTIL_PION/ROOTfiles/Analysis/Lumi/coin_replay_Full_Lumi_%s_%s.root" % (REPLAYPATH,runNum,MaxEvent)
+# report = "/u/group/c-pionlt/USERS/%s/kaonlt/REPORT_OUTPUT/coin_replay_Full_Lumi_%s_%s.report" % (USER[1],runNum,MaxEvent)
+report = "%s/UTIL_PION/REPORT_OUTPUT/Analysis/Lumi/replay_coin_Lumi_%s_%s.report" % (REPLAYPATH,runNum,MaxEvent)
 
 thres_curr = 2.5
 # thres_curr = 10.0
@@ -145,7 +145,6 @@ P_pPRHI_scaler = s_tree.array("P.PRHI.scaler")
 P_pPRLO_scaler = s_tree.array("P.PRLO.scaler")
 
 P_EDTM_scaler = s_tree.array("P.EDTM.scaler")
-
 
 def scaler(runNum, PS1, PS3, thres_curr):
 
@@ -445,7 +444,7 @@ T_coin_pEDTM_tdcTime = tree.array("T.coin.pEDTM_tdcTime")
 
 EvtType = tree.array("fEvtHdr.fEvtType")
 
-fout = REPLAYPATH+'/UTIL_KAONLT/DB/CUTS/run_type/lumi.cuts'
+fout = REPLAYPATH+'/UTIL_PION/DB/CUTS/run_type/lumi.cuts'
 
 # read in cuts file and make dictionary
 c = klt.pyPlot(REPLAYPATH)

@@ -23,7 +23,7 @@ USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
 HOST = subprocess.getstatusoutput("hostname")
 
 if ("farm" in HOST[1]):
-    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
+    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
 elif ("lark" in HOST[1]):
     REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
 elif ("trottar" in HOST[1]):
@@ -31,8 +31,8 @@ elif ("trottar" in HOST[1]):
 
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 
-inp_f = "%s/UTIL_KAONLT/scripts/pid/OUTPUTS/pid_data.csv" % str(REPLAYPATH)
-out_f = "%s/UTIL_KAONLT/scripts/pid/OUTPUTS/pid_data.root" % str(REPLAYPATH)
+inp_f = "%s/UTIL_PION/OUTPUT/Analysis/PID/pid_data.csv" % str(REPLAYPATH)
+out_f = "%s/UTIL_PION/OUTPUT/Analysis/PID/pid_data.root" % str(REPLAYPATH)
 
 try:
     pid_data = dict(pd.read_csv(inp_f))

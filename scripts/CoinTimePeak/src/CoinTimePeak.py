@@ -28,22 +28,22 @@ MaxEvent = sys.argv[3]
 USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
 HOST = subprocess.getstatusoutput("hostname")
 if ("farm" in HOST[1]):
-    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
+    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
 elif ("qcd" in HOST[1]):
-    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
+    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
 elif ("phys.uregina" in HOST[1]):
     REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
 elif("skynet" in HOST[1]):
     REPLAYPATH = "/home/%s/Work/JLab/hallc_replay_lt" % USER[1]
     
 # Add more path setting as needed in a similar manner
-OUTPATH = "%s/UTIL_PION/scripts/CoinTimePeak/OUTPUT" % REPLAYPATH
+OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/PionLT" % REPLAYPATH
 CUTPATH = "%s/UTIL_PION/DB/CUTS" % REPLAYPATH
 sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
 import kaonlt as klt
 
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
-rootName = "%s/UTIL_PION/ROOTfiles/%s_%s_%s.root" % (REPLAYPATH, ROOTPrefix, runNum, MaxEvent)
+rootName = "%s/UTIL_PION/ROOTfiles/Analysis/PionLT/%s_%s_%s.root" % (REPLAYPATH, ROOTPrefix, runNum, MaxEvent)
 if os.path.exists(OUTPATH):
     if os.path.islink(OUTPATH):
         pass
@@ -61,6 +61,7 @@ if os.path.isfile(rootName):
 else:
     print ("%s not found - do you have the correct sym link/folder set up?" % (rootName))
     sys.exit(4)
+print("Output path checks out, outputting to %s" % (OUTPATH))
 # Read stuff from the main event tree
 e_tree = up.open(rootName)["T"]
 # Timing info

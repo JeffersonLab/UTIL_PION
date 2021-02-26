@@ -32,7 +32,7 @@ void run_LumiYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_c
   }
 
   fstream REPORT_file;
-  REPORT_file.open (Form("/u/group/c-kaonlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/REPORT_OUTPUT/COIN/PRODUCTION/Lumi_coin_replay_production_Offline_%i_%i.report",RunNumber,MaxEvent));
+  REPORT_file.open (Form("/u/group/c-pionlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/REPORT_OUTPUT/COIN/PRODUCTION/Lumi_coin_replay_production_Offline_%i_%i.report",RunNumber,MaxEvent));
   Int_t line_num = 0;
   string line;
   TString line_PS1;
@@ -62,7 +62,7 @@ void run_LumiYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_c
   TString option = Form("%i.%i",PS1,PS3);
   
   ofstream myfile1;
-  myfile1.open ("/u/group/c-kaonlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/scripts_Luminosity/Yield_Data.dat", fstream::app);
+  myfile1.open ("/u/group/c-pionlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/scripts_Luminosity/Yield_Data.dat", fstream::app);
   myfile1 << Form("%d ", RunNumber);
   myfile1.close();
   
@@ -71,14 +71,14 @@ void run_LumiYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t threshold_c
 
   //Begin Counting Good Kaon Events
   TChain ch("T");
-  ch.Add(Form("/u/group/c-kaonlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/ROOTfiles/Lumi_coin_replay_production_Offline_%i_%i.root",RunNumber,MaxEvent));
+  ch.Add(Form("/u/group/c-pionlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/ROOTfiles/Lumi_coin_replay_production_Offline_%i_%i.root",RunNumber,MaxEvent));
   ch.SetProof();
 
-  ch.Process("/u/group/c-kaonlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/scripts_Luminosity/LumiYield.C+",option);
+  ch.Process("/u/group/c-pionlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/scripts_Luminosity/LumiYield.C+",option);
   
   TChain sc("TSH");
-  sc.Add(Form("/u/group/c-kaonlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/ROOTfiles/Lumi_coin_replay_production_Offline_%i_%i.root",RunNumber,MaxEvent));
-  sc.Process("/u/group/c-kaonlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/scripts_Luminosity/Scalers.C+",option);
+  sc.Add(Form("/u/group/c-pionlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/ROOTfiles/Lumi_coin_replay_production_Offline_%i_%i.root",RunNumber,MaxEvent));
+  sc.Process("/u/group/c-pionlt/USERS/trottar/hallc_replay_lt/UTIL_KAONLT/scripts_Luminosity/Scalers.C+",option);
 
   proof->Close();
  

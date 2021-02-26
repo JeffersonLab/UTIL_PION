@@ -2,7 +2,7 @@
 
 #Input run numbers
 
-REPLAYPATH="/u/group/c-kaonlt/USERS/trottar/hallc_replay_lt"        
+REPLAYPATH="/u/group/c-pionlt/USERS/trottar/hallc_replay_lt"        
 
 inputFile="$REPLAYPATH/UTIL_KAONLT/scripts_Luminosity/inputRuns"
 

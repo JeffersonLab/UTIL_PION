@@ -32,16 +32,16 @@ void PlotKinematic(string Kinematic = "")
 
   // Set paths depending on system you're running on
   if(Hostname.Contains("farm")){
-    Replaypath = "/group/c-kaonlt/USERS/"+User+"/hallc_replay_lt";
-    Outpath = Replaypath+"/UTIL_KAONLT/scripts/CoinTimePeak/OUTPUT";
+    Replaypath = "/group/c-pionlt/USERS/"+User+"/hallc_replay_lt";
+    Outpath = Replaypath+"/UTIL_PION/OUTPUT/Analysis/PionLT";
   }
   else if(Hostname.Contains("qcd")){
-    Replaypath = "/group/c-kaonlt/USERS/"+User+"/hallc_replay_lt";
-    Outpath = Replaypath+"/UTIL_KAONLT/scripts/CoinTimePeak/OUTPUT";
+    Replaypath = "/group/c-pionlt/USERS/"+User+"/hallc_replay_lt";
+    Outpath = Replaypath+"/UTIL_PION/OUTPUT/Analysis/PionLT";
   }
   else if (Hostname.Contains("phys.uregina.ca")){
     Replaypath = "/home/"+User+"/work/JLab/hallc_replay_lt";
-    Outpath = Replaypath+"/UTIL_KAONLT/scripts/CoinTimePeak/OUTPUT";
+    Outpath = Replaypath+"/UTIL_PION/OUTPUT/Analysis/PionLT";
   }
   // Add more as needed for your own envrionment
   if(Kinematic == "") {

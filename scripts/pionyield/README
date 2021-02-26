@@ -1,20 +1,20 @@
-Richard Trotta (Catholic University) and Stephen Kay (University of Regina)
+Richard Trotta (Catholic University of America) and Stephen Kay (University of Regina)
 For questions/comments/suggestions/complaints about scripts in this folder, please contact - stephen.kay@uregina.ca
 
 ############################################### INTRO ###########################################################
 
 This directory contains the scripts to analyse the physics yield of kaon events from the KaonLT data. The basic process of what these scripts are trying to do is -
 
-- src/Kaonyield.py reads in a replay from hcana and trims the data
+- src/Pionyield.py reads in a replay from hcana and trims the data
   - It will output a rootfile with trees corresponding to relevant info for different particle types under different conditions
   - E.g. you will get - Uncut Events
-    	     	      - Cut Kaon Events (all)
-		      - Cut Kaon Events (prompt)
-		      - Cut Kaon Events (random)
+    	     	      - Cut Pion Events (all)
+		      - Cut Pion Events (prompt)
+		      - Cut Pion Events (random)
 
 and others as root trees in the file. Each tree will have info such as detector signals, timing and so on. You can add or remove branches as needed. Follow the comments and methods in the python file.
 
-The next step - PlotKaons.C is a quick root macro which takes our new trimmed root file and plots some of the data from whichever trees we choose. Again, this can be customised to your liking but should be a simple and clear starting point.
+The next step - PlotPions.C is a quick root macro which takes our new trimmed root file and plots some of the data from whichever trees we choose. Again, this can be customised to your liking but should be a simple and clear starting point.
 
 There is a shell script which will execute both steps if you just provide it a run number, see RUNNING below.
 
@@ -22,15 +22,22 @@ There is a shell script which will execute both steps if you just provide it a r
 
 Before running anything make sure you have -
 
-- An OUTPUT directory within this scripts directory, it can be a symlink of course
-  - To be explicit it should be - UTIL_KAONLT/scripts/kaonyield/OUTPUT
-  - The output is typically quite small (10's of MBs per file from the python script) but if you're running lots of files, I would consider a sym link to a suitable directory
-- A ROOTfiles directory (or sym link) in the top level UTIL_KAONLT folder
+####################################### IMPORTANT - New as of 25/02/21 ##########################################
+- Note, if you ran the new setup script, the following directories and symlinks should already be present
+- Additionally, the scripts have been setup to now look in ROOTfiles/Analysis/PionLT and output to OUTPUT/Analysis/PionLT
+  - You can change this if desired in the scripts, just look for the relevant lines specifiying OUTPATH and rootName
+#################################################################################################################
+
+- An OUTPUT directory in the top level UTIL_PION directory, it can be a symlink of course
+  - To be explicit it should be - UTIL_PION/OUTPUT
+- A ROOTfiles directory (or sym link) in the top level UTIL_PION folder
   - You should also check the file prefix of the root file the python script for looks for before running too
-  - See ~ line 45  in src/Kaonyield.py - the relevant line is the one with rootName = "...", check this looks OK!
+  - See ~ line 50  in src/Pionyield.py - the relevant line is the one with rootName = "...", check this looks OK!
     - Of course, if it doesn't you'll have the script complaining at you that the file does not exist
-- If you want to examine what each cut is doing in more detail, see their definitions in UTIL_KAONLT/DB/CUTS
-  - The parameters that are read in for the cuts are also located in UTIL_KAONLT/DB/PARAM
+- If you want to examine what each cut is doing in more detail, see their definitions in UTIL_PION/DB/CUTS
+  - The parameters that are read in for the cuts are also located in UTIL_PION/DB/PARAM
+
+
 ############################################### RUNNING #########################################################
 
 Simply execute the shell script with a run number and it'll work its magic -
@@ -50,7 +57,7 @@ For the python script, provide a run number and max events.
 For the root plotting macro, provide it an input root file (the output of the python script), just the name is sufficient. It is assumed to be in the OUTPUT directory. 
 You also need to provide a name for the output file, do not include a suffix. It will produce a pdf and a root file.
 
-For example if you provide TEST_OUTPUT it will produce TEST_OUTPUT.pdf and TEST_OUTPUT.root as output files in the OUTPUT directory.
+For example if you provide TEST_OUTPUT it will produce TEST_OUTPUT.pdf and TEST_OUTPUT.root as output files in the OUTPUT/Analysis/PionLT directory.
 
 ############################################### DEBUGGING #########################################################
 
@@ -72,8 +79,8 @@ This is telling you your branches in the tree you're trying to make and the numb
 This type of error will look something like the following -
 
 Traceback (most recent call last):
-  File "/group/c-kaonlt/USERS/sjdkay/hallc_replay_lt/UTIL_KAONLT/scripts/kaonyield/src/Kaonyield.py", line 427, in <module>
-  File "/group/c-kaonlt/USERS/sjdkay/hallc_replay_lt/UTIL_KAONLT/scripts/kaonyield/src/Kaonyield.py", line 424, in main
+  File "/group/c-pionlt/USERS/{USER}/hallc_replay_lt/UTIL_PION/scripts/kaonyield/src/Pionyield.py", line 427, in <module>
+  File "/group/c-pionlt/USERS/{USER}/hallc_replay_lt/UTIL_PION/scripts/kaonyield/src/Pionyield.py", line 424, in main
     
   File "/apps/python/3.4.3/lib/python3.4/site-packages/pandas/core/frame.py", line 369, in __init__
     arrays, columns = _to_arrays(data, columns, dtype=dtype)

@@ -18,19 +18,19 @@ fi
 
 # Set path depending upon hostname. Change or add more as needed  
 if [[ "${HOSTNAME}" = *"farm"* ]]; then  
-    REPLAYPATH="/group/c-kaonlt/USERS/${USER}/hallc_replay_lt"
+    REPLAYPATH="/group/c-pionlt/USERS/${USER}/hallc_replay_lt"
     if [[ "${HOSTNAME}" != *"ifarm"* ]]; then
 	source /site/12gev_phys/softenv.sh 2.3
     fi
-    cd "/group/c-kaonlt/hcana/"
-    source "/group/c-kaonlt/hcana/setup.sh"
+    cd "/group/c-pionlt/hcana/"
+    source "/group/c-pionlt/hcana/setup.sh"
     cd "$REPLAYPATH"
     source "$REPLAYPATH/setup.sh"
 elif [[ "${HOSTNAME}" = *"qcd"* ]]; then
-    REPLAYPATH="/group/c-kaonlt/USERS/${USER}/hallc_replay_lt"
+    REPLAYPATH="/group/c-pionlt/USERS/${USER}/hallc_replay_lt"
     source /site/12gev_phys/softenv.sh 2.3
-    cd "/group/c-kaonlt/hcana/"
-    source "/group/c-kaonlt/hcana/setup.sh" 
+    cd "/group/c-pionlt/hcana/"
+    source "/group/c-pionlt/hcana/setup.sh" 
     cd "$REPLAYPATH"
     source "$REPLAYPATH/setup.sh" 
 elif [[ "${HOSTNAME}" = *"cdaq"* ]]; then
@@ -49,20 +49,21 @@ cd ${REPLAYPATH}/
 echo -e "\n\nStarting Scaler Replay Script\n\n"
 ./hcana -q "${REPLAYPATH}/SCRIPTS/COIN/SCALERS/replay_coin_scalers.C($RUNNUMBER,$MAXEVENTS)"
 cd CALIBRATION/bcm_current_map/
+# SK - Note - I don't like that this uses ../../!
 root -b<<EOF
 .L ScalerCalib.C+
-.x run.C("../../ROOTfiles/coin_replay_scalers_${RUNNUMBER}_${MAXEVENTS}.root")
+.x run.C("${REPLAYPATH}/ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMBER}_${MAXEVENTS}.root")
 EOF
 
 mv bcmcurrent_$RUNNUMBER.param ../../PARAM/HMS/BCM/CALIB/bcmcurrent_$RUNNUMBER.param
 cd ../../
 
 echo -e "\n\nStarting Replay Script\n\n"
-./hcana -q "${REPLAYPATH}/UTIL_KAONLT/scripts/luminosity/src/replay/replay_lumi_coin_offline.C($RUNNUMBER,$MAXEVENTS)"
+./hcana -q "${REPLAYPATH}/UTIL_PION/scripts/luminosity/src/replay/replay_lumi_coin_offline.C($RUNNUMBER,$MAXEVENTS)"
 
 source /apps/root/6.18.04/setroot_CUE.bash
-cd ${REPLAYPATH}/UTIL_KAONLT/scripts/luminosity/src/
+cd ${REPLAYPATH}/UTIL_PION/scripts/luminosity/src/
 python3 lumiyield.py ${RUNNUMBER} ${MAXEVENTS}
 
-cd ${REPLAYPATH}/UTIL_KAONLT/scripts/luminosity/src/
+cd ${REPLAYPATH}/UTIL_PION/scripts/luminosity/src/
 python3 csv2root.py "lumi_data"

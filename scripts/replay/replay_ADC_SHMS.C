@@ -23,7 +23,7 @@ void replay_ADC_SHMS (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   pathList.push_back("./raw/../raw.copiedtotape");
   pathList.push_back("./cache");
 
-  const char* ROOTFileNamePattern = "UTIL_KAONLT/ROOTfiles/ADCGates_SHMS_coin_replay_production_all_%d_%d.root";
+  const char* ROOTFileNamePattern = "UTIL_PION/ROOTfiles/Calib/Timing/ADCGates_SHMS_coin_replay_production_all_%d_%d.root";
   
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
@@ -34,7 +34,7 @@ void replay_ADC_SHMS (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Load parameters for SHMS trigger configuration
   gHcParms->Load("PARAM/TRIG/tshms.param");
   // Load fadc debug parameters
-  gHcParms->Load("UTIL_KAONLT/scripts_Replay/p_fadc_debug.param");
+  gHcParms->Load("UTIL_PION/scripts_Replay/p_fadc_debug.param");
 
   // Load the Hall C detector map
   gHcDetectorMap = new THcDetectorMap();
@@ -157,9 +157,9 @@ void replay_ADC_SHMS (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Define output ROOT file
   analyzer->SetOutFile(ROOTFileName.Data());
   // Define DEF-file
-  analyzer->SetOdefFile("UTIL_KAONLT/DEF-files/ADCGates_SHMS.def");
+  analyzer->SetOdefFile("UTIL_PION/DEF-files/ADCGates_SHMS.def");
   // Define cuts file
-  analyzer->SetCutFile("UTIL_KAONLT/DEF-files/ADCGates_SHMS_cuts.def");  // optional
+  analyzer->SetCutFile("UTIL_PION/DEF-files/ADCGates_SHMS_cuts.def");  // optional
   // File to record accounting information for cuts
   //analyzer->SetSummaryFile(Form("REPORT_OUTPUT/SHMS/PRODUCTION/summary_coin_all_production_%d_%d.report", RunNumber, MaxEvent));  // optional
   // Start the actual analysis.

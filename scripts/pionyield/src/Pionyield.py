@@ -31,22 +31,41 @@ MaxEvent = sys.argv[3]
 USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
 HOST = subprocess.getstatusoutput("hostname")
 if ("farm" in HOST[1]):
-    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
+    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
 elif ("qcd" in HOST[1]):
-    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
+    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
 elif ("phys.uregina" in HOST[1]):
     REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
 elif("skynet" in HOST[1]):
     REPLAYPATH = "/home/%s/Work/JLab/hallc_replay_lt" % USER[1]
     
 # Add more path setting as needed in a similar manner
-OUTPATH = "%s/UTIL_PION/scripts/pionyield/OUTPUT" % REPLAYPATH
+OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/PionLT" % REPLAYPATH
 CUTPATH = "%s/UTIL_PION/DB/CUTS" % REPLAYPATH
 sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
 import kaonlt as klt
 
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
-rootName = "%s/UTIL_PION/ROOTfiles/%s_%s_%s.root" % (REPLAYPATH, ROOTPrefix, runNum, MaxEvent)
+# Construct the name of the rootfile based upon the info we provided
+rootName = "%s/UTIL_PION/ROOTfiles/Analysis/PionLT/%s_%s_%s.root" % (REPLAYPATH, ROOTPrefix, runNum, MaxEvent)
+print ("Attempting to process %s" %(rootName))
+if os.path.exists(OUTPATH):
+    if os.path.islink(OUTPATH):
+        pass
+    elif os.path.isdir(OUTPATH):
+        pass
+    else:
+        print ("%s exists but is not a directory or sym link, check your directory/link and try again" % (OUTPATH))
+        sys.exit(2)
+else:
+    print("Output path not found, please check the OUTPATH variable in the script and check it looks OK")
+    sys.exit(3)
+if os.path.isfile(rootName):
+    print ("%s exists, attempting to process" % (rootName))
+else:
+    print ("%s not found - do you have the correct sym link/folder set up?" % (rootName))
+    sys.exit(4)
+print("Output path checks out, outputting to %s" % (OUTPATH))
 
 ###############################################################################################################
 ############################### RF Timing is the only thing left in here ######################################

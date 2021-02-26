@@ -23,7 +23,7 @@ void replay_ADC_HMS(Int_t RunNumber=0, Int_t MaxEvent=0) {
   pathList.push_back("./raw/../raw.copiedtotape");
   pathList.push_back("./cache");
 
-  const char* ROOTFileNamePattern = "UTIL_KAONLT/ROOTfiles/ADCGates_HMS_coin_replay_production_all_%d_%d.root";
+  const char* ROOTFileNamePattern = "UTIL_PION/ROOTfiles/Calib/Timing/ADCGates_HMS_coin_replay_production_all_%d_%d.root";
 
   // Load Global parameters
   // Add variables to global list.
@@ -35,7 +35,7 @@ void replay_ADC_HMS(Int_t RunNumber=0, Int_t MaxEvent=0) {
   // Load params for HMS trigger configuration
   gHcParms->Load("PARAM/TRIG/thms.param");
   // Load fadc debug parameters
-  gHcParms->Load("UTIL_KAONLT/scripts_Replay/h_fadc_debug.param");
+  gHcParms->Load("UTIL_PION/scripts_Replay/h_fadc_debug.param");
 
   // Load the Hall C detector map
   gHcDetectorMap = new THcDetectorMap();
@@ -155,10 +155,10 @@ void replay_ADC_HMS(Int_t RunNumber=0, Int_t MaxEvent=0) {
   // Define output ROOT file
   analyzer->SetOutFile(ROOTFileName.Data());
   // Define output DEF-file 
-  analyzer->SetOdefFile("UTIL_KAONLT/scripts_Replay/ADCGates_HMS.def");
+  analyzer->SetOdefFile("UTIL_PION/scripts_Replay/ADCGates_HMS.def");
   //analyzer->SetOdefFile("DEF-files/HMS/PRODUCTION/hstackana_production_all.def");
   // Define cuts file
-  analyzer->SetCutFile("UTIL_KAONLT/scripts_Replay/ADCGates_HMS_cuts.def");
+  analyzer->SetCutFile("UTIL_PION/scripts_Replay/ADCGates_HMS_cuts.def");
   //analyzer->SetCutFile("DEF-files/HMS/PRODUCTION/CUTS/hstackana_production_cuts.def");// optional
   // File to record cuts accounting information for cuts
   //analyzer->SetSummaryFile(Form("REPORT_OUTPUT/HMS/PRODUCTION/summary_coin_all_production_%d_%d.report", RunNumber, MaxEvent));    // optional

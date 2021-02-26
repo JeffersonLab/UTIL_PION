@@ -29,7 +29,7 @@ USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
 HOST = subprocess.getstatusoutput("hostname")
 
 if ("farm" in HOST[1]):
-    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
+    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
 elif ("lark" in HOST[1]):
     REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
 elif ("trottar" in HOST[1]):
@@ -39,7 +39,7 @@ print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST
 
 filename = "%s/UTIL_KAONLT/scripts/luminosity/OUTPUTS/lumi_data.csv" % REPLAYPATH
 rootName = "%s/UTIL_KAONLT/ROOTfiles/lumi_coin_offline_%s_%s.root" % (REPLAYPATH,runNum,MaxEvent)
-report = "/u/group/c-kaonlt/USERS/%s/kaonlt/REPORT_OUTPUT/lumi_coin_offline_%s_%s.report" % (USER[1],runNum,MaxEvent)
+report = "/u/group/c-pionlt/USERS/%s/kaonlt/REPORT_OUTPUT/lumi_coin_offline_%s_%s.report" % (USER[1],runNum,MaxEvent)
 
 thres_curr = 2.5
 

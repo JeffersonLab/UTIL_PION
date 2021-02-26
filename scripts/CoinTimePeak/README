@@ -21,7 +21,7 @@ The first step is to run the python script in /src, src/CoinTimePeak.py. This sc
 
 python3 CoinTimePeak.py ROOTPrefix runNum MaxEvent
 
-ROOTPrefix - Prefix of the replay ROOTfile name, omitting the final _ before the run number, assumed ROOTfiles are in the path - UTIL_KAONLT/ROOTfiles
+ROOTPrefix - Prefix of the replay ROOTfile name, omitting the final _ before the run number, assumed ROOTfiles are in the path - UTIL_PION/ROOTfiles/Analysis/PionLT
 runNum - The run number of the replay ROOTfile
 MaxEvent - Max number of events in the replay ROOTfile
 
@@ -29,7 +29,7 @@ e.g. if your replay is Kaon_coin_replay_production_8540_-1.root, you would execu
 
 python3 CoinTimePeak.py Kaon_coin_replay_production 8540 -1
 
-The output of this file is a trimmed .root file stored in UTIL_KAOLT/scripts/CoinTimePeak/OUTPUT with the name runNum_MaxEvent_CTPeak_Data.root. This rootfile includes trees which store info for Pi/K/p candidates, including branches that can be used to check the PID cut are OK if desired. For further analysis, only the following trees from this ROOTfile are used -
+The output of this file is a trimmed .root file stored in UTIL_PION/OUTPUT/Analysis/PionLT with the name runNum_MaxEvent_CTPeak_Data.root. This rootfile includes trees which store info for Pi/K/p candidates, including branches that can be used to check the PID cut are OK if desired. For further analysis, only the following trees from this ROOTfile are used -
 
 Pions_All
 Kaons_All
@@ -47,8 +47,8 @@ The script is executed via
 
 root -b -l -q 'PlotCoinPeak.C("InputFile", "OutputfileName")'
 
-InputFile - This is simply the output of the python script, it is expected this file is in UTIL_KAOLT/scripts/CoinTimePeak/OUTPUT
-OutputfileName - This is the name of the desired output file (which again will be saved to UTIL_KAOLT/scripts/CoinTimePeak/OUTPUT)
+InputFile - This is simply the output of the python script, it is expected this file is in UTIL_PION/OUTPUT/Analysis/PionLT
+OutputfileName - This is the name of the desired output file (which again will be saved to UTIL_PION/OUTPUT/Analysis/PionLT)
 E.g. if we wanted to run on our output from the example above we would run
 
 root -b -l -q 'PlotCoinPeak.C("8540_-1_CTPeak_Data.root", "8540_Test")' 
@@ -142,7 +142,7 @@ One of the reasons you may wish to do any of this analysis at all is to get more
 In my Physics analysis, I determine the prompt and random timing windows based upon several parameters, one of which is the position of the prompt coin time peak. 
 These parameters are all contained in a .csv file which the python script reads in to determine cut values. This parameter file can be found in
 
-UTIL_KAONLT/DB/PARAM/Timing_Parameters.csv
+UTIL_PION/DB/PARAM/Timing_Parameters.csv
 
 Timing_Parameters.csv is just a soft (symbolic) link to a .csv file containing the information you wish to use in your analysis.
 For the physics analysis of production data, accurate prompt/random windows are needed, to get these to be as accurate as possible, a run by run determination of the CTpeak is preferable. Luckily, we just produced all of this above!
@@ -161,9 +161,9 @@ Q0p375W2p2left1_highe
 for example. For this script to run, we would have needed to process these 3 kinematics using the script in Step 3a.
 
 OLD_PARAM_FILE - This is the name of the old timing parameter file we want to base our new one on. The purpose of this is to inherit the other parameters needed to determine the prompt/random windows. e.g. the bunch spacing
-The script looks for OLD_PARAM_FILE.csv in UTIL_KAONLT/DB/PARAM/ so say your old file was UTIL_KAONLT/DB/PARAM/Original_Param.csv, you would simply provide Original_Param as the argument here
+The script looks for OLD_PARAM_FILE.csv in UTIL_PION/DB/PARAM/ so say your old file was UTIL_PION/DB/PARAM/Original_Param.csv, you would simply provide Original_Param as the argument here
 
 Once executed, the script will construct a new param file, line by line, for all of the runs in all of the kinematics you requested. The produced output will be of the form KINEMATICS_LIST_TimingParamFile.csv in this directory. 
-The produced output is sorted by run number (low to high). If you wish to use this file subsequently to generate your timing cuts, move it to UTIL_KAONLT/DB/PARAM/ and change the sym link to point to your file.
+The produced output is sorted by run number (low to high). If you wish to use this file subsequently to generate your timing cuts, move it to UTIL_PION/DB/PARAM/ and change the sym link to point to your file.
 
 ### NOTE ### - This python script also requires the packages (and versions) listed in Step 1

@@ -41,7 +41,7 @@ void run_HeepSinglesYield(Int_t RunNumber = 0, Int_t MaxEvent = 0, Double_t thre
 
   //Begin Scaler Efficiency Calculation
   if(Hostname.Contains("farm")){
-    rootFileNameString = Form("/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent);
+    rootFileNameString = Form("/group/c-pionlt/USERS/${USER}/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent);
   }
   else if (Hostname.Contains("cdaq")){
     rootFileNameString = Form("/home/cdaq/hallc-online/hallc_replay_lt/ROOTfilesPion/PionLT_coin_replay_production_%i_%i.root",RunNumber,MaxEvent);
