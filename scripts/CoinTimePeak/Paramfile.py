@@ -33,12 +33,12 @@ elif ("lark.phys.uregina" in HOST[1]):
     REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
 
 # Add more path setting as needed in a similar manner
-OUTPATH = "%s/UTIL_KAONLT/scripts/CoinTimePeak/OUTPUT" % REPLAYPATH
-PARAMPATH = "%s/UTIL_KAONLT/DB/PARAM" % REPLAYPATH
-CUTPATH = "%s/UTIL_KAONLT/DB/CUTS" % REPLAYPATH
+OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/PionLT" % REPLAYPATH
+PARAMPATH = "%s/UTIL_PION/DB/PARAM" % REPLAYPATH
+CUTPATH = "%s/UTIL_PION/DB/CUTS" % REPLAYPATH
 
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
-KinList = "%s/UTIL_KAONLT/scripts/CoinTimePeak/Kinematics/%s" % (REPLAYPATH,InputList)
+KinList = "%s/UTIL_PION/scripts/CoinTimePeak/Kinematics/%s" % (REPLAYPATH,InputList)
 TimingCutFile = "%s/%s.csv" % (PARAMPATH,OldParam)
 if (path.exists(KinList) == False or path.isfile(KinList) == False):
     print("!!!!! ERROR !!!!!\n %s does not exist or is not a valid file - check 1st input arg and try again \n!!!!! ERROR !!!!!" % KinList)

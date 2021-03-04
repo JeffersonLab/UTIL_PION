@@ -40,8 +40,8 @@ If you ran the new setup scripts, these should already be present. Change the OU
 
 If you didn't, you can create a sym link via "ln -s $PATH $LINK_NAME"
 
-e.g. ln -s /volatile/hallc/c-kaonlt/ROOTfiles ROOTfiles 
-would make a sym link called ROOTfiles which points to the folder /volatile/hallc/c-kaonlt/ROOTfiles
+e.g. ln -s /volatile/hallc/c-pionlt/ROOTfiles ROOTfiles 
+would make a sym link called ROOTfiles which points to the folder /volatile/hallc/c-pionlt/ROOTfiles
 
 Further (less shouty explanation) follows -
 

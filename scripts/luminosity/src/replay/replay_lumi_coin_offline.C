@@ -27,7 +27,7 @@ void replay_lumi_coin_offline(Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   pathList.push_back("./raw/../raw.copiedtotape");
   pathList.push_back("./cache");
 
-  const char* ROOTFileNamePattern = "ROOTfiles/lumi_coin_offline_%d_%d.root";
+  const char* ROOTFileNamePattern = "ROOTfiles/Analysis/Lumi/lumi_coin_offline_%d_%d.root";
   
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
@@ -243,15 +243,15 @@ void replay_lumi_coin_offline(Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Define output ROOT file
   analyzer->SetOutFile(ROOTFileName.Data());
   // Define DEF-file+
-  analyzer->SetOdefFile("UTIL_KAONLT/config/DEF-files/luminosity_coin.def");
+  analyzer->SetOdefFile("UTIL_PION/config/DEF-files/luminosity_coin.def");
   // Define cuts file
-  analyzer->SetCutFile("UTIL_KAONLT/config/DEF-files/luminosity_coin_cuts.def");  // optional
+  analyzer->SetCutFile("UTIL_PION/config/DEF-files/luminosity_coin_cuts.def");  // optional
   // File to record accounting information for cuts
-  analyzer->SetSummaryFile(Form("UTIL_KAONLT/REPORT_OUTPUT/COIN/PRODUCTION/summary_production_%d_%d.report", RunNumber, MaxEvent));  // optional
+  analyzer->SetSummaryFile(Form("UTIL_PION/REPORT_OUTPUT/Analysis/Lumi/summary_production_%d_%d.report", RunNumber, MaxEvent));  // optional
   // Start the actual analysis.
   analyzer->Process(run);
   // Create report file from template	       
-analyzer->PrintReport("UTIL_KAONLT/config/TEMPLATES/lumi_coin.template",
-		    Form("UTIL_KAONLT/REPORT_OUTPUT/lumi_coin_offline_%d_%d.report", RunNumber, MaxEvent)); // optional
+analyzer->PrintReport("UTIL_PION/config/TEMPLATES/lumi_coin.template",
+		    Form("UTIL_PION/REPORT_OUTPUT/Analysis/Lumi/lumi_coin_offline_%d_%d.report", RunNumber, MaxEvent)); // optional
   
 }
