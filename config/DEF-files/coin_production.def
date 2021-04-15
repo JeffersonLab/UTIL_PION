@@ -1,6 +1,7 @@
 block CTime.eKCoinTime_ROC1
 block CTime.ePiCoinTime_ROC1
 block CTime.epCoinTime_ROC1      
+block RFTime.*
 block P.gtr.beta
 block P.gtr.th
 block P.gtr.ph

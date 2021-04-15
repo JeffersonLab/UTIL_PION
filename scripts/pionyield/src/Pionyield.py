@@ -101,6 +101,8 @@ CTime_eKCoinTime_ROC1 = e_tree.array("CTime.eKCoinTime_ROC1")
 CTime_epCoinTime_ROC1 = e_tree.array("CTime.epCoinTime_ROC1")
 P_RF_tdcTime = e_tree.array("T.coin.pRF_tdcTime")
 P_hod_fpHitsTime = e_tree.array("P.hod.fpHitsTime")
+H_RF_Dist = e_tree.array("RFTime.HMS_RFtimeDist")
+P_RF_Dist = e_tree.array("RFTime.SHMS_RFtimeDist")
 # HMS info
 H_gtr_beta = e_tree.array("H.gtr.beta")
 H_gtr_xp = e_tree.array("H.gtr.th") # xpfp -> Theta
@@ -199,8 +201,8 @@ c = klt.pyPlot(REPLAYPATH,cutDict)
 
 def coin_pions(): 
     # Define the array of arrays containing the relevant HMS and SHMS info
-    NoCut_COIN_Pions = [H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_ePiCoinTime_ROC1, P_RF_tdcTime, P_hod_fpHitsTime, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, MMpi, MMK, MMp, RF_CutDist, Q2, W, epsilon, MandelT, MandelU, ph_q]
-    Uncut_COIN_Pions = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*NoCut_COIN_Pions)] 
+    NoCut_COIN_Pions = [H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_ePiCoinTime_ROC1, P_RF_tdcTime, P_hod_fpHitsTime, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, MMpi, MMK, MMp, RF_CutDist, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, MandelT, MandelU, ph_q]
+    Uncut_COIN_Pions = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*NoCut_COIN_Pions)] 
 
     # Create array of arrays of pions after cuts, all events, prompt and random
     Cut_COIN_Pions_tmp = NoCut_COIN_Pions
@@ -219,21 +221,20 @@ def coin_pions():
         Cut_COIN_Pions_rand_tmp.append(c.add_cut(arr, "coin_epi_cut_rand"))
         Cut_COIN_Pions_rand_noRF_tmp.append(c.add_cut(arr, "coin_epi_cut_rand"))
 
-    Cut_COIN_Pions_all = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Pions_all_tmp)
+    Cut_COIN_Pions_all = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Pions_all_tmp)
                     if RFCutDist > 1.4 and RFCutDist < 3]
 
-    Cut_COIN_Pions_all_noRF = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Pions_all_noRF_tmp)]
+    Cut_COIN_Pions_all_noRF = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Pions_all_noRF_tmp)]
 
-    Cut_COIN_Pions_prompt = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Pions_prompt_tmp)
+    Cut_COIN_Pions_prompt = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Pions_prompt_tmp)
                     if RFCutDist > 1.4 and RFCutDist < 3]
 
-    Cut_COIN_Pions_prompt_noRF = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Pions_prompt_noRF_tmp)]
+    Cut_COIN_Pions_prompt_noRF = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Pions_prompt_noRF_tmp)]
 
-    Cut_COIN_Pions_random = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Pions_rand_tmp)
+    Cut_COIN_Pions_random = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Pions_rand_tmp)
                     if RFCutDist > 1.4 and RFCutDist < 3]
 
-    Cut_COIN_Pions_random_noRF = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Pions_rand_noRF_tmp)]
-
+    Cut_COIN_Pions_random_noRF = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTPi, RF, HodStart, PiBeta, Pixp, Piyp, PiP, PiDel, PiCal, PiCalTrack, PiAero, PiAeroX, PiAeroY, PiHGC, PiHGCX, PiHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Pions_rand_noRF_tmp)]
 
     COIN_Pions = {
         "Uncut_Pion_Events" : Uncut_COIN_Pions,
@@ -249,8 +250,8 @@ def coin_pions():
 
 def coin_kaons(): 
     # Define the array of arrays containing the relevant HMS and SHMS info
-    NoCut_COIN_Kaons = [H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_eKCoinTime_ROC1, P_RF_tdcTime, P_hod_fpHitsTime, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, MMpi, MMK, MMp, RF_CutDist, Q2, W, epsilon, MandelT, MandelU, ph_q]
-    Uncut_COIN_Kaons = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTK, RF, HodStart, KBeta, Kxp, Kyp, KP, KDel, KCal, KCalTrack, KAero, KAeroX, KAeroY, KHGC, KHGCX, KHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTK, RF, HodStart, KBeta, Kxp, Kyp, KP, KDel, KCal, KCalTrack, KAero, KAeroX, KAeroY, KHGC, KHGCX, KHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*NoCut_COIN_Kaons)] 
+    NoCut_COIN_Kaons = [H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_eKCoinTime_ROC1, P_RF_tdcTime, P_hod_fpHitsTime, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, MMpi, MMK, MMp, RF_CutDist, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, MandelT, MandelU, ph_q]
+    Uncut_COIN_Kaons = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTK, RF, HodStart, KBeta, Kxp, Kyp, KP, KDel, KCal, KCalTrack, KAero, KAeroX, KAeroY, KHGC, KHGCX, KHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTK, RF, HodStart, KBeta, Kxp, Kyp, KP, KDel, KCal, KCalTrack, KAero, KAeroX, KAeroY, KHGC, KHGCX, KHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*NoCut_COIN_Kaons)] 
 
     # Create array of arrays of pions after cuts, all events, prompt and random
     Cut_COIN_Kaons_tmp = NoCut_COIN_Kaons
@@ -263,13 +264,13 @@ def coin_kaons():
         Cut_COIN_Kaons_prompt_tmp.append(c.add_cut(arr, "coin_ek_cut_prompt"))
         Cut_COIN_Kaons_rand_tmp.append(c.add_cut(arr, "coin_ek_cut_rand"))
 
-    Cut_COIN_Kaons_all = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTK, RF, HodStart, KBeta, Kxp, Kyp, KP, KDel, KCal, KCalTrack, KAero, KAeroX, KAeroY, KHGC, KHGCX, KHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTK, RF, HodStart, KBeta, Kxp, Kyp, KP, KDel, KCal, KCalTrack, KAero, KAeroX, KAeroY, KHGC, KHGCX, KHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Kaons_all_tmp)
+    Cut_COIN_Kaons_all = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTK, RF, HodStart, KBeta, Kxp, Kyp, KP, KDel, KCal, KCalTrack, KAero, KAeroX, KAeroY, KHGC, KHGCX, KHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTK, RF, HodStart, KBeta, Kxp, Kyp, KP, KDel, KCal, KCalTrack, KAero, KAeroX, KAeroY, KHGC, KHGCX, KHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Kaons_all_tmp)
                     if RFCutDist > 1.3 and RFCutDist < 3]
 
-    Cut_COIN_Kaons_prompt = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTK, RF, HodStart, KBeta, Kxp, Kyp, KP, KDel, KCal, KCalTrack, KAero, KAeroX, KAeroY, KHGC, KHGCX, KHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTK, RF, HodStart, KBeta, Kxp, Kyp, KP, KDel, KCal, KCalTrack, KAero, KAeroX, KAeroY, KHGC, KHGCX, KHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Kaons_prompt_tmp)
+    Cut_COIN_Kaons_prompt = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTK, RF, HodStart, KBeta, Kxp, Kyp, KP, KDel, KCal, KCalTrack, KAero, KAeroX, KAeroY, KHGC, KHGCX, KHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTK, RF, HodStart, KBeta, Kxp, Kyp, KP, KDel, KCal, KCalTrack, KAero, KAeroX, KAeroY, KHGC, KHGCX, KHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Kaons_prompt_tmp)
                     if RFCutDist > 1.3 and RFCutDist < 3]
 
-    Cut_COIN_Kaons_random = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTK, RF, HodStart, KBeta, Kxp, Kyp, KP, KDel, KCal, KCalTrack, KAero, KAeroX, KAeroY, KHGC, KHGCX, KHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTK, RF, HodStart, KBeta, Kxp, Kyp, KP, KDel, KCal, KCalTrack, KAero, KAeroX, KAeroY, KHGC, KHGCX, KHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Kaons_rand_tmp)
+    Cut_COIN_Kaons_random = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTK, RF, HodStart, KBeta, Kxp, Kyp, KP, KDel, KCal, KCalTrack, KAero, KAeroX, KAeroY, KHGC, KHGCX, KHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTK, RF, HodStart, KBeta, Kxp, Kyp, KP, KDel, KCal, KCalTrack, KAero, KAeroX, KAeroY, KHGC, KHGCX, KHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Kaons_rand_tmp)
                     if RFCutDist > 1.3 and RFCutDist < 3]
 
     COIN_Kaons = {
@@ -281,11 +282,10 @@ def coin_kaons():
 
     return COIN_Kaons
 
-
 def coin_protons(): 
     # Define the array of arrays containing the relevant HMS and SHMS info
-    NoCut_COIN_Protons = [H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1, P_RF_tdcTime, P_hod_fpHitsTime, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, MMpi, MMK, MMp, RF_CutDist, Q2, W, epsilon, MandelT, MandelU, ph_q]
-    Uncut_COIN_Protons = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTp, RF, HodStart, pBeta, pxp, pyp, pP, pDel, pCal, pCalTrack, pAero, pAeroX, pAeroY, pHGC, pHGCX, pHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTp, RF, HodStart, pBeta, pxp, pyp, pP, pDel, pCal, pCalTrack, pAero, pAeroX, pAeroY, pHGC, pHGCX, pHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*NoCut_COIN_Protons)] 
+    NoCut_COIN_Protons = [H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1, P_RF_tdcTime, P_hod_fpHitsTime, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, MMpi, MMK, MMp, RF_CutDist, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, MandelT, MandelU, ph_q]
+    Uncut_COIN_Protons = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTp, RF, HodStart, pBeta, pxp, pyp, pP, pDel, pCal, pCalTrack, pAero, pAeroX, pAeroY, pHGC, pHGCX, pHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTp, RF, HodStart, pBeta, pxp, pyp, pP, pDel, pCal, pCalTrack, pAero, pAeroX, pAeroY, pHGC, pHGCX, pHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*NoCut_COIN_Protons)] 
 
     # Create array of arrays of pions after cuts, all events, prompt and random
     Cut_COIN_Protons_tmp = NoCut_COIN_Protons
@@ -298,13 +298,13 @@ def coin_protons():
         Cut_COIN_Protons_prompt_tmp.append(c.add_cut(arr, "coin_ep_cut_prompt"))
         Cut_COIN_Protons_rand_tmp.append(c.add_cut(arr, "coin_ep_cut_rand"))
 
-    Cut_COIN_Protons_all = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTp, RF, HodStart, pBeta, pxp, pyp, pP, pDel, pCal, pCalTrack, pAero, pAeroX, pAeroY, pHGC, pHGCX, pHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTp, RF, HodStart, pBeta, pxp, pyp, pP, pDel, pCal, pCalTrack, pAero, pAeroX, pAeroY, pHGC, pHGCX, pHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Protons_all_tmp)
+    Cut_COIN_Protons_all = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTp, RF, HodStart, pBeta, pxp, pyp, pP, pDel, pCal, pCalTrack, pAero, pAeroX, pAeroY, pHGC, pHGCX, pHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTp, RF, HodStart, pBeta, pxp, pyp, pP, pDel, pCal, pCalTrack, pAero, pAeroX, pAeroY, pHGC, pHGCX, pHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Protons_all_tmp)
                             if RFCutDist < 1.5]
 
-    Cut_COIN_Protons_prompt = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTp, RF, HodStart, pBeta, pxp, pyp, pP, pDel, pCal, pCalTrack, pAero, pAeroX, pAeroY, pHGC, pHGCX, pHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTp, RF, HodStart, pBeta, pxp, pyp, pP, pDel, pCal, pCalTrack, pAero, pAeroX, pAeroY, pHGC, pHGCX, pHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Protons_prompt_tmp)
+    Cut_COIN_Protons_prompt = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTp, RF, HodStart, pBeta, pxp, pyp, pP, pDel, pCal, pCalTrack, pAero, pAeroX, pAeroY, pHGC, pHGCX, pHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTp, RF, HodStart, pBeta, pxp, pyp, pP, pDel, pCal, pCalTrack, pAero, pAeroX, pAeroY, pHGC, pHGCX, pHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Protons_prompt_tmp)
                     if RFCutDist < 1.5]
 
-    Cut_COIN_Protons_random = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTp, RF, HodStart, pBeta, pxp, pyp, pP, pDel, pCal, pCalTrack, pAero, pAeroX, pAeroY, pHGC, pHGCX, pHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTp, RF, HodStart, pBeta, pxp, pyp, pP, pDel, pCal, pCalTrack, pAero, pAeroX, pAeroY, pHGC, pHGCX, pHGCY, mm1, mm2, mm3, RFCutDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Protons_rand_tmp)
+    Cut_COIN_Protons_random = [(HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTp, RF, HodStart, pBeta, pxp, pyp, pP, pDel, pCal, pCalTrack, pAero, pAeroX, pAeroY, pHGC, pHGCX, pHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) for (HBeta, Hxp, Hyp, Hdel, HCal, HCalTrack, HCer, CTp, RF, HodStart, pBeta, pxp, pyp, pP, pDel, pCal, pCalTrack, pAero, pAeroX, pAeroY, pHGC, pHGCX, pHGCY, mm1, mm2, mm3, RFCutDist, HRFDist, PRFDist, Kin_Q2, Kin_W, Kin_eps, Kin_t, Kin_u, phq) in zip(*Cut_COIN_Protons_rand_tmp)
                     if RFCutDist < 1.5]
 
     COIN_Protons = {
@@ -323,16 +323,15 @@ def main():
     # This is just the list of branches we use from the initial root file for each dict
     # I don't like re-defining this here as it's very prone to errors if you included (or removed something) earlier but didn't modify it here
     # Should base the branches to include based on some list and just repeat the list here (or call it again directly below)
-    COIN_Pion_Data_Header = ["H_gtr_beta","H_gtr_xp","H_gtr_yp","H_gtr_dp","H_cal_etotnorm", "H_cal_etottracknorm","H_cer_npeSum","CTime_ePiCoinTime_ROC1","P_RF_tdcTime","P_hod_fpHitsTime","P_gtr_beta","P_gtr_xp","P_gtr_yp","P_gtr_p","P_gtr_dp","P_cal_etotnorm","P_cal_etottracknorm","P_aero_npeSum","P_aero_xAtAero","P_aero_yAtAero","P_hgcer_npeSum","P_hgcer_xAtCer","P_hgcer_yAtCer","MMpi","MMK","MMp","RF_CutDist", "Q2", "W", "epsilon", "MandelT", "MandelU", "ph_q"]
-    COIN_Kaon_Data_Header = ["H_gtr_beta","H_gtr_xp","H_gtr_yp","H_gtr_dp","H_cal_etotnorm", "H_cal_etottracknorm","H_cer_npeSum","CTime_eKCoinTime_ROC1","P_RF_tdcTime","P_hod_fpHitsTime","P_gtr_beta","P_gtr_xp","P_gtr_yp","P_gtr_p","P_gtr_dp","P_cal_etotnorm","P_cal_etottracknorm","P_aero_npeSum","P_aero_xAtAero","P_aero_yAtAero","P_hgcer_npeSum","P_hgcer_xAtCer","P_hgcer_yAtCer","MMpi","MMK","MMp","RF_CutDist", "Q2", "W", "epsilon", "MandelT", "MandelU", "ph_q"]
-    COIN_Proton_Data_Header = ["H_gtr_beta","H_gtr_xp","H_gtr_yp","H_gtr_dp","H_cal_etotnorm", "H_cal_etottracknorm","H_cer_npeSum","CTime_epCoinTime_ROC1","P_RF_tdcTime","P_hod_fpHitsTime","P_gtr_beta","P_gtr_xp","P_gtr_yp","P_gtr_p","P_gtr_dp","P_cal_etotnorm","P_cal_etottracknorm","P_aero_npeSum","P_aero_xAtAero","P_aero_yAtAero","P_hgcer_npeSum","P_hgcer_xAtCer","P_hgcer_yAtCer","MMpi","MMK","MMp","RF_CutDist", "Q2", "W", "epsilon", "MandelT", "MandelU", "ph_q"]
+    COIN_Pion_Data_Header = ["H_gtr_beta","H_gtr_xp","H_gtr_yp","H_gtr_dp","H_cal_etotnorm","H_cal_etottracknorm","H_cer_npeSum","CTime_ePiCoinTime_ROC1","P_RF_tdcTime","P_hod_fpHitsTime","P_gtr_beta","P_gtr_xp","P_gtr_yp","P_gtr_p","P_gtr_dp","P_cal_etotnorm","P_cal_etottracknorm","P_aero_npeSum","P_aero_xAtAero","P_aero_yAtAero","P_hgcer_npeSum","P_hgcer_xAtCer","P_hgcer_yAtCer","MMpi","MMK","MMp","RF_CutDist","H_RF_Dist","P_RF_Dist","Q2","W","epsilon","MandelT","MandelU","ph_q"]
+    COIN_Kaon_Data_Header = ["H_gtr_beta","H_gtr_xp","H_gtr_yp","H_gtr_dp","H_cal_etotnorm","H_cal_etottracknorm","H_cer_npeSum","CTime_eKCoinTime_ROC1","P_RF_tdcTime","P_hod_fpHitsTime","P_gtr_beta","P_gtr_xp","P_gtr_yp","P_gtr_p","P_gtr_dp","P_cal_etotnorm","P_cal_etottracknorm","P_aero_npeSum","P_aero_xAtAero","P_aero_yAtAero","P_hgcer_npeSum","P_hgcer_xAtCer","P_hgcer_yAtCer","MMpi","MMK","MMp","RF_CutDist","H_RF_Dist","P_RF_Dist","Q2","W","epsilon","MandelT","MandelU","ph_q"]
+    COIN_Proton_Data_Header = ["H_gtr_beta","H_gtr_xp","H_gtr_yp","H_gtr_dp","H_cal_etotnorm","H_cal_etottracknorm","H_cer_npeSum","CTime_epCoinTime_ROC1","P_RF_tdcTime","P_hod_fpHitsTime","P_gtr_beta","P_gtr_xp","P_gtr_yp","P_gtr_p","P_gtr_dp","P_cal_etotnorm","P_cal_etottracknorm","P_aero_npeSum","P_aero_xAtAero","P_aero_yAtAero","P_hgcer_npeSum","P_hgcer_xAtCer","P_hgcer_yAtCer","MMpi","MMK","MMp","RF_CutDist","H_RF_Dist","P_RF_Dist","Q2","W","epsilon","MandelT","MandelU","ph_q"]
     # Need to create a dict for all the branches we grab
     data = {}
 
     for d in (COIN_Pion_Data, COIN_Kaon_Data, COIN_Proton_Data): # Convert individual dictionaries into a "dict of dicts"
         data.update(d)
         data_keys = list(data.keys()) # Create a list of all the keys in all dicts added above, each is an array of data
-
     for i in range (0, len(data_keys)):
         if("Pion" in data_keys[i]):
             DFHeader=list(COIN_Pion_Data_Header)

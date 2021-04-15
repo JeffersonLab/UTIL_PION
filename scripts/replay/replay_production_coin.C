@@ -204,6 +204,10 @@ void replay_production_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // const char* elecArmName, const char* coinname) :
   THcCoinTime* coinTime = new THcCoinTime("CTime", "Coincidende Time Determination", "P", "H", "T.coin");
   gHaPhysics->Add(coinTime);
+  //Add RF physics module THcRFTime::THcRFTime (const char *name, const char* description, const char* hadArmName, 
+  // const char* elecArmName, const char* RFname) :
+  THcRFTime* RFTime = new THcRFTime("RFTime", "RF Time Determination", "P", "H", "T.coin");
+  gHaPhysics->Add(RFTime);
 
   // Add event handler for prestart event 125.
   THcConfigEvtHandler* ev125 = new THcConfigEvtHandler("HC", "Config Event type 125");

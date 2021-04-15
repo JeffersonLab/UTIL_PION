@@ -84,6 +84,9 @@ void PlotPionPhysics(string InFilename = "", string OutFilename = "")
   Double_t RF_all; Cut_All_NoRF->SetBranchAddress("RF_CutDist", &RF_all);
   Double_t RF_pr; Cut_Pr_NoRF->SetBranchAddress("RF_CutDist", &RF_pr);
   Double_t RF_rn; Cut_Rn_NoRF->SetBranchAddress("RF_CutDist", &RF_rn);
+  Double_t P_RF_all; Cut_All_NoRF->SetBranchAddress("P_RF_Dist", &P_RF_all);
+  Double_t P_RF_pr; Cut_Pr_NoRF->SetBranchAddress("P_RF_Dist", &P_RF_pr);
+  Double_t P_RF_rn; Cut_Rn_NoRF->SetBranchAddress("P_RF_Dist", &P_RF_rn);
   Double_t Beta_all; Cut_All->SetBranchAddress("P_gtr_beta", &Beta_all);
   Double_t Beta_pr; Cut_Pr->SetBranchAddress("P_gtr_beta", &Beta_pr);
   Double_t Beta_rn; Cut_Rn->SetBranchAddress("P_gtr_beta", &Beta_rn);
@@ -123,6 +126,10 @@ void PlotPionPhysics(string InFilename = "", string OutFilename = "")
   TH1D *h1_RFCutDist = new TH1D("h1_RFCutDist", "RFCutDist - No RF or PID Cut applied", 200, 0, 4);
   TH1D *h1_RFCutDist_woCut = new TH1D("h1_RFCutDist_woCut", "Pion RFCutDist - No RF Cut applied", 200, 0, 4);
   TH1D *h1_RFCutDist_wCut = new TH1D("h1_RFCutDist_wCut", "Pion RFCutDist - RF Cut applied", 200, 0, 4);
+
+  TH1D *h1_P_RFDist = new TH1D("h1_P_RFDist", "SHMS RFDist - No RF or PID Cut applied", 200, 0, 4);
+  TH1D *h1_P_RFDist_woCut = new TH1D("h1_P_RFDist_woCut", "SHMS Pion RFDist - No RF Cut  applied", 200, 0, 4);
+  TH1D *h1_P_RFDist_wCut = new TH1D("h1_P_RFDist_wCut", "SHMS Pion RFDist - RF Cut applied", 200, 0, 4);
 
   TH1D *h1_Aero_Uncut = new TH1D("h1_Aero_Uncut", "Aerogel NPESum - all events before cuts", 50, 0, 50);
   TH1D *h1_Aero_Cut = new TH1D("h1_Aero_Cut", "Aerogel NPESum - all events after cuts", 50, 0, 50);
@@ -213,6 +220,10 @@ void PlotPionPhysics(string InFilename = "", string OutFilename = "")
   Uncut->Draw("RF_CutDist >> h1_RFCutDist", "", "goff");
   Cut_All_NoRF->Draw("RF_CutDist >> h1_RFCutDist_woCut", "", "goff");
   Cut_All->Draw("RF_CutDist >> h1_RFCutDist_wCut", "", "goff");
+
+  Uncut->Draw("P_RF_Dist >> h1_P_RFDist", "", "goff");
+  Cut_All_NoRF->Draw("P_RF_Dist >> h1_P_RFDist_woCut", "", "goff");
+  Cut_All->Draw("P_RF_Dist >> h1_P_RFDist_wCut","","goff");
 
   h1_MMpi_Random_Scaled->Scale(1.0/nWindows);
   h1_MMpi_BGSub->Add(h1_MMpi_Prompt, h1_MMpi_Random_Scaled, 1, -1);
@@ -348,7 +359,7 @@ void PlotPionPhysics(string InFilename = "", string OutFilename = "")
   c_CT2->Print(foutpdf);
 
   TCanvas *c_RFCut = new TCanvas("c_RFCut", "Pion RFCut distributions", 100, 0, 1000, 900);
-  c_RFCut->Divide(2,2);
+  c_RFCut->Divide(4,2);
   c_RFCut->cd(1);
   h1_RFCutDist_woCut->Draw();
   c_RFCut->cd(2);
@@ -363,6 +374,20 @@ void PlotPionPhysics(string InFilename = "", string OutFilename = "")
   h1_RFCutDist->Draw();
   h1_RFCutDist_woCut->Draw("SAME");
   h1_RFCutDist_wCut->Draw("SAME");
+  c_RFCut->cd(5);
+  h1_P_RFDist_woCut->Draw();
+  c_RFCut->cd(6);
+  h1_P_RFDist_woCut->SetLineColor(2);
+  h1_P_RFDist_woCut->Draw();
+  h1_P_RFDist_wCut->SetLineColor(4);
+  h1_P_RFDist_wCut->Draw("SAME");
+  c_RFCut->cd(7);
+  h1_P_RFDist->SetLineColor(6);
+  h1_P_RFDist->Draw();
+  c_RFCut->cd(8);
+  h1_P_RFDist->Draw();
+  h1_P_RFDist_woCut->Draw("SAME");
+  h1_P_RFDist_wCut->Draw("SAME");
   c_RFCut->Print(foutpdf);
 
   TCanvas *c_RFMM = new TCanvas("c_RFMM", "Pion RF vs MM distributions", 100, 0, 1000, 900);
@@ -453,6 +478,9 @@ void PlotPionPhysics(string InFilename = "", string OutFilename = "")
   h1_RFCutDist->Write();
   h1_RFCutDist_woCut->Write();
   h1_RFCutDist_wCut->Write();
+  h1_P_RFDist->Write();
+  h1_P_RFDist_woCut->Write();
+  h1_P_RFDist_wCut->Write();
 
   d_Kine->cd();
   h2_Q2vsW->Write();
