@@ -96,6 +96,14 @@ void PlotPionPhysics(string InFilename = "", string OutFilename = "")
   Double_t MMpi_all_NoRF; Cut_All_NoRF->SetBranchAddress("MMpi", &MMpi_all_NoRF);
   Double_t MMpi_pr_NoRF; Cut_Pr_NoRF->SetBranchAddress("MMpi", &MMpi_pr_NoRF);
   Double_t MMpi_rn_NoRF; Cut_Rn_NoRF->SetBranchAddress("MMpi", &MMpi_rn_NoRF);
+
+  Double_t MMpi_hcana_all; Cut_All->SetBranchAddress("MMpi_hcana", &MMpi_hcana_all);
+  Double_t MMpi_hcana_pr; Cut_Pr->SetBranchAddress("MMpi_hcana", &MMpi_hcana_pr);
+  Double_t MMpi_hcana_rn; Cut_Rn->SetBranchAddress("MMpi_hcana", &MMpi_hcana_rn);
+  Double_t MMpi_hcana_all_NoRF; Cut_All_NoRF->SetBranchAddress("MMpi_hcana", &MMpi_hcana_all_NoRF);
+  Double_t MMpi_hcana_pr_NoRF; Cut_Pr_NoRF->SetBranchAddress("MMpi_hcana", &MMpi_hcana_pr_NoRF);
+  Double_t MMpi_hcana_rn_NoRF; Cut_Rn_NoRF->SetBranchAddress("MMpi_hcana", &MMpi_hcana_rn_NoRF);
+
   Double_t W_pr; Cut_Pr->SetBranchAddress("W", &W_pr);
   Double_t Q2_pr; Cut_Pr->SetBranchAddress("Q2", &Q2_pr);
   Double_t t_pr; Cut_Pr->SetBranchAddress("MandelT", &t_pr);
@@ -118,6 +126,13 @@ void PlotPionPhysics(string InFilename = "", string OutFilename = "")
   TH1D *h1_MMpi_Random = new TH1D("h1_MMpi_Random", "MM_{#pi} - Random events after cuts; Mass (GeV/c^{2})", 220, 0.5, 1.6);
   TH1D *h1_MMpi_Random_Scaled = new TH1D("h1_MMpi_Random_Scaled", "MM_{#pi} - Random events after cuts; Mass (GeV/c^{2})", 220, 0.5, 1.6);
   TH1D *h1_MMpi_BGSub = new TH1D("h1_MMpi_BGSub", "MM_{#pi} - BGSub events after cuts; Mass (GeV/c^{2})", 220, 0.5, 1.6);
+
+  TH1D *h1_MMpi_hcana_All = new TH1D("h1_MMpi_hcana_All", "MM_{#pi} - All events after cuts; Mass (GeV/c^{2})", 220, 0.5, 1.6);
+  TH1D *h1_MMpi_hcana_Prompt = new TH1D("h1_MMpi_hcana_Prompt", "MM_{#pi} - Prompt events after cuts; Mass (GeV/c^{2})", 220, 0.5, 1.6);
+  TH1D *h1_MMpi_hcana_Random = new TH1D("h1_MMpi_hcana_Random", "MM_{#pi} - Random events after cuts; Mass (GeV/c^{2})", 220, 0.5, 1.6);
+  TH1D *h1_MMpi_hcana_Random_Scaled = new TH1D("h1_MMpi_hcana_Random_Scaled", "MM_{#pi} - Random events after cuts; Mass (GeV/c^{2})", 220, 0.5, 1.6);
+  TH1D *h1_MMpi_hcana_BGSub = new TH1D("h1_MMpi_hcana_BGSub", "MM_{#pi} - BGSub events after cuts; Mass (GeV/c^{2})", 220, 0.5, 1.6);
+
   TH1D *h1_CT_All = new TH1D("h1_CT_All", "Pion CT - All events after cuts; Time (ns)", 240, 10, 70); 
   TH1D *h1_CT_Prompt = new TH1D("h1_CT_Prompt", "Pion CT - Prompt events after cuts; Time (ns)", 240, 10, 70);
   TH1D *h1_CT_Random = new TH1D("h1_CT_Random", "Pion CT - Random events after cuts; Time (ns)", 240, 10, 70);
@@ -187,6 +202,12 @@ void PlotPionPhysics(string InFilename = "", string OutFilename = "")
   Cut_Pr->Draw("MMpi >> h1_MMpi_Prompt", "", "goff");
   Cut_Rn->Draw("MMpi >> h1_MMpi_Random", "", "goff");
   Cut_Rn->Draw("MMpi  >> h1_MMpi_Random_Scaled", "", "goff");
+
+  Cut_All->Draw("MMpi_hcana >> h1_MMpi_hcana_All", "", "goff");
+  Cut_Pr->Draw("MMpi_hcana >> h1_MMpi_hcana_Prompt", "", "goff");
+  Cut_Rn->Draw("MMpi_hcana >> h1_MMpi_hcana_Random", "", "goff");
+  Cut_Rn->Draw("MMpi_hcana  >> h1_MMpi_hcana_Random_Scaled", "", "goff");
+
   Cut_All->Draw("CTime_ePiCoinTime_ROC1 >> h1_CT_All", "", "goff");
   Cut_Pr->Draw("CTime_ePiCoinTime_ROC1 >> h1_CT_Prompt", "", "goff");
   Cut_Rn->Draw("CTime_ePiCoinTime_ROC1 >> h1_CT_Random", "", "goff");
@@ -227,6 +248,9 @@ void PlotPionPhysics(string InFilename = "", string OutFilename = "")
 
   h1_MMpi_Random_Scaled->Scale(1.0/nWindows);
   h1_MMpi_BGSub->Add(h1_MMpi_Prompt, h1_MMpi_Random_Scaled, 1, -1);
+
+  h1_MMpi_hcana_Random_Scaled->Scale(1.0/nWindows);
+  h1_MMpi_hcana_BGSub->Add(h1_MMpi_hcana_Prompt, h1_MMpi_hcana_Random_Scaled, 1, -1);
 
   // Loop over all events in tree and fill 2D histos event by event, ensures the events correctly correlate
   for(Long64_t i = 0; i < nEntries_Uncut; i++){
@@ -270,7 +294,7 @@ void PlotPionPhysics(string InFilename = "", string OutFilename = "")
   }
  
   TCanvas *c_MM = new TCanvas("c_MM", "Pion missing mass distributions", 100, 0, 1000, 900);
-  c_MM->Divide(2,2);
+  c_MM->Divide(4,2);
   c_MM->cd(1);
   h1_MMpi_All->Draw();
   c_MM->cd(2);
@@ -279,6 +303,14 @@ void PlotPionPhysics(string InFilename = "", string OutFilename = "")
   h1_MMpi_Random->Draw();
   c_MM->cd(4);
   h1_MMpi_BGSub->Draw("HIST");
+  c_MM->cd(5);
+  h1_MMpi_hcana_All->Draw();
+  c_MM->cd(6);
+  h1_MMpi_hcana_Prompt->Draw();
+  c_MM->cd(7);
+  h1_MMpi_hcana_Random->Draw();
+  c_MM->cd(8);
+  h1_MMpi_hcana_BGSub->Draw("HIST");
   c_MM->Print(foutpdf + '(');
 
   TCanvas *c_Track = new TCanvas("c_Track", "Tracking cut distributions", 100, 0, 1000, 900);  
@@ -454,6 +486,7 @@ void PlotPionPhysics(string InFilename = "", string OutFilename = "")
   
   d_PionAll->cd();
   h1_MMpi_All->Write();
+  h1_MMpi_hcana_All->Write();
   h1_CT_All->Write();
   h2_CT_Beta_All->Write();
   h2_CT_MMpi_All->Write();
@@ -462,6 +495,7 @@ void PlotPionPhysics(string InFilename = "", string OutFilename = "")
 
   d_PionPr->cd();
   h1_MMpi_Prompt->Write();
+  h1_MMpi_hcana_Prompt->Write();
   h1_CT_Prompt->Write();
   h2_CT_Beta_Prompt->Write();
   h2_CT_MMpi_Prompt->Write();
@@ -469,6 +503,7 @@ void PlotPionPhysics(string InFilename = "", string OutFilename = "")
  
   d_PionRn->cd();
   h1_MMpi_Random->Write();
+  h1_MMpi_hcana_Random->Write();
   h1_CT_Random->Write();
   h2_CT_Beta_Random->Write();
   h2_CT_MMpi_Random->Write();
@@ -487,6 +522,7 @@ void PlotPionPhysics(string InFilename = "", string OutFilename = "")
   h1_Epsilon->Write();
   h2_phiqvst->Write();
   h1_MMpi_BGSub->Write();
+  h1_MMpi_hcana_BGSub->Write();
 
   d_PionTracking->cd();
   h1_HDelta_Uncut->Write();
