@@ -73,9 +73,9 @@ void PlotCoinPeak(string InFilename = "", string OutFilename = "")
   Double_t CT_protons; Protons->SetBranchAddress("CTime_epCoinTime_ROC1", &CT_protons);
 
   // Define Histograms
-  TH1D *h1_CT_Pions = new TH1D("h1_CT_Pions", "Pions CT - All events after PID cuts; Time (ns)", 240, 10, 70); 
-  TH1D *h1_CT_Kaons = new TH1D("h1_CT_Kaons", "Kaons CT - All events after PID cuts; Time (ns)", 240, 10, 70); 
-  TH1D *h1_CT_Protons = new TH1D("h1_CT_Protons", "Protons CT - All events after PID cuts; Time (ns)", 240, 10, 70); 
+  TH1D *h1_CT_Pions = new TH1D("h1_CT_Pions", "Pions CT - All events after PID cuts; Time (ns)", 480, -60, 60); 
+  TH1D *h1_CT_Kaons = new TH1D("h1_CT_Kaons", "Kaons CT - All events after PID cuts; Time (ns)", 480, -60, 60); 
+  TH1D *h1_CT_Protons = new TH1D("h1_CT_Protons", "Protons CT - All events after PID cuts; Time (ns)", 480, -60, 60); 
 
   // For 1D histos, can easily create directly from the corresponding branch
   Pions->Draw("CTime_ePiCoinTime_ROC1 >> h1_CT_Pions", "", "goff"); 
