@@ -352,7 +352,7 @@ void HeepSinglesYield::Terminate()
   //TString foutname = Form("../OUTPUT/HeepSingles_Run%i",option.Atoi());
   // 06/04/21 - SJDK - Horrible hard coded path but just retesting this quickly.
   // PDF output also seems to be broken as well, can't open the produced file
-  TString foutname = Form("/group/c-pionlt/USERS/${USER}/hallc_replay_lt/OUTPUT/Analysis/HeeP/HeepSingles_Run%i",option.Atoi());
+  TString foutname = Form("/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/OUTPUT/Analysis/HeeP/HeepSingles_Run%i",option.Atoi());
   TString outputpdf = foutname + ".pdf";
   TCanvas *cHMS = new TCanvas("cHMS","Summary of HMS Events");
   cHMS->Divide(2,2);
@@ -387,7 +387,7 @@ void HeepSinglesYield::Terminate()
 
   //TFile *Histogram_file = new TFile(Form("../HISTOGRAMS/PionLT_HeepSingles_Run%i.root",option.Atoi()),"RECREATE");
   // 06/04/21 - SJDK - Again, horrible hard coded path but just testing
-  TFile *Histogram_file = new TFile(Form("/group/c-pionlt/USERS/${USER}/hallc_replay_lt/HISTOGRAMS/Analysis/HeeP//HeepSingles_Run%i.root",option.Atoi()),"RECREATE");
+  TFile *Histogram_file = new TFile(Form("/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/HISTOGRAMS/Analysis/HeeP//HeepSingles_Run%i.root",option.Atoi()),"RECREATE");
  
   TDirectory *DTiming = Histogram_file->mkdir("Timing and Event Type Summary"); DTiming->cd();
   EventType->Write();

@@ -278,7 +278,7 @@ void HeepCoinYield::Terminate()
   //TString foutname = Form("../OUTPUT/HeepCoin_Run%i",option.Atoi());
   // 06/04/21 - SJDK - Horrible hard coded path but just retesting this quickly.
   // PDF output also seems to be broken as well, can't open the produced file
-  TString foutname = Form("/group/c-pionlt/USERS/${USER}/hallc_replay_lt/OUTPUT/Analysis/HeeP/HeepCoin_Run%i",option.Atoi());
+  TString foutname = Form("/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/OUTPUT/Analysis/HeeP/HeepCoin_Run%i",option.Atoi());
   TString outputpdf = foutname + ".pdf";
 
   TCanvas *cKine = new TCanvas("Kine","Summary of Higher Order Kinemaics");
@@ -339,7 +339,7 @@ void HeepCoinYield::Terminate()
   //Start output of .root file with all histograms
   // TFile *Histogram_file = new TFile(Form("../../HISTOGRAMS/KaonLT_Run%i.root",option.Atoi()),"RECREATE");
   // 06/04/21 - SJDK - Again, horrible hard coded path but just testing
-  TFile *Histogram_file = new TFile(Form("/group/c-pionlt/USERS/${USER}/hallc_replay_lt/HISTOGRAMS/Analysis/HeeP//HeepCoin_Run%i.root",option.Atoi()),"RECREATE");
+  TFile *Histogram_file = new TFile(Form("/group/c-kaonlt/USERS/${USER}/hallc_replay_lt/HISTOGRAMS/Analysis/HeeP//HeepCoin_Run%i.root",option.Atoi()),"RECREATE");
   TDirectory *DCuts = Histogram_file->mkdir("Spectrometer Delta and Calorimeter Cuts"); DCuts->cd();
   h1HMS_delta->Write("HMS Delta Before Cuts"); h1HMS_delta_cut->Write("HMS Delta After Cuts");
   h1SHMS_delta->Write("SHMS Delta Before Cuts"); h1SHMS_delta_cut->Write("SHMS Delta After Cuts");

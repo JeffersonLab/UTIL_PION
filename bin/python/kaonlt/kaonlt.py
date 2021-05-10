@@ -209,7 +209,7 @@ class pyPlot(pyDict):
 
     def cut_RF(self,runNum,MaxEvent):
         TimingCutFile = self.REPLAYPATH+'/UTIL_PION/DB/PARAM/Timing_Parameters.csv'
-        # rootName = "/lustre19/expphy/volatile/hallc/c-pionlt/sjdkay/ROOTfiles/Proton_Analysis/Pass3/Proton_coin_replay_production_%s_%s.root" % (self.REPLAYPATH, runNum, MaxEvent)
+        # rootName = "/lustre19/expphy/volatile/hallc/c-kaonlt/sjdkay/ROOTfiles/Proton_Analysis/Pass3/Proton_coin_replay_production_%s_%s.root" % (self.REPLAYPATH, runNum, MaxEvent)
         rootName = "%s/UTIL_PION/ROOTfiles/coin_replay_Full_Lumi_%s_%s.root" % (self.REPLAYPATH,runNum,MaxEvent)
         e_tree = up.open(rootName)["T"]
         TimingCutf = open(TimingCutFile)
