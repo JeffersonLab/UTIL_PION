@@ -76,10 +76,11 @@ for KinLine in KinListf:
                 KinFileData=KinFileLine.split(",") # Convert csv row to an array
                 RunParamData[0]=int(KinFileData[0]) # Run number
                 #RunParamData[1]=int(KinFileData[0])+1
+                # For the HeepCoin data, we only set the electron proton coincidence peak positon, the values for the OTHER values are set to just be the proton
                 RunParamData[1]=int(KinFileData[0]) # Run start = run end as this is to cover one run at a time
                 RunParamData[6]=float(KinFileData[1]) # Pion peak pos
-                RunParamData[7]=float(KinFileData[5]) # Kaon peak pos
-                RunParamData[8]=float(KinFileData[9]) # Proton peak pos
+                RunParamData[7]=float(KinFileData[1]) # Kaon peak pos
+                RunParamData[8]=float(KinFileData[1]) # Proton peak pos
                 # Need to now get the rest of the run param values from the existing param file which we were also given
                 TempPar = -1 # To check later
                 TimingCutLineNum = 0 # Count Timing cut file line number
@@ -125,7 +126,4 @@ if(len(FailedParamData) != 0):
     FailedParamDataArr=np.array(FailedParamData, dtype='O')
     FailedParamDataArr = FailedParamDataArr[FailedParamDataArr[:,0].argsort()] # Sort by values in 1st column (starting run number)
     np.savetxt(("%s_Failed_TimingParamFile.csv" % InputList), FailedParamDataArr, fmt="%i,%i,%2.3f,%2.3f,%i,%i,%3.3f,%3.3f,%3.3f,%2.3f", delimiter=",", header='Run_Start,Run_End,Bunch_Spacing,Coin_Offset,nSkip,nWindows,Pion_Prompt_Peak,Kaon_Prompt_Peak,Proton_Prompt_Peak,RF_Offset', comments='')
-
-
-
 
