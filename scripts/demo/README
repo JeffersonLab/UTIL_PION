@@ -1,0 +1,117 @@
+Stephen Kay - University of Regina
+09/10/20
+
+A selection of demo python scripts that carry out some simple processes using the new analysis framework.
+
+### IMPORTANT - SETUP INFO ###
+
+Make sure you are using JLab software environment 2.3, you should source this in your .login
+
+source /site/12gev_phys/softenv.csh 2.3
+
+Unfortunately, this uses an incompatible ROOT version so you also need to source a new ROOT version too.
+Before running ensure you are using ROOT 6.18.04 -
+
+source /apps/root/6.18.04/setroot_CUE.csh
+
+(assuming you're running this on the JLab iFarm, also this assumes you are using softenv v2.3)
+
+You should also make sure you have the relevant packages, in particular, execute -
+
+pip install --user root_numpy --user
+
+pip install --user root_pandas --user
+
+if you have not done so previously.
+
+Ensure that these are installed with ROOT 6.18.04 active or the scripts will not run!
+
+If you get errors complaining that root_numpy was installed with ROOT 6.14.04 (or ANY errors like this), you either didn't install the packages (or run the script) with 6.18.04 active. 
+Uninstall any problematic packages and reinstall them with the correct ROOT version active.
+
+### IMPORTANT - SYM LINKS/PATHING ###
+
+BY DEFAULT
+
+YOU MUST HAVE A FOLDER OR SYMLINK CALLED - ROOTfiles - IN THE FIRST LEVEL OF THE UTIL_PION DIRECTORY
+YOU MUST ALSO HAVE A FOLDER OR SYMLINK CALLED - OUTPUT - IN THE FIRST LEVEL OF THE UTIL_PION DIRECTORY
+
+If you ran the new setup scripts, these should already be present. Change the OUTPUT pathing in the python script as you see fit.
+
+If you didn't, you can create a sym link via "ln -s $PATH $LINK_NAME"
+
+e.g. ln -s /volatile/hallc/c-pionlt/ROOTfiles ROOTfiles 
+would make a sym link called ROOTfiles which points to the folder /volatile/hallc/c-pionlt/ROOTfiles
+
+Further (less shouty explanation) follows -
+
+The scripts will look for an input ROOTFILE in the directory specified on line 49. Modify this as you please, but it is set up to avoid hard coding a path to a single file.
+This directory is constructed based on some pre-set environments - PLEASE CHECK THIS PATH AND THAT YOUR RELEVANT ENVIRONMENT IS LISTED
+
+By default, it is assumed that you have a sym link (or folder) called ROOTfiles in the first level of the UTIL_PION directory
+A sym link is preferable as the (assumed default) /group/ path is not intended for large file storage.
+
+The output of the script will go to a sym link (or folder) in the same directory as this README.
+
+Example - You are running on the JLab ifarm,
+the script will look for your speicified ROOTfile in 
+/group/c-pionlt/USERS/{USERNAME}/hallc_replay_lt/UTIL_PION/ROOTfiles/Analysis/General
+and output to
+/group/c-pionlt/USERS/{USERNAME}/hallc_replay_lt/UTIL_PION/OUTPUT/Analysis/General
+
+### Running the scripts ###
+
+Execute the scripts via -
+
+python3 SCRIPT arg1 arg2...
+
+The script should prompt for the arguments it needs if you don't provide them. I would recommend checking what it expects before trying to run the script in question.
+
+For quicker analysis and checking, I recommend that you use 100k replay ROOTfiles if possible
+
+### Demo1 ###
+
+This script simply opens a root file, grabs some branches from it, and saves it as new root file. No cuts are applied or utilised. We simply grab the acceptance info and get out.
+
+SUGGESTED TASKS
+
+1. Verify the pathing of the file and check it opens up a valid rootfile, add or change the path as needed 
+2. Change the naming of the trees in our produced rootfile
+3. Try adding some new branches to our final root file. Say we want some detector info for one of the spectrometers too. Add this in and verify it works.
+
+### Demo2 ###
+
+This script opens a root file and grabs some branches from it, but this time, it also defines and applies some cuts.
+
+We provide a cuts file with 3 cuts in it, we create a dictionary of cuts and add *2* of the three defined cuts to our dict. We then use these cuts on our SHMS data selection. Our cuts are just simple acceptance cuts
+
+The cuts will get their required ranges from a database file. The relevant data file depends upon the cuts being used and the values taken will depend upon the run number.
+
+SUGGESTED TASKS
+
+1. Try adding the third cut to our cut dict and using it to cut our HMS data
+2. Modify the cut ranges and verify that they are now different, both in the creation of the cut and their actual effect on the data
+3. Add an additional component to our existing cuts - for example, try adding a cut on beta
+4. Try defining a completely new cut in our cut file and applying it
+
+### DEBUGGING ###
+
+If when running demo2, you get errors that look like -
+
+Demo2Cut1
+x  [' {"P_gtr_th" : ((P_gtr_xp > accept.P_xpfp_low) & (P_gtr_xp < accept.P_xpfp_high))}', ' {"P_gtr_ph" : ((P_gtr_yp > accept.P_ypfp_low) & (P_gtr_yp < accept.P_ypfp_high))}']
+Traceback (most recent call last):
+  File "demo2.py", line 119, in <module>
+    cutDict = make_cutDict("Demo2Cut1")
+  File "demo2.py", line 114, in make_cutDict
+    inputDict[cut].update(eval(tmp))
+  File "<string>", line 1, in <module>
+NameError: name 'accept' is not defined
+
+or similar, please check that the run number you are trying to process actually falls into a specified range for the cut parameters.
+Explicitly, check 
+DB/PARAM/
+and look at the parameter ranges for any cuts you are trying to use, ensure that your run number falls inside one of the ranges.
+
+For example, by default, demo2 uses cuts that are constructed from acceptance parameters, the error above is due to the fact that the run number being processed did not fall under any of the run ranges
+specified in DB/PARAM/Acceptance_Parameters.csv

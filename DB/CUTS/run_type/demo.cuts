@@ -1,0 +1,9 @@
+########################################
+# Some simple cuts for use in demo2.py #
+########################################
+Demo2Cut1 = accept.p_pfp
+# Cut 1 is relatively simple, it's just our normal SHMS acceptance xpfp and ypfp cut
+Demo2Cut2 = accept.delta+accept.p_pfp-accept.delta.H_gtr_dp
+# Cut 2 is the same as cut 1, but now with our cuts on delta, note that we have to explicitly have to snip off the HMS part of this cut as it is defined in CUTS/general/accept.cuts
+Demo2Cut3 = accept.delta+accept.h_pfp-accept.delta.P_gtr_dp
+# For good measure, we define a third cut which is a HMS verson of cut 2

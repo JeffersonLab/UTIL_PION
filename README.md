@@ -1,3 +1,14 @@
+The structure of this REPO has been changed to match that of UTIL_KAONLT and UTIL_PROTON
+
+####################################################################
+scripts/        : contains all analysis scripts
+batch/          : for running batch jobs to farm
+archive/        : archive files that may be useful in the future, old TProof scripts and online running scripts
+config/         : replay configuration files (e.g. DEF-files, PARAM)
+####################################################################
+
+Please contact Stephen Kay (stephen.kay@uregina.ca) or Richard Trotta (trotta@cua.edu) for more information.
+
 # UTIL_PION
 
 A selection of various utility and analysis scripts associated with the Pion experiments, E12-06-101 and E12-07-105.

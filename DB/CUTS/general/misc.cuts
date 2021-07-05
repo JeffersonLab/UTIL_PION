@@ -1,0 +1,5 @@
+########
+# EDTM #
+########
+c_noedtm = {"pEDTM_tdcTime" : (T_coin_pEDTM_tdcTime == misc.noedtm)}
+c_edtm = {"pEDTM_tdcTime" : (T_coin_pEDTM_tdcTime > misc.noedtm)}
