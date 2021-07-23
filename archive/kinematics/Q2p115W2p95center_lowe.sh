@@ -43,9 +43,9 @@ KINFILE="Q2p115W2p95center_lowe.root"
 hadd ${KINFILE} ${RootName}
 
 if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/Q2p115W2p95center_lowe_Pions.root" ]; then
-    root -b -l -q "${UTILPATH}/scripts/pionyield/PlotPionPhysics.C(\"${KINFILE}\", \"Q2p115W2p95center_lowe_Kaons\")"
+    root -b -l -q "${UTILPATH}/scripts/pionyield/PlotPionPhysics.C(\"${KINFILE}\", \"Q2p115W2p95center_lowe_Pions\")"
 elif [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/Q2p115W2p95center_lowe_Pions.pdf" ]; then
-    root -b -l -q "${UTILPATH}/scripts/pionyield/PlotPionPhysics.C(\"${KINFILE}\", \"Q2p115W2p95center_lowe_Kaons\")"
-else echo "Pion plots already found in - ${UTILPATH}/OUTPUT/Analysis/PionLT/Q2p115W2p95center_lowe_Kaons.root and .pdf - Plotting macro skipped"
+    root -b -l -q "${UTILPATH}/scripts/pionyield/PlotPionPhysics.C(\"${KINFILE}\", \"Q2p115W2p95center_lowe_Pions\")"
+else echo "Pion plots already found in - ${UTILPATH}/OUTPUT/Analysis/PionLT/Q2p115W2p95center_lowe_Pions.root and .pdf - Plotting macro skipped"
 fi
 exit 0
