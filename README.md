@@ -13,7 +13,7 @@ Please contact Stephen Kay (stephen.kay@uregina.ca) or Richard Trotta (trotta@cu
 
 A selection of various utility and analysis scripts associated with the Pion experiments, E12-06-101 and E12-07-105.
 
-### SJDK 05/08/21 - Update on contents and instructions needed
+### SJDK 05/08/21 - Update on contents and instructions needed, may also need to tweak structure above, outline usage of setup shell script
 
 ##############################################################################
 			SCIENTIFIC MOTIVATION
