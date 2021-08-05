@@ -13,9 +13,7 @@ Please contact Stephen Kay (stephen.kay@uregina.ca) or Richard Trotta (trotta@cu
 
 A selection of various utility and analysis scripts associated with the Pion experiments, E12-06-101 and E12-07-105.
 
-Included are the associated run lists as .csv files as well as shell scripts for running the analysis code and for submitting batch jobs to the JLab iFarm.
-
-Copy the files in the DBASE directory to DBASE/COIN/ in your main replay folder.
+### SJDK 05/08/21 - Update on contents and instructions needed
 
 ##############################################################################
 			SCIENTIFIC MOTIVATION
