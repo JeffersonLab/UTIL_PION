@@ -1,6 +1,7 @@
 #! /bin/bash
-
-# 10/July/2021, Author - Muhammad Junaid, University of Regina, Canada
+##################################################################################
+# Created - 10/July/2021, Author - Muhammad Junaid, University of Regina, Canada
+##################################################################################
 # This version of script is for shift workers at JLAB
 # Executes the replay script and python analysis script and at the end python plotting script
 # To run this script, execute ./scriptname $RUNNUMBER$

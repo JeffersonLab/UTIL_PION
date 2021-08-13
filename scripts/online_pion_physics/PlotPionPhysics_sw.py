@@ -1,11 +1,11 @@
 #! /usr/bin/python
-
-# 20/July/21, Author - Muhammad Junaid, University of Regina, Canada
-
+####################################################################################
+# Created - 20/July/21, Author - Muhammad Junaid, University of Regina, Canada
+####################################################################################
 # Python version of the pion plotting script. Now utilises uproot to select event of each type and writes them to a root file.
 # Python should allow for easier reading of databases storing diferent variables.
 # This version of script is for shift workers at JLab
-# To run this script, execute: python3 scriptname inputfilename
+# To run this script, execute: python3 scriptname runnumber
 
 ###################################################################################################################################################
 
@@ -419,7 +419,7 @@ c1_kin.cd(3)
 phiqvst.GetYaxis().SetRangeUser(minrangeuser,maxrangeuser)
 phiqvst.Draw("SURF2 POL")
 # Section for polar plotting
-gStyle.SetPalette(55);
+gStyle.SetPalette(55)
 gPad.SetTheta(90)
 gPad.SetPhi(180)
 tvsphi_title = TPaveText(0.0277092,0.89779,0.096428,0.991854,"NDC")
