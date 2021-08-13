@@ -1,29 +1,28 @@
 #! /bin/bash
-
-# 10/July/2021, Author - Muhammad Junaid, University of Regina, Canada
-
-# Executes the python analysis script
+#################################################################################
+# Created - 10/July/2021, Author - Muhammad Junaid, University of Regina, Canada
+#################################################################################
+# This version of script is for analysis experts
+# Executes the replay script and python analysis script and at the end python plotting script
+# To run this script, execute ./scriptname 
+# Provide run numbers in RUNLISt file
 
 #################################################################################################################################################
 
-# source ROOT version 6.18.04
-source /apps/root/6.18.04/setroot_CUE.bash
-
-
 echo "Starting analysis of Pion events"
 echo "I take as arguments the run prefix, run number and max number of events!"
+# Input params - runlist and max number of events 
+#RUNLIST=$1
+#if [[ -z "$1" ]]; then
+#    echo "I need a input RunList"
+#    echo "Please provide a run list as input"
+#fi
 
-RUNLIST=$1
+RUNNUMBER=$1
 if [[ -z "$1" ]]; then
     echo "I need a input RunList"
     echo "Please provide a run list as input"
 fi
-
-#RUNPREFIX=$2
-#if [[ -z "$2" ]]; then
-#    echo "Please provide a run prefix as input"
-#    echo "Otherwise I'll assume coin_replay_Full"
-#fi
 
 MAXEVENTS=$2
 if [[ -z "$2" ]]; then
@@ -38,6 +37,7 @@ if [[ "${HOSTNAME}" = *"farm"* ]]; then
     REPLAYPATH="/group/c-kaonlt/USERS/${USER}/hallc_replay_lt"
     if [[ "${HOSTNAME}" != *"ifarm"* ]]; then
 	source /site/12gev_phys/softenv.sh 2.1
+	source /apps/root/6.18.04/setroot_CUE.bash
     fi
     cd "/group/c-kaonlt/hcana/"
     source "/group/c-kaonlt/hcana/setup.sh"
@@ -57,27 +57,71 @@ UTILPATH="${REPLAYPATH}/UTIL_PION"
 
 ###################################################################################################################################################
 
-##Input run numbers##
 
-inputFile="${UTILPATH}/scripts/work/${RUNLIST}"
-while IFS='' read -r line || [[ -n "$line" ]]; do
+# Section for pion replay script                                                                        
+#inputFile="${UTILPATH}/scripts/pionyield/${RUNLIST}"
+#while IFS='' read -r line || [[ -n "$line" ]]; do
+#RUNNUMBER=$line
 
-    RUNNUMBER=$line
-    if [ ! -f "${REPLAYPATH}/ROOTfiles/Analysis/General/coin_replay_Full_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
-        eval "${REPLAYPATH}/hcana -l -q \"SCRIPTS/COIN/PRODUCTION/FullReplay.C ($RUNNUMBER,$MAXEVENTS)\""
-    else echo "Replay root file already found in ${REPLAYPATH}/ROOTfiles/Analysis/General/ - Skipped python replay script step"
+if [ ! -f "$REPLAYPATH/UTIL_PION/ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
+    eval "$REPLAYPATH/hcana -l -q \"SCRIPTS/COIN/SCALERS/replay_coin_scalers.C($RUNNUMBER,${MAXEVENTS})\""
+    cd "$REPLAYPATH/CALIBRATION/bcm_current_map"
+    root -b<<EOF                                                                                        
+.L ScalerCalib.C+                                                                                       .x run.C("${REPLAYPATH}/UTIL_PION/ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMBER}_${MAXEVENTS}.root")
+.q 
+EOF
+    mv bcmcurrent_$RUNNUMBER.param $REPLAYPATH/PARAM/HMS/BCM/CALIB/bcmcurrent_$RUNNUMBER.param
+    cd $REPLAYPATH
+else echo "Scaler replayfile already found for this run in $REPLAYPATH/ROOTfiles/Scalers - Skipping scaler replay step"
+fi
+
+sleep 3
+
+#RUNNUMBER=$line
+if [ ! -f "$REPLAYPATH/UTIL_PION/ROOTfiles/Analysis/PionLT/Pion_coin_replay_production_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
+    if [[ "${HOSTNAME}" != *"ifarm"* ]]; then
+        eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\""
+    elif [[ "${HOSTNAME}" == *"ifarm"* ]]; then
+        eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\""| tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/Analysis/PionLT/Pion_output_coin_production_${RUNNUMBER}_${MAXEVENTS}.report
     fi
+else echo "Replayfile already found for this run in $REPLAYPATH/UTIL_PION/ROOTfiles/Analysis/PionLT/ - Skipping replay step"
+fi
 
-    RUNNUMBER=$line
-    if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
-        python3 ${UTILPATH}/scripts/work/analyzer.py coin_replay_Full ${RUNNUMBER} ${MAXEVENTS}
-    else echo "Analysed root file already found in ${UTILPATH}/OUTPUT/Analysis/PionLT/ - Skipped python analyzer script step"
+sleep 3
+
+########################################################################################################################################
+
+# Section for pion analysis script
+#RUNNUMBER=$line                                                                      
+if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
+    read -p "Pion production analyzed file already exits, you want to reprocess it? <Y/N> " option1
+    if [[ $option1 == "y" || $option1 == "Y" || $option1 == "yes" || $option1 == "Yes" ]]; then
+	rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root"
+        echo "Reprocessing"
+        python3 ${UTILPATH}/scripts/online_pion_physics/pion_prod_analysis_Full.py Pion_coin_replay_production ${RUNNUMBER} ${MAXEVENTS}
+    else
+        echo "Skipping python analysis script step"
     fi
+else echo "Analysed root file already found in ${UTILPATH}/OUTPUT/Analysis/PionLT/ - Skipped python analyzer script step"
+fi
 
-    RUNNUMBER=$line
-    if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
-        python3 ${UTILPATH}/scripts/work/PlotPionPhysics.py ${RUNNUMBER} ${MAXEVENTS} Analysed_Data
-    else echo "Output root file already found in ${UTILPATH}/OUTPUT/Analysis/PionLT/ - Skipped python output script step"
+sleep 3
+
+################################################################################################################################
+
+# Section for pion physics ploting script
+#RUNNUMBER=$line                                                               
+if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
+    read -p "Pion physics output file already exits, you want to reprocess it? <Y/N> " option2
+    if [[ $option2 == "y" || $option2 == "Y" || $option2 == "yes" || $option2 == "Yes" ]]; then
+        rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root"
+        echo "Reprocessing"
+        python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_Full.py ${RUNNUMBER} ${MAXEVENTS} Analysed_Data
+    else
+        echo "Skipping python physics plotting script step"
     fi
+else echo "Pion physics output root file already found in ${UTILPATH}/OUTPUT/Analysis/PionLT/ - Skipped python output script step"
+fi
 
-done < "$inputFile"
+#done < "$inputFile"
+exit 0
