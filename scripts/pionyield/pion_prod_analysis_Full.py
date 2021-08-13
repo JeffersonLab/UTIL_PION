@@ -156,9 +156,9 @@ MandelT = e_tree.array("P.kin.secondary.MandelT")                #
 
 ##############################################################################################################################################
 
+# Defining path for cut file  
 r = klt.pyRoot()
-#fout = '%s/UTIL_PION/DB/CUTS/run_type/coin_prod.cuts' % REPLAYPATH
-fout = '%s/UTIL_PION/DB/CUTS/run_type/analyzer.cuts' % REPLAYPATH
+fout = '%s/UTIL_PION/DB/CUTS/run_type/coin_prod.cuts' % REPLAYPATH
 
 # read in cuts file and make dictionary
 c = klt.pyPlot(REPLAYPATH)
@@ -197,6 +197,7 @@ def make_cutDict(cut,inputDict=None):
 
 #################################################################################################################################################################
 
+# defining Cuts
 cutDict = make_cutDict("coin_epi_cut_all_RF")
 cutDict = make_cutDict("coin_epi_cut_prompt_RF", cutDict)
 cutDict = make_cutDict("coin_epi_cut_rand_RF", cutDict)

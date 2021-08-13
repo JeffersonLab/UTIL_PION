@@ -1,10 +1,11 @@
 #! /usr/bin/python
-
-# 20/July/21, Author - Muhammad Junaid, University of Regina, Canada
-
+###################################################################################
+# Created - 20/July/21, Author - Muhammad Junaid, University of Regina, Canada
+###################################################################################
 # Python version of the pion plotting script. Now utilises uproot to select event of each type and writes them to a root file.
 # Python should allow for easier reading of databases storing diferent variables.
-# This version of script is for physics experts
+# This version of script is for physics analysis experts
+# To run this script, execute: python3 scriptname runnumber
 
 ###################################################################################################################################################
 
@@ -96,6 +97,53 @@ else:
     print ("%s not found - do you have the correct sym link/folder set up?" % (rootName))
     sys.exit(4)
 print("Output path checks out, outputting to %s" % (OUTPATH))
+
+###############################################################################################################################################
+
+# Section for grabing Prompt/Random selection parameters from PARAM file
+PARAMPATH = "%s/UTIL_PION/DB/PARAM" % REPLAYPATH
+print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
+TimingCutFile = "%s/Timing_Parameters.csv" % PARAMPATH # This should match the param file actually being used!
+TimingCutf = open(TimingCutFile)
+try:
+    TimingCutFile
+except NameError:
+    print("!!!!! ERRROR !!!!!\n One (or more) of the cut files not found!\n!!!!! ERRORR !!!!!")
+    sys.exit(2)
+print("Reading timing cuts from %s" % TimingCutFile)
+PromptWindow = [0, 0]
+RandomWindows = [0, 0, 0, 0]
+linenum = 0 # Count line number we're on
+TempPar = -1 # To check later
+for line in TimingCutf: # Read all lines in the cut file
+    linenum += 1 # Add one to line number at start of loop
+    if(linenum > 1): # Skip first line
+        line = line.partition('#')[0] # Treat anything after a # as a comment and ignore it
+        line = line.rstrip()
+        array = line.split(",") # Convert line into an array, anything after a comma is a new entry 
+        if(int(runNum) in range (int(array[0]), int(array[1])+1)): # Check if run number for file is within any of the ranges specified in the cut file
+            TempPar += 2 # If run number is in range, set to non -1 value
+            BunchSpacing = float(array[2])
+            CoinOffset = float(array[3]) # Coin offset value
+            nSkip = float(array[4]) # Number of random windows skipped 
+            nWindows = float(array[5]) # Total number of random windows
+            PromptPeak = float(array[6]) # Pion CT prompt peak positon 
+TimingCutf.close() # After scanning all lines in file, close file
+
+if(TempPar == -1): # If value is still -1, run number provided din't match any ranges specified so exit 
+    print("!!!!! ERROR !!!!!\n Run number specified does not fall within a set of runs for which cuts are defined in %s\n!!!!! ERROR !!!!!" % TimingCutFile)
+    sys.exit(3)
+elif(TempPar > 1):
+    print("!!! WARNING!!! Run number was found within the range of two (or more) line entries of %s !!! WARNING !!!" % TimingCutFile)
+    print("The last matching entry will be treated as the input, you should ensure this is what you want")
+
+# From our values from the file, reconstruct our windows 
+PromptWindow[0] = PromptPeak - (BunchSpacing/2) - CoinOffset
+PromptWindow[1] = PromptPeak + (BunchSpacing/2) + CoinOffset
+RandomWindows[0] = PromptPeak - (BunchSpacing/2) - CoinOffset - (nSkip*BunchSpacing) - ((nWindows/2)*BunchSpacing)
+RandomWindows[1] = PromptPeak - (BunchSpacing/2) - CoinOffset - (nSkip*BunchSpacing)
+RandomWindows[2] = PromptPeak + (BunchSpacing/2) + CoinOffset + (nSkip*BunchSpacing)
+RandomWindows[3] = PromptPeak + (BunchSpacing/2) + CoinOffset + (nSkip*BunchSpacing) + ((nWindows/2)*BunchSpacing)
 
 ###############################################################################################################################################
 
@@ -388,7 +436,7 @@ P_kin_MMp_protons_cut_random_sub = ROOT.TH1D("P_kin_MMp_protons_cut_random_sub",
 
 ###################################################################################################################################################
 
-# 2D Histograms
+# 2D Histograms for pions, kaons and protons
 H_cal_etottracknorm_vs_H_cer_npeSum_pions_uncut = ROOT.TH2D("H_cal_etottracknorm_vs_H_cer_npeSum_pions_uncut","HMS cal etottracknorm vs HMS cer npeSum (no cut); H_cal_etottracknorm; H_cer_npeSum",100, 0, 2, 100, 0, 40)
 P_hgcer_npeSum_vs_aero_npeSum_pions_uncut = ROOT.TH2D("P_hgcer_npeSum_vs_aero_npeSum_pions_uncut", "SHMS HGC npeSum vs SHMS Aero npeSum (no cut); SHMS_hgcer_npeSum; SHMS_aero_npeSum", 100, 0, 50, 100, 0, 50)
 CTime_ePiCoinTime_ROC1_vs_P_kin_MMpi_pions_uncut = ROOT.TH2D("CTime_ePiCoinTime_ROC1_vs_P_kin_MMpi_pions_uncut","Electron-Pion CTime vs Missing Mass (no cut); e #pi Coin_Time; MM_{#pi}", 200, -40, 40, 200, 0, 2)
@@ -842,236 +890,9 @@ for event in Cut_Proton_Events_Random_tree:
 P_kin_MMp_protons_cut_random_sub.Add(P_kin_MMp_protons_cut_prompt, P_kin_MMp_protons_cut_random_scaled, 1, -1)
 
 ############################################################################################################################################
-'''
-# Saving pions histoggrams in PDF
-c1_kin = TCanvas("c1_kin", "Kinematic Distributions", 100, 0, 1000, 900)
-c1_kin.Divide(2,2)
-c1_kin.cd(1)
-Q2vsW.Draw("COLZ")
-c1_kin.cd(2)
-epsilon_pions_cut_all.Draw()
-c1_kin.cd(3)
-phiqvst.GetYaxis().SetRangeUser(minrangeuser,maxrangeuser)
-phiqvst.Draw("SURF2 POL")
-# Section for polar plotting
-gStyle.SetPalette(55);
-gPad.SetTheta(90)
-gPad.SetPhi(180)
-tvsphi_title = TPaveText(0.0277092,0.89779,0.096428,0.991854,"NDC")
-tvsphi_title.AddText("-t vs #phi")
-tvsphi_title.Draw()
-ptphizero = TPaveText(0.923951,0.513932,0.993778,0.574551,"NDC")
-ptphizero.AddText("#phi = 0")
-ptphizero.Draw()
-phihalfpi = TLine(0,0,0,0.6)
-phihalfpi.SetLineColor(kBlack)
-phihalfpi.SetLineWidth(2)
-phihalfpi.Draw()
-ptphihalfpi = TPaveText(0.417855,0.901876,0.486574,0.996358,"NDC")
-ptphihalfpi.AddText("#phi = #frac{#pi}{2}")
-ptphihalfpi.Draw()
-phipi = TLine(0,0,-0.6,0)
-phipi.SetLineColor(kBlack)
-phipi.SetLineWidth(2)
-phipi.Draw()
-ptphipi = TPaveText(0.0277092,0.514217,0.096428,0.572746,"NDC")
-ptphipi.AddText("#phi = #pi")
-ptphipi.Draw()
-phithreepi = TLine(0,0,0,-0.6)
-phithreepi.SetLineColor(kBlack)
-phithreepi.SetLineWidth(2)
-phithreepi.Draw()
-ptphithreepi = TPaveText(0.419517,0.00514928,0.487128,0.0996315,"NDC")
-ptphithreepi.AddText("#phi = #frac{3#pi}{2}")
-ptphithreepi.Draw()
-Arc = TArc()
-for k in range(0, 10):
-     Arc.SetFillStyle(0)
-     Arc.SetLineWidth(2)
-     # Need a comment here on how to set the range for this based upon the histogram binning earlier. Need 10 arcs between 0 and max bin value
-     Arc.DrawArc(0,0,0.575*(k+1)/(10),0.,360.,"same")
-tradius = TGaxis(0,0,0.575,0,0,0.5,10,"-+")
-tradius.SetLineColor(2)
-tradius.SetLabelColor(2)
-tradius.Draw()
-phizero = TLine(0,0,0.6,0) 
-phizero.SetLineColor(kBlack)
-phizero.SetLineWidth(2)
-phizero.Draw()
-# End of polar plotting section
-c1_kin.cd(4)
-P_kin_MMpi_pions_cut_random_sub.Draw("HIST")
-# Section for Neutron Peak Events Selection
-NeutronEvt = TPaveText(0.58934,0.675,0.95,0.75,"NDC")
-BinLow = P_kin_MMpi_pions_cut_random_sub.GetXaxis().FindBin(minbin)
-BinHigh = P_kin_MMpi_pions_cut_random_sub.GetXaxis().FindBin(maxbin)
-BinIntegral = P_kin_MMpi_pions_cut_random_sub.Integral(BinLow, BinHigh)
-NeutronEvt.AddText("Neutron Events: %s" %(BinIntegral))
-NeutronEvt.Draw()
-# End of Neutron Peak Events Selection Section
-c1_kin.Print(Pion_Analysis_Distributions + '(')
-
-c1_H_acpt = TCanvas("c1_H_kin", "Electron-Pion HMS Acceptance Distributions", 100, 0, 1000, 900)
-c1_H_acpt.Divide(2,2)
-c1_H_acpt.cd(1)
-gPad.SetLogy()
-H_gtr_beta_pions_uncut.SetLineColor(2)
-H_gtr_beta_pions_uncut.Draw()
-H_gtr_beta_pions_cut_all.SetLineColor(4)
-H_gtr_beta_pions_cut_all.Draw("same")
-c1_H_acpt.cd(2)
-gPad.SetLogy()
-H_gtr_xp_pions_uncut.SetLineColor(2)
-H_gtr_xp_pions_uncut.Draw()
-H_gtr_xp_pions_cut_all.SetLineColor(4)
-H_gtr_xp_pions_cut_all.Draw("same")
-c1_H_acpt.cd(3)
-gPad.SetLogy()
-H_gtr_yp_pions_uncut.SetLineColor(2)
-H_gtr_yp_pions_uncut.Draw()
-H_gtr_yp_pions_cut_all.SetLineColor(4)
-H_gtr_yp_pions_cut_all.Draw("same")
-c1_H_acpt.cd(4)
-H_gtr_dp_pions_uncut.SetLineColor(2)
-H_gtr_dp_pions_uncut.Draw()
-H_gtr_dp_pions_cut_all.SetLineColor(4)
-H_gtr_dp_pions_cut_all.Draw("same")
-c1_H_acpt.Print(Pion_Analysis_Distributions)
-
-c1_P_acpt = TCanvas("c1_P_kin", "Electron-Pion SHMS Acceptance Distributions", 100, 0, 1000, 900)
-c1_P_acpt.Divide(2,2)
-c1_P_acpt.cd(1)
-gPad.SetLogy()
-P_gtr_beta_pions_uncut.SetLineColor(2)
-P_gtr_beta_pions_uncut.Draw()
-P_gtr_beta_pions_cut_all.SetLineColor(4)
-P_gtr_beta_pions_cut_all.Draw("same")
-c1_P_acpt.cd(2)
-gPad.SetLogy()
-P_gtr_xp_pions_uncut.SetLineColor(2)
-P_gtr_xp_pions_uncut.Draw()
-P_gtr_xp_pions_cut_all.SetLineColor(4)
-P_gtr_xp_pions_cut_all.Draw("same")
-c1_P_acpt.cd(3)
-gPad.SetLogy()
-P_gtr_yp_pions_uncut.SetLineColor(2)
-P_gtr_yp_pions_uncut.Draw()
-P_gtr_yp_pions_cut_all.SetLineColor(4)
-P_gtr_yp_pions_cut_all.Draw("same")
-c1_P_acpt.cd(4)
-gPad.SetLogy()
-P_gtr_dp_pions_uncut.SetLineColor(2)
-P_gtr_dp_pions_uncut.Draw()
-P_gtr_dp_pions_cut_all.SetLineColor(4)
-P_gtr_dp_pions_cut_all.Draw("same")
-c1_P_acpt.Print(Pion_Analysis_Distributions)
-
-c1_pid = TCanvas("c1_pid", "Electron-Pion CAL/RF Distributions", 100, 0, 1000, 900)
-c1_pid.Divide(2,4)
-c1_pid.cd(1)
-gPad.SetLogy()
-H_cal_etottracknorm_pions_uncut.SetLineColor(2)
-H_cal_etottracknorm_pions_uncut.Draw()
-H_cal_etottracknorm_pions_cut_all.SetLineColor(4)
-H_cal_etottracknorm_pions_cut_all.Draw("same")
-c1_pid.cd(2)
-H_cal_etottracknorm_vs_H_cer_npeSum_pions_cut_all.Draw("COLZ")
-c1_pid.cd(3)
-gPad.SetLogy()
-P_cal_etottracknorm_pions_uncut.SetLineColor(2)
-P_cal_etottracknorm_pions_uncut.Draw()
-P_cal_etottracknorm_pions_cut_all.SetLineColor(4)
-P_cal_etottracknorm_pions_cut_all.Draw("same")
-c1_pid.cd(4)
-#P_cal_etottracknorm_vs_P_ngcer_npeSum_pions_cut_all.Draw("COLZ")
-c1_pid.cd(5)
-P_RFTime_Dist_pions_uncut.SetLineColor(2)
-P_RFTime_Dist_pions_uncut.Draw()
-P_RFTime_Dist_pions_cut_all.SetLineColor(4)
-P_RFTime_Dist_pions_cut_all.Draw("same")
-c1_pid.cd(6)
-#
-c1_pid.cd(7)
-P_kin_MMpi_vs_P_RFTime_pions_uncut.Draw("COLZ")
-c1_pid.cd(8)
-P_kin_MMpi_vs_P_RFTime_pions_cut_all.Draw("COLZ")
-c1_pid.Print(Pion_Analysis_Distributions)
-
-c2_pid = TCanvas("c2_pid", "Electron-Pion Aero/HGC PID Distributions", 100, 0, 1000, 900)
-c2_pid.Divide(2,4)
-c2_pid.cd(1)
-gPad.SetLogy()
-P_hgcer_npeSum_pions_uncut.SetLineColor(2)
-P_hgcer_npeSum_pions_uncut.Draw()
-P_hgcer_npeSum_pions_cut_all.SetLineColor(4)
-P_hgcer_npeSum_pions_cut_all.Draw("same")
-c2_pid.cd(2)
-gPad.SetLogy()
-P_aero_npeSum_pions_uncut.SetLineColor(2)
-P_aero_npeSum_pions_uncut.Draw()
-P_aero_npeSum_pions_cut_all.SetLineColor(4)
-P_aero_npeSum_pions_cut_all.Draw("same")
-c2_pid.cd(3)
-gPad.SetLogz()
-P_hgcer_npeSum_vs_aero_npeSum_pions_uncut.Draw("COLZ")
-c2_pid.cd(4)
-P_hgcer_npeSum_vs_aero_npeSum_pions_cut_all.Draw("COLZ")
-c2_pid.cd(5)
-P_hgcer_yAtCer_vs_hgcer_xAtCer_pions_uncut.Draw("COLZ")
-c2_pid.cd(6)
-P_hgcer_yAtCer_vs_hgcer_xAtCer_pions_cut_all.Draw("COLZ")
-c2_pid.cd(7)
-P_aero_yAtAero_vs_aero_xAtAero_pions_uncut.Draw("COLZ")
-c2_pid.cd(8)
-P_aero_yAtAero_vs_aero_xAtAero_pions_cut_all.Draw("COLZ")
-c2_pid.Print(Pion_Analysis_Distributions)
 
 
-c3_pid = TCanvas("c3_pid", "Electron-Pion NGC PID Distributions", 100, 0, 1000, 900)
-c3_pid.Divide(2,2)
-c3_pid.cd(1)
-P_ngcer_npeSum_pions_uncut.SetLineColor(2)
-P_ngcer_npeSum_pions_uncut.Draw()
-P_ngcer_npeSum_pions_cut_all.SetLineColor(4)
-P_ngcer_npeSum_pions_cut_all.Draw("same")
-c3_pid.cd(2)
-P_ngcer_yAtCer_vs_ngcer_xAtCer_pions_uncut.Draw("COLZ")
-c3_pid.cd(4)
-P_ngcer_npeSum_vs_hgcer_npeSum_pions_uncut.Draw("COLZ")
-c3_pid.cd(4)
-P_ngcer_npeSum_vs_aero_npeSum_pions_cut_all.Draw("COLZ")
-c3_pid.Print(Pion_Analysis_Distributions)
 
-c1_CT = TCanvas("c1_CT", "Electron-Pion CT/MM Distributions", 100, 0, 1000, 900)
-c1_CT.Divide(2,4)
-c1_CT.cd(1)
-CTime_ePiCoinTime_ROC1_pions_cut_all.Draw()
-c1_CT.cd(2)
-CTime_ePiCoinTime_ROC1_pions_uncut.SetLineColor(4)
-CTime_ePiCoinTime_ROC1_pions_uncut.Draw()
-CTime_ePiCoinTime_ROC1_pions_cut_prompt.SetLineColor(6)
-CTime_ePiCoinTime_ROC1_pions_cut_prompt.Draw("same")
-CTime_ePiCoinTime_ROC1_pions_cut_random.SetLineColor(8)
-CTime_ePiCoinTime_ROC1_pions_cut_random.Draw("same")
-c1_CT.cd(3)
-P_kin_MMpi_pions_uncut.Draw()
-c1_CT.cd(4)
-P_kin_MMpi_pions_cut_all.SetLineColor(4)
-P_kin_MMpi_pions_cut_all.Draw()
-P_kin_MMpi_pions_cut_prompt.SetLineColor(6)
-P_kin_MMpi_pions_cut_prompt.Draw("same")
-P_kin_MMpi_pions_cut_random.SetLineColor(8)
-P_kin_MMpi_pions_cut_random.Draw("same")
-c1_CT.cd(5)
-CTime_ePiCoinTime_ROC1_vs_beta_pions_uncut.Draw("COLZ")
-c1_CT.cd(6)
-CTime_ePiCoinTime_ROC1_vs_beta_pions_cut_all.Draw("COLZ")
-c1_CT.cd(7)
-CTime_ePiCoinTime_ROC1_vs_P_kin_MMpi_pions_uncut.Draw("COLZ")
-c1_CT.cd(8)
-CTime_ePiCoinTime_ROC1_vs_P_kin_MMpi_pions_cut_all.Draw("COLZ")
-c1_CT.Print(Pion_Analysis_Distributions + ')')
-'''
 #############################################################################################################################################
 
 # Making directories in output file
@@ -1091,7 +912,7 @@ d_Cut_Proton_Events_All = outHistFile.mkdir("Cut_Proton_Events_All")
 d_Cut_Proton_Events_Prompt = outHistFile.mkdir("Cut_Proton_Events_Prompt")
 d_Cut_Proton_Events_Random = outHistFile.mkdir("Cut_Proton_Events_Random")
 
-# Writing Histograms for pions                                                                                                                                                              
+# Writing Histograms for pions                                                               
 d_Uncut_Pion_Events.cd()
 H_gtr_beta_pions_uncut.Write()
 H_gtr_xp_pions_uncut.Write()
@@ -1206,7 +1027,7 @@ P_RFTime_Dist_pions_cut_random.Write()
 CTime_ePiCoinTime_ROC1_pions_cut_random.Write()
 P_kin_MMpi_pions_cut_random.Write() 
 
-# Writing Histograms for kaons                                                                                                                                                            
+# Writing Histograms for kaons                                                         
 d_Uncut_Kaon_Events.cd()
 H_gtr_beta_kaons_uncut.Write()
 H_gtr_xp_kaons_uncut.Write()
@@ -1321,7 +1142,7 @@ P_RFTime_Dist_kaons_cut_random.Write()
 CTime_eKCoinTime_ROC1_kaons_cut_random.Write()
 P_kin_MMK_kaons_cut_random.Write() 
 
-# Writing Histograms for protons                                                                                                                                                                       
+# Writing Histograms for protons                                                                  
 d_Uncut_Proton_Events.cd()
 H_gtr_beta_protons_uncut.Write()
 H_gtr_xp_protons_uncut.Write()
