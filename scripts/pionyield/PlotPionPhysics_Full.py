@@ -28,7 +28,6 @@ sys.path.insert(0, 'python/')
 ##################################################################################################################################################
 
 # Defining some constants here
-nWindows = 6 # for random subtraction
 minrangeuser = 0 # min range for -t vs phi plot
 maxrangeuser = 0.5 # max range for -t vs phi plot
 minbin = 0.92 # minbin for selecting neutrons events in missing mass distribution
@@ -52,12 +51,12 @@ USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
 HOST = subprocess.getstatusoutput("hostname")
 
 if ("farm" in HOST[1]):
-#    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
-    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
+    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
+#    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
 
 elif ("qcd" in HOST[1]):
-#    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
-    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
+    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
+#    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
 
 elif ("phys.uregina" in HOST[1]):
     REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
