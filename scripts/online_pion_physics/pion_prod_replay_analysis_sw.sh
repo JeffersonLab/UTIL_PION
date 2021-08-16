@@ -26,17 +26,17 @@ fi
 
 # Set path depending upon hostname. Change or add more as needed  
 if [[ "${HOSTNAME}" = *"farm"* ]]; then  
-    REPLAYPATH="/group/c-kaonlt/USERS/${USER}/hallc_replay_lt"
+    REPLAYPATH="/group/c-pionlt/USERS/${USER}/hallc_replay_lt"
     if [[ "${HOSTNAME}" != *"ifarm"* ]]; then
 	source /site/12gev_phys/softenv.sh 2.3
 	source /apps/root/6.18.04/setroot_CUE.bash
     fi
-    cd "/group/c-kaonlt/hcana/"
-    source "/group/c-kaonlt/hcana/setup.sh"
+    cd "/group/c-pionlt/hcana/"
+    source "/group/c-pionlt/hcana/setup.sh"
     cd "$REPLAYPATH"
     source "$REPLAYPATH/setup.sh"
 elif [[ "${HOSTNAME}" = *"qcd"* ]]; then
-    REPLAYPATH="/group/c-kaonlt/USERS/${USER}/hallc_replay_lt"
+    REPLAYPATH="/group/c-pionlt/USERS/${USER}/hallc_replay_lt"
     cd "$REPLAYPATH"
     source "$REPLAYPATH/setup.sh" 
 elif [[ "${HOSTNAME}" = *"cdaq"* ]]; then
@@ -54,7 +54,7 @@ cd $REPLAYPATH
 if [ ! -f "$REPLAYPATH/UTIL_PION/ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
     eval "$REPLAYPATH/hcana -l -q \"SCRIPTS/COIN/SCALERS/replay_coin_scalers.C($RUNNUMBER,${MAXEVENTS})\""
     cd "$REPLAYPATH/CALIBRATION/bcm_current_map"
-    root -b<<EOF 
+    root -b -l<<EOF 
 .L ScalerCalib.C+
 .x run.C("${REPLAYPATH}/UTIL_PION/ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMBER}_${MAXEVENTS}.root")
 .q  
@@ -68,9 +68,13 @@ sleep 3
 
 if [ ! -f "$REPLAYPATH/UTIL_PION/ROOTfiles/Analysis/PionLT/Pion_coin_replay_production_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
     if [[ "${HOSTNAME}" != *"ifarm"* ]]; then
-	eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\"" 
+	if [[ "${HOSTNAME}" == *"cdaq"* ]]; then
+	    eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\""| tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/Analysis/PionLT/Pion_output_coin_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
+	else	
+	    eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\"" 
+	fi
     elif [[ "${HOSTNAME}" == *"ifarm"* ]]; then
-	eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\""| tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/Analysis/PionLT/Pion_output_coin_production_${RUNNUMBER}_${MAXEVENTS}.report
+	eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\""| tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/Analysis/PionLT/Pion_output_coin_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
     fi
 else echo "Replayfile already found for this run in $REPLAYPATH/UTIL_PION/ROOTfiles/Analysis/PionLT/ - Skipping replay step"
 fi
@@ -88,6 +92,8 @@ if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_D
     else
 	echo "Skipping python analysis script step"
     fi
+elif [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
+	python3 ${UTILPATH}/scripts/online_pion_physics/pion_prod_analysis_sw.py Pion_coin_replay_production ${RUNNUMBER} ${MAXEVENTS}
 else echo "Analysed root file already found in ${UTILPATH}/OUTPUT/Analysis/PionLT/ - Skipped python analyzer script step"
 fi
 
@@ -105,6 +111,8 @@ if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Dat
     else
 	echo "Skipping python physics plotting script step"
     fi
+elif [ ! -f  "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
+	python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw.py ${RUNNUMBER} ${MAXEVENTS} Analysed_Data
 else echo "Pion physics output root file already found in ${UTILPATH}/OUTPUT/Analysis/PionLT/ - Skipped python output script step"
 fi
 exit 0
