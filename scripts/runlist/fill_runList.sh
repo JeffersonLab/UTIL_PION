@@ -21,15 +21,20 @@ RUNTYPE=$2
 TARGET=$3
 RUNLIST="${REPLAYPATH}/UTIL_PION/runlist_pionLT_2021.csv"
 # Need to fix paths rather than give relative paths, also need to check information is still in these files and that it can grab it correctly
-# KINFILE="../DBASE/COIN/standard.kinematics"
+KINFILE="${REPLAYPATH}/DBASE/COIN/standard.kinematics"
 # SCALERFILE="OUTPUT/scalers_Run$RUNNUMBER.txt"
 # REPORTFILE="../REPORT_OUTPUT/COIN/PRODUCTION/PionLT_replay_coin_production_${RUNNUMBER}_-1.report"
 # MONITORFILE="../MON_OUTPUT/REPORT/reportMonitor_shms_${RUNNUMBER}_50000.txt"
+# Get information available in standard.kinematics, execute a python script to do this for us
+# Need to actually get this to execute the python script correctly and set some variable to the printed output
+python3 ${KINFILE} ${RUNNUMBER}
+# OLD Version - Gets info from LAST entry block in standard.kinematics - Not very robust
 # SHMSANGLE=$(sed -n -e 's/^.*ptheta_lab = //p' $KINFILE | tail -1)
 # SHMSMOMENT=$(sed -n -e 's/^.*ppcentral = //p' $KINFILE | tail -1)
 # HMSANGLE=$(sed -n -e 's/^.*htheta_lab = //p' $KINFILE | tail -1)
 # HMSMOMENT=$(sed -n -e 's/^.*hpcentral = //p' $KINFILE | tail -1)
 # EBEAM=$(sed -n -e 's/^.*gpbeam = //p' $KINFILE | tail -1)
+
 # python runlistGatherer.py $RUNNUMBER $RUNTYPE $TARGET
 # inputFile="tmp"
 # if [[ -e "output.txt" ]]; then
