@@ -65,5 +65,3 @@ for KinFileBlock in KinFileContent.split('\n\n'):
                 EBeam = float((entry.split("="))[1])
 RunListEntry=("%2.3f,%2.3f,%2.3f,%2.3f,%2.3f" % (SHMS_Angle, SHMS_P, HMS_Angle, HMS_P, EBeam))
 print(RunListEntry)
-            
-            

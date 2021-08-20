@@ -22,20 +22,31 @@ TARGET=$3
 RUNLIST="${REPLAYPATH}/UTIL_PION/runlist_pionLT_2021.csv"
 # Need to fix paths rather than give relative paths, also need to check information is still in these files and that it can grab it correctly
 KINFILE="${REPLAYPATH}/DBASE/COIN/standard.kinematics"
+# Get report file based upon run type
+if [[ ${RUNTYPE} = *"Prod"* ]]; then
+    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/PionLT/Pion_replay_coin_production_${RUNNUMBER}_-1.report"
+elif [[ ${RUNTYPE} = *"Lumi"* ]]; then
+    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/Lumi/Pion_replay_coin_Lumi_${RUNNUMBER}_-1.report" # CHANGE WHEN FINALISED
+elif [[ ${RUNTYPE} = *"HeeP"* ]]; then
+    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_coin_HeeP_${RUNNUMBER}_-1.report" # CHANGE WHEN FINALISED
+else
+    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/General/Pion_replay_coin_production_${RUNNUMBER}_-1.report" # CHANGE WHEN FINALISED
+fi
 # Need the names/paths for the files that contain the rest of the info we actually need
 # SCALERFILE="OUTPUT/scalers_Run$RUNNUMBER.txt"
-# REPORTFILE="../REPORT_OUTPUT/COIN/PRODUCTION/PionLT_replay_coin_production_${RUNNUMBER}_-1.report"
 # MONITORFILE="../MON_OUTPUT/REPORT/reportMonitor_shms_${RUNNUMBER}_50000.txt"
 
 # Get information available in standard.kinematics, execute a python script to do this for us
-KINFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/kinfile.py ${KINFILE} ${RUNNUMBER}`
+KINFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/kinfile.py ${KINFILE} ${RUNNUMBER}` # The output of this python script is just a comma separated string
 # Split the string we get to individual variables, easier for printing and use later
-SHMS_Angle=`echo ${KINFILE_INFO} | cut -d ','  -f1`
+SHMS_Angle=`echo ${KINFILE_INFO} | cut -d ','  -f1` # Cut the string on , delimitter, select field (f) 1, set variable to output of command
 SHMS_P=`echo ${KINFILE_INFO} | cut -d ','  -f2`
 HMS_Angle=`echo ${KINFILE_INFO} | cut -d ','  -f3`
 HMS_P=`echo ${KINFILE_INFO} | cut -d ','  -f4`
 EBeam=`echo ${KINFILE_INFO} | cut -d ','  -f5`
 
+# Get information available in the report file
+REPORTFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/reportfile.py ${REPORTFILE}`
 # Variables that still need to be set correctly
 Current="Temp"
 PS1="Temp"
@@ -95,9 +106,9 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
     fi
 done <  <(tail -n +2 ${RUNLIST}) # Ignores header line by using tail here
 
-if [[ `echo "${#DuplicateLines[@]}"` != 0 ]]; then
+if [[ `echo "${#DuplicateLines[@]}"` != 0 ]]; then # If the array is not empty, check some stuff and check with the user if they want to remove duplicate entries
     # Ask if the user wants to remove duplicate lines, in a grammatically correct manner :)
-    if [[ `echo "${#DuplicateLines[@]}"` == 1 ]]; then
+    if [[ `echo "${#DuplicateLines[@]}"` == 1 ]]; then 
 	read -p "$(echo "${#DuplicateLines[@]}") entry already found in the runlist for run ${RUNNUMBER}, delete dupliacte entry and print new entry to file? <Y/N> " prompt
     elif [[ `echo "${#DuplicateLines[@]}"` -gt 1 ]]; then
 	read -p "$(echo "${#DuplicateLines[@]}") entries already found in the runlist for run ${RUNNUMBER}, delete dupliacte entries and print new entry to file? <Y/N> " prompt

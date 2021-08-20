@@ -1,2 +1,2 @@
 Run,Type,Target,EBeam,P_SHMS,Theta_SHMS,P_HMS,Theta_HMS,Current,PS1,PS3,PS5,HMS_Rate_(kHz),SHMS_Rate_(kHz),Coin_Rate_(kHz),Charge,Raw_Coin,SHMS_Hadron_Tracking,Comments
-5003,Coin,LH2,10.585,5.389,15.810,4.712,-17.080,Temp,Temp,Temp,Temp,Temp,Temp,Temp,Temp,Temp,Temp,Test
+5003,Coin,,10.585,5.389,15.810,4.712,-17.080,Temp,Temp,Temp,Temp,Temp,Temp,Temp,Temp,Temp,Temp,Done
