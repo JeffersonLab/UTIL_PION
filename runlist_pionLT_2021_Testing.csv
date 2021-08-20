@@ -1,0 +1,4 @@
+Run,Type,P_SHMS,Theta_SHMS,P_HMS,Theta_HMS,Target,EBeam,Current,PS1,PS4,PS5,HMS_Rate_(kHz),SHMS_Rate_(kHz),Coin_Rate_(kHz),Charge,Raw_Coin,SHMS_Hadron_Tracking,Comments
+1   2    3          4          5  6            7  8      9      10  11  12   13               14                 15           16   17        18                  19
+111,1111,111111,1111111111,11111,111111111,111111,11111,1111111,111,111,111,11111111111111,111111111111111,111111111111111,111111,11111111,111111111111111111111,1111111
+3  , 4  , 6    ,  10      , 5   , 9       , 6    ,  5  ,   7   , 3 , 3 , 3 , 14           ,   15          , 15            ,   6  ,  8     , 21                  , 7
