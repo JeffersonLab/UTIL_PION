@@ -7,7 +7,7 @@ archive/        : archive files that may be useful in the future, old TProof scr
 config/         : replay configuration files (e.g. DEF-files, PARAM)
 ####################################################################
 
-Please contact Stephen Kay (stephen.kay@uregina.ca) or Richard Trotta (trotta@cua.edu) for more information.
+Please contact Stephen Kay (stephen.kay@uregina.ca) or Richard Trotta (trotta@cua.edu) or Muhammad Junaid (mjo147@uregina.ca) for more information.
 
 # UTIL_PION
 
