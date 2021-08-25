@@ -17,87 +17,59 @@ ReportFilePath = sys.argv[1]
 
 ReportFile = open(ReportFilePath)
 
-Current="ERROR"
-PS1="ERROR"
-PS4="ERROR"
-PS5="ERROR"
-HMS_Rate="ERROR"
-SHMS_Rate="ERROR"
-Coin_Rate="ERROR"
-Charge="ERROR"
-Raw_Coin="ERROR"
-Had_Track="ERROR"
+Current=0
+PS1=0
+PS4=0
+PS5=0
+HMS_Rate=0
+SHMS_Rate=0
+Coin_Rate=0
+Charge=0
+Raw_Coin=0
+Had_Track=0
 
 TestVar = 0 # Counter to check the right number of variables have been set, should get 10 items
 for line in ReportFile:
-    if "BCM4A Current" in line :
+    if "SW_BCM4A_Current" in line :
         Current = float(((line.split(":")[1]).strip()).split(" ")[0]) # Need to split on : delimiter to get number, then space to remove unit
         TestVar+=1
-    if "Ps1_factor" in line :
+    if "SW_Ps1_factor" in line :
         PS1 = int((line.split(":"))[1])
         TestVar+=1
-    if "Ps4_factor" in line :
+    if "SW_Ps4_factor" in line :
         PS4 = int((line.split(":"))[1])
         TestVar+=1
-    if "Ps6_factor" in line :
-        PS6 = int((line.split(":"))[1])
+    if "SW_Ps5_factor" in line :
+        PS5 = int((line.split(":"))[1])
         TestVar+=1
-    if "HMS EL-REAL Trigger Rate" in line :
+    if "SW_HMS_EL-REAL_Trigger_Rate" in line :
         HMS_Rate = float(((line.split(":")[1]).strip()).split(" ")[0]) 
         TestVar+=1
-    if "SHMS 3/4 Trigger Rate" in line :
+    if "SW_SHMS_3/4_Trigger_Rate" in line :
         SHMS_Rate = float(((line.split(":")[1]).strip()).split(" ")[0]) 
         TestVar+=1
-    if "COIN Trigger Rate" in line :
+    if "SW_COIN_Trigger_Rate" in line :
         COIN_Rate = float(((line.split(":")[1]).strip()).split(" ")[0]) 
         TestVar+=1
-    if "BCM4A Beam Cut Charge" in line :
+    if "SW_BCM4A_Beam_Cut_Charge" in line :
         Charge = float(((line.split(":")[1]).strip()).split(" ")[0]) 
         TestVar+=1
-    if "Accepted COIN Triggers" in line :
+    if "SW_Accepted_COIN_Triggers" in line :
         Raw_Coin = float(((line.split(":")[1]).strip()).split(" ")[0]) 
         TestVar+=1
-    if "SHMS Hadron Singles TRACK EFF" in line :
+    if "SW_SHMS_Hadron_Singles_TRACK_EFF" in line :
         Had_Track = float(((line.split(":")[1]).strip()).split(" ")[0])  
         TestVar+=1
-
-if TestVar != 10 :
+        
+if TestVar != 10 and TestVar > 10 :
     print(" !!! WARNING IN reportfile.py !!! \n More than expected matching entries found, some information may have been overwritten \n !!! WARNING IN reportfile.py !!!")
+    RunListEntry=("%.3f,%i,%i,%i,%.3f,%.3f,%.3f,%.3f,%i,%.3f" % (Current, PS1, PS4, PS5, HMS_Rate, SHMS_Rate, COIN_Rate, Charge, Raw_Coin, Had_Track) )
+elif TestVar != 10 and TestVar < 10 :
+    print(" !!! WARNING IN reportfile.py !!! \n Less than expected matching entries found, some information may have not have been gathered \n !!! WARNING IN reportfile.py !!!")
+    RunListEntry=("%.3f,%i,%i,%i,%.3f,%.3f,%.3f,%.3f,%i,%.3f" % (Current, PS1, PS4, PS5, HMS_Rate, SHMS_Rate, COIN_Rate, Charge, Raw_Coin, Had_Track) )
+else :
+    RunListEntry=("%.3f,%i,%i,%i,%.3f,%.3f,%.3f,%.3f,%i,%.3f" % (Current, PS1, PS4, PS5, HMS_Rate, SHMS_Rate, COIN_Rate, Charge, Raw_Coin, Had_Track) )
 
-# # The loop here is explicitly written such that if there are multiple entrie, the values will be overwrriten
-# # The LAST matching block in the file is the one that will be used
-# for KinFileBlock in KinFileContent.split('\n\n'):
-#     nLines=0 # Counter for the number of lines in the block of text
-#     Lines =[]
-#     for KinFileLine in KinFileBlock.split('\n'):
-#         nLines+=1
-#         if not KinFileLine.startswith("#"): # If line does NOT start with a #, add it to our array
-#             Lines.append(KinFileLine)
-#     if nLines < 10: # If less than 10 lines, skip to next block
-#         continue
-#     # If it's an entry with a -, it's a range of run numbers, set the start and end accordingly    
-#     if "-" in Lines[0]:
-#         RunNumArr = Lines[0].split("-")
-#         RunStart = int(RunNumArr[0])
-#         RunEnd = int(RunNumArr[1])
-#     # If there's no -, it's a single line entry and run start and end are the same
-#     elif "-" not in Lines[0]:
-#         RunStart=int(Lines[0])
-#         RunEnd=int(Lines[0])
-#     # Check if the provided run number is in the run number range for the block, if it is, set the values
-#     if int(RunNum) in range (RunStart, RunEnd) :
-#         TestVar +=1
-#         for entry in Lines :
-#             if "ptheta_lab" in entry :
-#                 SHMS_Angle = float((entry.split("="))[1])
-#             if "ppcentral" in entry :
-#                 SHMS_P = float((entry.split("="))[1])
-#             if "htheta_lab" in entry :
-#                 HMS_Angle = float((entry.split("="))[1])
-#             if "hpcentral" in entry :
-#                 HMS_P = float((entry.split("="))[1])
-#             if "gpbeam" in entry :
-#                 EBeam = float((entry.split("="))[1])
-# RunListEntry=("%2.3f,%2.3f,%2.3f,%2.3f,%2.3f" % (SHMS_Angle, SHMS_P, HMS_Angle, HMS_P, EBeam))
-# print(RunListEntry)
+print(RunListEntry)
+
 ReportFile.close()

@@ -22,11 +22,11 @@ KinFile = open(KinFilePath)
 KinFileContent = KinFile.read()
 KinFile.close()
 
-SHMS_Angle = "ERROR"
-SHMS_P = "ERROR"
-HMS_Angle = "ERROR"
-HMS_P = "ERROR"
-EBeam = "ERROR"
+SHMS_Angle = 0
+SHMS_P = 0
+HMS_Angle = 0
+HMS_P = 0
+EBeam = 0
 
 TestVar = 0
 # The loop here is explicitly written such that if there are multiple entrie, the values will be overwrriten

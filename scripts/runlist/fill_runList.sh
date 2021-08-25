@@ -6,7 +6,7 @@
 # Set up paths depending upon location
 
 # Set path depending upon hostname. Change or add more as needed  
-# Note, farm paths are only for teting
+# Note, farm paths are only for testing
 if [[ "${HOSTNAME}" = *"farm"* ]]; then  
     REPLAYPATH="/group/c-pionlt/USERS/${USER}/hallc_replay_lt"
 elif [[ "${HOSTNAME}" = *"qcd"* ]]; then
@@ -32,9 +32,6 @@ elif [[ ${RUNTYPE} = *"HeeP"* ]]; then
 else
     REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/General/Pion_replay_coin_production_${RUNNUMBER}_-1.report" # CHANGE WHEN FINALISED
 fi
-# Need the names/paths for the files that contain the rest of the info we actually need
-# SCALERFILE="OUTPUT/scalers_Run$RUNNUMBER.txt"
-# MONITORFILE="../MON_OUTPUT/REPORT/reportMonitor_shms_${RUNNUMBER}_50000.txt"
 
 # Get information available in standard.kinematics, execute a python script to do this for us
 KINFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/kinfile.py ${KINFILE} ${RUNNUMBER}` # The output of this python script is just a comma separated string
@@ -48,50 +45,51 @@ EBeam=`echo ${KINFILE_INFO} | cut -d ','  -f5`
 # Get information available in the report file
 REPORTFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/reportfile.py ${REPORTFILE}`
 # Variables that still need to be set correctly
-Current="Temp"
-PS1="Temp"
-PS4="Temp"
-PS5="Temp"
-HMS_Rate="Temp"
-SHMS_Rate="Temp"
-COIN_Rate="Temp"
-Charge="Temp"
-Raw_COIN="Temp"
-Tracking="Temp"
+Current=`echo ${REPORTFILE_INFO} | cut -d ',' -f1`
+PS1=`echo ${REPORTFILE_INFO} | cut -d ',' -f2`
+PS4=`echo ${REPORTFILE_INFO} | cut -d ',' -f3`
+PS5=`echo ${REPORTFILE_INFO} | cut -d ',' -f4`
+HMS_Rate=`echo ${REPORTFILE_INFO} | cut -d ',' -f5`
+SHMS_Rate=`echo ${REPORTFILE_INFO} | cut -d ',' -f6`
+COIN_Rate=`echo ${REPORTFILE_INFO} | cut -d ',' -f7`
+Charge=`echo ${REPORTFILE_INFO} | cut -d ',' -f8`
+Raw_COIN=`echo ${REPORTFILE_INFO} | cut -d ',' -f9`
+Tracking=`echo ${REPORTFILE_INFO} | cut -d ',' -f10`
 
- echo "========================================================================="
- echo "These values autofill into the run list ..."
- echo
- echo "Run number: $RUNNUMBER"
- echo "Run type: $RUNTYPE"
- echo "Target: $TARGET"
- echo "Beam energy: $EBeam"
- echo "SHMS momentum: $SHMS_P"
- echo "SHMS angle : $SHMS_Angle"
- echo "HMS momentum: $HMS_P"
- echo "HMS angle: $HMS_Angle"
-# echo "Current: ${tmp[0]}"
-# echo "PS1 : ${tmp[1]}"
-# echo "PS3 : ${tmp[3]}"
-# echo "PS5 : ${tmp[5]}"
-# echo "HMS rate [kHz]: ${tmp[7]}"
-# echo "SHMS rate [kHz]: ${tmp[8]}"
-# echo "COIN rate [kHz]: ${tmp[9]}"
-# echo "Charge [mC]: ${tmp[10]}"
-# echo "Raw coin: ${tmp[11]}"
-# echo "SHMS hadron tracking: ${tmp[12]}"
- echo "========================================================================="
-# while true; do
-#     read -p "Do these values all look correct? (Please answer yes or no) " yn
-#     case $yn in
-#         [Yy]* ) break;;
-#         [Nn]* ) exit;;
-#         * ) echo "Please answer yes or no.";;
-#     esac
-# done
+echo "========================================================================="
+echo "These values autofill into the run list ..."
+echo
+echo "Run number: $RUNNUMBER"
+echo "Run type: $RUNTYPE"
+echo "Target: $TARGET"
+echo "Beam energy: $EBeam"
+echo "SHMS momentum: $SHMS_P"
+echo "SHMS angle : $SHMS_Angle"
+echo "HMS momentum: $HMS_P"
+echo "HMS angle: $HMS_Angle"
+echo "Current: $Current"
+echo "PS1 : $PS1"
+echo "PS4 : $PS4"
+echo "PS5 : $PS5"
+echo "HMS rate [kHz]: $HMS_Rate"
+echo "SHMS rate [kHz]: $SHMS_Rate"
+echo "COIN rate [kHz]: $Coin_Rate"
+echo "Charge [mC]: $Charge"
+echo "Raw coin: $Raw_COIN"
+echo "SHMS hadron tracking: $Tracking"
+echo "========================================================================="
+
+while true; do
+    read -p "Do these values all look correct? (Please answer yes or no) " yn
+    case $yn in
+        [Yy]* ) break;;
+        [Nn]* ) exit;;
+        * ) echo "Please answer yes or no.";;
+    esac
+done
 
 # Ask user for a comment
-read -p "Enter number of pi/n events and any other comments: " Comment
+read -p "Enter number of pi/n events and/or any other comments: " Comment
 # Need to fix widths of entries with blank space at some point, see the test file for widths (based on headers)
 RUNLIST_INFO="${RUNNUMBER},${RUNTYPE},${TARGET},${EBeam},${SHMS_P},${SHMS_Angle},${HMS_P},${HMS_Angle},${Current},${PS1},${PS4},${PS5},${HMS_Rate},${SHMS_Rate},${COIN_Rate},${Charge},${Raw_COIN},${Tracking},${Comment}"
 
