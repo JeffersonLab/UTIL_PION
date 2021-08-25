@@ -44,7 +44,6 @@ EBeam=`echo ${KINFILE_INFO} | cut -d ','  -f5`
 
 # Get information available in the report file
 REPORTFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/reportfile.py ${REPORTFILE}`
-# Variables that still need to be set correctly
 Current=`echo ${REPORTFILE_INFO} | cut -d ',' -f1`
 PS1=`echo ${REPORTFILE_INFO} | cut -d ',' -f2`
 PS4=`echo ${REPORTFILE_INFO} | cut -d ',' -f3`
@@ -53,8 +52,11 @@ HMS_Rate=`echo ${REPORTFILE_INFO} | cut -d ',' -f5`
 SHMS_Rate=`echo ${REPORTFILE_INFO} | cut -d ',' -f6`
 COIN_Rate=`echo ${REPORTFILE_INFO} | cut -d ',' -f7`
 Charge=`echo ${REPORTFILE_INFO} | cut -d ',' -f8`
-Raw_COIN=`echo ${REPORTFILE_INFO} | cut -d ',' -f9`
-Tracking=`echo ${REPORTFILE_INFO} | cut -d ',' -f10`
+Raw_HMS=`echo ${REPORTFILE_INFO} | cut -d ',' -f9`
+Raw_SHMS=`echo ${REPORTFILE_INFO} | cut -d ',' -f10`
+Raw_COIN=`echo ${REPORTFILE_INFO} | cut -d ',' -f11`
+EDTM=`echo ${REPORTFILE_INFO} | cut -d ',' -f12`
+Tracking=`echo ${REPORTFILE_INFO} | cut -d ',' -f13`
 
 echo "========================================================================="
 echo "These values autofill into the run list ..."
@@ -75,7 +77,10 @@ echo "HMS rate [kHz]: $HMS_Rate"
 echo "SHMS rate [kHz]: $SHMS_Rate"
 echo "COIN rate [kHz]: $Coin_Rate"
 echo "Charge [mC]: $Charge"
+echo "Raw HMS: $Raw_HMS"
+echo "Raw SHMS: $Raw_SHMS"
 echo "Raw coin: $Raw_COIN"
+echo "EDTM: $EDTM"
 echo "SHMS hadron tracking: $Tracking"
 echo "========================================================================="
 
@@ -91,7 +96,7 @@ done
 # Ask user for a comment
 read -p "Enter number of pi/n events and/or any other comments: " Comment
 # Need to fix widths of entries with blank space at some point, see the test file for widths (based on headers)
-RUNLIST_INFO="${RUNNUMBER},${RUNTYPE},${TARGET},${EBeam},${SHMS_P},${SHMS_Angle},${HMS_P},${HMS_Angle},${Current},${PS1},${PS4},${PS5},${HMS_Rate},${SHMS_Rate},${COIN_Rate},${Charge},${Raw_COIN},${Tracking},${Comment}"
+RUNLIST_INFO="${RUNNUMBER},${RUNTYPE},${TARGET},${EBeam},${SHMS_P},${SHMS_Angle},${HMS_P},${HMS_Angle},${Current},${PS1},${PS4},${PS5},${HMS_Rate},${SHMS_Rate},${COIN_Rate},${Charge},${Raw_HMS},${Raw_SHMS},${Raw_COIN},${EDTM},${Tracking},${Comment}"
 
 # Check if there is already an entry for this run number, if there is, ask if you want to overwrite it, if not, print it to the file
 DuplicateLines=() # Array to store line numbers of duplicated entries

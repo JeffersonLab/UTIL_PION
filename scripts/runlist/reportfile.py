@@ -25,7 +25,10 @@ HMS_Rate=0
 SHMS_Rate=0
 Coin_Rate=0
 Charge=0
+Raw_HMS=0
+Raw_SHMS=0
 Raw_Coin=0
+EDTM=0
 Had_Track=0
 
 TestVar = 0 # Counter to check the right number of variables have been set, should get 10 items
@@ -54,22 +57,36 @@ for line in ReportFile:
     if "SW_BCM4A_Beam_Cut_Charge" in line :
         Charge = float(((line.split(":")[1]).strip()).split(" ")[0]) 
         TestVar+=1
+    if "SW_Accepted_HMS_Triggers" in line :
+        Raw_HMS = float(((line.split(":")[1]).strip()).split(" ")[0]) 
+        TestVar+=1
+    if "SW_Accepted_SHMS_Triggers" in line :
+        Raw_SHMS = float(((line.split(":")[1]).strip()).split(" ")[0]) 
+        TestVar+=1
     if "SW_Accepted_COIN_Triggers" in line :
         Raw_Coin = float(((line.split(":")[1]).strip()).split(" ")[0]) 
+        TestVar+=1
+    if "SW_EDTM_Accepted_Triggers" in line :
+        EDTM = float(((line.split(":")[1]).strip()).split(" ")[0]) 
         TestVar+=1
     if "SW_SHMS_Hadron_Singles_TRACK_EFF" in line :
         Had_Track = float(((line.split(":")[1]).strip()).split(" ")[0])  
         TestVar+=1
-        
-if TestVar != 10 and TestVar > 10 :
-    print(" !!! WARNING IN reportfile.py !!! \n More than expected matching entries found, some information may have been overwritten \n !!! WARNING IN reportfile.py !!!")
-    RunListEntry=("%.3f,%i,%i,%i,%.3f,%.3f,%.3f,%.3f,%i,%.3f" % (Current, PS1, PS4, PS5, HMS_Rate, SHMS_Rate, COIN_Rate, Charge, Raw_Coin, Had_Track) )
-elif TestVar != 10 and TestVar < 10 :
-    print(" !!! WARNING IN reportfile.py !!! \n Less than expected matching entries found, some information may have not have been gathered \n !!! WARNING IN reportfile.py !!!")
-    RunListEntry=("%.3f,%i,%i,%i,%.3f,%.3f,%.3f,%.3f,%i,%.3f" % (Current, PS1, PS4, PS5, HMS_Rate, SHMS_Rate, COIN_Rate, Charge, Raw_Coin, Had_Track) )
-else :
-    RunListEntry=("%.3f,%i,%i,%i,%.3f,%.3f,%.3f,%.3f,%i,%.3f" % (Current, PS1, PS4, PS5, HMS_Rate, SHMS_Rate, COIN_Rate, Charge, Raw_Coin, Had_Track) )
 
+#Round these values to nearest 1000
+Raw_HMS=int(round(Raw_HMS,-3)/1000)
+Raw_SHMS=int(round(Raw_SHMS,-3)/1000)
+Raw_Coin=int(round(Raw_Coin,-3)/1000)
+EDTM=int(round(EDTM,-3)/1000)
+        
+if TestVar != 13 and TestVar > 13 :
+    print(" !!! WARNING IN reportfile.py !!! \n More than expected matching entries found, some information may have been overwritten \n !!! WARNING IN reportfile.py !!!")
+    RunListEntry=("%.3f,%i,%i,%i,%.3f,%.3f,%.3f,%.3f,%ik,%ik,%ik,%ik,%.3f" % (Current, PS1, PS4, PS5, HMS_Rate, SHMS_Rate, COIN_Rate, Charge, Raw_HMS, Raw_SHMS, Raw_Coin, EDTM, Had_Track) )
+elif TestVar != 13 and TestVar < 13 :
+    print(" !!! WARNING IN reportfile.py !!! \n Less than expected matching entries found, some information may have not have been gathered \n !!! WARNING IN reportfile.py !!!")
+    RunListEntry=("%.3f,%i,%i,%i,%.3f,%.3f,%.3f,%.3f,%ik,%ik,%ik,%ik,%.3f" % (Current, PS1, PS4, PS5, HMS_Rate, SHMS_Rate, COIN_Rate, Charge, Raw_HMS, Raw_SHMS, Raw_Coin, EDTM, Had_Track) )
+else :
+    RunListEntry=("%.3f,%i,%i,%i,%.3f,%.3f,%.3f,%.3f,%ik,%ik,%ik,%ik,%.3f" % (Current, PS1, PS4, PS5, HMS_Rate, SHMS_Rate, COIN_Rate, Charge, Raw_HMS, Raw_SHMS, Raw_Coin, EDTM, Had_Track) )
 print(RunListEntry)
 
 ReportFile.close()
