@@ -12,7 +12,7 @@ if [[ "${HOSTNAME}" = *"farm"* ]]; then
 elif [[ "${HOSTNAME}" = *"qcd"* ]]; then
     REPLAYPATH="/group/c-pionlt/USERS/${USER}/hallc_replay_lt"
 elif [[ "${HOSTNAME}" = *"cdaq"* ]]; then
-    REPLAYPATH="/home/cdaq/hallc-online/hallc_replay_lt"
+    REPLAYPATH="/home/cdaq/pionLT-2021/hallc_replay_lt"
 fi
 
 # Run number and run type should be read in by the "master" script, automating the target would be more difficult, master script should prompt for this - Only accept LD2, LH2, Dummy and carbon 1.5 or 6
@@ -27,7 +27,9 @@ if [[ ${RUNTYPE} = *"Prod"* ]]; then
     REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/PionLT/Pion_replay_coin_production_${RUNNUMBER}_-1.report"
 elif [[ ${RUNTYPE} = *"Lumi"* ]]; then
     REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/Lumi/Pion_replay_coin_Lumi_${RUNNUMBER}_-1.report" # CHANGE WHEN FINALISED
-elif [[ ${RUNTYPE} = *"HeeP"* ]]; then
+elif [[ ${RUNTYPE} = *"HeePSing"* ]]; then
+    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_coin_HeeP_${RUNNUMBER}_-1.report" # CHANGE WHEN FINALISED
+elif [[ ${RUNTYPE} = *"HeePCoin"* ]]; then
     REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_coin_HeeP_${RUNNUMBER}_-1.report" # CHANGE WHEN FINALISED
 else
     REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/General/Pion_replay_coin_production_${RUNNUMBER}_-1.report" # CHANGE WHEN FINALISED
@@ -43,20 +45,36 @@ HMS_P=`echo ${KINFILE_INFO} | cut -d ','  -f4`
 EBeam=`echo ${KINFILE_INFO} | cut -d ','  -f5`
 
 # Get information available in the report file
-REPORTFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/reportfile.py ${REPORTFILE}`
-Current=`echo ${REPORTFILE_INFO} | cut -d ',' -f1`
-PS1=`echo ${REPORTFILE_INFO} | cut -d ',' -f2`
-PS4=`echo ${REPORTFILE_INFO} | cut -d ',' -f3`
-PS5=`echo ${REPORTFILE_INFO} | cut -d ',' -f4`
-HMS_Rate=`echo ${REPORTFILE_INFO} | cut -d ',' -f5`
-SHMS_Rate=`echo ${REPORTFILE_INFO} | cut -d ',' -f6`
-COIN_Rate=`echo ${REPORTFILE_INFO} | cut -d ',' -f7`
-Charge=`echo ${REPORTFILE_INFO} | cut -d ',' -f8`
-Raw_HMS=`echo ${REPORTFILE_INFO} | cut -d ',' -f9`
-Raw_SHMS=`echo ${REPORTFILE_INFO} | cut -d ',' -f10`
-Raw_COIN=`echo ${REPORTFILE_INFO} | cut -d ',' -f11`
-EDTM=`echo ${REPORTFILE_INFO} | cut -d ',' -f12`
-Tracking=`echo ${REPORTFILE_INFO} | cut -d ',' -f13`
+if [[ -f ${REPORTFILE} ]]; then
+	REPORTFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/reportfile.py ${REPORTFILE}`
+	Current=`echo ${REPORTFILE_INFO} | cut -d ',' -f1`
+	PS1=`echo ${REPORTFILE_INFO} | cut -d ',' -f2`
+	PS4=`echo ${REPORTFILE_INFO} | cut -d ',' -f3`
+	PS5=`echo ${REPORTFILE_INFO} | cut -d ',' -f4`
+	HMS_Rate=`echo ${REPORTFILE_INFO} | cut -d ',' -f5`
+	SHMS_Rate=`echo ${REPORTFILE_INFO} | cut -d ',' -f6`
+	COIN_Rate=`echo ${REPORTFILE_INFO} | cut -d ',' -f7`
+	Charge=`echo ${REPORTFILE_INFO} | cut -d ',' -f8`
+	Raw_HMS=`echo ${REPORTFILE_INFO} | cut -d ',' -f9`
+	Raw_SHMS=`echo ${REPORTFILE_INFO} | cut -d ',' -f10`
+	Raw_COIN=`echo ${REPORTFILE_INFO} | cut -d ',' -f11`
+	EDTM=`echo ${REPORTFILE_INFO} | cut -d ',' -f12`
+	Tracking=`echo ${REPORTFILE_INFO} | cut -d ',' -f13`
+elif [[ ! -f ${REPORTFILE} ]]; then
+	Current="ERROR"
+	PS1="ERROR"
+	PS4="ERROR"
+	PS5="ERROR"
+	HMS_Rate="ERROR"
+	SHMS_Rate="ERROR"
+	COIN_Rate="ERROR"
+	Charge="ERROR"
+	Raw_HMS="ERROR"
+	Raw_SHMS="ERROR"
+	Raw_COIN="ERROR"
+	EDTM="ERROR"
+	Tracking="ERROR"
+fi
 
 echo "========================================================================="
 echo "These values autofill into the run list ..."

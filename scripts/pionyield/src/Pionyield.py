@@ -39,6 +39,8 @@ elif ("phys.uregina" in HOST[1]):
     REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
 elif("skynet" in HOST[1]):
     REPLAYPATH = "/home/%s/Work/JLab/hallc_replay_lt" % USER[1]
+elif("cdaq" in HOST[1]):
+    REPLAYPATH = "/home/cdaq/hallc-online/hallc_replay_lt"
     
 # Add more path setting as needed in a similar manner
 OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/PionLT" % REPLAYPATH
@@ -49,6 +51,7 @@ import kaonlt as klt
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 # Construct the name of the rootfile based upon the info we provided
 rootName = "%s/UTIL_PION/ROOTfiles/Analysis/PionLT/%s_%s_%s.root" % (REPLAYPATH, ROOTPrefix, runNum, MaxEvent)
+#rootName = "/volatile/hallc/c-pionlt/heinricn/ROOTfiles/Analysis/PionLT/Pion_coin_replay_production_7875_66690.root" # Hard coded file for testing
 print ("Attempting to process %s" %(rootName))
 if os.path.exists(OUTPATH):
     if os.path.islink(OUTPATH):

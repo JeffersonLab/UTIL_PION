@@ -17,6 +17,7 @@ block P.cal.etotnorm
 block P.cal.etottracknorm
 block P.aero.npeSum
 block P.hgcer.npeSum
+block P.ngcer.npeSum
 block P.hod.starttime
 block P.hod.fpHitsTime
 block P.hod.goodscinhit
@@ -31,6 +32,8 @@ block P.dc.x*
 block P.dc.y*
 block P.hgcer.xAtCer
 block P.hgcer.yAtCer
+block P.ngcer.xAtCer
+block P.ngcer.yAtCer
 block P.aero.xAtAero
 block P.aero.yAtAero
 block H.kin.primary.*

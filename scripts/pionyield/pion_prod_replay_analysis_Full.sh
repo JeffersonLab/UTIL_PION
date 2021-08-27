@@ -9,12 +9,12 @@
 #################################################################################################################################################
 
 echo "Starting analysis of Pion events"
-echo "I take as arguments the run prefix, run number and max number of events!"
+echo "I take as arguments the run number and number of events!"
 # Input params - run number and max number of events
 RUNNUMBER=$1
 if [[ -z "$1" ]]; then
-    echo "I need a input RunList"
-    echo "Please provide a run list as input"
+    echo "I need a run number"
+    echo "Please provide a run number as input"
 fi
 MAXEVENTS=$2
 if [[ -z "$2" ]]; then

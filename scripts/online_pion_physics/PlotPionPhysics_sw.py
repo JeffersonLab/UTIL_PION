@@ -43,20 +43,21 @@ if len(sys.argv)-1!=3:
 ##################################################################################################################################################
 
 # Input params - run number and max number of events
-runNum = sys.argv[1]
-MaxEvent = sys.argv[2]
-ROOTPrefix = sys.argv[3]
+ROOTPrefix = sys.argv[1]
+runNum = sys.argv[2]
+MaxEvent = sys.argv[3]
 
 USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
 HOST = subprocess.getstatusoutput("hostname")
 
 if ("farm" in HOST[1]):
     REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
-#    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
 
 elif ("qcd" in HOST[1]):
     REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
-#    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
+
+elif ("cdaq" in HOST[1]):
+    REPLAYPATH = "/home/cdaq/hallc-online/hallc_replay_lt"
 
 elif ("phys.uregina" in HOST[1]):
     REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
@@ -77,6 +78,7 @@ Pion_Analysis_Distributions = "%s/%s_%s_sw_Pion_Analysis_Distributions.pdf" % (O
 
 # Construct the name of the rootfile based upon the info we provided
 rootName = "%s/UTIL_PION/OUTPUT/Analysis/PionLT/%s_%s_%s.root" % (REPLAYPATH, runNum, MaxEvent, ROOTPrefix)     # Input file location and variables taking
+#rootName = "/home/cdaq/hallc-online/hallc_replay_lt/UTIL_PION/OUTPUT/Analysis/PionLT/8076_-1_Analysed_Data.root" # Hard coded file for testing on cdaq
 print ("Attempting to process %s" %(rootName))
 if os.path.exists(OUTPATH):
     if os.path.islink(OUTPATH):
@@ -87,7 +89,7 @@ if os.path.exists(OUTPATH):
         print ("%s exists but is not a directory or sym link, check your directory/link and try again" % (OUTPATH))
         sys.exit(2)
 else:
-    print("Output path not found, please make a sym link or directory called OUTPUT in UTIL_PION/scripts/demo to store output")
+    print("Output path not found, please make a sym link or directory called OUTPUT in UTIL_PION to store output")
     sys.exit(3)
 print ("Attempting to process %s" %(rootName))
 if os.path.isfile(rootName):
@@ -475,9 +477,9 @@ shadedpeak.Draw("samehist")
 NeutronEvt = TPaveText(0.58934,0.675,0.95,0.75,"NDC")
 BinLow = P_kin_MMpi_pions_cut_random_sub.GetXaxis().FindBin(minbin)
 BinHigh = P_kin_MMpi_pions_cut_random_sub.GetXaxis().FindBin(maxbin)
-BinIntegral = P_kin_MMpi_pions_cut_random_sub.Integral(BinLow, BinHigh)
+BinIntegral = int(P_kin_MMpi_pions_cut_random_sub.Integral(BinLow, BinHigh))
 NeutronEvt.SetLineColor(2)
-NeutronEvt.AddText("e #pi n Events: %s" %(BinIntegral))
+NeutronEvt.AddText("e #pi n Events: %i" %(BinIntegral))
 NeutronEvt.Draw()
 # End of Neutron Peak Events Selection Section
 c1_kin.Print(Pion_Analysis_Distributions + '(')
@@ -864,3 +866,4 @@ P_kin_MMpi_pions_cut_random.Write()
 outHistFile.Close()
 infile.Close() 
 print ("Processing Complete")
+print("!!!!!!!!\n %i pi-n events \n!!!!!!!!" % BinIntegral)

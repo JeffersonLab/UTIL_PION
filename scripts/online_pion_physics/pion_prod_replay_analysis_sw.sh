@@ -1,4 +1,5 @@
 #! /bin/bash
+
 ##################################################################################
 # Created - 10/July/2021, Author - Muhammad Junaid, University of Regina, Canada
 ##################################################################################
@@ -13,8 +14,8 @@ echo "I take as arguments the run prefix, run number and max number of events!"
 # Input params - run number and max number of events
 RUNNUMBER=$1
 if [[ -z "$1" ]]; then
-    echo "I need a input RunList"
-    echo "Please provide a run list as input"
+    echo "I need an input run number"
+    echo "Please provide a run number as input"
 fi
 MAXEVENTS=$2
 if [[ -z "$2" ]]; then
@@ -107,12 +108,13 @@ if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Dat
     if [[ $option2 == "y" || $option2 == "Y" || $option2 == "yes" || $option2 == "Yes" ]]; then
 	rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root"
 	echo "Reprocessing"
-	python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw.py ${RUNNUMBER} ${MAXEVENTS} Analysed_Data
+	python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw.py Analysed_Data ${RUNNUMBER} ${MAXEVENTS}
     else
 	echo "Skipping python physics plotting script step"
     fi
 elif [ ! -f  "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
-	python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw.py ${RUNNUMBER} ${MAXEVENTS} Analysed_Data
+	python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw.py Analysed_Data ${RUNNUMBER} ${MAXEVENTS}
 else echo "Pion physics output root file already found in ${UTILPATH}/OUTPUT/Analysis/PionLT/ - Skipped python output script step"
 fi
+evince "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_sw_Pion_Analysis_Distributions.pdf" &
 exit 0
