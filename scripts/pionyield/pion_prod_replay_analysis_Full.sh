@@ -13,7 +13,7 @@ echo "I take as arguments the run number and number of events!"
 # Input params - run number and max number of events
 RUNNUMBER=$1
 if [[ -z "$1" ]]; then
-    echo "I need a run number"
+    echo "I need an input run number"
     echo "Please provide a run number as input"
 fi
 MAXEVENTS=$2
@@ -83,16 +83,16 @@ sleep 3
 
 ################################################################################################################################                                                                                   
 # Section for pion analysis script
-if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
+if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/{RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
     read -p "Pion production analyzed file already exits, you want to reprocess it? <Y/N> " option1
     if [[ $option1 == "y" || $option1 == "Y" || $option1 == "yes" || $option1 == "Yes" ]]; then
-	rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root"
+	rm "${UTILPATH}/OUTPUT/Analysis/PionLT/{RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root"
 	echo "Reprocessing"
 	python3 ${UTILPATH}/scripts/pionyield/pion_prod_analysis_Full.py Pion_coin_replay_production ${RUNNUMBER} ${MAXEVENTS}
     else
 	echo "Skipping python analysis script step"
     fi
-elif [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
+elif [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/{RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
 	python3 ${UTILPATH}/scripts/pionyield/pion_prod_analysis_Full.py Pion_coin_replay_production ${RUNNUMBER} ${MAXEVENTS}
 else echo "Analysed root file already found in ${UTILPATH}/OUTPUT/Analysis/PionLT/ - Skipped python analyzer script step"
 fi
@@ -107,12 +107,15 @@ if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Dat
     if [[ $option2 == "y" || $option2 == "Y" || $option2 == "yes" || $option2 == "Yes" ]]; then
 	rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root"
 	echo "Reprocessing"
-	python3 ${UTILPATH}/scripts/pionyield/PlotPionPhysics_Full.py ${RUNNUMBER} ${MAXEVENTS} Analysed_Data
+	python3 ${UTILPATH}/scripts/pionyield/PlotPionPhysics_Full.py Analysed_Data ${RUNNUMBER} ${MAXEVENTS}
     else
 	echo "Skipping python physics plotting script step"
     fi
 elif [ ! -f  "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
-	python3 ${UTILPATH}/scripts/pionyield/PlotPionPhysics_Full.py ${RUNNUMBER} ${MAXEVENTS} Analysed_Data
+	python3 ${UTILPATH}/scripts/pionyield/PlotPionPhysics_Full.py Analysed_Data ${RUNNUMBER} ${MAXEVENTS}
 else echo "Pion physics output root file already found in ${UTILPATH}/OUTPUT/Analysis/PionLT/ - Skipped python output script step"
 fi
+#evince "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Full_Pion_Analysis_Distributions.pdf" &
+#evince "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Full_Kaon_Analysis_Distributions.pdf" &
+#evince "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Full_Proton_Analysis_Distributions.pdf" &
 exit 0
