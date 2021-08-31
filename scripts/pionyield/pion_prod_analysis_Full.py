@@ -42,17 +42,17 @@ USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
 HOST = subprocess.getstatusoutput("hostname")
 if ("farm" in HOST[1]):
     REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
-#    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
 
 elif ("qcd" in HOST[1]):
     REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
-#    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
 
 elif ("phys.uregina" in HOST[1]):
     REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
 
 elif("skynet" in HOST[1]):
     REPLAYPATH = "/home/%s/Work/JLab/hallc_replay_lt" % USER[1]
+elif("cdaq" in HOST[1]):
+    REPLAYPATH = "/home/cdaq/hallc-online/hallc_replay_lt"
 
 ################################################################################################################################################
 
@@ -79,7 +79,7 @@ if os.path.exists(OUTPATH):
         print ("%s exists but is not a directory or sym link, check your directory/link and try again" % (OUTPATH))
         sys.exit(2)
 else:
-    print("Output path not found, please make a sym link or directory called OUTPUT in UTIL_PION/scripts/demo to store output")
+    print("Output path not found, please make a sym link or directory called OUTPUT in UTIL_PION to store output")
     sys.exit(3)
 print ("Attempting to process %s" %(rootName))
 if os.path.isfile(rootName):
@@ -98,8 +98,8 @@ e_tree = up.open(rootName)["T"]
 CTime_ePiCoinTime_ROC1 = e_tree.array("CTime.ePiCoinTime_ROC1")  #
 CTime_eKCoinTime_ROC1 = e_tree.array("CTime.eKCoinTime_ROC1")    #
 CTime_epCoinTime_ROC1 = e_tree.array("CTime.epCoinTime_ROC1")    #
-#P_RF_tdcTime = e_tree.array("T.coin.pRF_tdcTime")               #
-#P_hod_fpHitsTime = e_tree.array("P.hod.fpHitsTime")             #
+P_RF_tdcTime = e_tree.array("T.coin.pRF_tdcTime")               #
+P_hod_fpHitsTime = e_tree.array("P.hod.fpHitsTime")             #
 H_RF_Dist = e_tree.array("RFTime.HMS_RFtimeDist")            #
 P_RF_Dist = e_tree.array("RFTime.SHMS_RFtimeDist")           #
 
@@ -148,10 +148,10 @@ MandelT = e_tree.array("P.kin.secondary.MandelT")                #
 #MandelU = e_tree.array("P.kin.secondary.MandelU")               #
 
 # Misc quantities
-#fEvtType = e_tree.array("fEvtHdr.fEvtType")                     #
-#RFFreq = e_tree.array("MOFC1FREQ")                              #
-#RFFreqDiff = e_tree.array("MOFC1DELTA")                         #
-#pEDTM = e_tree.array("T.coin.pEDTM_tdcTime")                    #
+fEvtType = e_tree.array("fEvtHdr.fEvtType")                     #
+RFFreq = e_tree.array("MOFC1FREQ")                              #
+RFFreqDiff = e_tree.array("MOFC1DELTA")                         #
+pEDTM = e_tree.array("T.coin.pEDTM_tdcTime")                    #
 # Relevant branches now stored as NP arrays
 
 ##############################################################################################################################################
@@ -400,11 +400,9 @@ def main():
             # Uncomment the line below if you want .csv file output, WARNING the files can be very large and take a long time to process!                                                                      
             #pd.DataFrame(data.get(data_keys[i])).to_csv("%s/%s_%s.csv" % (OUTPATH, data_keys[i], runNum), header=DFHeader, index=False) # Convert array to panda dataframe and write to csv with correct header                                                                                                      
         if (i == 0):
-            pd.DataFrame(data.get(data_keys[i]), columns = DFHeader, index = None).to_root("%s/%s_%s_An\
-alysed_Data.root" % (OUTPATH, runNum, MaxEvent), key ="%s" % data_keys[i])
+            pd.DataFrame(data.get(data_keys[i]), columns = DFHeader, index = None).to_root("%s/%s_%s_Analysed_Data.root" % (OUTPATH, runNum, MaxEvent), key ="%s" % data_keys[i])
         elif (i != 0):
-            pd.DataFrame(data.get(data_keys[i]), columns = DFHeader, index = None).to_root("%s/%s_%s_An\
-alysed_Data.root" % (OUTPATH, runNum, MaxEvent), key ="%s" % data_keys[i], mode ='a')
+            pd.DataFrame(data.get(data_keys[i]), columns = DFHeader, index = None).to_root("%s/%s_%s_Analysed_Data.root" % (OUTPATH, runNum, MaxEvent), key ="%s" % data_keys[i], mode ='a')
 
 if __name__ == '__main__':
     main()
