@@ -1,0 +1,5 @@
+Stephen JD Kay - 31/08/21 - University of Regina
+
+- Scripts in this directory still need testing
+- Replays for HeeP runs should output to ROOTfiles/Analysis/HeeP, NOT Analysis/PionLT, minor fix we can do later
+- Plotting script should not splash anything to screen in terms of plots, it should execute, make the pdf and THEN display the pdf using an evince command in the shell script

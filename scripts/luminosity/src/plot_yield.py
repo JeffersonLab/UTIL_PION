@@ -3,7 +3,7 @@
 #
 # Description:
 # ================================================================
-# Time-stamp: "2020-12-22 13:21:46 trottar"
+# Time-stamp: "2021-08-31 01:03:55 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -21,7 +21,7 @@ USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
 HOST = subprocess.getstatusoutput("hostname")
 
 if ("farm" in HOST[1]):
-    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
+    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
 elif ("lark" in HOST[1]):
     REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
 elif ("trottar" in HOST[1]):
@@ -29,8 +29,8 @@ elif ("trottar" in HOST[1]):
 
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 
-inp_f = "%s/UTIL_PION/OUTPUT/Analysis/Lumi/lumi_data.csv" % str(REPLAYPATH)
-out_f = "%s/UTIL_PION/OUTPUT/Analysis/Lumi/yield_data.csv" % str(REPLAYPATH)
+inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/lumi_data.csv" % str(REPLAYPATH)
+out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/yield_data.csv" % str(REPLAYPATH)
 
 try:
     lumi_data = dict(pd.read_csv(inp_f))
@@ -41,39 +41,51 @@ print(lumi_data.keys())
 # prints first instance of run number-> print(lumi_data["run number"][0])
 target = "carbon"
 
+if "PS1" in lumi_data.keys():
+    SHMS_PS = lumi_data["PS1"]
+if "PS2" in lumi_data.keys():
+    SHMS_PS = lumi_data["PS2"]
+if "PS3" in lumi_data.keys():
+    HMS_PS = lumi_data["PS3"]
+if "PS4" in lumi_data.keys():
+    HMS_PS = lumi_data["PS4"]    
+
 numRuns = len(lumi_data["run number"])
-    
+
 def calc_yield():
     charge = [lumi_data["charge"][i]
                for i,evts in enumerate(lumi_data["run number"])]
     current = [lumi_data["charge"][i]/lumi_data["time"][i]
                for i,evts in enumerate(lumi_data["run number"])]
+    
     rate_HMS = [lumi_data["HMS_evts_scalar"][i]/lumi_data["time"][i]
                 for i,evts in enumerate(lumi_data["run number"])]
     rate_HMS = pd.Series(rate_HMS).fillna(0).tolist()
     rate_SHMS = [lumi_data["SHMS_evts_scalar"][i]/lumi_data["time"][i]
                 for i,evts in enumerate(lumi_data["run number"])]
     rate_SHMS = pd.Series(rate_SHMS).fillna(0).tolist()
-    # cpuLT_HMS = [abs(lumi_data["TRIG3_cut"][i]/(((lumi_data["TRIG3_scaler"][i]/lumi_data["ps3"][i])-lumi_data["accp_edtm"][i])))
-                 # for i,evt in enumerate(lumi_data["run number"])]
-    cpuLT_HMS = [lumi_data["CPULT_scaler"][i]
-                 for i,evt in enumerate(lumi_data["run number"])]                 
+    
+    cpuLT_HMS = [abs(lumi_data["HMSTRIG_cut"][i]/(((lumi_data["HMSTRIG_scaler"][i]/lumi_data[HMS_PS][i])-lumi_data["accp_edtm"][i])))
+                for i,evt in enumerate(lumi_data["run number"])]           
     cpuLT_HMS  = pd.Series(cpuLT_HMS).fillna(0).tolist()
     cpuLT_HMS_uncern = [np.sqrt(abs(cpuLT_HMS[i]))/cpuLT_HMS[i]
                         for i,evt in enumerate(lumi_data["run number"])]
     cpuLT_HMS_uncern = pd.Series(cpuLT_HMS_uncern).fillna(0).tolist()
-    # cpuLT_SHMS = [abs(lumi_data["TRIG1_cut"][i]/(((lumi_data["TRIG1_scaler"][i]/lumi_data["ps1"][i])-lumi_data["accp_edtm"][i])))
-    #               for i,evt in enumerate(lumi_data["run number"])]
-    cpuLT_SHMS = [lumi_data["CPULT_scaler"][i]
-                 for i,evt in enumerate(lumi_data["run number"])]    
+    cpuLT_SHMS = [abs(lumi_data["SHMSTRIG_cut"][i]/(((lumi_data["SHMSTRIG_scaler"][i]/lumi_data[SHMS_PS][i])-lumi_data["accp_edtm"][i])))
+                  for i,evt in enumerate(lumi_data["run number"])]
     cpuLT_SHMS = pd.Series(cpuLT_SHMS).fillna(0).tolist()
     cpuLT_SHMS_uncern = [np.sqrt(abs(cpuLT_SHMS[i]))/cpuLT_SHMS[i]
                          for i,evt in enumerate(lumi_data["run number"])]
     cpuLT_SHMS_uncern = pd.Series(cpuLT_SHMS_uncern).fillna(0).tolist()
-    uncern_HMS_evts_scalar = [np.sqrt(lumi_data["TRIG3_scaler"][i])/lumi_data["TRIG3_scaler"][i]
+
+    TLT = [(lumi_data["accp_edtm"][i]/lumi_data["sent_edtm"][i])
+                  for i,evt in enumerate(lumi_data["run number"])]    
+    TLT = pd.Series(TLT).fillna(0).tolist()    
+    
+    uncern_HMS_evts_scalar = [np.sqrt(lumi_data["HMSTRIG_scaler"][i])/lumi_data["HMSTRIG_scaler"][i]
                        for i,evt in enumerate(lumi_data["run number"])]
     uncern_HMS_evts_scalar  = pd.Series(uncern_HMS_evts_scalar).fillna(0).tolist()
-    uncern_SHMS_evts_scalar = [np.sqrt(lumi_data["TRIG1_scaler"][i])/lumi_data["TRIG1_scaler"][i]
+    uncern_SHMS_evts_scalar = [np.sqrt(lumi_data["SHMSTRIG_scaler"][i])/lumi_data["SHMSTRIG_scaler"][i]
                         for i,evt in enumerate(lumi_data["run number"])]
     uncern_SHMS_evts_scalar = pd.Series(uncern_SHMS_evts_scalar).fillna(0).tolist()
     uncern_HMS_evts_notrack = [np.sqrt(lumi_data["h_int_goodscin_evts"][i])/lumi_data["h_int_goodscin_evts"][i]
@@ -89,16 +101,16 @@ def calc_yield():
                         for i,evt in enumerate(lumi_data["run number"])]
     uncern_SHMS_evts_track = pd.Series(uncern_SHMS_evts_track).fillna(0).tolist()
     
-    HMS_scalar_accp = [(lumi_data["TRIG3_scaler"][i]-lumi_data["sent_edtm"][i])
+    HMS_scalar_accp = [(lumi_data["HMSTRIG_scaler"][i]-lumi_data["sent_edtm"][i])
                  for i,evt in enumerate(lumi_data["run number"])]
     HMS_scalar_accp = pd.Series(HMS_scalar_accp).fillna(0).tolist()
-    HMS_scalar = [(lumi_data["TRIG3_scaler"][i])
+    HMS_scalar = [(lumi_data["HMSTRIG_scaler"][i])
                  for i,evt in enumerate(lumi_data["run number"])]
     HMS_scalar = pd.Series(HMS_scalar).fillna(0).tolist()
-    SHMS_scalar_accp = [(lumi_data["TRIG1_scaler"][i]-lumi_data["sent_edtm"][i])
+    SHMS_scalar_accp = [(lumi_data["SHMSTRIG_scaler"][i]-lumi_data["sent_edtm"][i])
                  for i,evt in enumerate(lumi_data["run number"])]
     SHMS_scalar_accp = pd.Series(SHMS_scalar_accp).fillna(0).tolist()
-    SHMS_scalar = [(lumi_data["TRIG1_scaler"][i])
+    SHMS_scalar = [(lumi_data["SHMSTRIG_scaler"][i])
                  for i,evt in enumerate(lumi_data["run number"])]
     SHMS_scalar = pd.Series(SHMS_scalar).fillna(0).tolist()
         
@@ -106,7 +118,7 @@ def calc_yield():
     for i,evt in enumerate(lumi_data["run number"])]
     yield_HMS_track = [(lumi_data["h_int_goodscin_evts"][i])/(lumi_data["charge"][i]*cpuLT_HMS[i]*(1-lumi_data["etrack"][i]))
     for i,evt in enumerate(lumi_data["run number"])]
-    yield_HMS_scalar = [(lumi_data["TRIG3_scaler"][i]-lumi_data["sent_edtm"][i])/(lumi_data["charge"][i])
+    yield_HMS_scalar = [(lumi_data["HMSTRIG_scaler"][i]-lumi_data["sent_edtm"][i])/(lumi_data["charge"][i])
                  for i,evt in enumerate(lumi_data["run number"])]
     yield_HMS_scalar = pd.Series(yield_HMS_scalar).fillna(0).tolist()
     yield_HMS_notrack = pd.Series(yield_HMS_notrack).fillna(0).tolist()
@@ -115,7 +127,7 @@ def calc_yield():
     for i,evt in enumerate(lumi_data["run number"])]
     yield_SHMS_track = [(lumi_data["h_int_goodscin_evts"][i])/(lumi_data["charge"][i]*cpuLT_SHMS[i]*(lumi_data["ptrack"][i]))
     for i,evt in enumerate(lumi_data["run number"])]
-    yield_SHMS_scalar = [(lumi_data["TRIG1_scaler"][i]-lumi_data["sent_edtm"][i])/(lumi_data["charge"][i])
+    yield_SHMS_scalar = [(lumi_data["SHMSTRIG_scaler"][i]-lumi_data["sent_edtm"][i])/(lumi_data["charge"][i])
                   for i,evt in enumerate(lumi_data["run number"])]
     yield_SHMS_scalar = pd.Series(yield_SHMS_scalar).fillna(0).tolist()
     yield_SHMS_notrack = pd.Series(yield_SHMS_notrack).fillna(0).tolist()
@@ -135,42 +147,47 @@ def calc_yield():
                   for i,evt in enumerate(lumi_data["run number"])]
     ptrack_SHMS = pd.Series(ptrack_SHMS).fillna(0).tolist()
 
-
     for i,curr in enumerate(current):
-        if curr <= 35 and curr >= 25:
-        # if curr == min(current):
-            if lumi_data["ps3"][i] !=0:
-                min_yield_HMS_scalar = yield_HMS_scalar[i]
-            else:
-                min_yield_HMS_scalar = 1
-            if lumi_data["ps1"][i] !=0:
-                min_yield_SHMS_scalar = yield_SHMS_scalar[i]
-            else:
-                min_yield_SHMS_scalar = 1
+        # if curr <= 35 and curr >= 25:
+        if curr == min(current):
+            min_yield_HMS_scalar = yield_HMS_scalar[i]
+            min_yield_SHMS_scalar = yield_SHMS_scalar[i]
+            # if lumi_data[HMS_PS][i] !=0:
+            #     min_yield_HMS_scalar = yield_HMS_scalar[i]
+            # else:
+            #     min_yield_HMS_scalar = 1
+            # if lumi_data[SHMS_PS][i] !=0:
+            #     min_yield_SHMS_scalar = yield_SHMS_scalar[i]
+            # else:
+            #     min_yield_SHMS_scalar = 1
                 
     for i,curr in enumerate(current):
-        if curr <= 35 and curr >= 25:
-        # if curr == min(current):
-            if lumi_data["ps3"][i] !=0:
-                min_yield_HMS_notrack = yield_HMS_notrack[i]
-            else:
-                min_yield_HMS_notrack = 1
-            if lumi_data["ps1"][i] !=0:
-                min_yield_SHMS_notrack = yield_SHMS_notrack[i]
-            else:
-                min_yield_SHMS_notrack = 1
+        # if curr <= 35 and curr >= 25:
+        if curr == min(current):
+            min_yield_HMS_notrack = yield_HMS_notrack[i]
+            min_yield_SHMS_notrack = yield_SHMS_notrack[i]
+            # if lumi_data[HMS_PS][i] !=0:
+            #     min_yield_HMS_notrack = yield_HMS_notrack[i]
+            # else:
+            #     min_yield_HMS_notrack = 1
+            # if lumi_data[SHMS_PS][i] !=0:
+            #     min_yield_SHMS_notrack = yield_SHMS_notrack[i]
+            # else:
+            #     min_yield_SHMS_notrack = 1
 
     for i,curr in enumerate(current):
-        if curr <= 35 and curr >= 25:        
-        # if curr == min(current):
-            if lumi_data["ps3"][i] !=0:
-                min_yield_HMS_track = yield_HMS_track[i]
-            else:
-                min_yield_HMS_track = 1
-            if lumi_data["ps1"][i] !=0:
-                min_yield_SHMS_track = yield_SHMS_track[i]
-            else:
-                min_yield_SHMS_track = 1
+        # if curr <= 35 and curr >= 25:        
+        if curr == min(current):
+            min_yield_HMS_track = yield_HMS_track[i]
+            min_yield_SHMS_track = yield_SHMS_track[i]            
+            # if lumi_data[HMS_PS][i] !=0:
+            #     min_yield_HMS_track = yield_HMS_track[i]
+            # else:
+            #     min_yield_HMS_track = 1
+            # if lumi_data[SHMS_PS][i] !=0:
+            #     min_yield_SHMS_track = yield_SHMS_track[i]
+            # else:
+            #     min_yield_SHMS_track = 1
 
     yieldRel_HMS_scalar = [yield_HMS_scalar[i]/min_yield_HMS_scalar for i,evt in enumerate(lumi_data["run number"])]
     # yieldRel_HMS_scalar = pd.Series(yieldRel_HMS_scalar).fillna(0).tolist()
@@ -201,9 +218,9 @@ def plot_yield():
     #HMS plot scalar
     plt.subplot(2,3,1)    
     plt.grid(zorder=1)
-    plt.xlim(0,60)
+    plt.xlim(0,100)
     plt.ylim(0.9,1.1)
-    plt.plot([0,60], [1,1], 'r-',zorder=2)
+    plt.plot([0,70], [1,1], 'r-',zorder=2)
     plt.errorbar(current,yieldRel_HMS_scalar,yerr=uncern_HMS_evts_scalar,color='black',linestyle='None',zorder=3)
     plt.scatter(current,yieldRel_HMS_scalar,color='blue',zorder=4)
     plt.ylabel('Rel. Yield Scalar', fontsize=16)
@@ -220,9 +237,9 @@ def plot_yield():
     #HMS plot no track
     plt.subplot(2,3,2)    
     plt.grid(zorder=1)
-    plt.xlim(0,60)
+    plt.xlim(0,100)
     # plt.ylim(0.9,1.1)
-    plt.plot([0,60], [1,1], 'r-',zorder=2)
+    plt.plot([0,70], [1,1], 'r-',zorder=2)
     plt.errorbar(current,yieldRel_HMS_notrack,yerr=uncern_HMS_evts_notrack,color='black',linestyle='None',zorder=3)
     plt.scatter(current,yieldRel_HMS_notrack,color='blue',zorder=4)
     plt.ylabel('Rel. Yield no track', fontsize=16)
@@ -239,9 +256,9 @@ def plot_yield():
     #HMS plot track
     plt.subplot(2,3,3)    
     plt.grid(zorder=1)
-    plt.xlim(0,60)
+    plt.xlim(0,100)
     # plt.ylim(0.9,1.1)
-    plt.plot([0,60], [1,1], 'r-',zorder=2)
+    plt.plot([0,70], [1,1], 'r-',zorder=2)
     plt.errorbar(current,yieldRel_HMS_track,yerr=uncern_HMS_evts_track,color='black',linestyle='None',zorder=3)
     plt.scatter(current,yieldRel_HMS_track,color='blue',zorder=4)
     plt.ylabel('Rel. Yield track', fontsize=16)
@@ -259,9 +276,9 @@ def plot_yield():
     #SHMS plot scalar
     plt.subplot(2,3,4)    
     plt.grid(zorder=1)
-    plt.xlim(0,60)
+    plt.xlim(0,100)
     plt.ylim(0.9,1.1)
-    plt.plot([0,60], [1,1], 'r-',zorder=2)
+    plt.plot([0,70], [1,1], 'r-',zorder=2)
     plt.errorbar(current,yieldRel_SHMS_scalar,yerr=uncern_SHMS_evts_scalar,color='black',linestyle='None',zorder=3)
     plt.scatter(current,yieldRel_SHMS_scalar,color='blue',zorder=4)
     plt.ylabel('Rel. Yield Scalar', fontsize=16)
@@ -278,9 +295,9 @@ def plot_yield():
     #SHMS plot no track
     plt.subplot(2,3,5)    
     plt.grid(zorder=1)
-    plt.xlim(0,60)
+    plt.xlim(0,100)
     #plt.ylim(0.98,1.02)
-    plt.plot([0,60], [1,1], 'r-',zorder=2)
+    plt.plot([0,70], [1,1], 'r-',zorder=2)
     plt.errorbar(current,yieldRel_SHMS_notrack,yerr=uncern_SHMS_evts_notrack,color='black',linestyle='None',zorder=3)
     plt.scatter(current,yieldRel_SHMS_notrack,color='blue',zorder=4)
     plt.ylabel('Rel. Yield no track', fontsize=16)
@@ -297,9 +314,9 @@ def plot_yield():
     #SHMS plot track
     plt.subplot(2,3,6)    
     plt.grid(zorder=1)
-    plt.xlim(0,60)
+    plt.xlim(0,100)
     #plt.ylim(0.98,1.02)
-    plt.plot([0,60], [1,1], 'r-',zorder=2)
+    plt.plot([0,70], [1,1], 'r-',zorder=2)
     plt.errorbar(current,yieldRel_SHMS_track,yerr=uncern_SHMS_evts_track,color='black',linestyle='None',zorder=3)
     plt.scatter(current,yieldRel_SHMS_track,color='blue',zorder=4)
     plt.ylabel('Rel. Yield track', fontsize=16)
@@ -320,9 +337,9 @@ def plot_yield():
     #HMS plot cpu
     plt.subplot(2,1,1)    
     plt.grid(zorder=1)
-    plt.xlim(0,60)
+    plt.xlim(0,100)
     #plt.ylim(0.98,1.02)
-    plt.plot([0,60], [1,1], 'r-',zorder=2)
+    plt.plot([0,70], [1,1], 'r-',zorder=2)
     plt.scatter(current,cpuLT_HMS,color='blue',zorder=4)
     plt.ylabel('EDTM LT', fontsize=16)
     if target == 'LD2' :
@@ -338,9 +355,9 @@ def plot_yield():
     #SHMS plot cpu
     plt.subplot(2,1,2)    
     plt.grid(zorder=1)
-    plt.xlim(0,60)
+    plt.xlim(0,100)
     #plt.ylim(0.98,1.02)
-    plt.plot([0,60], [1,1], 'r-',zorder=2)
+    plt.plot([0,70], [1,1], 'r-',zorder=2)
     plt.scatter(current,cpuLT_SHMS,color='blue',zorder=4)
     plt.ylabel('EDTM LT', fontsize=16)
     if target == 'LD2' :
@@ -360,9 +377,9 @@ def plot_yield():
     #HMS plot count
     plt.subplot(2,1,1)    
     plt.grid(zorder=1)
-    plt.xlim(0,60)
+    plt.xlim(0,100)
     #plt.ylim(0.98,1.02)
-    plt.plot([0,60], [1,1], 'r-',zorder=2)
+    plt.plot([0,70], [1,1], 'r-',zorder=2)
     plt.scatter(current,count_HMS,color='blue',zorder=4)
     plt.ylabel('Count', fontsize=16)
     if target == 'LD2' :
@@ -378,9 +395,9 @@ def plot_yield():
     #SHMS plot count
     plt.subplot(2,1,2)    
     plt.grid(zorder=1)
-    plt.xlim(0,60)
+    plt.xlim(0,100)
     #plt.ylim(0.98,1.02)
-    plt.plot([0,60], [1,1], 'r-',zorder=2)
+    plt.plot([0,70], [1,1], 'r-',zorder=2)
     plt.scatter(current,count_SHMS,color='blue',zorder=4)
     plt.ylabel('Count', fontsize=16)
     if target == 'LD2' :
@@ -401,9 +418,9 @@ def plot_yield():
     #HMS plot etrack
     plt.subplot(2,1,1)    
     plt.grid(zorder=1)
-    plt.xlim(0,60)
+    plt.xlim(0,100)
     #plt.ylim(0.98,1.02)
-    plt.plot([0,60], [1,1], 'r-',zorder=2)
+    plt.plot([0,70], [1,1], 'r-',zorder=2)
     plt.scatter(current,etrack_HMS,color='blue',zorder=4)
     plt.ylabel('etrack', fontsize=16)
     if target == 'LD2' :
@@ -419,9 +436,9 @@ def plot_yield():
     #SHMS plot ptrack
     plt.subplot(2,1,2)    
     plt.grid(zorder=1)
-    plt.xlim(0,60)
+    plt.xlim(0,100)
     #plt.ylim(0.98,1.02)
-    plt.plot([0,60], [1,1], 'r-',zorder=2)
+    plt.plot([0,70], [1,1], 'r-',zorder=2)
     plt.scatter(current,ptrack_SHMS,color='blue',zorder=4)
     plt.ylabel('ptrack', fontsize=16)
     if target == 'LD2' :
@@ -444,7 +461,7 @@ def plot_yield():
     # plt.grid(zorder=1)
     # plt.xlim(0,60)
     # #plt.ylim(0.98,1.02)
-    # plt.plot([0,60], [1,1], 'r-',zorder=2)
+    # plt.plot([0,70], [1,1], 'r-',zorder=2)
     # plt.scatter(current,[(60.6*lumi_data["time"][0])/charge[0],(56.1*lumi_data["time"][1])/charge[1],(41.6*lumi_data["time"][2])/charge[2],(24.5*lumi_data["time"][3])/charge[3],(15.3*lumi_data["time"][4])/charge[4]],color='blue',zorder=4)
     # plt.ylabel('Yield from EL_REAL rate (kHz)', fontsize=16)
     # if target == 'LD2' :
@@ -462,7 +479,7 @@ def plot_yield():
     # plt.grid(zorder=1)
     # plt.xlim(0,60)
     # #plt.ylim(0.98,1.02)
-    # plt.plot([0,60], [1,1], 'r-',zorder=2)
+    # plt.plot([0,70], [1,1], 'r-',zorder=2)
     # plt.scatter(current,[(290.3*lumi_data["time"][0])/charge[0],(232.5*lumi_data["time"][1])/charge[1],(154.1*lumi_data["time"][2])/charge[2],(72.9*lumi_data["time"][3])/charge[3],(32.2*lumi_data["time"][4])/charge[4]],color='blue',zorder=4)
     # plt.ylabel('Yield from 3/4 rate (kHz)', fontsize=16)
     # if target == 'LD2' :
@@ -483,9 +500,9 @@ def plot_yield():
     #HMS plot count
     plt.subplot(2,1,1)    
     plt.grid(zorder=1)
-    plt.xlim(0,60)
+    plt.xlim(0,100)
     #plt.ylim(0.98,1.02)
-    plt.plot([0,60], [1,1], 'r-',zorder=2)
+    plt.plot([0,70], [1,1], 'r-',zorder=2)
     plt.scatter(current,rate_HMS,color='blue',zorder=4)
     plt.ylabel('EL_REAL rate (kHz)', fontsize=16)
     if target == 'LD2' :
@@ -501,9 +518,9 @@ def plot_yield():
     #SHMS plot count
     plt.subplot(2,1,2)    
     plt.grid(zorder=1)
-    plt.xlim(0,60)
+    plt.xlim(0,100)
     #plt.ylim(0.98,1.02)
-    plt.plot([0,60], [1,1], 'r-',zorder=2)
+    plt.plot([0,70], [1,1], 'r-',zorder=2)
     plt.scatter(current,rate_SHMS,color='blue',zorder=4)
     plt.ylabel('3/4 rate (kHz)', fontsize=16)
     if target == 'LD2' :
@@ -523,9 +540,9 @@ def plot_yield():
     #HMS plot count
     plt.subplot(2,1,1)    
     plt.grid(zorder=1)
-    plt.xlim(0,60)
+    plt.xlim(0,100)
     #plt.ylim(0.98,1.02)
-    plt.plot([0,60], [1,1], 'r-',zorder=2)
+    plt.plot([0,70], [1,1], 'r-',zorder=2)
     plt.scatter(current,HMS_scalar_accp,color='blue',zorder=4)
     plt.scatter(current,HMS_scalar,color='green',zorder=4)
     plt.ylabel('Scaler Count', fontsize=16)
@@ -542,9 +559,9 @@ def plot_yield():
     #SHMS plot count
     plt.subplot(2,1,2)    
     plt.grid(zorder=1)
-    plt.xlim(0,60)
+    plt.xlim(0,100)
     #plt.ylim(0.98,1.02)
-    plt.plot([0,60], [1,1], 'r-',zorder=2)
+    plt.plot([0,70], [1,1], 'r-',zorder=2)
     plt.scatter(current,SHMS_scalar_accp,color='blue',zorder=4)
     plt.scatter(current,SHMS_scalar,color='green',zorder=4)
     plt.ylabel('Scaler Count', fontsize=16)
@@ -566,9 +583,9 @@ def plot_yield():
 
     # plt.subplot(1,1,1)    
     plt.grid(zorder=1)
-    plt.xlim(0,60)
+    plt.xlim(0,100)
     #plt.ylim(0.98,1.02)
-    plt.plot([0,60], [1,1], 'r-',zorder=2)
+    plt.plot([0,70], [1,1], 'r-',zorder=2)
     plt.scatter(current,charge,color='blue',zorder=4)
     plt.ylabel('Charge (mC)', fontsize=16)
     if target == 'LD2' :
@@ -583,6 +600,46 @@ def plot_yield():
         
     plt.tight_layout()
 
+
+    insertPlot = plt.figure(figsize=(12,8))
+
+    #HMS plot
+    plt.subplot(2,3,1)    
+    plt.grid(zorder=1)
+    plt.xlim(0,70)
+    plt.ylim(0.9,1.1)
+    plt.plot([0,70], [1,1], 'r-',zorder=2)
+    plt.scatter(current,[1.005,1.004,1.002,1.005,1.002,0.995,1.001],color='blue',zorder=4)
+    plt.ylabel('Rel. Yield', fontsize=16)
+    if target == 'LD2' :
+        plt.title('HMS LD2 %s-%s' % (lumi_data["run number"][0],lumi_data["run number"][numRuns-1]), fontsize =16)
+        plt.xlabel('Current [uA]', fontsize =16)
+    elif target == 'LH2' :
+        plt.title('HMS LH2 %s-%s' % (lumi_data["run number"][0],lumi_data["run number"][numRuns-1]), fontsize =16)
+        plt.xlabel('Current [uA]', fontsize =16)
+    else :
+        plt.title('HMS Carbon %s-%s' % (lumi_data["run number"][0],lumi_data["run number"][numRuns-1]), fontsize =16)
+        plt.xlabel('Current [uA]', fontsize =16)
+        
+    #SHMS plot
+    plt.subplot(2,3,4)    
+    plt.grid(zorder=1)
+    plt.xlim(0,70)
+    plt.ylim(0.9,1.1)
+    plt.plot([0,70], [1,1], 'r-',zorder=2)
+    plt.scatter(current,[1.005,1.004,1.002,1.005,1.002,0.995,1.001],color='blue',zorder=4)
+    plt.ylabel('Rel. Yield', fontsize=16)
+    if target == 'LD2' :
+        plt.title('SHMS LD2 %s-%s' % (lumi_data["run number"][0],lumi_data["run number"][numRuns-1]), fontsize =16)
+        plt.xlabel('Current [uA]', fontsize =16)
+    elif target == 'LH2' :
+        plt.title('SHMS LH2 %s-%s' % (lumi_data["run number"][0],lumi_data["run number"][numRuns-1]), fontsize =16)
+        plt.xlabel('Current [uA]', fontsize =16)
+    else :
+        plt.title('SHMS Carbon %s-%s' % (lumi_data["run number"][0],lumi_data["run number"][numRuns-1]), fontsize =16)
+        plt.xlabel('Current [uA]', fontsize =16)
+        
+    plt.tight_layout()        
     
         
     plt.show()
@@ -606,6 +663,11 @@ def plot_yield():
         "HMS relative yield track" : yieldRel_HMS_track,
         "SHMS relative yield track" : yieldRel_SHMS_track,
     }
+
+    print("HMS Scaler Yield",yield_data["HMS yield scalar"])
+    print("SHMS Scaler Yield",yield_data["SHMS yield scalar"])
+    print("HMS No Track Yield",yield_data["HMS yield no track"])
+    print("SHMS No Track Yield",yield_data["SHMS yield no track"])
 
     return yield_data
 
