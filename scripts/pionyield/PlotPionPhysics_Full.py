@@ -892,7 +892,7 @@ for event in Cut_Proton_Events_Random_tree:
 P_kin_MMp_protons_cut_random_sub.Add(P_kin_MMp_protons_cut_prompt, P_kin_MMp_protons_cut_random_scaled, 1, -1)
 
 ############################################################################################################################################
-
+'''
 # Saving histograms in PDF
 c1_kin = TCanvas("c1_kin", "Kinematic Distributions", 100, 0, 1000, 900)
 c1_kin.Divide(2,2)
@@ -1112,7 +1112,7 @@ NeutronEvt_protons.AddText("e p n Events: %i" %(BinIntegral_protons))
 NeutronEvt_protons.Draw()
 # End of Neutron Peak Events Selection Section
 c3_kin.Print(Proton_Analysis_Distributions)
-
+'''
 #############################################################################################################################################
 
 # Making directories in output file
