@@ -52,16 +52,12 @@ HOST = subprocess.getstatusoutput("hostname")
 
 if ("farm" in HOST[1]):
     REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
-
 elif ("qcd" in HOST[1]):
     REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
-
 elif ("cdaq" in HOST[1]):
     REPLAYPATH = "/home/cdaq/hallc-online/hallc_replay_lt"
-
 elif ("phys.uregina" in HOST[1]):
     REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
-
 elif("skynet" in HOST[1]):
     REPLAYPATH = "/home/%s/Work/JLab/hallc_replay_lt" % USER[1]
 
@@ -100,6 +96,8 @@ else:
     sys.exit(4)
 print("Output path checks out, outputting to %s" % (OUTPATH))
 
+###############################################################################################################################################
+ROOT.gROOT.SetBatch(ROOT.kTRUE) # Set ROOT to batch mode explicitly, does not splash anything to screen
 ###############################################################################################################################################
 
 # Section for grabing Prompt/Random selection parameters from PARAM file

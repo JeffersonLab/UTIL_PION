@@ -84,7 +84,7 @@ sleep 3
 ################################################################################################################################                                                                                   
 # Section for pion analysis script
 if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
-    read -p "Pion production analyzed file already exits, you want to reprocess it? <Y/N> " option1
+    read -p "Pion production analysis file already exists, do you want to reprocess it? <Y/N> " option1
     if [[ $option1 == "y" || $option1 == "Y" || $option1 == "yes" || $option1 == "Yes" ]]; then
 	rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root"
 	echo "Reprocessing"
@@ -94,16 +94,14 @@ if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_D
     fi
 elif [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
 	python3 ${UTILPATH}/scripts/online_pion_physics/pion_prod_analysis_sw.py Pion_coin_replay_production ${RUNNUMBER} ${MAXEVENTS}
-else echo "Analysed root file already found in ${UTILPATH}/OUTPUT/Analysis/PionLT/ - Skipped python analyzer script step"
 fi
 
 sleep 3
 
 ##################################################################################################################################
-
 # Section for pion physics ploting script
 if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
-    read -p "Pion physics output file already exits, you want to reprocess it? <Y/N> " option2
+    read -p "Pion physics plots already exits, do you want to reprocess them? <Y/N> " option2
     if [[ $option2 == "y" || $option2 == "Y" || $option2 == "yes" || $option2 == "Yes" ]]; then
 	rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root"
 	echo "Reprocessing"
@@ -113,7 +111,6 @@ if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Dat
     fi
 elif [ ! -f  "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
 	python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw.py Analysed_Data ${RUNNUMBER} ${MAXEVENTS}
-else echo "Pion physics output root file already found in ${UTILPATH}/OUTPUT/Analysis/PionLT/ - Skipped python output script step"
 fi
 evince "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_sw_Pion_Analysis_Distributions.pdf" &
 exit 0

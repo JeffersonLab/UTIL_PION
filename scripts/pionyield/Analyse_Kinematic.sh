@@ -1,6 +1,12 @@
 #!/bin/bash
-#23/07/21 - Stephen Kay, University of Regina
-#Script to analyse an entire pion kinematic setting
+# 23/07/21 - Stephen Kay, University of Regina
+# Script to analyse an entire pion kinematic setting
+# !!! 31/08/21 !!!
+# !!! WARNING !!!
+# This needs updating, Junaid removed some of the old scripts and created new versions
+# This script will need to be tweaked to run the newer scripts instead of the old ones 
+# !!! WARNING !!!
+# !!! 31/08/21 !!!
 
 KINEMATIC=$1
 

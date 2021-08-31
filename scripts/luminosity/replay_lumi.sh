@@ -51,7 +51,7 @@ echo -e "\n\nStarting Scaler Replay Script\n\n"
 cd CALIBRATION/bcm_current_map/
 root -b<<EOF
 .L ScalerCalib.C+
-.x run.C("../../ROOTfiles/coin_replay_scalers_${RUNNUMBER}_${MAXEVENTS}.root")
+.x run.C("../../ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMBER}_${MAXEVENTS}.root")
 EOF
 
 mv bcmcurrent_$RUNNUMBER.param $REPLAYPATH/PARAM/HMS/BCM/CALIB/bcmcurrent_$RUNNUMBER.param
