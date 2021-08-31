@@ -1,2 +1,2 @@
-Run_Start,Run_End,Bunch_Spacing,Coin_Offset,nSkip,nWindows,Pion_Prompt_Peak,Kaon_Prompt_Peak,Proton_Prompt_Peak,RF_Offset,PiRFLow,PiRFHigh,KRFLow,KRFHigh,pRFLow,pRFHigh
-8000,99999,4.008,0.25,2,6,0,-0.91,0.42,-1.99,1.5,2.5,0.75,1.75,0,0.75
+Run_Start,Run_End,Bunch_Spacing,Coin_Offset,nSkip,nWindows,Pion_Prompt_Peak,Kaon_Prompt_Peak,Proton_Prompt_Peak,PiRFLow,PiRFHigh,KRFLow,KRFHigh,pRFLow,pRFHigh
+8000,99999,4.008,0.25,2,6,0,-0.91,0.42,1.5,2.5,0.75,1.75,0,0.75
