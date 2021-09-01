@@ -79,9 +79,8 @@ if os.path.exists(OUTPATH):
 else:
     print("Output path not found, please make a sym link or directory called OUTPUT in UTIL_PION to store output")
     sys.exit(3)
-print ("Attempting to process %s" %(rootName))
 if os.path.isfile(rootName):
-    print ("%s exists, attempting to process" % (rootName))
+    print ("%s exists, processing" % (rootName))
 else:
     print ("%s not found - do you have the correct sym link/folder set up?" % (rootName))
     sys.exit(4)

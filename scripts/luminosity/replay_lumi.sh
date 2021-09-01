@@ -41,27 +41,41 @@ elif [[ "${HOSTNAME}" = *"trottar"* ]]; then
     REPLAYPATH="/home/trottar/Analysis/hallc_replay_lt"
 fi
 
-cd ${REPLAYPATH}/
-#   Load params for BCM
-#   const char* CurrentFileNamePattern = "PARAM/HMS/BCM/CALIB/bcmcurrent_%d.param";
-#   gHcParms->Load(Form(CurrentFileNamePattern, RunNumber));
-# When we comment out the below bit ONLY when the bit above is commented out in replay_luminosity_coin.C
-echo -e "\n\nStarting Scaler Replay Script\n\n"
-./hcana -q "${REPLAYPATH}/SCRIPTS/COIN/SCALERS/replay_coin_scalers.C($RUNNUMBER,$MAXEVENTS)"
-cd CALIBRATION/bcm_current_map/
-root -b<<EOF
-.L ScalerCalib.C+
-.x run.C("../../ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMBER}_${MAXEVENTS}.root")
-EOF
-
-mv bcmcurrent_$RUNNUMBER.param $REPLAYPATH/PARAM/HMS/BCM/CALIB/bcmcurrent_$RUNNUMBER.param
+UTILPATH="${REPLAYPATH}/UTIL_PION"
 cd $REPLAYPATH
 
-echo -e "\n\nStarting Replay Script\n\n"
-./hcana -q "${REPLAYPATH}/UTIL_PION/scripts/luminosity/src/replay/replay_lumi_coin_offline.C($RUNNUMBER,$MAXEVENTS)"
+###################################################################################################################################################
+
+# Section for pion replay script
+if [ ! -f "$REPLAYPATH/UTIL_PION/ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
+    eval "$REPLAYPATH/hcana -l -q \"SCRIPTS/COIN/SCALERS/replay_coin_scalers.C($RUNNUMBER,${MAXEVENTS})\""
+    cd "$REPLAYPATH/CALIBRATION/bcm_current_map"
+    root -b -l<<EOF 
+.L ScalerCalib.C+
+.x run.C("${REPLAYPATH}/UTIL_PION/ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMBER}_${MAXEVENTS}.root")
+.q  
+EOF
+    mv bcmcurrent_$RUNNUMBER.param $REPLAYPATH/PARAM/HMS/BCM/CALIB/bcmcurrent_$RUNNUMBER.param
+    cd $REPLAYPATH
+else echo "Scaler replayfile already found for this run in $REPLAYPATH/ROOTfiles/Scalers - Skipping scaler replay step"
+fi
+
+sleep 3
+# SJDK 31/08/21 - Replays for HeeP analysis should output to Analysis/HeeP, for now this is probably fine
+if [ ! -f "$REPLAYPATH/UTIL_PION/ROOTfiles/Analysis/Lumi/Pion_coin_replay_production_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
+    if [[ "${HOSTNAME}" != *"ifarm"* ]]; then
+	if [[ "${HOSTNAME}" == *"cdaq"* ]]; then
+	    eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\""| tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/Analysis/HeeP/Pion_output_coin_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
+	else	
+	    eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\"" 
+	fi
+    elif [[ "${HOSTNAME}" == *"ifarm"* ]]; then
+	eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\""| tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/Analysis/HeeP/Pion_output_coin_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
+    fi
+else echo "Replayfile already found for this run in $REPLAYPATH/UTIL_PION/ROOTfiles/Analysis/Lumi/ - Skipping replay step"
+fi
+
+sleep 3
 
 cd ${REPLAYPATH}/UTIL_PION/scripts/luminosity/src/
-python3 lumiyield.py ${RUNNUMBER} ${MAXEVENTS}
-
-cd ${REPLAYPATH}/UTIL_PION/scripts/luminosity/src/
-python3 csv2root.py "lumi_data"
+python3 lumiyield.py Pion_coin_replay_production ${RUNNUMBER} ${MAXEVENTS}

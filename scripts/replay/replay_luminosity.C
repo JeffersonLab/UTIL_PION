@@ -11,20 +11,21 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
     cin >> MaxEvent;
     if(MaxEvent == 0) {
       cerr << "...Invalid entry\n";
-      exit;
+      //exit;
     }
   }
 
   // Create file name patterns.
-  const char* RunFileNamePattern = "coin_all_%05d.dat";
+  const char* RunFileNamePattern = "shms_all_%05d.dat";
   vector<TString> pathList;
   pathList.push_back(".");
   pathList.push_back("./raw");
   pathList.push_back("./raw/../raw.copiedtotape");
   pathList.push_back("./cache");
+  pathList.push_back("./raw_volatile");
 
   //const char* RunFileNamePattern = "raw/coin_all_%05d.dat";
-  const char* ROOTFileNamePattern = "UTIL_PION/ROOTfiles/Analysis/Lumi/PionLT_Luminosity_coin_replay_production_%d_%d.root";
+  const char* ROOTFileNamePattern = "UTIL_PION/ROOTfiles/Analysis/PionLT/Pion_replay_luminosity_%d_%d.root";
   
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
@@ -37,7 +38,7 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Load fadc debug parameters
   gHcParms->Load("PARAM/HMS/GEN/h_fadc_debug.param");
   gHcParms->Load("PARAM/SHMS/GEN/p_fadc_debug.param");
-  // Load params for BCM
+  //Load params for BCM
   const char* CurrentFileNamePattern = "PARAM/HMS/BCM/CALIB/bcmcurrent_%d.param";
   gHcParms->Load(Form(CurrentFileNamePattern, RunNumber));
 
@@ -45,8 +46,6 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   gHcDetectorMap = new THcDetectorMap();
   gHcDetectorMap->Load("MAPS/COIN/DETEC/coin.map");
 
-     // Dec data
-   gHaApps->Add(new Podd::DecData("D","Decoder raw data"));
   //=:=:=:=
   // SHMS 
   //=:=:=:=
@@ -60,8 +59,8 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   SHMS->AddEvtType(7);
   gHaApps->Add(SHMS);
   // Add Noble Gas Cherenkov to SHMS apparatus
-  THcCherenkov* pngcer = new THcCherenkov("ngcer", "Noble Gas Cherenkov");
-  SHMS->AddDetector(pngcer);
+  //THcCherenkov* pngcer = new THcCherenkov("ngcer", "Noble Gas Cherenkov");
+  //SHMS->AddDetector(pngcer);
   // Add drift chambers to SHMS apparatus
   THcDC* pdc = new THcDC("dc", "Drift Chambers");
   SHMS->AddDetector(pdc);
@@ -152,8 +151,8 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   THcHodoEff* heff = new THcHodoEff("hhodeff", "HMS hodo efficiency", "H.hod");
   gHaPhysics->Add(heff);
   // Add BCM Current check
-  THcBCMCurrent* hbc = new THcBCMCurrent("H.bcm", "BCM current check");
-  gHaPhysics->Add(hbc);
+  // THcBCMCurrent* hbc = new THcBCMCurrent("H.bcm", "BCM current check");
+  // gHaPhysics->Add(hbc);
 
   // Add event handler for scaler events
   THcScalerEvtHandler *hscaler = new THcScalerEvtHandler("H", "Hall C scaler event type 4");  
@@ -192,11 +191,23 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   coin->AddEvtType(2);
   TRG->AddDetector(coin); 
 
+  // THcHelicityScaler *helscaler = new THcHelicityScaler("HS", "Hall C helicity scalers"); 
+  // helscaler->SetROC(8);
+  // helscaler->SetUseFirstEvent(kTRUE);
+  // gHaEvtHandlers->Add(helscaler);
+  // // Add helicity detector to trigger apparatus
+  // THcHelicity* helicity = new THcHelicity("helicity","Helicity Detector");
+  // TRG->AddDetector(helicity);
+  // helicity->SetHelicityScaler(helscaler);
   
   //Add coin physics module THcCoinTime::THcCoinTime (const char *name, const char* description, const char* hadArmName, 
   // const char* elecArmName, const char* coinname) :
   THcCoinTime* coinTime = new THcCoinTime("CTime", "Coincidende Time Determination", "P", "H", "T.coin");
   gHaPhysics->Add(coinTime);
+  //Add RF physics module THcRFTime::THcRFTime (const char *name, const char* description, const char* hadArmName, 
+  // const char* elecArmName, const char* RFname) :
+  THcRFTime* RFTime = new THcRFTime("RFTime", "RF Time Determination", "P", "H", "T.coin");
+  gHaPhysics->Add(RFTime);
 
   // Add event handler for prestart event 125.
   THcConfigEvtHandler* ev125 = new THcConfigEvtHandler("HC", "Config Event type 125");
@@ -244,16 +255,13 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Define output ROOT file
   analyzer->SetOutFile(ROOTFileName.Data());
   // Define DEF-file+
-  analyzer->SetOdefFile("UTIL_PION/DEF-files/luminosity_coin_production.def");
+  analyzer->SetOdefFile("UTIL_PION/config/DEF-files/coin_production.def");
   // Define cuts file
-  analyzer->SetCutFile("DEF-files/COIN/PRODUCTION/CUTS/coin_production_cuts.def");  // optional
-  //analyzer->SetCutFile("UTIL_PION/DEF-files/luminosity_coin_production_cuts.def");  // optional
+  analyzer->SetCutFile("UTIL_PION/config/DEF-files/coin_production_cuts.def");  // optional
   // File to record accounting information for cuts
-  analyzer->SetSummaryFile(Form("UTIL_PION/REPORT_OUTPUT/Analysis/Lumi/summary_production_%d_%d.report", RunNumber, MaxEvent));  // optional
+  analyzer->SetSummaryFile(Form("UTIL_PION/config/REPORT_OUTPUT/summary_luminosity_%d_%d.report", RunNumber, MaxEvent)); // optional
   // Start the actual analysis.
   analyzer->Process(run);
-  // Create report file from template
-  analyzer->PrintReport("TEMPLATES/COIN/PRODUCTION/coin_production_new.template",
-			Form("UTIL_PION/REPORT_OUTPUT/Analysis/Lumi/KaonLT_replay_coin_production_%d_%d.report", RunNumber, MaxEvent));  // optional
-
+  // Create report file from template	       
+  analyzer->PrintReport("UTIL_PION/config/TEMPLATES/COIN/coin_production.template", Form("UTIL_PION/REPORT_OUTPUT/Analysis/PionLT/Pion_replay_luminosity_%d_%d.report", RunNumber, MaxEvent)); // optional}
 }

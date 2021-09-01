@@ -21,8 +21,9 @@ import kaonlt as klt
 
 import scaler
 
-runNum = sys.argv[1]
-MaxEvent=sys.argv[2]
+ROOTPrefix = sys.argv[1]
+runNum = sys.argv[2]
+MaxEvent=sys.argv[3]
 
 # Add this to all files for more dynamic pathing
 USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
@@ -43,8 +44,8 @@ print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST
 thres_curr = 10.0
 
 filename = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/lumi_data.csv" % REPLAYPATH
-rootName = "%s/UTIL_PION/ROOTfiles/coin_replay_Full_Lumi_%s_%s.root" % (REPLAYPATH,runNum,MaxEvent)
-report = "%s/UTIL_PION/REPORT_OUTPUT/replay_coin_Lumi_%s_%s.report" % (REPLAYPATH,runNum,MaxEvent)
+rootName = "%s/UTIL_PION/ROOTfiles/%s_%s_%s.root" % (REPLAYPATH,ROOTPrefix,runNum,MaxEvent)
+report = "%s/UTIL_PION/REPORT_OUTPUT/%s_%s_%s.report" % (REPLAYPATH,ROOTPrefix,runNum,MaxEvent)
 # report = "%s/UTIL_PION/REPORT_OUTPUT/replay_coin_Lumi_%s_-1.report" % (REPLAYPATH,runNum)
 
 f = open(report)

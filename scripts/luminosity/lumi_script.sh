@@ -43,7 +43,7 @@ fi
 
 # source /apps/root/6.18.04/setroot_CUE.bash
 cd ${REPLAYPATH}/UTIL_PION/scripts/luminosity/src/
-python3 lumiyield.py ${RUNNUMBER} ${MAXEVENTS}
+python3 lumiyield.py Pion_coin_replay_production ${RUNNUMBER} ${MAXEVENTS}
 
 cd ${REPLAYPATH}/UTIL_PION/scripts/luminosity/src/
 # python3 csv2root.py "lumi_data"
