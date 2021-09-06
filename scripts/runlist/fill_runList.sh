@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 12/08/21 - Stephen JD Kay - University of Regina
-# Script to fill the run list, will be executed by "master" script after each run
+# Script to fill the run list, executed by "master" script after each run
 
 # Set up paths depending upon location
 
@@ -15,7 +15,7 @@ elif [[ "${HOSTNAME}" = *"cdaq"* ]]; then
     REPLAYPATH="/home/cdaq/pionLT-2021/hallc_replay_lt"
 fi
 
-# Run number and run type should be read in by the "master" script, automating the target would be more difficult, master script should prompt for this - Only accept LD2, LH2, Dummy and carbon 1.5 or 6
+# Run number and run type should be read in by the "master" script, automating the target would be more difficult, master script prompts for this
 RUNNUMBER=$1
 RUNTYPE=$2
 TARGET=$3
@@ -28,7 +28,7 @@ if [[ ${RUNTYPE} = *"Prod"* ]]; then
 elif [[ ${RUNTYPE} = *"Lumi"* ]]; then
     REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/Lumi/Pion_replay_Luminosity_${RUNNUMBER}_-1.report" 
 elif [[ ${RUNTYPE} = *"HeePSing"* ]]; then
-    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_shms_Production_${RUNNUMBER}_-1.report" # Script may not work properly as there are 2 Heep singles Report files!!!
+    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_shms_Production_${RUNNUMBER}_-1.report" # All of the available info SHOULD be in the SHMS report file, don't need to look at both
 elif [[ ${RUNTYPE} = *"HeePCoin"* ]]; then
     REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_coin_production_${RUNNUMBER}_-1.report" 
 else
@@ -46,34 +46,39 @@ EBeam=`echo ${KINFILE_INFO} | cut -d ','  -f5`
 
 # Get information available in the report file
 if [[ -f ${REPORTFILE} ]]; then
+    if [[ ${RUNTYPE} != "HeePSing" ]]; then
 	REPORTFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/reportfile.py ${REPORTFILE}`
-	Current=`echo ${REPORTFILE_INFO} | cut -d ',' -f1`
-	PS1=`echo ${REPORTFILE_INFO} | cut -d ',' -f2`
-	PS4=`echo ${REPORTFILE_INFO} | cut -d ',' -f3`
-	PS5=`echo ${REPORTFILE_INFO} | cut -d ',' -f4`
-	HMS_Rate=`echo ${REPORTFILE_INFO} | cut -d ',' -f5`
-	SHMS_Rate=`echo ${REPORTFILE_INFO} | cut -d ',' -f6`
-	COIN_Rate=`echo ${REPORTFILE_INFO} | cut -d ',' -f7`
-	Charge=`echo ${REPORTFILE_INFO} | cut -d ',' -f8`
-	Raw_HMS=`echo ${REPORTFILE_INFO} | cut -d ',' -f9`
-	Raw_SHMS=`echo ${REPORTFILE_INFO} | cut -d ',' -f10`
-	Raw_COIN=`echo ${REPORTFILE_INFO} | cut -d ',' -f11`
-	EDTM=`echo ${REPORTFILE_INFO} | cut -d ',' -f12`
-	Tracking=`echo ${REPORTFILE_INFO} | cut -d ',' -f13`
+    elif [[ ${RUNTYPE} == "HeepSing" ]]; then
+	REPORTFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/reportfile_HeePSing.py ${REPORTFILE}`
+	
+    fi
+    Current=`echo ${REPORTFILE_INFO} | cut -d ',' -f1`
+    PS1=`echo ${REPORTFILE_INFO} | cut -d ',' -f2`
+    PS4=`echo ${REPORTFILE_INFO} | cut -d ',' -f3`
+    PS5=`echo ${REPORTFILE_INFO} | cut -d ',' -f4`
+    HMS_Rate=`echo ${REPORTFILE_INFO} | cut -d ',' -f5`
+    SHMS_Rate=`echo ${REPORTFILE_INFO} | cut -d ',' -f6`
+    COIN_Rate=`echo ${REPORTFILE_INFO} | cut -d ',' -f7`
+    Charge=`echo ${REPORTFILE_INFO} | cut -d ',' -f8`
+    Raw_HMS=`echo ${REPORTFILE_INFO} | cut -d ',' -f9`
+    Raw_SHMS=`echo ${REPORTFILE_INFO} | cut -d ',' -f10`
+    Raw_COIN=`echo ${REPORTFILE_INFO} | cut -d ',' -f11`
+    EDTM=`echo ${REPORTFILE_INFO} | cut -d ',' -f12`
+    Tracking=`echo ${REPORTFILE_INFO} | cut -d ',' -f13`
 elif [[ ! -f ${REPORTFILE} ]]; then
-	Current="ERROR"
-	PS1="ERROR"
-	PS4="ERROR"
-	PS5="ERROR"
-	HMS_Rate="ERROR"
-	SHMS_Rate="ERROR"
-	COIN_Rate="ERROR"
-	Charge="ERROR"
-	Raw_HMS="ERROR"
-	Raw_SHMS="ERROR"
-	Raw_COIN="ERROR"
-	EDTM="ERROR"
-	Tracking="ERROR"
+    Current="ERROR"
+    PS1="ERROR"
+    PS4="ERROR"
+    PS5="ERROR"
+    HMS_Rate="ERROR"
+    SHMS_Rate="ERROR"
+    COIN_Rate="ERROR"
+    Charge="ERROR"
+    Raw_HMS="ERROR"
+    Raw_SHMS="ERROR"
+    Raw_COIN="ERROR"
+    EDTM="ERROR"
+    Tracking="ERROR"
 fi
 
 echo "========================================================================="

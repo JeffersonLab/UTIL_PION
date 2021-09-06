@@ -90,7 +90,7 @@ Pion_Analysis_Distributions = "%s/%s_%s_sw_Pion_Analysis_Distributions.pdf" % (O
 #################################################################################################################################################
 
 # Construct the name of the rootfile based upon the info we provided
-rootName = "%s/UTIL_PION/OUTPUT/Analysis/PionLT/%s_%s_%s.root" % (REPLAYPATH, runNum, MaxEvent, ROOTPrefix)     # Input file location and variables taking
+rootName = "%s/UTIL_PION/OUTPUT/Analysis/HeeP/%s_%s_%s.root" % (REPLAYPATH, runNum, MaxEvent, ROOTPrefix)     # Input file location and variables taking
 print ("Attempting to process %s" %(rootName))
 if os.path.exists(OUTPATH):
     if os.path.islink(OUTPATH):
@@ -202,11 +202,6 @@ P_aero_yAtAero_protons_uncut = ROOT.TH1D("P_aero_yAtAero_protons_uncut", "SHMS a
 P_kin_MMp_protons_uncut = ROOT.TH1D("P_kin_MMp_protons_uncut", "MIssing Mass; MM_{p}; Counts", 200, 0.5, 1.8)
 P_RFTime_Dist_protons_uncut = ROOT.TH1D("P_RFTime_Dist_protons_uncut", "SHMS RFTime; SHMS_RFTime; Counts", 200, 0, 4)
 CTime_epCoinTime_ROC1_protons_uncut = ROOT.TH1D("CTime_epCoinTime_ROC1_protons_uncut", "Electron-Proton CTime; e p Coin_Time; Counts", 200, -60, 60)
-Q2_protons_uncut = ROOT.TH1D("Q2_protons_uncut", "Q2; Q2; Counts", 200, 0, 6)
-W_protons_uncut = ROOT.TH1D("W_protons_uncut", "W; W; Counts", 200, 2, 4)
-epsilon_protons_uncut = ROOT.TH1D("epsilon_protons_uncut", "epsilon; epsilon; Counts", 200, 0, 0.8)
-phiq_protons_uncut = ROOT.TH1D("phiq_protons_uncut", "phiq; #phi; Counts", 200, -10, 10)
-t_protons_uncut = ROOT.TH1D("t_protons_uncut", "t; t; Counts", 200, -1.5, 1)
 
 H_gtr_beta_protons_cut_all = ROOT.TH1D("H_gtr_beta_protons_cut_all", "HMS #beta; HMS_gtr_#beta; Counts", 200, 0.8, 1.2)
 H_gtr_xp_protons_cut_all = ROOT.TH1D("H_gtr_xp_protons_cut_all", "HMS x'; HMS_gtr_xp; Counts", 200, -0.2, 0.2)
@@ -239,11 +234,6 @@ P_aero_yAtAero_protons_cut_all = ROOT.TH1D("P_aero_yAtAero_protons_cut_all", "SH
 P_kin_MMp_protons_cut_all = ROOT.TH1D("P_kin_MMpi_protons_cut_all", "Missing Mass; MM_{#pi}; Counts", 200, 0.5, 1.8)
 P_RFTime_Dist_protons_cut_all = ROOT.TH1D("P_RFTime_Dist_protons_cut_all", "SHMS RFTime; SHMS_RFTime; Counts", 200, 0, 4)
 CTime_epCoinTime_ROC1_protons_cut_all = ROOT.TH1D("CTime_epCoinTime_ROC1_protons_cut_all", "Electron-Proton CTime; e p Coin_Time; Counts", 200, -50, 50)
-Q2_protons_cut_all = ROOT.TH1D("Q2_protons_cut_all", "Q2; Q2; Counts", 200, 2, 4)
-W_protons_cut_all = ROOT.TH1D("W_protons_cut_all", "W; W; Counts", 200, 2.2, 4)
-epsilon_protons_cut_all = ROOT.TH1D("epsilon_protons_cut_all", "epsilon; epsilon; Counts", 200, 0, 0.8)
-phiq_protons_cut_all = ROOT.TH1D("phiq_protons_cut_all", "phiq; #phi; Counts", 200, -10, 10)
-t_protons_cut_all = ROOT.TH1D("t_protons_cut_all", "t; t; Counts", 200, -1, 0.5)
 
 P_gtr_beta_protons_cut_prompt = ROOT.TH1D("P_gtr_beta_protons_cut_prompt", "SHMS beta; SHMS_#beta; Counts", 200, 0.8, 1.2)
 P_RFTime_Dist_protons_cut_prompt = ROOT.TH1D("P_RFTime_Dist_protons_cut_prompt", "SHMS RFTime; SHMS_RFTime; Counts", 200, 0, 4)
@@ -286,8 +276,6 @@ P_kin_MMp_vs_P_RFTime_protons_cut_all = ROOT.TH2D("P_kin_MMp_vs_P_RFTime_protons
 #P_ngcer_npeSum_vs_aero_npeSum_protons_cut_all = ROOT.TH2D("P_ngcer_npeSum_vs_aero_npeSum_protons_cut_all", "SHMS NGC npeSum vs SHMS aero npeSum (with cuts); SHMS_ngcer_npeSum; SHMS_aero_npeSum", 100, 0, 50, 100, 0, 50)
 
 P_kin_MMp_vs_CTime_epCoinTime_ROC1_protons_cut_prompt = ROOT.TH2D("P_kin_MMp_vs_CTime_epCoinTime_ROC1_protons_cut_prompt","Missing Mass vs Electron-Proton CTime; MM_{p}; e p Coin_Time",100, 0, 2, 100, -2, 2)
-Q2vsW_protons = ROOT.TH2D("Q2vsW_protons", "Q2 vs W; Q2; W", 200, 1, 5, 200, 2.4, 4)
-phiqvst_protons = ROOT.TH2D("phiqvst_protons","; #phi ;t", 12, -3.14, 3.14, 24, 0.0, 1.2)
 
 #################################################################################################################################################
 
@@ -324,11 +312,6 @@ for event in Uncut_Proton_Events_tree:
     P_kin_MMp_protons_uncut.Fill(event.MMp)
     P_RFTime_Dist_protons_uncut.Fill(event.P_RF_Dist)
     CTime_epCoinTime_ROC1_protons_uncut.Fill(event.CTime_epCoinTime_ROC1)
-    Q2_protons_uncut.Fill(event.Q2)
-    W_protons_uncut.Fill(event.W)
-    epsilon_protons_uncut.Fill(event.epsilon)
-    phiq_protons_uncut.Fill(event.ph_q)
-    t_protons_uncut.Fill(-event.MandelT)
     H_cal_etottracknorm_vs_H_cer_npeSum_protons_uncut.Fill(event.H_cal_etottracknorm, event.H_cer_npeSum)
     P_hgcer_npeSum_vs_aero_npeSum_protons_uncut.Fill(event.P_hgcer_npeSum, event.P_aero_npeSum)
     CTime_epCoinTime_ROC1_vs_P_kin_MMp_protons_uncut.Fill(event.CTime_epCoinTime_ROC1, event.MMp)
@@ -373,11 +356,6 @@ for event in Cut_Proton_Events_All_tree:
     P_kin_MMp_protons_cut_all.Fill(event.MMp)
     P_RFTime_Dist_protons_cut_all.Fill(event.P_RF_Dist)
     CTime_epCoinTime_ROC1_protons_cut_all.Fill(event.CTime_epCoinTime_ROC1)
-    Q2_protons_cut_all.Fill(event.Q2)
-    W_protons_cut_all.Fill(event.W)
-    epsilon_protons_cut_all.Fill(event.epsilon)
-    phiq_protons_cut_all.Fill(event.ph_q)
-    t_protons_cut_all.Fill(-event.MandelT)
     H_cal_etottracknorm_vs_H_cer_npeSum_protons_cut_all.Fill(event.H_cal_etottracknorm, event.H_cer_npeSum)    
     P_hgcer_npeSum_vs_aero_npeSum_protons_cut_all.Fill(event.P_hgcer_npeSum, event.P_aero_npeSum)
     P_hgcer_yAtCer_vs_hgcer_xAtCer_protons_cut_all.Fill(event.P_hgcer_yAtCer, event.P_hgcer_xAtCer)
@@ -385,8 +363,6 @@ for event in Cut_Proton_Events_All_tree:
     CTime_epCoinTime_ROC1_vs_beta_protons_cut_all.Fill(event.CTime_epCoinTime_ROC1, event.P_gtr_beta)
     CTime_epCoinTime_ROC1_vs_P_kin_MMp_protons_cut_all.Fill(event.CTime_epCoinTime_ROC1, event.MMp)
     P_kin_MMp_vs_P_RFTime_protons_cut_all.Fill(event.MMp, event.P_RF_Dist)
-    Q2vsW_protons.Fill(event.Q2, event.W)
-    phiqvst_protons.Fill(event.ph_q, -event.MandelT)
 #    P_cal_etottracknorm_vs_P_ngcer_npeSum_protons_cut_all.Fill(event.P_cal_etottracknorm, event.P_ngcer_npeSum)
 #    P_ngcer_yAtCer_vs_ngcer_xAtCer_protons_cut_all.Fill(event.P_ngcer_yAtCer, event.P_ngcer_xAtCer)
 #    P_ngcer_npeSum_vs_hgcer_npeSum_protons_cut_all.Fill(event.P_ngcer_npeSum, event.P_hgcer_npeSum)
@@ -459,11 +435,6 @@ P_aero_yAtAero_protons_uncut.Write()
 P_kin_MMp_protons_uncut.Write()
 P_RFTime_Dist_protons_uncut.Write()
 CTime_epCoinTime_ROC1_protons_uncut.Write()
-Q2_protons_uncut.Write()
-W_protons_uncut.Write()
-epsilon_protons_uncut.Write()
-phiq_protons_uncut.Write()
-t_protons_uncut.Write()
 H_cal_etottracknorm_vs_H_cer_npeSum_protons_uncut.Write()
 P_hgcer_npeSum_vs_aero_npeSum_protons_uncut.Write()
 CTime_epCoinTime_ROC1_vs_P_kin_MMp_protons_uncut.Write()
@@ -508,13 +479,6 @@ P_aero_yAtAero_protons_cut_all.Write()
 P_kin_MMp_protons_cut_all.Write()
 P_RFTime_Dist_protons_cut_all.Write()
 CTime_epCoinTime_ROC1_protons_cut_all.Write()
-Q2_protons_cut_all.Write()
-W_protons_cut_all.Write()
-epsilon_protons_cut_all.Write()
-phiq_protons_cut_all.Write()
-t_protons_cut_all.Write()
-Q2vsW_protons.Write()
-phiqvst_protons.Write()
 H_cal_etottracknorm_vs_H_cer_npeSum_protons_cut_all.Write()
 P_hgcer_npeSum_vs_aero_npeSum_protons_cut_all.Write()
 CTime_epCoinTime_ROC1_vs_P_kin_MMp_protons_cut_all.Write()

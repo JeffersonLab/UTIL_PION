@@ -61,7 +61,7 @@ cd $REPLAYPATH
 
 ###################################################################################################################################################
 
-# Section for pion replay script
+# Section for HeeP replay script
 if [ ! -f "$REPLAYPATH/UTIL_PION/ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
     eval "$REPLAYPATH/hcana -l -q \"SCRIPTS/COIN/SCALERS/replay_coin_scalers.C($RUNNUMBER,${MAXEVENTS})\""
     cd "$REPLAYPATH/CALIBRATION/bcm_current_map"
@@ -77,23 +77,23 @@ fi
 
 sleep 3
 # SJDK 31/08/21 - Replays for HeeP analysis should output to Analysis/HeeP, for now this is probably fine
-if [ ! -f "$REPLAYPATH/UTIL_PION/ROOTfiles/Analysis/PionLT/Pion_coin_replay_production_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
+if [ ! -f "$REPLAYPATH/UTIL_PION/ROOTfiles/Analysis/HeeP/Pion_coin_replay_production_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
     if [[ "${HOSTNAME}" != *"ifarm"* ]]; then
 	if [[ "${HOSTNAME}" == *"cdaq"* ]]; then
-	    eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\""| tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/Analysis/HeeP/Pion_output_coin_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
+	    eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_coin_heep.C($RUNNUMBER,$MAXEVENTS)\""| tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/Analysis/HeeP/Pion_output_coin_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
 	else	
-	    eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\"" 
+	    eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_coin_heep.C($RUNNUMBER,$MAXEVENTS)\"" 
 	fi
     elif [[ "${HOSTNAME}" == *"ifarm"* ]]; then
-	eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\""| tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/Analysis/HeeP/Pion_output_coin_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
+	eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_coin_heep.C($RUNNUMBER,$MAXEVENTS)\""| tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/Analysis/HeeP/Pion_output_coin_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
     fi
-else echo "Replayfile already found for this run in $REPLAYPATH/UTIL_PION/ROOTfiles/Analysis/PionLT/ - Skipping replay step"
+else echo "Replayfile already found for this run in $REPLAYPATH/UTIL_PION/ROOTfiles/Analysis/HeeP/ - Skipping replay step"
 fi
 
 sleep 3
 
 ################################################################################################################################                                                                                   
-# Section for pion analysis script
+# Section for HeeP analysis script
 if [ -f "${UTILPATH}/OUTPUT/Analysis/HeeP/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
     read -p "Pion production analyzed file already exits, you want to reprocess it? <Y/N> " option1
     if [[ $option1 == "y" || $option1 == "Y" || $option1 == "yes" || $option1 == "Yes" ]]; then
@@ -112,15 +112,15 @@ sleep 3
 
 ##################################################################################################################################
 
-# Section for pion physics ploting script
+# Section for HeeP physics ploting script
 if [ -f "${UTILPATH}/OUTPUT/Analysis/HeeP/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
-    read -p "Pion physics output file already exits, you want to reprocess it? <Y/N> " option2
+    read -p "HeeP output file already exits, you want to reprocess it? <Y/N> " option2
     if [[ $option2 == "y" || $option2 == "Y" || $option2 == "yes" || $option2 == "Yes" ]]; then
 	rm "${UTILPATH}/OUTPUT/Analysis/HeeP/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root"
 	echo "Reprocessing"
 	python3 ${UTILPATH}/scripts/heep/src/plot_coin.py ${RUNNUMBER} ${MAXEVENTS} Analysed_Data
     else
-	echo "Skipping python physics plotting script step"
+	echo "Skipping python HeeP plotting script step"
     fi
 elif [ ! -f  "${UTILPATH}/OUTPUT/Analysis/HeeP/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
 	python3 ${UTILPATH}/scripts/heep/src/plot_coin.py ${RUNNUMBER} ${MAXEVENTS} Analysed_Data

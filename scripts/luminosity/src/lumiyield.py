@@ -44,8 +44,8 @@ print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST
 thres_curr = 10.0
 
 filename = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/lumi_data.csv" % REPLAYPATH
-rootName = "%s/UTIL_PION/ROOTfiles/%s_%s_%s.root" % (REPLAYPATH,ROOTPrefix,runNum,MaxEvent)
-report = "%s/UTIL_PION/REPORT_OUTPUT/%s_%s_%s.report" % (REPLAYPATH,ROOTPrefix,runNum,MaxEvent)
+rootName = "%s/UTIL_PION/ROOTfiles/Analysis/Lumi/%s_%s_%s.root" % (REPLAYPATH,ROOTPrefix,runNum,MaxEvent)
+report = "%s/UTIL_PION/REPORT_OUTPUT/Analysis/Lumi/%s_%s_%s.report" % (REPLAYPATH,ROOTPrefix,runNum,MaxEvent)
 # report = "%s/UTIL_PION/REPORT_OUTPUT/replay_coin_Lumi_%s_-1.report" % (REPLAYPATH,runNum)
 
 f = open(report)
@@ -116,7 +116,7 @@ for i,index in enumerate(psActual):
             PS6 = psActual[i]            
 f.close()
 
-print("Pre-scale values...\nPS1:{0}, PS2:{1}, PS3:{2}, PS4:{3}, PS5:{4}, PS6:{5}".format(PS1,PS2,PS3,PS4,PS5,PS6))
+print("\nPre-scale values...\nPS1:{0}, PS2:{1}, PS3:{2}, PS4:{3}, PS5:{4}, PS6:{5}\n".format(PS1,PS2,PS3,PS4,PS5,PS6))
 
 PS_used = [["PS1",PS1],["PS2",PS2],["PS3",PS3],["PS4",PS4],["PS5",PS5],["PS6",PS6]]
 
@@ -141,6 +141,7 @@ tree = up.open(rootName)["T"]
 branch = klt.pyBranch(tree)
 
 if PS_used[1][0] is "PS3" or PS_used[1][0] is "PS4":
+    W = tree.array("H.kin.primary.W")
     H_cal_etotnorm = tree.array("H.cal.etotnorm")
     H_cer_npeSum = tree.array("H.cer.npeSum")
     H_gtr_dp = tree.array("H.gtr.dp")
@@ -170,7 +171,7 @@ if PS_used[1][0] is "PS3" or PS_used[1][0] is "PS4":
     H_bcm_bcm4a_AvgCurrent = tree.array("H.bcm.bcm4a.AvgCurrent")
 
 if PS_used[0][0] is "PS1" or PS_used[0][0] is "PS2":
-    #W = tree.array("H.kin.primary.W")
+    #W = tree.array("P.kin.primary.W")
     P_cal_etotnorm = tree.array("P.cal.etotnorm")
     P_hgcer_npeSum = tree.array("P.hgcer.npeSum")
     P_aero_npeSum = tree.array("P.aero.npeSum")
@@ -205,26 +206,31 @@ if PS_used[0][0] is "PS1" or PS_used[1][0] is "PS1":
     T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG1_ROC2_tdcTimeRaw")
     T_coin_pTRIG_SHMS_ROC1_tdcTime = tree.array("T.coin.pTRIG1_ROC1_tdcTime")
     T_coin_pTRIG_SHMS_ROC2_tdcTime = tree.array("T.coin.pTRIG1_ROC2_tdcTime")
+
 if PS_used[0][0] is "PS2" or PS_used[1][0] is "PS2":
     T_coin_pTRIG_SHMS_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG2_ROC1_tdcTimeRaw")
     T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG2_ROC2_tdcTimeRaw")
     T_coin_pTRIG_SHMS_ROC1_tdcTime = tree.array("T.coin.pTRIG2_ROC1_tdcTime")
     T_coin_pTRIG_SHMS_ROC2_tdcTime = tree.array("T.coin.pTRIG2_ROC2_tdcTime")
+
 if PS_used[0][0] is "PS3" or PS_used[1][0] is "PS3":
     T_coin_pTRIG_HMS_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG3_ROC1_tdcTimeRaw")
     T_coin_pTRIG_HMS_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG3_ROC2_tdcTimeRaw")
     T_coin_pTRIG_HMS_ROC1_tdcTime = tree.array("T.coin.pTRIG3_ROC1_tdcTime")
     T_coin_pTRIG_HMS_ROC2_tdcTime = tree.array("T.coin.pTRIG3_ROC2_tdcTime")
+
 if PS_used[0][0] is "PS4" or PS_used[1][0] is "PS4":
     T_coin_pTRIG_HMS_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG4_ROC1_tdcTimeRaw")
     T_coin_pTRIG_HMS_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG4_ROC2_tdcTimeRaw")
     T_coin_pTRIG_HMS_ROC1_tdcTime = tree.array("T.coin.pTRIG4_ROC1_tdcTime")
     T_coin_pTRIG_HMS_ROC2_tdcTime = tree.array("T.coin.pTRIG4_ROC2_tdcTime")
+
 if PS_used[0][0] is "PS5" or PS_used[1][0] is "PS5":
     T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG5_ROC1_tdcTimeRaw")
     T_coin_pTRIG_COIN_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG5_ROC2_tdcTimeRaw")
     T_coin_pTRIG_COIN_ROC1_tdcTime = tree.array("T.coin.pTRIG5_ROC1_tdcTime")
     T_coin_pTRIG_COIN_ROC2_tdcTime = tree.array("T.coin.pTRIG5_ROC2_tdcTime")
+
 if PS_used[0][0] is "PS6" or PS_used[1][0] is "PS6":
     T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG6_ROC1_tdcTimeRaw")
     T_coin_pTRIG_COIN_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG6_ROC2_tdcTimeRaw")

@@ -82,7 +82,7 @@ print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST
 #################################################################################################################################################
 
 # Construct the name of the rootfile based upon the info we provided
-rootName = "%s/UTIL_PION/ROOTfiles/Analysis/PionLT/%s_%s_%s.root" % (REPLAYPATH, ROOTPrefix, runNum, MaxEvent)     # Input file location and variables taking
+rootName = "%s/UTIL_PION/ROOTfiles/Analysis/HeeP/%s_%s_%s.root" % (REPLAYPATH, ROOTPrefix, runNum, MaxEvent)     # Input file location and variables taking
 print ("Attempting to process %s" %(rootName))
 if os.path.exists(OUTPATH):
     if os.path.islink(OUTPATH):
@@ -210,7 +210,7 @@ def make_cutDict(cut,inputDict=None):
 #################################################################################################################################################################
 
 # defining Cuts
-cutDict = make_cutDict("coin_ep_cut_all_RF", cutDict)
+cutDict = make_cutDict("coin_ep_cut_all_RF")
 cutDict = make_cutDict("coin_ep_cut_prompt_RF", cutDict)
 cutDict = make_cutDict("coin_ep_cut_rand_RF", cutDict)
 

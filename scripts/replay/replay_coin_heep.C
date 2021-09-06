@@ -1,4 +1,4 @@
-void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
+void replay_coin_heep (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -25,7 +25,7 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   pathList.push_back("./raw_volatile");
 
   //const char* RunFileNamePattern = "raw/coin_all_%05d.dat";
-  const char* ROOTFileNamePattern = "UTIL_PION/ROOTfiles/Analysis/Lumi/Pion_replay_luminosity_%d_%d.root";
+  const char* ROOTFileNamePattern = "UTIL_PION/ROOTfiles/Analysis/HeeP/Pion_coin_replay_production_%d_%d.root";
   
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
@@ -259,9 +259,9 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Define cuts file
   analyzer->SetCutFile("UTIL_PION/config/DEF-files/coin_production_cuts.def");  // optional
   // File to record accounting information for cuts
-  analyzer->SetSummaryFile(Form("UTIL_PION/config/REPORT_OUTPUT/summary_luminosity_%d_%d.report", RunNumber, MaxEvent)); // optional
+  analyzer->SetSummaryFile(Form("UTIL_PION/config/REPORT_OUTPUT/summary_production_%d_%d.report", RunNumber, MaxEvent)); // optional
   // Start the actual analysis.
   analyzer->Process(run);
   // Create report file from template	       
-  analyzer->PrintReport("UTIL_PION/config/TEMPLATES/lumi_coin.template", Form("UTIL_PION/REPORT_OUTPUT/Analysis/Lumi/Pion_replay_luminosity_%d_%d.report", RunNumber, MaxEvent)); // optional}
+  analyzer->PrintReport("UTIL_PION/config/TEMPLATES/COIN/coin_production.template", Form("UTIL_PION/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_coin_production_%d_%d.report", RunNumber, MaxEvent)); // optional}
 }

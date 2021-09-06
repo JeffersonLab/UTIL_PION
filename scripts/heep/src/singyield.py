@@ -38,8 +38,8 @@ sys.path.insert(0, 'python/')
 ##################################################################################################################################################
 
 # Check the number of arguments provided to the script
-if len(sys.argv)-1!=3:
-    print("!!!!! ERROR !!!!!\n Expected 3 arguments\n Usage is with - ROOTfilePrefix RunNumber MaxEvents \n!!!!! ERROR !!!!!")
+if len(sys.argv)-1!=4:
+    print("!!!!! ERROR !!!!!\n Expected 4 arguments\n Usage is with - ROOTfilePrefix RunNumber MaxEvents spec \n!!!!! ERROR !!!!!")
     sys.exit(1)
 
 ##################################################################################################################################################
@@ -85,7 +85,7 @@ print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST
 #################################################################################################################################################
 
 # Construct the name of the rootfile based upon the info we provided
-rootName = "%s/UTIL_PION/ROOTfiles/Analysis/PionLT/%s_%s_%s.root" % (REPLAYPATH, ROOTPrefix, runNum, MaxEvent)     # Input file location and variables taking
+rootName = "%s/UTIL_PION/ROOTfiles/Analysis/HeeP/%s_%s_%s.root" % (REPLAYPATH, ROOTPrefix, runNum, MaxEvent)     # Input file location and variables taking
 print ("Attempting to process %s" %(rootName))
 if os.path.exists(OUTPATH):
     if os.path.islink(OUTPATH):
@@ -129,7 +129,8 @@ if spec == "HMS":
     H_cal_etotnorm = e_tree.array("H.cal.etotnorm")                  #
     H_cal_etottracknorm = e_tree.array("H.cal.etottracknorm")        #
     H_cer_npeSum = e_tree.array("H.cer.npeSum")                      #
-    MMp = e_tree.array("H.kin.secondary.MMp")                        #
+    #MMp = e_tree.array("H.kin.secondary.MMp")                        #
+    MMp = e_tree.array("H.cer.npeSum")                        # False
 if spec == "SHMS":    
     # SHMS info
     P_hod_goodscinhit = e_tree.array("P.hod.goodscinhit")            #
@@ -150,7 +151,8 @@ if spec == "SHMS":
     #P_ngcer_npeSum = e_tree.array("P.ngcer.npeSum")                  #
     #P_ngcer_xAtCer = e_tree.array("P.ngcer.xAtCer")                  #
     #P_ngcer_yAtCer = e_tree.array("P.ngcer.yAtCer")                  #
-    MMp = e_tree.array("P.kin.secondary.MMp")                        #
+    #MMp = e_tree.array("P.kin.secondary.MMp")                        #
+    MMp = e_tree.array("P.cal.etotnorm")                        # False
 
 
 ##############################################################################################################################################
@@ -200,7 +202,7 @@ def make_cutDict(cut,inputDict=None):
 #################################################################################################################################################################
 
 # defining Cuts
-cutDict = make_cutDict("sing_ep_cut_all_RF", cutDict)
+cutDict = make_cutDict("sing_ep_cut_all_RF")
 cutDict = make_cutDict("sing_ep_cut_prompt_RF", cutDict)
 cutDict = make_cutDict("sing_ep_cut_rand_RF", cutDict)
 
@@ -325,11 +327,11 @@ def main():
             # Uncomment the line below if you want .csv file output, WARNING the files can be very large and take a long time to process!                                                                      
             #pd.DataFrame(data.get(data_keys[i])).to_csv("%s/%s_%s.csv" % (OUTPATH, data_keys[i], runNum), header=DFHeader, index=False) # Convert array to panda dataframe and write to csv with correct header                                                                                                      
         if (i == 0):
-            pd.DataFrame(data.get(data_keys[i]), columns = DFHeader, index = None).to_root("%s/%s_%s_An\
-alysed_Data.root" % (OUTPATH, runNum, MaxEvent), key ="%s" % data_keys[i])
+            pd.DataFrame(data.get(data_keys[i]), columns = DFHeader, index = None).to_root("%s/%s_%s_%s_An\
+alysed_Data.root" % (OUTPATH, spec, runNum, MaxEvent), key ="%s" % data_keys[i])
         elif (i != 0):
-            pd.DataFrame(data.get(data_keys[i]), columns = DFHeader, index = None).to_root("%s/%s_%s_An\
-alysed_Data.root" % (OUTPATH, runNum, MaxEvent), key ="%s" % data_keys[i], mode ='a')
+            pd.DataFrame(data.get(data_keys[i]), columns = DFHeader, index = None).to_root("%s/%s_%s_%s_An\
+alysed_Data.root" % (OUTPATH, spec, runNum, MaxEvent), key ="%s" % data_keys[i], mode ='a')
 
 if __name__ == '__main__':
     main()

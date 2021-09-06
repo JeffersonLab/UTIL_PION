@@ -1,4 +1,4 @@
-void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
+void replay_shms_heep (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -25,7 +25,7 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   pathList.push_back("./raw_volatile");
 
   //const char* RunFileNamePattern = "raw/coin_all_%05d.dat";
-  const char* ROOTFileNamePattern = "UTIL_PION/ROOTfiles/Analysis/Lumi/Pion_replay_luminosity_%d_%d.root";
+  const char* ROOTFileNamePattern = "UTIL_PION/ROOTfiles/Analysis/HeeP/Pion_shms_replay_production_%d_%d.root";
   
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
@@ -35,8 +35,8 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
   // Load params for COIN trigger configuration
   gHcParms->Load("PARAM/TRIG/tcoin.param");
+  //gHcParms->Load("PARAM/TRIG/tshms.param");
   // Load fadc debug parameters
-  gHcParms->Load("PARAM/HMS/GEN/h_fadc_debug.param");
   gHcParms->Load("PARAM/SHMS/GEN/p_fadc_debug.param");
   //Load params for BCM
   const char* CurrentFileNamePattern = "PARAM/HMS/BCM/CALIB/bcmcurrent_%d.param";
@@ -45,6 +45,7 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Load the Hall C detector map
   gHcDetectorMap = new THcDetectorMap();
   gHcDetectorMap->Load("MAPS/COIN/DETEC/coin.map");
+  //gHcDetectorMap->Load("MAPS/SHMS/DETEC/STACK/shms_stack.map");
 
   //=:=:=:=
   // SHMS 
@@ -255,13 +256,13 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Define output ROOT file
   analyzer->SetOutFile(ROOTFileName.Data());
   // Define DEF-file+
-  analyzer->SetOdefFile("UTIL_PION/config/DEF-files/coin_production.def");
+  analyzer->SetOdefFile("UTIL_PION/config/DEF-files/shms_heep.def");
   // Define cuts file
-  analyzer->SetCutFile("UTIL_PION/config/DEF-files/coin_production_cuts.def");  // optional
+  analyzer->SetCutFile("UTIL_PION/config/DEF-files/shms_heep_cuts.def");  // optional
   // File to record accounting information for cuts
-  analyzer->SetSummaryFile(Form("UTIL_PION/config/REPORT_OUTPUT/summary_luminosity_%d_%d.report", RunNumber, MaxEvent)); // optional
+  analyzer->SetSummaryFile(Form("UTIL_PION/config/REPORT_OUTPUT/summary_production_%d_%d.report", RunNumber, MaxEvent)); // optional
   // Start the actual analysis.
   analyzer->Process(run);
   // Create report file from template	       
-  analyzer->PrintReport("UTIL_PION/config/TEMPLATES/lumi_coin.template", Form("UTIL_PION/REPORT_OUTPUT/Analysis/Lumi/Pion_replay_luminosity_%d_%d.report", RunNumber, MaxEvent)); // optional}
+  analyzer->PrintReport("UTIL_PION/config/TEMPLATES/COIN/coin_production.template", Form("UTIL_PION/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_shms_production_%d_%d.report", RunNumber, MaxEvent)); // optional}
 }

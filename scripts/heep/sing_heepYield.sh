@@ -19,22 +19,22 @@
 
 #################################################################################################################################################
 
-echo "Starting analysis of Protonb events"
+echo "Starting analysis of Proton events"
 echo "I take as arguments the run number and number of events!"
 # Input params - run number and max number of events
-RUNNUMBER=$1
+spec=$1
 if [[ -z "$1" ]]; then
+    echo "Please specify which spectrometer (hms or shms)" 
+fi
+RUNNUMBER=$2
+if [[ -z "$2" ]]; then
     echo "I need a run number"
     echo "Please provide a run number as input"
 fi
-MAXEVENTS=$2
-if [[ -z "$2" ]]; then
+MAXEVENTS=$3
+if [[ -z "$3" ]]; then
     echo "Only Run Number entered...I'll assume -1 (all) events!" 
     MAXEVENTS=-1 
-fi
-spec=$3
-if [[ -z "$3" ]]; then
-    echo "Please specify which spectrometer" 
 fi
 
 SPEC=$(echo "$spec" | tr '[:lower:]' '[:upper:]')
@@ -68,12 +68,12 @@ cd $REPLAYPATH
 ###################################################################################################################################################
 
 # Section for pion replay script
-if [ ! -f "$REPLAYPATH/UTIL_PION/ROOTfiles/Scalers/$spec_replay_scalers_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
-    eval "$REPLAYPATH/hcana -l -q \"SCRIPTS/$SPEC/SCALERS/replay_$spec_scalers.C($RUNNUMBER,${MAXEVENTS})\""
+if [ ! -f "$REPLAYPATH/UTIL_PION/ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
+    eval "$REPLAYPATH/hcana -l -q \"SCRIPTS/COIN/SCALERS/replay_coin_scalers.C($RUNNUMBER,${MAXEVENTS})\""
     cd "$REPLAYPATH/CALIBRATION/bcm_current_map"
     root -b -l<<EOF 
 .L ScalerCalib.C+
-.x run.C("${REPLAYPATH}/UTIL_PION/ROOTfiles/Scalers/$spec_replay_scalers_${RUNNUMBER}_${MAXEVENTS}.root")
+.x run.C("${REPLAYPATH}/UTIL_PION/ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMBER}_${MAXEVENTS}.root")
 .q  
 EOF
     mv bcmcurrent_$RUNNUMBER.param $REPLAYPATH/PARAM/HMS/BCM/CALIB/bcmcurrent_$RUNNUMBER.param
@@ -83,34 +83,34 @@ fi
 
 sleep 3
 
-if [ ! -f "$REPLAYPATH/UTIL_PION/ROOTfiles/Analysis/PionLT/Pion_$spec_replay_production_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
+if [ ! -f "$REPLAYPATH/UTIL_PION/ROOTfiles/Analysis/HeeP/Pion_${spec}_replay_production_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
     if [[ "${HOSTNAME}" != *"ifarm"* ]]; then
 	if [[ "${HOSTNAME}" == *"cdaq"* ]]; then
-	    eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_$spec.C($RUNNUMBER,$MAXEVENTS)\""| tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/Analysis/HeeP/Pion_output_$spec_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
+	    eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_${spec}_heep.C($RUNNUMBER,$MAXEVENTS)\""| tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/Analysis/HeeP/Pion_output_${spec}_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
 	else	
-	    eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_$spec.C($RUNNUMBER,$MAXEVENTS)\"" 
+	    eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_${spec}_heep.C($RUNNUMBER,$MAXEVENTS)\"" 
 	fi
     elif [[ "${HOSTNAME}" == *"ifarm"* ]]; then
-	eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_$spec.C($RUNNUMBER,$MAXEVENTS)\""| tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/Analysis/HeeP/Pion_output_$spec_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
+	eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_${spec}_heep.C($RUNNUMBER,$MAXEVENTS)\""| tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/Analysis/HeeP/Pion_output_${spec}_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
     fi
-else echo "Replayfile already found for this run in $REPLAYPATH/UTIL_PION/ROOTfiles/Analysis/PionLT/ - Skipping replay step"
+else echo "Replayfile already found for this run in $REPLAYPATH/UTIL_PION/ROOTfiles/Analysis/HeeP/ - Skipping replay step"
 fi
 
 sleep 3
 
 ################################################################################################################################                                                                                   
 # Section for pion analysis script
-if [ -f "${UTILPATH}/OUTPUT/Analysis/HeeP/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
+if [ -f "${UTILPATH}/OUTPUT/Analysis/HeeP/${spec}_${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
     read -p "Pion production analyzed file already exits, you want to reprocess it? <Y/N> " option1
     if [[ $option1 == "y" || $option1 == "Y" || $option1 == "yes" || $option1 == "Yes" ]]; then
-	rm "${UTILPATH}/OUTPUT/Analysis/HeeP/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root"
+	rm "${UTILPATH}/OUTPUT/Analysis/HeeP/${spec}_${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root"
 	echo "Reprocessing"
-	python3 ${UTILPATH}/scripts/heep/src/singyield.py Pion_$spec_replay_production ${RUNNUMBER} ${MAXEVENTS}
+	python3 ${UTILPATH}/scripts/heep/src/singyield.py Pion_${spec}_replay_production ${RUNNUMBER} ${MAXEVENTS} ${SPEC}
     else
 	echo "Skipping python analysis script step"
     fi
-elif [ ! -f "${UTILPATH}/OUTPUT/Analysis/HeeP/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
-	python3 ${UTILPATH}/scripts/heep/src/singyield.py Pion_$spec_replay_production ${RUNNUMBER} ${MAXEVENTS}
+elif [ ! -f "${UTILPATH}/OUTPUT/Analysis/HeeP/${spec}_${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
+	python3 ${UTILPATH}/scripts/heep/src/singyield.py Pion_${spec}_replay_production ${RUNNUMBER} ${MAXEVENTS} ${SPEC}
 else echo "Analysed root file already found in ${UTILPATH}/OUTPUT/Analysis/HeeP/ - Skipped python analyzer script step"
 fi
 
@@ -119,17 +119,17 @@ sleep 3
 ##################################################################################################################################
 
 # Section for pion physics ploting script
-if [ -f "${UTILPATH}/OUTPUT/Analysis/HeeP/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
+if [ -f "${UTILPATH}/OUTPUT/Analysis/HeeP/${spec}_${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
     read -p "Pion physics output file already exits, you want to reprocess it? <Y/N> " option2
     if [[ $option2 == "y" || $option2 == "Y" || $option2 == "yes" || $option2 == "Yes" ]]; then
-	rm "${UTILPATH}/OUTPUT/Analysis/HeeP/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root"
+	rm "${UTILPATH}/OUTPUT/Analysis/HeeP/${spec}_${RUNNUMBER}_${MAXEVENTS}_Output_Data.root"
 	echo "Reprocessing"
-	python3 ${UTILPATH}/scripts/heep/src/plot_sing.py ${RUNNUMBER} ${MAXEVENTS} Analysed_Data
+	python3 ${UTILPATH}/scripts/heep/src/plot_sing.py ${RUNNUMBER} ${MAXEVENTS} Analysed_Data ${SPEC}
     else
 	echo "Skipping python physics plotting script step"
     fi
-elif [ ! -f  "${UTILPATH}/OUTPUT/Analysis/HeeP/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
-	python3 ${UTILPATH}/scripts/heep/src/plot_sing.py ${RUNNUMBER} ${MAXEVENTS} Analysed_Data
+elif [ ! -f  "${UTILPATH}/OUTPUT/Analysis/HeeP/${spec}_${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
+	python3 ${UTILPATH}/scripts/heep/src/plot_sing.py ${RUNNUMBER} ${MAXEVENTS} Analysed_Data ${SPEC}
 else echo "Pion physics output root file already found in ${UTILPATH}/OUTPUT/Analysis/HeeP/ - Skipped python output script step"
 fi
 exit 0

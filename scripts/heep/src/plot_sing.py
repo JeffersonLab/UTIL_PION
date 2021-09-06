@@ -47,8 +47,8 @@ maxbin = 0.98 # maxbin for selecting neutrons events in missing mass distributio
 ##################################################################################################################################################
 
 # Check the number of arguments provided to the script
-if len(sys.argv)-1!=3:
-    print("!!!!! ERROR !!!!!\n Expected 3 arguments\n Usage is with - ROOTfilePrefix RunNumber MaxEvents \n!!!!! ERROR !!!!!")
+if len(sys.argv)-1!=4:
+    print("!!!!! ERROR !!!!!\n Expected 4 arguments\n Usage is with - ROOTfilePrefix RunNumber MaxEvents spec \n!!!!! ERROR !!!!!")
     sys.exit(1)
 
 ##################################################################################################################################################
@@ -93,7 +93,7 @@ Pion_Analysis_Distributions = "%s/%s_%s_sw_Pion_Analysis_Distributions.pdf" % (O
 #################################################################################################################################################
 
 # Construct the name of the rootfile based upon the info we provided
-rootName = "%s/UTIL_PION/OUTPUT/Analysis/PionLT/%s_%s_%s.root" % (REPLAYPATH, runNum, MaxEvent, ROOTPrefix)     # Input file location and variables taking
+rootName = "%s/UTIL_PION/OUTPUT/Analysis/HeeP/%s_%s_%s.root" % (REPLAYPATH, runNum, MaxEvent, ROOTPrefix)     # Input file location and variables taking
 print ("Attempting to process %s" %(rootName))
 if os.path.exists(OUTPATH):
     if os.path.islink(OUTPATH):
@@ -354,7 +354,7 @@ for event in Uncut_Proton_Events_tree:
         P_kin_MMp_protons_uncut.Fill(event.MMp)
         P_RFTime_Dist_protons_uncut.Fill(event.P_RF_Dist)
         P_hgcer_npeSum_vs_aero_npeSum_protons_uncut.Fill(event.P_hgcer_npeSum, event.P_aero_npeSum)
-        CTime_epCoinTime_ROC1_vs_H_kin_MMp_protons_uncut.Fill(event.CTime_epCoinTime_ROC1, event.MMp)
+        CTime_epCoinTime_ROC1_vs_P_kin_MMp_protons_uncut.Fill(event.CTime_epCoinTime_ROC1, event.MMp)
         P_kin_MMp_vs_P_RFTime_protons_uncut.Fill(event.MMp, event.P_RF_Dist)
         P_hgcer_yAtCer_vs_hgcer_xAtCer_protons_uncut.Fill(event.P_hgcer_yAtCer, event.P_hgcer_xAtCer)
         P_aero_yAtAero_vs_aero_xAtAero_protons_uncut.Fill(event.P_aero_yAtAero, event.P_aero_xAtAero)
@@ -467,7 +467,7 @@ for event in Cut_Proton_Events_Random_tree:
 #############################################################################################################################################
 
 # Making directories in output file
-outHistFile = ROOT.TFile.Open("%s/%s_%s_Output_Data.root" % (OUTPATH, runNum, MaxEvent), "RECREATE")                                                                                                    
+outHistFile = ROOT.TFile.Open("%s/%s_%s_%s_Output_Data.root" % (OUTPATH, spec, runNum, MaxEvent), "RECREATE")                                                                                                    
 d_Uncut_Proton_Events = outHistFile.mkdir("Uncut_Proton_Events")
 d_Cut_Proton_Events_All = outHistFile.mkdir("Cut_Proton_Events_All")
 d_Cut_Proton_Events_Prompt = outHistFile.mkdir("Cut_Proton_Events_Prompt")
