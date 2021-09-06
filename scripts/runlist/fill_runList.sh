@@ -26,11 +26,11 @@ KINFILE="${REPLAYPATH}/DBASE/COIN/standard.kinematics"
 if [[ ${RUNTYPE} = *"Prod"* ]]; then
     REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/PionLT/Pion_replay_coin_production_${RUNNUMBER}_-1.report"
 elif [[ ${RUNTYPE} = *"Lumi"* ]]; then
-    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/Lumi/Pion_replay_coin_Lumi_${RUNNUMBER}_-1.report" # CHANGE WHEN FINALISED
+    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/Lumi/Pion_replay_Luminosity_${RUNNUMBER}_-1.report" 
 elif [[ ${RUNTYPE} = *"HeePSing"* ]]; then
-    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_coin_HeeP_${RUNNUMBER}_-1.report" # CHANGE WHEN FINALISED
+    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_shms_Production_${RUNNUMBER}_-1.report" # Script may not work properly as there are 2 Heep singles Report files!!!
 elif [[ ${RUNTYPE} = *"HeePCoin"* ]]; then
-    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_coin_HeeP_${RUNNUMBER}_-1.report" # CHANGE WHEN FINALISED
+    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_coin_production_${RUNNUMBER}_-1.report" 
 else
     REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/General/Pion_replay_coin_production_${RUNNUMBER}_-1.report" # CHANGE WHEN FINALISED
 fi
