@@ -9,7 +9,7 @@
 #################################################################################################################################################
 
 echo "Starting analysis of Pion events"
-echo "I take as arguments the run prefix, run number and max number of events!"
+echo "I take as arguments the run number and max number of events!"
 # Input params - run number and max number of events
 RUNNUMBER=$1
 if [[ -z "$1" ]]; then

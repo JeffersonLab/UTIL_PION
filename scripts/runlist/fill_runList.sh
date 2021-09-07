@@ -24,13 +24,13 @@ RUNLIST="${REPLAYPATH}/UTIL_PION/runlist_pionLT_2021.csv"
 KINFILE="${REPLAYPATH}/DBASE/COIN/standard.kinematics"
 # Get report file based upon run type
 if [[ ${RUNTYPE} = *"Prod"* ]]; then
-    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/PionLT/Pion_replay_coin_production_${RUNNUMBER}_-1.report"
+    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/PionLT/Pion_replay_coin_production_${RUNNUMBER}_-1.report" # Finalised
 elif [[ ${RUNTYPE} = *"Lumi"* ]]; then
     REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/Lumi/Pion_replay_Luminosity_${RUNNUMBER}_-1.report" 
 elif [[ ${RUNTYPE} = *"HeePSing"* ]]; then
-    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_shms_Production_${RUNNUMBER}_-1.report" # All of the available info SHOULD be in the SHMS report file, don't need to look at both
+    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_shms_Production_${RUNNUMBER}_-1.report" # Finalised, all of the available info SHOULD be in the SHMS report file, don't need to look at both
 elif [[ ${RUNTYPE} = *"HeePCoin"* ]]; then
-    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_coin_production_${RUNNUMBER}_-1.report" 
+    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_coin_production_${RUNNUMBER}_-1.report" # Finalised
 else
     REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/General/Pion_replay_coin_production_${RUNNUMBER}_-1.report" # CHANGE WHEN FINALISED
 fi
@@ -93,18 +93,30 @@ echo "SHMS angle : $SHMS_Angle"
 echo "HMS momentum: $HMS_P"
 echo "HMS angle: $HMS_Angle"
 echo "Current: $Current"
-echo "PS1 : $PS1"
+if [[ ${RUNTYPE} != "HeePSing" ]]; then
+    echo "PS1 : $PS1"
+else echo "PS2: $PS1" # For HeepSingles we care about both ELReal triggers (2 and 4)
+fi
 echo "PS4 : $PS4"
 echo "PS5 : $PS5"
 echo "HMS rate [kHz]: $HMS_Rate"
 echo "SHMS rate [kHz]: $SHMS_Rate"
-echo "COIN rate [kHz]: $Coin_Rate"
+if [[ ${RUNTYPE} != "HeePSing" ]]; then
+    echo "COIN rate [kHz]: $Coin_Rate"
+else echo "COIN rate [kHz] (No coin - SHMS rate duplicated): $Coin_Rate"
+fi
 echo "Charge [mC]: $Charge"
 echo "Raw HMS: $Raw_HMS"
 echo "Raw SHMS: $Raw_SHMS"
-echo "Raw coin: $Raw_COIN"
+if [[ ${RUNTYPE} != "HeePSing" ]]; then
+    echo "Raw coin: $Raw_COIN"
+else echo "Raw coin (No coin - SHMS number duplicated): $Raw_COIN"
+fi
 echo "EDTM: $EDTM"
-echo "SHMS hadron tracking: $Tracking"
+if [[ ${RUNTYPE} != "HeePSing" ]]; then
+    echo "SHMS hadron tracking: $Tracking"
+else echo "SHMS electron tracking: $Tracking"
+fi
 echo "========================================================================="
 
 while true; do
