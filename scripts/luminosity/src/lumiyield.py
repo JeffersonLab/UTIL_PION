@@ -50,37 +50,46 @@ report = "%s/UTIL_PION/REPORT_OUTPUT/Analysis/Lumi/%s_%s_%s.report" % (REPLAYPAT
 
 f = open(report)
     
-psList = ['Ps1_factor','Ps2_factor','Ps3_factor','Ps4_factor','Ps5_factor','Ps6_factor']
+psList = ['SW_Ps1_factor','SW_Ps2_factor','SW_Ps3_factor','SW_Ps4_factor','SW_Ps5_factor','SW_Ps6_factor']
     
 psActual = [-1,1,2,3,5,9,17,33,65,129,257,513,1025,2049,4097,8193,16385,32769]
 psValue = [-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
 
 for line in f:
-    data = line.split('=')
+    data = line.split(':')
     curr_data = line.split(':')
-    if ('SHMS BCM4A Beam Cut Current' in curr_data[0]) :
-        report_current_tmp = curr_data[1].split(" ")[1]
-    for index, obj in enumerate(psList) :
-        if (psList[index] in data[0]) : 
-            if (index == 0) :  
-                ps1_tmp = data[1].split(" ")
-            if (index == 1) : 
-                ps2_tmp = data[1].split(" ")
-            if (index == 2) :
-                ps3_tmp = data[1].split(" ")
-            if (index == 3) :
-                ps4_tmp = data[1].split(" ")
-            if (index == 4) :
-                ps5_tmp = data[1].split(" ")
-            if (index == 5) :
-                ps6_tmp = data[1].split(" ")
-ps1=int(ps1_tmp[1])
-ps2=int(ps2_tmp[1])
-ps3=int(ps3_tmp[1])
-ps4=int(ps4_tmp[1])
-ps5=int(ps5_tmp[1])
-ps6=int(ps6_tmp[1])
-report_current = float(report_current_tmp)        
+    if ('SW_BCM4A_Beam_Cut_Current' in curr_data[0]) :
+        report_current_tmp = curr_data[1].split("uA")[0].strip()
+        print("report_current_tmp",report_current_tmp)
+    if ('SW_SHMS_Hadron_Singles_TRACK_EFF' in curr_data[0]):
+        SHMS_track_info = curr_data[1].split("+-")
+        print("\n\nSHMS track info ",SHMS_track_info)
+    if ('SW_HMS_Hadron_Singles_TRACK_EFF' in curr_data[0]):
+        HMS_track_info = curr_data[1]
+    for i, obj in enumerate(psList) :
+        if (psList[i] in data[0]) : 
+            if (i == 0) :  
+                ps1_tmp = data[1].strip()
+                print("ps1",ps1_tmp)
+            if (i == 1) : 
+                ps2_tmp = data[1].strip()
+            if (i == 2) :
+                ps3_tmp = data[1].strip()
+            if (i == 3) :
+                ps4_tmp = data[1].strip()
+            if (i == 4) :
+                ps5_tmp = data[1].strip()
+            if (i == 5) :
+                ps6_tmp = data[1].strip()
+ps1=int(ps1_tmp)
+ps2=int(ps2_tmp)
+ps3=int(ps3_tmp)
+ps4=int(ps4_tmp)
+ps5=int(ps5_tmp)
+ps6=int(ps6_tmp)
+report_current = float(report_current_tmp)
+SHMS_track_eff = float(SHMS_track_info[0])
+SHMS_track_uncern = float(SHMS_track_info[1])
 
 for i,index in enumerate(psActual):
     #psValue

@@ -1,0 +1,50 @@
+
+
+block T.coin.*FADC_TREF*
+block T.coin.*tdcTimeRaw*
+block T.coin.*Mult*
+
+block H.cer.*AdcTdcDiffTime
+block H.cer.*Mult*
+block H.dc.*rawtdc*
+block H.dc.*nhit*
+block H.dc.*ntrack*
+block H.dc.*RefTime*
+block H.hod.*AdcTdcDiffTime*
+block H.hod.*TdcTime*
+block H.hod.*starttime*
+block H.hod.*Mult*
+block H.hod.*RefTime*
+block H.cal.*AdcTdcDiffTime*
+block H.cal.*Mult*
+block H.cal.*PulseTime*
+
+block P.hgcer.*AdcTdcDiffTime
+block P.hgcer.*Mult*
+block P.ngcer.*AdcTdcDiffTime
+block P.ngcer.*Mult*
+block P.dc.*rawtdc*
+block P.dc.*nhit*
+block P.dc.*ntrack*
+block P.dc.*RefTime*
+block P.hod.*AdcTdcDiffTime*
+block P.hod.*TdcTime*
+block P.hod.*starttime*
+block P.hod.*Mult*
+block P.hod.*RefTime*
+block P.cal.*AdcTdcDiffTime*
+block P.cal.*AdcHits*
+block P.cal.*Mult*
+block P.cal.*PulseTime*
+
+
+begin epics
+IBC3H00CRCUR4
+hac_bcm_average
+ibcm1
+ibcm2
+iunser
+itov3out
+itov4out
+end epics
+

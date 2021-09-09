@@ -1,6 +1,4 @@
-block CTime.eKCoinTime_ROC1
-block CTime.ePiCoinTime_ROC1
-block CTime.epCoinTime_ROC1      
+block CTime.*     
 block RFTime.*
 block P.gtr.beta
 block P.gtr.th
@@ -38,6 +36,7 @@ block P.aero.xAtAero
 block P.aero.yAtAero
 block H.kin.primary.*
 block P.kin.secondary.*
+block T.coin.*
 block T.coin.pTRIG5_ROC2_tdcTime
 block T.coin.pEDTM_tdcTime
 block T.helicity.*

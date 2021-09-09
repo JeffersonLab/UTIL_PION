@@ -132,4 +132,5 @@ elif [ ! -f  "${UTILPATH}/OUTPUT/Analysis/HeeP/${spec}_${RUNNUMBER}_${MAXEVENTS}
 	python3 ${UTILPATH}/scripts/heep/src/plot_sing.py ${RUNNUMBER} ${MAXEVENTS} Analysed_Data ${SPEC}
 else echo "Pion physics output root file already found in ${UTILPATH}/OUTPUT/Analysis/HeeP/ - Skipped python output script step"
 fi
+evince "${UTILPATH}/OUTPUT/Analysis/HeeP/${RUNNUMBER}_${MAXEVENTS}_sw_heep_${SPEC}_Proton_Analysis_Distributions.pdf" &
 exit 0

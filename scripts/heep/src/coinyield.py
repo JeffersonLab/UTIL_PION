@@ -112,8 +112,8 @@ e_tree = up.open(rootName)["T"]
 CTime_epCoinTime_ROC1 = e_tree.array("CTime.epCoinTime_ROC1")    #
 #P_RF_tdcTime = e_tree.array("T.coin.pRF_tdcTime")               #
 #P_hod_fpHitsTime = e_tree.array("P.hod.fpHitsTime")             #
-H_RF_Dist = e_tree.array("RFTime.HMS_RFtimeDist")            #
-P_RF_Dist = e_tree.array("RFTime.SHMS_RFtimeDist")           #
+H_RF_Dist = e_tree.array("RFTime.HMS_RFtimeDist")                #
+P_RF_Dist = e_tree.array("RFTime.SHMS_RFtimeDist")               #
 
 # HMS info
 H_hod_goodscinhit = e_tree.array("H.hod.goodscinhit")            #
@@ -122,6 +122,7 @@ H_gtr_beta = e_tree.array("H.gtr.beta")                          # Beta is veloc
 H_gtr_xp = e_tree.array("H.gtr.th")                              # xpfp -> Theta
 H_gtr_yp = e_tree.array("H.gtr.ph")                              # ypfp -> Phi
 H_gtr_dp = e_tree.array("H.gtr.dp")                              # dp is Delta
+H_gtr_p = e_tree.array("H.gtr.p")                              # 
 H_cal_etotnorm = e_tree.array("H.cal.etotnorm")                  #
 H_cal_etottracknorm = e_tree.array("H.cal.etottracknorm")        #
 H_cer_npeSum = e_tree.array("H.cer.npeSum")                      #
@@ -142,9 +143,9 @@ P_aero_yAtAero = e_tree.array("P.aero.yAtAero")                  #
 P_hgcer_npeSum = e_tree.array("P.hgcer.npeSum")                  #
 P_hgcer_xAtCer = e_tree.array("P.hgcer.xAtCer")                  #
 P_hgcer_yAtCer = e_tree.array("P.hgcer.yAtCer")                  #
-#P_ngcer_npeSum = e_tree.array("P.ngcer.npeSum")                  #
-#P_ngcer_xAtCer = e_tree.array("P.ngcer.xAtCer")                  #
-#P_ngcer_yAtCer = e_tree.array("P.ngcer.yAtCer")                  #
+P_ngcer_npeSum = e_tree.array("P.ngcer.npeSum")                  #
+P_ngcer_xAtCer = e_tree.array("P.ngcer.xAtCer")                  #
+P_ngcer_yAtCer = e_tree.array("P.ngcer.yAtCer")                  #
 
 # Kinematic quantitites
 Q2 = e_tree.array("H.kin.primary.Q2")                            #
@@ -158,6 +159,10 @@ MMK = e_tree.array("P.kin.secondary.MMK")                        #
 MMp = e_tree.array("P.kin.secondary.MMp")                        #
 MandelT = e_tree.array("P.kin.secondary.MandelT")                #
 #MandelU = e_tree.array("P.kin.secondary.MandelU")               #
+pmiss = e_tree.array("P.kin.secondary.pmiss")                    #
+pmiss_x = e_tree.array("P.kin.secondary.pmiss_x")                #
+pmiss_y = e_tree.array("P.kin.secondary.pmiss_y")                #
+pmiss_z = e_tree.array("P.kin.secondary.pmiss_z")                #
 
 # Misc quantities
 #fEvtType = e_tree.array("fEvtHdr.fEvtType")                     #
@@ -188,8 +193,8 @@ def make_cutDict(cut,inputDict=None):
 
     c = klt.pyPlot(REPLAYPATH,readDict)
     x = c.w_dict(cut)
-    print("%s" % cut)
-    print("x ", x)
+    print("\n%s" % cut)
+    print(x, "\n")
     
     if inputDict == None:
         inputDict = {}
@@ -222,9 +227,10 @@ def coin_protons():
 
     # Define the array of arrays containing the relevant HMS and SHMS info                              
 
-    NoCut_COIN_Protons = [H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, MMp, H_RF_Dist,P_RF_Dist, Q2, W, epsilon, ph_q, MandelT]
+    NoCut_COIN_Protons = [H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, MMp, H_RF_Dist,P_RF_Dist, Q2, W, epsilon, ph_q, MandelT, pmiss, pmiss_x, pmiss_y, pmiss_z]
 
-    Uncut_COIN_Protons = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, MMp, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelT) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, MMp, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelT) in zip(*NoCut_COIN_Protons)]
+    Uncut_COIN_Protons = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, MMp, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelT, pmiss, pmiss_x, pmiss_y, pmiss_z) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, MMp, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelT, pmiss, pmiss_x, pmiss_y, pmiss_z) in zip(*NoCut_COIN_Protons)
+        ]
 
     # Create array of arrays of pions after cuts, all events, prompt and random          
 
@@ -238,27 +244,13 @@ def coin_protons():
         Cut_COIN_Protons_prompt_tmp.append(c.add_cut(arr, "coin_ep_cut_prompt_RF"))
         Cut_COIN_Protons_rand_tmp.append(c.add_cut(arr, "coin_ep_cut_rand_RF"))
 
-    Cut_COIN_Protons_all = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, MMp, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelT) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, MMp, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelT) in zip(*Cut_COIN_Protons_all_tmp)
-
-        if H_hod_goodscinhit == 1
-        if H_hod_goodstarttime == 1
-        if P_hod_goodscinhit == 1
-        if P_hod_goodstarttime == 1
+    Cut_COIN_Protons_all = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, MMp, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelT, pmiss, pmiss_x, pmiss_y, pmiss_z) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, MMp, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelT, pmiss, pmiss_x, pmiss_y, pmiss_z) in zip(*Cut_COIN_Protons_all_tmp)
         ]
 
-    Cut_COIN_Protons_prompt = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, MMp, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelT) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1,P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, MMp, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelT) in zip(*Cut_COIN_Protons_prompt_tmp)
-        if H_hod_goodscinhit == 1
-        if H_hod_goodstarttime == 1
-        if P_hod_goodscinhit == 1
-        if P_hod_goodstarttime == 1
+    Cut_COIN_Protons_prompt = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, MMp, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelT, pmiss, pmiss_x, pmiss_y, pmiss_z) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1,P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, MMp, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelT, pmiss, pmiss_x, pmiss_y, pmiss_z) in zip(*Cut_COIN_Protons_prompt_tmp)
         ]
 
-    Cut_COIN_Protons_random = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, MMp, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelT) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1,P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, MMp, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelT) in zip(*Cut_COIN_Protons_rand_tmp)
-
-        if H_hod_goodscinhit == 1
-        if H_hod_goodstarttime == 1
-        if P_hod_goodscinhit == 1
-        if P_hod_goodstarttime == 1
+    Cut_COIN_Protons_random = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, MMp, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelT, pmiss, pmiss_x, pmiss_y, pmiss_z) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1,P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, MMp, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelT, pmiss, pmiss_x, pmiss_y, pmiss_z) in zip(*Cut_COIN_Protons_rand_tmp)
         ]
 
     COIN_Protons = {
@@ -279,7 +271,7 @@ def main():
     # I don't like re-defining this here as it's very prone to errors if you included (or removed something) earlier but didn't modify it here
     # Should base the branches to include based on some list and just repeat the list here (or call it again directly below)
 
-    COIN_Proton_Data_Header = ["H_gtr_beta","H_gtr_xp","H_gtr_yp","H_gtr_dp","H_hod_goodscinhit","H_hod_goodstarttime","H_cal_etotnorm","H_cal_etottracknorm","H_cer_npeSum","CTime_epCoinTime_ROC1","P_gtr_beta","P_gtr_xp","P_gtr_yp","P_gtr_p","P_gtr_dp","P_hod_goodscinhit","P_hod_goodstarttime","P_cal_etotnorm","P_cal_etottracknorm","P_aero_npeSum","P_aero_xAtAero","P_aero_yAtAero","P_hgcer_npeSum","P_hgcer_xAtCer","P_hgcer_yAtCer","MMp","H_RF_Dist","P_RF_Dist", "Q2", "W", "epsilon", "ph_q", "MandelT"]
+    COIN_Proton_Data_Header = ["H_gtr_beta","H_gtr_xp","H_gtr_yp","H_gtr_dp", "H_gtr_p", "H_hod_goodscinhit","H_hod_goodstarttime","H_cal_etotnorm","H_cal_etottracknorm","H_cer_npeSum","CTime_epCoinTime_ROC1","P_gtr_beta","P_gtr_xp","P_gtr_yp","P_gtr_p","P_gtr_dp","P_hod_goodscinhit","P_hod_goodstarttime","P_cal_etotnorm","P_cal_etottracknorm","P_aero_npeSum","P_aero_xAtAero","P_aero_yAtAero","P_hgcer_npeSum","P_hgcer_xAtCer","P_hgcer_yAtCer","P_ngcer_npeSum","P_ngcer_xAtCer","P_ngcer_yAtCer","MMp","H_RF_Dist","P_RF_Dist", "Q2", "W", "epsilon", "ph_q", "MandelT", "pmiss", "pmiss_x", "pmiss_y", "pmiss_z"]
 
     # Need to create a dict for all the branches we grab                                                
     data = {}
@@ -294,11 +286,9 @@ def main():
             # Uncomment the line below if you want .csv file output, WARNING the files can be very large and take a long time to process!                                                                      
             #pd.DataFrame(data.get(data_keys[i])).to_csv("%s/%s_%s.csv" % (OUTPATH, data_keys[i], runNum), header=DFHeader, index=False) # Convert array to panda dataframe and write to csv with correct header                                                                                                      
         if (i == 0):
-            pd.DataFrame(data.get(data_keys[i]), columns = DFHeader, index = None).to_root("%s/%s_%s_An\
-alysed_Data.root" % (OUTPATH, runNum, MaxEvent), key ="%s" % data_keys[i])
+            pd.DataFrame(data.get(data_keys[i]), columns = DFHeader, index = None).to_root("%s/%s_%s_Analysed_Data.root" % (OUTPATH, runNum, MaxEvent), key ="%s" % data_keys[i])
         elif (i != 0):
-            pd.DataFrame(data.get(data_keys[i]), columns = DFHeader, index = None).to_root("%s/%s_%s_An\
-alysed_Data.root" % (OUTPATH, runNum, MaxEvent), key ="%s" % data_keys[i], mode ='a')
+            pd.DataFrame(data.get(data_keys[i]), columns = DFHeader, index = None).to_root("%s/%s_%s_Analysed_Data.root" % (OUTPATH, runNum, MaxEvent), key ="%s" % data_keys[i], mode ='a')
 
 if __name__ == '__main__':
     main()

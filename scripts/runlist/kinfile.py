@@ -29,7 +29,7 @@ HMS_P = 0
 EBeam = 0
 
 TestVar = 0
-# The loop here is explicitly written such that if there are multiple entrie, the values will be overwrriten
+# The loop here is explicitly written such that if there are multiple entries, the values will be overwrriten
 # The LAST matching block in the file is the one that will be used
 for KinFileBlock in KinFileContent.split('\n\n'):
     nLines=0 # Counter for the number of lines in the block of text
@@ -38,7 +38,7 @@ for KinFileBlock in KinFileContent.split('\n\n'):
         nLines+=1
         if not KinFileLine.startswith("#"): # If line does NOT start with a #, add it to our array
             Lines.append(KinFileLine)
-    if nLines < 10: # If less than 10 lines, skip to next block
+    if nLines < 12: # If less than 12 lines, skip to next block
         continue
     # If it's an entry with a -, it's a range of run numbers, set the start and end accordingly    
     if "-" in Lines[0]:

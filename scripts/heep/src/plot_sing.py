@@ -88,7 +88,7 @@ OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/HeeP" % REPLAYPATH        # Output folde
 sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
 import kaonlt as klt # Import kaonlt module, need the path setting line above prior to importing this                                                                                                         
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
-Pion_Analysis_Distributions = "%s/%s_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, runNum, MaxEvent)
+Proton_Analysis_Distributions = "%s/%s_%s_sw_heep_%s_Proton_Analysis_Distributions.pdf" % (OUTPATH, runNum, MaxEvent, spec)
 
 #################################################################################################################################################
 
@@ -115,52 +115,7 @@ else:
 print("Output path checks out, outputting to %s" % (OUTPATH))
 
 ###############################################################################################################################################
-
-# Section for grabing Prompt/Random selection parameters from PARAM file
-PARAMPATH = "%s/UTIL_PION/DB/PARAM" % REPLAYPATH
-print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
-TimingCutFile = "%s/Timing_Parameters.csv" % PARAMPATH # This should match the param file actually being used!
-TimingCutf = open(TimingCutFile)
-try:
-    TimingCutFile
-except NameError:
-    print("!!!!! ERRROR !!!!!\n One (or more) of the cut files not found!\n!!!!! ERRORR !!!!!")
-    sys.exit(2)
-print("Reading timing cuts from %s" % TimingCutFile)
-PromptWindow = [0, 0]
-RandomWindows = [0, 0, 0, 0]
-linenum = 0 # Count line number we're on
-TempPar = -1 # To check later
-for line in TimingCutf: # Read all lines in the cut file
-    linenum += 1 # Add one to line number at start of loop
-    if(linenum > 1): # Skip first line
-        line = line.partition('#')[0] # Treat anything after a # as a comment and ignore it
-        line = line.rstrip()
-        array = line.split(",") # Convert line into an array, anything after a comma is a new entry 
-        if(int(runNum) in range (int(array[0]), int(array[1])+1)): # Check if run number for file is within any of the ranges specified in the cut file
-            TempPar += 2 # If run number is in range, set to non -1 value
-            BunchSpacing = float(array[2])
-            CoinOffset = float(array[3]) # Coin offset value
-            nSkip = float(array[4]) # Number of random windows skipped 
-            nWindows = float(array[5]) # Total number of random windows
-            PromptPeak = float(array[6]) # Pion CT prompt peak positon 
-TimingCutf.close() # After scanning all lines in file, close file
-
-if(TempPar == -1): # If value is still -1, run number provided din't match any ranges specified so exit 
-    print("!!!!! ERROR !!!!!\n Run number specified does not fall within a set of runs for which cuts are defined in %s\n!!!!! ERROR !!!!!" % TimingCutFile)
-    sys.exit(3)
-elif(TempPar > 1):
-    print("!!! WARNING!!! Run number was found within the range of two (or more) line entries of %s !!! WARNING !!!" % TimingCutFile)
-    print("The last matching entry will be treated as the input, you should ensure this is what you want")
-
-# From our values from the file, reconstruct our windows 
-PromptWindow[0] = PromptPeak - (BunchSpacing/2) - CoinOffset
-PromptWindow[1] = PromptPeak + (BunchSpacing/2) + CoinOffset
-RandomWindows[0] = PromptPeak - (BunchSpacing/2) - CoinOffset - (nSkip*BunchSpacing) - ((nWindows/2)*BunchSpacing)
-RandomWindows[1] = PromptPeak - (BunchSpacing/2) - CoinOffset - (nSkip*BunchSpacing)
-RandomWindows[2] = PromptPeak + (BunchSpacing/2) + CoinOffset + (nSkip*BunchSpacing)
-RandomWindows[3] = PromptPeak + (BunchSpacing/2) + CoinOffset + (nSkip*BunchSpacing) + ((nWindows/2)*BunchSpacing)
-
+ROOT.gROOT.SetBatch(ROOT.kTRUE) # Set ROOT to batch mode explicitly, does not splash anything to screen
 ###############################################################################################################################################
 
 # Read stuff from the main event tree
@@ -179,6 +134,7 @@ if spec == "HMS":
     H_gtr_xp_protons_uncut = ROOT.TH1D("H_gtr_xp_protons_uncut", "HMS x'; HMS_gtr_xp; Counts", 200, -0.2, 0.2)
     H_gtr_yp_protons_uncut = ROOT.TH1D("H_gtr_yp_protons_uncut", "HMS y'; HMS_gtr_yp; Counts", 200, -0.2, 0.2)
     H_gtr_dp_protons_uncut = ROOT.TH1D("H_gtr_dp_protons_uncut", "HMS #delta; HMS_gtr_dp; Counts", 200, -15, 15)
+    H_gtr_p_protons_uncut = ROOT.TH1D("H_gtr_p_protons_uncut", "HMS p; HMS_gtr_p; Counts", 200, 4, 8)
     H_hod_goodscinhit_protons_uncut = ROOT.TH1D("H_hod_goodscinhit_protons_uncut", "HMS hod goodscinhit; HMS_hod_goodscinhi; Counts", 200, 0.7, 1.3)
     H_hod_goodstarttime_protons_uncut = ROOT.TH1D("H_hod_goodstarttime_protons_uncut", "HMS hod goodstarttime; HMS_hod_goodstarttime; Counts", 200, 0.7, 1.3)
     H_cal_etotnorm_protons_uncut = ROOT.TH1D("H_cal_etotnorm_protons_uncut", "HMS cal etotnorm; HMS_cal_etotnorm; Counts", 200, 0.2, 1.8)
@@ -191,6 +147,7 @@ if spec == "HMS":
     H_gtr_xp_protons_cut_all = ROOT.TH1D("H_gtr_xp_protons_cut_all", "HMS x'; HMS_gtr_xp; Counts", 200, -0.2, 0.2)
     H_gtr_yp_protons_cut_all = ROOT.TH1D("H_gtr_yp_protons_cut_all", "HMS y'; HMS_gtr_yp; Counts", 200, -0.2, 0.2)
     H_gtr_dp_protons_cut_all = ROOT.TH1D("H_gtr_dp_protons_cut_all", "HMS #delta; HMS_gtr_dp; Counts", 200, -15, 15)
+    H_gtr_p_protons_cut_all = ROOT.TH1D("H_gtr_p_protons_cut_all", "HMS p; HMS_gtr_p; Counts", 200, 4, 8)
     H_hod_goodscinhit_protons_cut_all = ROOT.TH1D("H_hod_goodscinhit_protons_cut_all", "HMS hod goodscinhit; HMS_hod_goodscinhit; Counts", 200, 0.7, 1.3)
     H_hod_goodstarttime_protons_cut_all = ROOT.TH1D("H_hod_goodstarttime_protons_cut_all", "HMS hod goodstarttime; HMS_hod_goodstarttime; Counts", 200, 0.7, 1.3)
     H_cal_etotnorm_protons_cut_all = ROOT.TH1D("H_cal_etotnorm_protons_cut_all", "HMS cal etotnorm; HMS_cal_etotnorm; Counts", 200, 0.6, 1.4)
@@ -462,7 +419,154 @@ for event in Cut_Proton_Events_Random_tree:
         
 ############################################################################################################################################
 
+if spec == "HMS":
+    # Saving histograms in PDF
+    c1_mom = TCanvas("c1_mom", "Momentum Distributions", 100, 0, 1000, 900)
+    c1_mom.Divide(1,1)
+    # End of polar plotting section
+    c1_mom.cd(1)
+    H_gtr_p_protons_uncut.Draw("hist")
+    H_gtr_p_protons_cut_all.Draw("hist")
+    c1_mom.Print(Proton_Analysis_Distributions + '(')
 
+    c1_acpt = TCanvas("c1_H_kin", "Electron-Proton Acceptance Distributions", 100, 0, 1000, 900)
+    c1_acpt.Divide(3,1)
+    c1_acpt.cd(1)
+    gPad.SetLogy()
+    H_gtr_xp_protons_uncut.SetLineColor(2)
+    H_gtr_xp_protons_uncut.Draw()
+    H_gtr_xp_protons_cut_all.SetLineColor(4)
+    H_gtr_xp_protons_cut_all.Draw("same")
+    c1_acpt.cd(2)
+    gPad.SetLogy()
+    H_gtr_yp_protons_uncut.SetLineColor(2)
+    H_gtr_yp_protons_uncut.Draw()
+    H_gtr_yp_protons_cut_all.SetLineColor(4)
+    H_gtr_yp_protons_cut_all.Draw("same")
+    c1_acpt.cd(3)
+    gPad.SetLogy()
+    H_gtr_dp_protons_uncut.SetLineColor(2)
+    H_gtr_dp_protons_uncut.Draw()
+    H_gtr_dp_protons_cut_all.SetLineColor(4)
+    H_gtr_dp_protons_cut_all.Draw("same")
+    # TLegend (x1, y1, x2, y2) 
+    legend2 = ROOT.TLegend(0.115, 0.8, 0.6, 0.9)
+    legend2.AddEntry("H_gtr_dp_protons_uncut", "without cuts", "l")
+    legend2.AddEntry("H_gtr_dp_protons_cut_all", "with cuts (acpt/RF/PID)", "l")
+    legend2.Draw("same")
+    c1_acpt.Print(Proton_Analysis_Distributions)
+    
+    c1_pid = TCanvas("c1_pid", "Electron-Proton CAL Distributions", 100, 0, 1000, 900)
+    c1_pid.Divide(2,1)
+    c1_pid.cd(1)
+    gPad.SetLogy()
+    H_cal_etottracknorm_protons_uncut.SetLineColor(2)
+    H_cal_etottracknorm_protons_uncut.Draw()
+    H_cal_etottracknorm_protons_cut_all.SetLineColor(4)
+    H_cal_etottracknorm_protons_cut_all.Draw("same")
+    legend7 = ROOT.TLegend(0.115, 0.835, 0.43, 0.9)
+    legend7.AddEntry("H_cal_etottracknorm_protons_uncut", "without cuts", "l")
+    legend7.AddEntry("H_cal_etottracknorm_protons_cut_all", "with cuts (acpt/RF/PID)", "l")
+    legend7.Draw("same")
+    c1_pid.cd(2)
+    H_cal_etottracknorm_vs_H_cer_npeSum_protons_cut_all.Draw("COLZ")
+    c1_pid.Print(Proton_Analysis_Distributions + ')')
+    
+if spec == "SHMS":
+    # Saving histograms in PDF
+    c1_mom = TCanvas("c1_mom", "Momentum Distributions", 100, 0, 1000, 900)
+    c1_mom.Divide(1,1)
+    # End of polar plotting section
+    c1_mom.cd(1)
+    P_gtr_p_protons_uncut.Draw("hist")
+    P_gtr_p_protons_cut_all.Draw("hist")
+    c1_mom.Print(Proton_Analysis_Distributions + '(')
+
+    c1_acpt = TCanvas("c1_H_kin", "Electron-Proton Acceptance Distributions", 100, 0, 1000, 900)
+    c1_acpt.Divide(3,1)
+    c1_acpt.cd(1)
+    gPad.SetLogy()
+    P_gtr_xp_protons_uncut.SetLineColor(2)
+    P_gtr_xp_protons_uncut.Draw()
+    P_gtr_xp_protons_cut_all.SetLineColor(4)
+    P_gtr_xp_protons_cut_all.Draw("same")
+    c1_acpt.cd(2)
+    gPad.SetLogy()
+    P_gtr_yp_protons_uncut.SetLineColor(2)
+    P_gtr_yp_protons_uncut.Draw()
+    P_gtr_yp_protons_cut_all.SetLineColor(4)
+    P_gtr_yp_protons_cut_all.Draw("same")
+    c1_acpt.cd(3)
+    gPad.SetLogy()
+    P_gtr_dp_protons_uncut.SetLineColor(2)
+    P_gtr_dp_protons_uncut.Draw()
+    P_gtr_dp_protons_cut_all.SetLineColor(4)
+    P_gtr_dp_protons_cut_all.Draw("same")
+    c1_acpt.Print(Proton_Analysis_Distributions)
+    
+    c1_pid = TCanvas("c1_pid", "Electron-Proton CAL Distributions", 100, 0, 1000, 900)
+    c1_pid.Divide(1,1)
+    c1_pid.cd(1)
+    gPad.SetLogy()
+    P_cal_etottracknorm_protons_uncut.SetLineColor(2)
+    P_cal_etottracknorm_protons_uncut.Draw()
+    P_cal_etottracknorm_protons_cut_all.SetLineColor(4)
+    P_cal_etottracknorm_protons_cut_all.Draw("same")
+    legend8 = ROOT.TLegend(0.115, 0.835, 0.43, 0.9)
+    legend8.AddEntry("P_cal_etottracknorm_protons_uncut", "without cuts", "l")
+    legend8.AddEntry("P_cal_etottracknorm_protons_cut_all", "with cuts (acpt/RF/PID)", "l")
+    legend8.Draw("same")
+    c1_pid.Print(Proton_Analysis_Distributions)
+    
+    c2_pid = TCanvas("c2_pid", "Electron-Proton Aero/HGC/NGC PID Distributions", 100, 0, 1000, 900)
+    c2_pid.Divide(3,1)
+    c2_pid.cd(1)
+    gPad.SetLogy()
+    P_hgcer_npeSum_protons_uncut.SetLineColor(2)
+    P_hgcer_npeSum_protons_uncut.Draw()
+    P_hgcer_npeSum_protons_cut_all.SetLineColor(4)
+    P_hgcer_npeSum_protons_cut_all.Draw("same")
+    legend10 = ROOT.TLegend(0.115, 0.835, 0.43, 0.9)
+    legend10.AddEntry("P_hgcer_npeSum_protons_uncut", "without cuts", "l")
+    legend10.AddEntry("P_hgcer_npeSum_protons_cut_all", "with cuts (acpt/RF/PID)", "l")
+    legend10.Draw("same")
+    c2_pid.cd(2)
+    gPad.SetLogy()
+    P_aero_npeSum_protons_uncut.SetLineColor(2)
+    P_aero_npeSum_protons_uncut.Draw()
+    P_aero_npeSum_protons_cut_all.SetLineColor(4)
+    P_aero_npeSum_protons_cut_all.Draw("same")
+    legend11 = ROOT.TLegend(0.115, 0.835, 0.43, 0.9)
+    legend11.AddEntry("P_aero_npeSum_protons_uncut", "without cuts", "l")
+    legend11.AddEntry("P_aero_npeSum_protons_cut_all", "with cuts (acpt/RF/PID)", "l")
+    legend11.Draw("same")
+    c2_pid.cd(3)
+    #P_ngcer_npeSum_protons_uncut.SetLineColor(2)
+    #P_ngcer_npeSum_protons_uncut.Draw()
+    #P_ngcer_npeSum_protons_cut_all.SetLineColor(4)
+    #P_ngcer_npeSum_protons_cut_all.Draw("same") 
+    #legend12 = ROOT.TLegend(0.115, 0.835, 0.43, 0.9)
+    #legend12.AddEntry("P_ngcer_npeSum_protons_uncut", "without cuts", "l")
+    #legend12.AddEntry("P_ngcer_npeSum_protons_cut_all", "with cuts (acpt/RF/PID)", "l")
+    #legend12.Draw("same")
+    c2_pid.Print(Proton_Analysis_Distributions)
+    
+    c3_pid = TCanvas("c3_pid", "Electron-Proton Aero/HGC/NGC PID Distributions", 100, 0, 1000, 900)
+    c3_pid.Divide(2,3)
+    c3_pid.cd(1)
+    gPad.SetLogz()
+    P_hgcer_npeSum_vs_aero_npeSum_protons_uncut.Draw("COLZ")
+    c3_pid.cd(2)
+    P_hgcer_npeSum_vs_aero_npeSum_protons_cut_all.Draw("COLZ")
+    c3_pid.cd(3)
+    #P_ngcer_npeSum_vs_hgcer_npeSum_protons_uncut.Draw("COLZ")
+    c3_pid.cd(4)
+    #P_ngcer_npeSum_vs_hgcer_npeSum_protons_cut_all.Draw("COLZ")
+    c3_pid.cd(5)
+    #P_ngcer_npeSum_vs_aero_npeSum_protons_uncut.Draw("COLZ")
+    c3_pid.cd(6)
+    #P_ngcer_npeSum_vs_aero_npeSum_protons_cut_all.Draw("COLZ")
+    c3_pid.Print(Proton_Analysis_Distributions + ')')
 
 #############################################################################################################################################
 
