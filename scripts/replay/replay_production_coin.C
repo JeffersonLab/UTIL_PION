@@ -255,8 +255,9 @@ void replay_production_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Define output ROOT file
   analyzer->SetOutFile(ROOTFileName.Data());
   // Define DEF-file+
-  //analyzer->SetOdefFile("UTIL_PION/config/DEF-files/coin_production.def");
-  analyzer->SetOdefFile("UTIL_PION/config/DEF-files/Full_Replay_Pass2_Coin.def");
+  analyzer->SetOdefFile("UTIL_PION/config/DEF-files/coin_production.def");
+  // SJDK - 09/09/21 - Who uncommented the line below and used this in the replay?!
+  //analyzer->SetOdefFile("UTIL_PION/config/DEF-files/Full_Replay_Pass2_Coin.def");
   // Define cuts file
   analyzer->SetCutFile("UTIL_PION/config/DEF-files/Online_Coin_Production_Cuts.def");  // optional
   // File to record accounting information for cuts

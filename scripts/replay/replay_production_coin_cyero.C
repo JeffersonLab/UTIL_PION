@@ -1,5 +1,6 @@
-void replay_production_coin_timeWinCheck_cyero (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
+void replay_production_coin_cyero (Int_t RunNumber = 0, Int_t MaxEvent = 0, TString ftype="hod_calib_cyero" ) {
 
+  //ftype: "timeWinCheck_cyero", "hod_calib_cyero", 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
     cout << "Enter a Run Number (-1 to exit): ";
@@ -25,11 +26,11 @@ void replay_production_coin_timeWinCheck_cyero (Int_t RunNumber = 0, Int_t MaxEv
   pathList.push_back("./raw_volatile");
 
   //const char* RunFileNamePattern = "raw/coin_all_%05d.dat";
-  const char* ROOTFileNamePattern = "~/cyero/PION_LT_ONLINE/ROOTfiles/Pion_coin_replay_production_%d_%d.root";
+  const char* ROOTFileNamePattern = "~/cyero/PION_LT_ONLINE/ROOTfiles/Pion_coin_replay_%s_%d_%d.root";
   
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
-  gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard_KaonLTCalib.database");
+  gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard_cyero.database");
   gHcParms->Load(gHcParms->GetString("g_ctp_database_filename"), RunNumber);
   gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
   gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
@@ -242,7 +243,7 @@ void replay_production_coin_timeWinCheck_cyero (Int_t RunNumber = 0, Int_t MaxEv
   run->Print();
 
   // Define the analysis parameters
-  TString ROOTFileName = Form(ROOTFileNamePattern, RunNumber, MaxEvent);
+  TString ROOTFileName = Form(ROOTFileNamePattern, ftype.Data(), RunNumber, MaxEvent);
   analyzer->SetCountMode(2);  // 0 = counter is # of physics triggers
                               // 1 = counter is # of all decode reads
                               // 2 = counter is event number
@@ -256,13 +257,13 @@ void replay_production_coin_timeWinCheck_cyero (Int_t RunNumber = 0, Int_t MaxEv
   analyzer->SetOutFile(ROOTFileName.Data());
   // Define DEF-file+
   //analyzer->SetOdefFile("UTIL_PION/config/DEF-files/coin_production.def");
-  analyzer->SetOdefFile("UTIL_PION/config/DEF-files/timeWin_check_cyero.def");
+  analyzer->SetOdefFile(Form("UTIL_PION/config/DEF-files/%s.def", ftype.Data()));
   // Define cuts file
-  analyzer->SetCutFile("UTIL_PION/config/DEF-files/Online_Coin_Production_Cuts.def");  // optional
+  analyzer->SetCutFile("UTIL_PION/config/DEF-files/coin_production_cuts_cyero.def");  // optional
   // File to record accounting information for cuts
-  analyzer->SetSummaryFile(Form("UTIL_PION/config/REPORT_OUTPUT/summary_production_%d_%d.report", RunNumber, MaxEvent)); // optional
+  //analyzer->SetSummaryFile(Form("UTIL_PION/config/REPORT_OUTPUT/summary_production_%d_%d.report", RunNumber, MaxEvent)); // optional
   // Start the actual analysis.
   analyzer->Process(run);
   // Create report file from template	       
-  analyzer->PrintReport("UTIL_PION/config/TEMPLATES/COIN/Online_Coin_Production.template", Form("UTIL_PION/REPORT_OUTPUT/Analysis/PionLT/Pion_replay_coin_production_%d_%d.report", RunNumber, MaxEvent)); // optional}
+  //analyzer->PrintReport("UTIL_PION/config/TEMPLATES/COIN/Online_Coin_Production.template", Form("UTIL_PION/REPORT_OUTPUT/Analysis/PionLT/Pion_replay_coin_production_%d_%d.report", RunNumber, MaxEvent)); // optional}
 }

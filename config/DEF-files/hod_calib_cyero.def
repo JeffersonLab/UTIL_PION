@@ -1,0 +1,15 @@
+block T.coin.*pFADC_TREF_ROC2*
+block T.coin.pT*
+
+
+block P.hod.*
+block P.dc.ntrack
+block P.cal.etotnorm
+block P.cal.etracknorm
+block P.hgcer.npe*
+
+block H.hod.*
+block H.dc.ntrack
+block H.cal.etotnorm
+block H.cal.etracknorm
+block H.cer.npe*

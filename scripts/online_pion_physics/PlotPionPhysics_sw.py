@@ -1,4 +1,3 @@
-
 #! /usr/bin/python
 ####################################################################################
 # Created - 20/July/21, Author - Muhammad Junaid, University of Regina, Canada
@@ -186,7 +185,7 @@ P_hgcer_yAtCer_pions_uncut = ROOT.TH1D("P_hgcer_yAtCer_pions_uncut", "SHMS HGC y
 P_aero_npeSum_pions_uncut = ROOT.TH1D("P_aero_npeSum_pions_uncut", "SHMS aero npeSum; SHMS_aero_npeSum; Counts", 200, 0, 50)
 P_aero_xAtAero_pions_uncut = ROOT.TH1D("P_acero_xAtAero_pions_uncut", "SHMS aero xAtAero; SHMS_aero_xAtAero; Counts", 200, -60, 60)
 P_aero_yAtAero_pions_uncut = ROOT.TH1D("P_aero_yAtAero_pions_uncut", "SHMS aero yAtAero; SHMS_aero_yAtAero; Counts", 200, -50, 50)
-P_ngcer_npeSum_pions_uncut = ROOT.TH1D("P_ngcer_npeSum_pions_uncut", "SHMS NGC npeSum; SHMS_ngcer_npeSum; Counts", 200, 0, 0.5)
+P_ngcer_npeSum_pions_uncut = ROOT.TH1D("P_ngcer_npeSum_pions_uncut", "SHMS NGC npeSum; SHMS_ngcer_npeSum; Counts", 200, -10, 50)
 P_ngcer_xAtCer_pions_uncut = ROOT.TH1D("P_ngcer_xAtCer_pions_uncut", "SHMS NGC xAtCer; SHMS_ngcer_xAtCer; Counts", 200, -70, 50)
 P_ngcer_yAtCer_pions_uncut = ROOT.TH1D("P_ngcer_yAtCer_pions_uncut", "SHMS NGC yAtCer; SHMS_ngcer_yAtCer; Counts", 200, -50, 50)
 P_kin_MMpi_pions_uncut = ROOT.TH1D("P_kin_MMpi_pions_uncut", "MIssing Mass (no cuts); MM_{#pi}; Counts", 200, 0.5, 1.8)
@@ -262,6 +261,8 @@ P_cal_etottracknorm_vs_P_ngcer_npeSum_pions_uncut = ROOT.TH2D("P_cal_etottrackno
 P_ngcer_yAtCer_vs_ngcer_xAtCer_pions_uncut = ROOT.TH2D("P_ngcer_yAtCer_vs_ngcer_xAtCer_pions_uncut", "SHMS NGC yAtCer vs SHMS NGC xAtCer (no cut); SHMS_ngcer_yAtCer; SHMS_ngcer_xAtCer", 100, -10, 10, 100, -10, 10)
 P_ngcer_npeSum_vs_hgcer_npeSum_pions_uncut = ROOT.TH2D("P_ngcer_npeSum_vs_hgcer_npeSum_pions_uncut", "SHMS NGC npeSum vs SHMS HGC npeSum (no cut); SHMS_ngcer_npeSum; SHMS_hgcer_npeSum", 100, 0, 50, 100, 0, 50)
 P_ngcer_npeSum_vs_aero_npeSum_pions_uncut = ROOT.TH2D("P_ngcer_npeSum_vs_aero_npeSum_pions_uncut", "SHMS NGC npeSum vs SHMS aero npeSum (no cut); SHMS_ngcer_npeSum; SHMS_aero_npeSum", 100, 0, 50, 100, 0, 50)
+H_gtr_dp_pions_vs_beta_pions_uncut = ROOT.TH2D("H_gtr_dp_pions_vs_beta_pions_uncut", "HMS #delta vs HMS #beta (no cut); HMS #delta; HMS_#beta", 200, -12, 12, 200, 0, 2)
+P_gtr_dp_pions_vs_beta_pions_uncut = ROOT.TH2D("P_gtr_dp_pions_vs_beta_pions_uncut", "SHMS #delta vs SHMS #beta (no cut); SHMS #delta; SHMS_#beta", 200, -30, 30, 200, 0, 2)
 
 H_cal_etottracknorm_vs_H_cer_npeSum_pions_cut_all = ROOT.TH2D("H_cal_etottracknorm_vs_H_cer_npeSum_pions_cut_all","HMS cal etottracknorm vs HMS cer npeSum (with cuts); H_cal_etottracknorm; H_cer_npeSum",100, 0.5, 1.5, 100, 0, 40)
 P_hgcer_npeSum_vs_aero_npeSum_pions_cut_all = ROOT.TH2D("P_hgcer_npeSum_vs_aero_npeSum_pions_cut_all", "SHMS HGC npeSum vs SHMS aero npeSum (with cuts); SHMS_hgcer_npeSum; SHMS_aero_npeSum", 100, 0, 50, 100, 0, 50)
@@ -274,6 +275,8 @@ P_cal_etottracknorm_vs_P_ngcer_npeSum_pions_cut_all = ROOT.TH2D("P_cal_etottrack
 P_ngcer_yAtCer_vs_ngcer_xAtCer_pions_cut_all = ROOT.TH2D("P_ngcer_yAtCer_vs_ngcer_xAtCer_pions_cut_all", "SHMS NGC yAtCer vs SHMS NGC xAtCer (with cuts); SHMS_ngcer_yAtCer; SHMS_ngcer_xAtCer", 100, -10, 10, 100, -10, 10)
 P_ngcer_npeSum_vs_hgcer_npeSum_pions_cut_all = ROOT.TH2D("P_ngcer_npeSum_vs_hgcer_npeSum_pions_cut_all", "SHMS NGC npeSum vs SHMS HGC npeSum (with cuts); SHMS_ngcer_npeSum; SHMS_hgcer_npeSum", 100, 0, 50, 100, 0, 50)
 P_ngcer_npeSum_vs_aero_npeSum_pions_cut_all = ROOT.TH2D("P_ngcer_npeSum_vs_aero_npeSum_pions_cut_all", "SHMS NGC npeSum vs SHMS aero npeSum (with cuts); SHMS_ngcer_npeSum; SHMS_aero_npeSum", 100, 0, 50, 100, 0, 50)
+H_gtr_dp_pions_vs_beta_pions_cut_all = ROOT.TH2D("H_gtr_dp_pions_vs_beta_pions_cut_all", "HMS #delta vs HMS #beta (with cut); HMS #delta; HMS_#beta", 200, -12, 12, 200, 0, 2)
+P_gtr_dp_pions_vs_beta_pions_cut_all = ROOT.TH2D("P_gtr_dp_pions_vs_beta_pions_cut_all", "SHMS #delta vs SHMS #beta (with cut); SHMS #delta; SHMS_#beta", 200, -30, 30, 200, 0, 2)
 
 P_kin_MMpi_vs_CTime_ePiCoinTime_ROC1_pions_cut_prompt = ROOT.TH2D("P_kin_MMpi_vs_CTime_ePiCoinTime_ROC1_pions_cut_prompt","Missing Mass vs Electron-Pion CTime; MM_{#pi}; e #pi Coin_Time",100, 0, 2, 100, -2, 2)
 Q2vsW = ROOT.TH2D("Q2vsW", "Q2 vs W; Q2; W", 200, 1, 5, 200, 2.7, 3.6)
@@ -333,6 +336,8 @@ for event in Uncut_Pion_Events_tree:
     P_ngcer_yAtCer_vs_ngcer_xAtCer_pions_uncut.Fill(event.P_ngcer_yAtCer, event.P_ngcer_xAtCer)
     P_ngcer_npeSum_vs_hgcer_npeSum_pions_uncut.Fill(event.P_ngcer_npeSum, event.P_hgcer_npeSum)
     P_ngcer_npeSum_vs_aero_npeSum_pions_uncut.Fill(event.P_ngcer_npeSum, event.P_aero_npeSum)
+    H_gtr_dp_pions_vs_beta_pions_uncut.Fill(event.H_gtr_dp, event.H_gtr_beta) 
+    P_gtr_dp_pions_vs_beta_pions_uncut.Fill(event.P_gtr_dp, event.P_gtr_beta) 
 
 for event in Cut_Pion_Events_All_tree:
     H_gtr_beta_pions_cut_all.Fill(event.H_gtr_beta)
@@ -383,7 +388,8 @@ for event in Cut_Pion_Events_All_tree:
     P_cal_etottracknorm_vs_P_ngcer_npeSum_pions_cut_all.Fill(event.P_cal_etottracknorm, event.P_ngcer_npeSum)
     P_ngcer_yAtCer_vs_ngcer_xAtCer_pions_cut_all.Fill(event.P_ngcer_yAtCer, event.P_ngcer_xAtCer)
     P_ngcer_npeSum_vs_hgcer_npeSum_pions_cut_all.Fill(event.P_ngcer_npeSum, event.P_hgcer_npeSum)
-    P_ngcer_npeSum_vs_aero_npeSum_pions_cut_all.Fill(event.P_ngcer_npeSum, event.P_aero_npeSum) 
+    H_gtr_dp_pions_vs_beta_pions_cut_all.Fill(event.H_gtr_dp, event.H_gtr_beta) 
+    P_gtr_dp_pions_vs_beta_pions_cut_all.Fill(event.P_gtr_dp, event.P_gtr_beta) 
 
 for event in Cut_Pion_Events_Prompt_tree:
     P_gtr_beta_pions_cut_prompt.Fill(event.P_gtr_beta)
@@ -662,6 +668,19 @@ legend14.AddEntry("CTime_ePiCoinTime_ROC1_pions_cut_random", "CT_randoms with cu
 legend14.Draw("same")
 c1_MM.cd(3)
 P_kin_MMpi_pions_uncut.Draw()
+# Section for Neutron Peak Events Selection
+shadedpeak = P_kin_MMpi_pions_uncut.Clone()
+shadedpeak.SetFillColor(2)
+shadedpeak.SetFillStyle(3244)
+shadedpeak.GetXaxis().SetRangeUser(minbin, maxbin)
+shadedpeak.Draw("samehist")
+NeutronEvt = TPaveText(0.58934,0.675,0.95,0.75,"NDC")
+BinLow = P_kin_MMpi_pions_uncut.GetXaxis().FindBin(minbin)
+BinHigh = P_kin_MMpi_pions_uncut.GetXaxis().FindBin(maxbin)
+BinIntegral = int(P_kin_MMpi_pions_uncut.Integral(BinLow, BinHigh))
+NeutronEvt.SetLineColor(2)
+NeutronEvt.AddText("e #pi n Events: %i" %(BinIntegral))
+NeutronEvt.Draw()
 c1_MM.cd(4)
 P_kin_MMpi_pions_cut_all.SetLineColor(4)
 P_kin_MMpi_pions_cut_all.Draw()
@@ -735,7 +754,19 @@ UpperRandomR2.SetLineWidth(2)
 UpperRandomR2.Draw("same")
 c1_CT.cd(4)
 CTime_ePiCoinTime_ROC1_vs_P_kin_MMpi_pions_cut_all.Draw("COLZ")
-c1_CT.Print(Pion_Analysis_Distributions + ')')
+c1_CT.Print(Pion_Analysis_Distributions)
+
+c1_delta = TCanvas("c1_delta", "Delta Debugging", 100, 0, 1000, 900)
+c1_delta.Divide(2,2)
+c1_delta.cd(1)
+H_gtr_dp_pions_vs_beta_pions_uncut.Draw("COLZ")
+c1_delta.cd(2)
+H_gtr_dp_pions_vs_beta_pions_cut_all.Draw("COLZ")
+c1_delta.cd(3)
+P_gtr_dp_pions_vs_beta_pions_uncut.Draw("COLZ")
+c1_delta.cd(4)
+P_gtr_dp_pions_vs_beta_pions_cut_all.Draw("COLZ")
+c1_delta.Print(Pion_Analysis_Distributions + ')')
 
 #############################################################################################################################################
 
@@ -795,6 +826,8 @@ P_cal_etottracknorm_vs_P_ngcer_npeSum_pions_uncut.Write()
 P_ngcer_yAtCer_vs_ngcer_xAtCer_pions_uncut.Write()
 P_ngcer_npeSum_vs_hgcer_npeSum_pions_uncut.Write()
 P_ngcer_npeSum_vs_aero_npeSum_pions_uncut.Write()
+H_gtr_dp_pions_vs_beta_pions_uncut.Write()
+P_gtr_dp_pions_vs_beta_pions_uncut.Write()
 
 d_Cut_Pion_Events_All.cd()
 H_gtr_beta_pions_cut_all.Write()
@@ -847,6 +880,8 @@ P_cal_etottracknorm_vs_P_ngcer_npeSum_pions_cut_all.Write()
 P_ngcer_yAtCer_vs_ngcer_xAtCer_pions_cut_all.Write()
 P_ngcer_npeSum_vs_hgcer_npeSum_pions_cut_all.Write()
 P_ngcer_npeSum_vs_aero_npeSum_pions_cut_all.Write()
+H_gtr_dp_pions_vs_beta_pions_cut_all.Write()
+P_gtr_dp_pions_vs_beta_pions_cut_all.Write()
 
 d_Cut_Pion_Events_Prompt.cd()
 P_gtr_beta_pions_cut_prompt.Write()

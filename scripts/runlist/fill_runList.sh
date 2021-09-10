@@ -130,6 +130,7 @@ done
 
 # Ask user for a comment
 read -p "Enter number of pi/n events and/or any other comments: " Comment
+Comment=$(echo "$Comment" | tr "," " ") # Remove any commas from the comment line as this will cause... issues
 # Need to fix widths of entries with blank space at some point, see the test file for widths (based on headers)
 RUNLIST_INFO="${RUNNUMBER},${RUNTYPE},${TARGET},${EBeam},${SHMS_P},${SHMS_Angle},${HMS_P},${HMS_Angle},${Current},${PS1},${PS4},${PS5},${HMS_Rate},${SHMS_Rate},${COIN_Rate},${Charge},${Raw_HMS},${Raw_SHMS},${Raw_COIN},${EDTM},${Tracking},${Comment}"
 

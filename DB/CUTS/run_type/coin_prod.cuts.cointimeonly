@@ -1,0 +1,42 @@
+##############
+# COIN picut #
+##############
+coin_epi_cut_all_noRF = misc.starttime
+#
+coin_epi_cut_prompt_noRF = coin_time.Coin_Pion_Prompt+misc.starttime
+#
+coin_epi_cut_rand_noRF = coin_time.Coin_Pion_Rand+misc.starttime
+#
+coin_epi_cut_all_RF = coin_time.SHMS_Pi_RF+misc.starttime
+#
+coin_epi_cut_prompt_RF = coin_time.Coin_Pion_Prompt+coin_time.SHMS_Pi_RF+misc.starttime
+#
+coin_epi_cut_rand_RF = coin_time.Coin_Pion_Rand+coin_time.SHMS_Pi_RF+misc.starttime
+##############
+# COIN kcut  #
+##############
+coin_ek_cut_all_noRF = misc.starttime
+#
+coin_ek_cut_prompt_noRF = coin_time.Coin_Kaon_Prompt+misc.starttime
+#
+coin_ek_cut_rand_noRF = coin_time.Coin_Kaon_Rand+misc.starttime
+#
+coin_ek_cut_all_RF = coin_time.SHMS_K_RF+misc.starttime
+#
+coin_ek_cut_prompt_RF = coin_time.Coin_Kaon_Prompt+coin_time.SHMS_K_RF+misc.starttime
+#
+coin_ek_cut_rand_RF = coin_time.Coin_Kaon_Rand+coin_time.SHMS_K_RF+misc.starttime
+##############
+# COIN pcut  #
+##############
+coin_ep_cut_all_noRF = misc.starttime
+#
+coin_ep_cut_prompt_noRF = coin_time.Coin_Proton_Prompt+misc.starttime
+#
+coin_ep_cut_rand_noRF = coin_time.Coin_Proton_Rand+misc.starttime
+#
+coin_ep_cut_all_RF = coin_time.SHMS_p_RF+misc.starttime
+#
+coin_ep_cut_prompt_RF = coin_time.Coin_Proton_Prompt+coin_time.SHMS_p_RF+misc.starttime
+#
+coin_ep_cut_rand_RF = coin_time.Coin_Proton_Rand+coin_time.SHMS_p_RF+misc.starttime
