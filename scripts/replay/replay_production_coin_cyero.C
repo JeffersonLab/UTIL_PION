@@ -1,4 +1,4 @@
-void replay_production_coin_cyero (Int_t RunNumber = 0, Int_t MaxEvent = 0, TString ftype="hod_calib_cyero" ) {
+void replay_production_coin_cyero (Int_t RunNumber = 0, Int_t MaxEvent = 0, TString ftype="cal_calib_cyero" ) {
 
   //ftype: "timeWinCheck_cyero", "hod_calib_cyero", 
   // Get RunNumber and MaxEvent if not provided.

@@ -50,7 +50,6 @@ if [[ -f ${REPORTFILE} ]]; then
 	REPORTFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/reportfile.py ${REPORTFILE}`
     elif [[ ${RUNTYPE} == "HeePSing" ]]; then
 	REPORTFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/reportfile_HeePSing.py ${REPORTFILE}`
-	
     fi
     Current=`echo ${REPORTFILE_INFO} | cut -d ',' -f1`
     PS1=`echo ${REPORTFILE_INFO} | cut -d ',' -f2`
@@ -131,6 +130,8 @@ done
 # Ask user for a comment
 read -p "Enter number of pi/n events and/or any other comments: " Comment
 Comment=$(echo "$Comment" | tr "," " ") # Remove any commas from the comment line as this will cause... issues
+Comment=$(echo "$Comment" | tr ";" " ") # Remove any semicolons from the comment line as well, grammar get out!
+Comment=$(echo "$Comment" | tr "\t" " ") # Tabs can go to hell too
 # Need to fix widths of entries with blank space at some point, see the test file for widths (based on headers)
 RUNLIST_INFO="${RUNNUMBER},${RUNTYPE},${TARGET},${EBeam},${SHMS_P},${SHMS_Angle},${HMS_P},${HMS_Angle},${Current},${PS1},${PS4},${PS5},${HMS_Rate},${SHMS_Rate},${COIN_Rate},${Charge},${Raw_HMS},${Raw_SHMS},${Raw_COIN},${EDTM},${Tracking},${Comment}"
 

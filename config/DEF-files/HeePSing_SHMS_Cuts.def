@@ -49,7 +49,7 @@ Block: Tracking
 # Accceptance cuts for SHMS gloden track defined here (Not used in SHMS Tracking)
 
 #pcut_acceptance		  P.gtr.th > -0.06 && P.gtr.th < 0.06 && P.gtr.ph > -0.04 && P.gtr.ph < 0.04 && P.gtr.dp > -10 && P.gtr.dp < 20
-pcut_acceptance		  P.tr.th > -0.06 && P.tr.th < 0.06 && P.tr.ph > -0.04 && P.tr.ph < 0.04 && P.tr.dp > -10 && P.tr.dp < 20
+#pcut_acceptance		  P.tr.th > -0.06 && P.tr.th < 0.06 && P.tr.ph > -0.04 && P.tr.ph < 0.04 && P.tr.dp > -10 && P.tr.dp < 20
 
 # PID cuts for different particles in all the SHMS detectors [HGC, AERO, CAL(untracked)]
 
@@ -80,7 +80,7 @@ shmsScinDidh        shmsScinShouldh && P.dc.ntrack > 0
 # HMS Acceptance cuts (Not used in HMS Tracking Efficiency)
 
 #hcut_acceptance           H.gtr.th > -0.08 && H.gtr.th < 0.08 && H.gtr.ph > -0.045 && H.gtr.ph < 0.04 && H.gtr.dp > -8 && H.gtr.dp < 8
-hcut_acceptance           H.tr.th > -0.08 && H.tr.th < 0.08 && H.tr.ph > -0.045 && H.tr.ph < 0.04 && H.tr.dp > -8 && H.tr.dp < 8
+#hcut_acceptance           H.tr.th > -0.08 && H.tr.th < 0.08 && H.tr.ph > -0.045 && H.tr.ph < 0.04 && H.tr.dp > -8 && H.tr.dp < 8
 
 # HMS PID cuts for different particles in HGC and CAL
 
@@ -106,7 +106,7 @@ HMSScinDide           HMSScinShoulde && H.dc.ntrack > 0
 
 SHMScoindcindipole	P.dc.InsideDipoleExit == 1
 
-SHMSGEN		shmsScinGood && shmshodstarttime && SHMScoindcindipole && pcut_acceptance
+SHMSGEN		shmsScinGood && shmshodstarttime && SHMScoindcindipole
 SHMSCalpi	P.cal.etottracknorm < 0.7
 SHMSAEROpi      P.aero.npeSum  > 1.5
 
@@ -128,7 +128,7 @@ SHMSAeroDidpi            SHMSAeroShouldpi && P.aero.npeSum > 1.5
 
 HMScoindcindipole	H.dc.InsideDipoleExit == 1
 
-HMSGEN		   HMSScinGood && HMShodstarttime && HMScoindcindipole && hcut_acceptance
+HMSGEN		   HMSScinGood && HMShodstarttime && HMScoindcindipole
 HMSCalelec         H.cal.etottracknorm > 0.05
 
 HMSHGCShouldelec         HMSGEN && SHMSCT && HMSCalelec 
