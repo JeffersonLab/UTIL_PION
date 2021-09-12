@@ -9,9 +9,11 @@ block P.dc.ntrack
 block P.cal.etot*
 block P.cal.etrack*
 block P.hgcer.npe*
+block P.gtr.dp
 
 block H.hod.*
 block H.dc.ntrack
 block H.cal.etot*
 block H.cal.etrack*
 block H.cer.npe*
+block H.gtr.dp

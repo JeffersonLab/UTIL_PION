@@ -465,7 +465,6 @@ CTime_ePiCoinTime_ROC1_vs_P_kin_MMpi_pions_cut_prompt = ROOT.TH2D("CTime_ePiCoin
 Q2vsW_pions = ROOT.TH2D("Q2vsW_pions", "Q2 vs W; Q2; W", 200, 1, 5, 200, 2.7, 3.6)
 phiqvst_pions = ROOT.TH2D("phiqvst_pions","; #phi ;t", 12, -3.14, 3.14, 24, 0.0, 1.2)
 
-
 H_cal_etottracknorm_vs_H_cer_npeSum_kaons_uncut = ROOT.TH2D("H_cal_etottracknorm_vs_H_cer_npeSum_kaons_uncut","HMS cal etottracknorm vs HMS cer npeSum (no cut); H_cal_etottracknorm; H_cer_npeSum",100, 0, 2, 100, 0, 40)
 P_hgcer_npeSum_vs_aero_npeSum_kaons_uncut = ROOT.TH2D("P_hgcer_npeSum_vs_aero_npeSum_kaons_uncut", "SHMS HGC npeSum vs SHMS Aero npeSum (no cut); SHMS_hgcer_npeSum; SHMS_aero_npeSum", 100, 0, 50, 100, 0, 50)
 CTime_eKCoinTime_ROC1_vs_P_kin_MMK_kaons_uncut = ROOT.TH2D("CTime_eKCoinTime_ROC1_vs_P_kin_MMK_kaons_uncut","Electron-Kaon CTime vs Missing Mass (no cut); e K Coin_Time; MM_{K}", 200, -40, 40, 200, 0, 2)

@@ -139,18 +139,11 @@ EDTM Live Time		   :	{edtm_accepted.npassed/(P.EDTM.scalerCut+0.0001):%8.4f} +- 
 
 #Needs fixing
 
-#CPU Live Time		   :	{(SHMSTRIG1_ROC2.npassed + HMSTRIG3_ROC2.npassed)/((P.pTRIG1.scalerCut/gHC_ti_ps_factors[0])+(H.hTRIG3.scalerCut/gHC_ti_ps_factors[2]))}
-#Electronic Live Time	   :    {(edtm_accepted.npassed/P.EDTM.scalerCut)/(SHMSTRIG1_ROC2.npassed + HMSTRIG3_ROC2.npassed)/((P.pTRIG1.scalerCut/gHC_ti_ps_factors[0])+(H.hTRIG3.scalerCut/gHC_ti_ps_factors[2]))}
-
 ###########################
 ######### LUMI ############
 ###########################
 
 #Needs fixing
-
-#CPU Live Time              :    {(SHMSTRIG2_ROC2.npassed + HMSTRIG3_ROC1.npassed)/((P.pTRIG2.scalerCut/gHC_ti_ps_factors[1])+(H.hTRIG3.scalerCut/gHC_ti_ps_factors[2]))}
-#Electronic Live Time       :    {(edtm_accepted.npassed/P.EDTM.scalerCut)/(SHMSTRIG2_ROC2.npassed + HMSTRIG3_ROC2.npassed)/((P.pTRIG2.scalerCut/gHC_ti_ps_factors[1])+(H.hTRIG3.scalerCut/gHC_ti_ps_factors[2]))}
-
 
 #############################
 ### Detector Efficiencies ###

@@ -24,8 +24,10 @@ KinFile.close()
 
 SHMS_Angle = 0
 SHMS_P = 0
+SHMS_mass = 0
 HMS_Angle = 0
 HMS_P = 0
+HMS_mass = 0
 EBeam = 0
 
 TestVar = 0
@@ -57,11 +59,15 @@ for KinFileBlock in KinFileContent.split('\n\n'):
                 SHMS_Angle = float((entry.split("="))[1])
             if "ppcentral" in entry :
                 SHMS_P = float((entry.split("="))[1])
+            if "ppartmass" in entry :
+                SHMS_mass = float((entry.split("="))[1])
             if "htheta_lab" in entry :
                 HMS_Angle = float((entry.split("="))[1])
             if "hpcentral" in entry :
                 HMS_P = float((entry.split("="))[1])
+            if "hpartmass" in entry :
+                HMS_mass = float((entry.split("="))[1])
             if "gpbeam" in entry :
                 EBeam = float((entry.split("="))[1])
-RunListEntry=("%2.3f,%2.3f,%2.3f,%2.3f,%2.3f" % (SHMS_Angle, SHMS_P, HMS_Angle, HMS_P, EBeam))
+RunListEntry=("%2.3f,%2.3f,%0.5f,%2.3f,%2.3f,%0.5f,%2.3f" % (SHMS_Angle, SHMS_P, SHMS_mass, HMS_Angle, HMS_P, HMS_mass, EBeam))
 print(RunListEntry)

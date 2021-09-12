@@ -1,0 +1,14 @@
+block P.dc.*
+block P.cal.etot*
+block P.cal.etracknorm
+block P.hgcer.npe*
+block P.ngcer.npe*
+block P.hod.beta*
+block P.hod.start*
+
+block H.dc.*
+block H.cal.etot*
+block H.cal.etracknorm
+block H.hcer.npe*
+block H.hod.beta*
+block H.hod.start*

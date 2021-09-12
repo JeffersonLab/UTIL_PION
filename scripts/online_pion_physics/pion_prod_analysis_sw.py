@@ -114,6 +114,8 @@ H_cer_npeSum = e_tree.array("H.cer.npeSum")                      #
 # SHMS info
 P_hod_goodscinhit = e_tree.array("P.hod.goodscinhit")            #
 P_hod_goodstarttime = e_tree.array("P.hod.goodstarttime")        #
+# RLT 09/11/21...applied an offset to the SHMS beta of 0.5
+#P_gtr_beta = e_tree.array("P.gtr.beta")+0.5                         # Beta is velocity of particle between pairs of hodoscopes
 P_gtr_beta = e_tree.array("P.gtr.beta")                          # Beta is velocity of particle between pairs of hodoscopes
 P_gtr_xp = e_tree.array("P.gtr.th")                              # xpfp -> Theta
 P_gtr_yp = e_tree.array("P.gtr.ph")                              # ypfp -> Phi

@@ -40,9 +40,11 @@ KINFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/kinfile.py ${KINFILE
 # Split the string we get to individual variables, easier for printing and use later
 SHMS_Angle=`echo ${KINFILE_INFO} | cut -d ','  -f1` # Cut the string on , delimitter, select field (f) 1, set variable to output of command
 SHMS_P=`echo ${KINFILE_INFO} | cut -d ','  -f2`
-HMS_Angle=`echo ${KINFILE_INFO} | cut -d ','  -f3`
-HMS_P=`echo ${KINFILE_INFO} | cut -d ','  -f4`
-EBeam=`echo ${KINFILE_INFO} | cut -d ','  -f5`
+SHMS_mass=`echo ${KINFILE_INFO} | cut -d ','  -f3`
+HMS_Angle=`echo ${KINFILE_INFO} | cut -d ','  -f4`
+HMS_P=`echo ${KINFILE_INFO} | cut -d ','  -f5`
+HMS_mass=`echo ${KINFILE_INFO} | cut -d ','  -f6`
+EBeam=`echo ${KINFILE_INFO} | cut -d ','  -f7`
 
 # Get information available in the report file
 if [[ -f ${REPORTFILE} ]]; then
@@ -89,8 +91,10 @@ echo "Target: $TARGET"
 echo "Beam energy: $EBeam"
 echo "SHMS momentum: $SHMS_P"
 echo "SHMS angle : $SHMS_Angle"
+echo "SHMS particle mass : $SHMS_mass"
 echo "HMS momentum: $HMS_P"
 echo "HMS angle: $HMS_Angle"
+echo "HMS particle mass : $HMS_mass"
 echo "Current: $Current"
 if [[ ${RUNTYPE} != "HeePSing" ]]; then
     echo "PS1 : $PS1"

@@ -1,5 +1,4 @@
 
-
 block T.coin.*FADC_TREF*
 block T.coin.*tdcTimeRaw*
 block T.coin.*Mult*
