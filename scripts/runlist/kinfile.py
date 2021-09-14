@@ -52,7 +52,7 @@ for KinFileBlock in KinFileContent.split('\n\n'):
         RunStart=int(Lines[0])
         RunEnd=int(Lines[0])
     # Check if the provided run number is in the run number range for the block, if it is, set the values
-    if int(RunNum) in range (RunStart, RunEnd) :
+    if int(RunNum) in range (RunStart, RunEnd+1) :
         TestVar +=1
         for entry in Lines :
             if "ptheta_lab" in entry :
