@@ -45,6 +45,11 @@ block T.coin.hRF*
 block H.dc.InsideDipoleExit
 block P.dc.InsideDipoleExit
 
+# For debugging cherenkovs, all variables for them are included for now
+block P.ngcer.*
+block P.hgcer.*
+block P.aero.*
+
 begin epics
 IBC3H00CRCUR4
 hac_bcm_average

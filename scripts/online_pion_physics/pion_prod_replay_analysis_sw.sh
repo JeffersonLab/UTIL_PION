@@ -1,7 +1,7 @@
 #! /bin/bash
-##################################################################################
-# Created - 10/July/2021, Author - Muhammad Junaid, University of Regina, Canada
-##################################################################################
+###########################################################################################################################
+# Created - 20/July/21, Author - Muhammad Junaid (mjo147@uregina.ca), University of Regina, Canada (Copyright (c) junaid) #
+###########################################################################################################################
 # This version of script is for shift workers at JLAB
 # Executes the replay script and python analysis script and at the end python plotting script
 # To run this script, execute ./scriptname $RUNNUMBER$

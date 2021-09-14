@@ -22,7 +22,7 @@ void replay_hms_heep (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   pathList.push_back("./raw");
   pathList.push_back("./raw/../raw.copiedtotape");
   pathList.push_back("./cache");
-  pathList.push_back("./raw_volatile");
+  pathList.push_back("./raw.volatile");
 
   //const char* RunFileNamePattern = "raw/coin_all_%05d.dat";
   const char* ROOTFileNamePattern = "UTIL_PION/ROOTfiles/Analysis/HeeP/Pion_hms_replay_production_%d_%d.root";
