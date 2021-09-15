@@ -65,15 +65,15 @@ for line in ReportFile:
         Charge = float(((line.split(":")[1]).strip()).split(" ")[0]) 
         TestVar+=1
         #print('Charge', TestVar, "\n")
-    if "SW_Accepted_HMS_Triggers" in line :
+    if "SW_Pre-Scaled_HMS_EL-REAL_Triggers" in line :
         Raw_HMS = float(((line.split(":")[1]).strip()).split(" ")[0]) 
         TestVar+=1
         #print('Raw_HMS', TestVar, "\n")
-    if "SW_Accepted_SHMS_Triggers" in line :
+    if "SW_Pre-Scaled_SHMS_3/4_Triggers" in line :
         Raw_SHMS = float(((line.split(":")[1]).strip()).split(" ")[0]) 
         TestVar+=1
         #print('Raw_SHMS', TestVar, "\n")
-    if "SW_Accepted_COIN_Triggers" in line :
+    if "SW_Pre-Scaled_COIN_Triggers" in line :
         Raw_COIN = float(((line.split(":")[1]).strip()).split(" ")[0]) 
         TestVar+=1
         #print('Raw_COIN', TestVar, "\n")
