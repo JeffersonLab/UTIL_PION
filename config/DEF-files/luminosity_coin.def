@@ -1,6 +1,10 @@
 block CTime.*     
 block RFTime.*
-block H.bcm.*
+block H.bcm.bcm1.AvgCurrent
+block H.bcm.bcm2.AvgCurrent
+block H.bcm.bcm4a.AvgCurrent
+block H.bcm.bcm4b.AvgCurrent
+block H.bcm.bcm4c.AvgCurrent
 block P.gtr.beta
 block P.gtr.th
 block P.gtr.ph
@@ -25,6 +29,7 @@ block P.hod.fpHitsTime
 block P.hod.goodscinhit
 block P.hod.goodstarttime
 block H.hod.betanotrack
+block P.hod.betanotrack
 block H.gtr.dp
 block H.gtr.p
 block P.gtr.dp
