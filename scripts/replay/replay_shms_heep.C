@@ -60,8 +60,8 @@ void replay_shms_heep (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   SHMS->AddEvtType(7);
   gHaApps->Add(SHMS);
   // Add Noble Gas Cherenkov to SHMS apparatus
-  //THcCherenkov* pngcer = new THcCherenkov("ngcer", "Noble Gas Cherenkov");
-  //SHMS->AddDetector(pngcer);
+  THcCherenkov* pngcer = new THcCherenkov("ngcer", "Noble Gas Cherenkov");
+  SHMS->AddDetector(pngcer);
   // Add drift chambers to SHMS apparatus
   THcDC* pdc = new THcDC("dc", "Drift Chambers");
   SHMS->AddDetector(pdc);
@@ -249,6 +249,7 @@ void replay_shms_heep (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
                               // 2 = counter is event number
 
   analyzer->SetEvent(event);
+  analyzer->SetMarkInterval(10000);
   // Set EPICS event type
   analyzer->SetEpicsEvtType(180);
   // Define crate map
@@ -258,6 +259,7 @@ void replay_shms_heep (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Define DEF-file+
   analyzer->SetOdefFile("UTIL_PION/config/DEF-files/shms_heep.def");
   // Define cuts file
+  //analyzer->SetCutFile("UTIL_PION/config/DEF-files/HeePSing_SHMS_Cuts.def");  // optional
   analyzer->SetCutFile("UTIL_PION/config/DEF-files/HeePSing_SHMS_Cuts.def");  // optional
   // File to record accounting information for cuts
   analyzer->SetSummaryFile(Form("UTIL_PION/config/REPORT_OUTPUT/summary_production_%d_%d.report", RunNumber, MaxEvent)); // optional

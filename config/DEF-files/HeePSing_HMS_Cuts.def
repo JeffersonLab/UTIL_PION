@@ -129,9 +129,9 @@ SHMSAeroDidpi            SHMSAeroShouldpi && P.aero.npeSum > 1.5
 HMScoindcindipole	H.dc.InsideDipoleExit == 1
 
 HMSGEN		   HMSScinGood && HMShodstarttime && HMScoindcindipole
-HMSCalelec         H.cal.etottracknorm > 0.05
+HMSCalelec         H.cal.etottracknorm > 0.7
 
-HMSHGCShouldelec         HMSGEN && SHMSCT && HMSCalelec 
+HMSHGCShouldelec         HMSGEN && HMSCalelec 
 HMSHGCDidelec            HMSHGCShouldelec && H.cer.npeSum > 1.5
 
 HMS_TRACK_FOUND      H.dc.ntrack > 0 && ALL_HMS_events_NOEDTM
@@ -142,7 +142,8 @@ Tracking_master HMS_TRACK_FOUND
 
 Block: Physics       
 DELTA_HMS            H.gtr.dp>-10&&H.gtr.dp<10.
-HMS_ELEC             H.cal.etotnorm>.35&&H.cer.npeSum>1.2
+#HMS_ELEC             H.cal.etotnorm>.35&&H.cer.npeSum>1.2
+HMS_ELEC             H.cer.npeSum>1.2
 GOOD_EVENT           HMS_TRACK_FOUND&&DELTA_HMS&&HMS_ELEC
 
 Physics_master GOOD_EVENT

@@ -102,11 +102,11 @@ else echo "PS2 : $PS1" # For HeepSingles we care about both ELReal triggers (2 a
 fi
 echo "PS4 : $PS4"
 echo "PS5 : $PS5"
-echo "HMS rate [kHz]: $HMS_Rate"
-echo "SHMS rate [kHz]: $SHMS_Rate"
+echo "Raw HMS rate [kHz]: $HMS_Rate"
+echo "Raw SHMS rate [kHz]: $SHMS_Rate"
 if [[ ${RUNTYPE} != "HeePSing" ]]; then
-    echo "COIN rate [kHz]: $COIN_Rate"
-else echo "COIN rate [kHz] (No coin - SHMS rate duplicated): $COIN_Rate"
+    echo "Raw COIN rate [kHz]: $COIN_Rate"
+else echo "Raw COIN rate [kHz] (No coin - SHMS rate duplicated): $COIN_Rate"
 fi
 echo "Charge [mC]: $Charge"
 echo "Raw HMS: $Raw_HMS"

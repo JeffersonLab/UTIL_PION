@@ -42,7 +42,7 @@ for KinFileBlock in KinFileContent.split('\n\n'):
             Lines.append(KinFileLine)
     if nLines < 12: # If less than 12 lines, skip to next block
         continue
-    # If it's an entry with a -, it's a range of run numbers, set the start and end accordingly    
+    # If it's an entry with a -, it's a range of run numbers, set the start and end accordingly
     if "-" in Lines[0]:
         RunNumArr = Lines[0].split("-")
         RunStart = int(RunNumArr[0])

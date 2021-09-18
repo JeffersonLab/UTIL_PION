@@ -460,7 +460,6 @@ c1_kin.Print(Proton_Analysis_Distributions + '(')
 # Saving histograms in PDF
 c1_mom = TCanvas("c1_mom", "Momentum Distributions", 100, 0, 1000, 900)
 c1_mom.Divide(1,2)
-# End of polar plotting section
 c1_mom.cd(1)
 P_gtr_p_protons_uncut.Draw("hist")
 P_gtr_p_protons_cut_all.Draw("hist")

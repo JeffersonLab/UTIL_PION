@@ -63,18 +63,6 @@ SW_Pre-Scaled_COIN_Triggers                  :		{(P.pTRIG5.scaler/gHC_ti_ps_fact
 SW_COIN_Trigger_Rate			     :		{P.pTRIG5.scalerCut/P.1MHz.scalerTimeCut/1000.:%.3f} kHz
 SW_Accepted_COIN_Triggers                    :		{pTRIG5_ROC2.npassed}
 
-SW_Coin_ROC2_pTRIG1_Accepted_Triggers	     :		{pTRIG1_ROC2.npassed}
-SW_Coin_ROC2_pTRIG2_Accepted_Triggers	     :	   	{pTRIG2_ROC2.npassed}
-SW_Coin_ROC2_pTRIG3_Accepted_Triggers	     :		{pTRIG3_ROC2.npassed}
-SW_Coin_ROC2_pTRIG4_Accepted_Triggers	     :		{pTRIG4_ROC2.npassed}
-SW_Coin_ROC2_pTRIG5_Accepted_Triggers	     :		{pTRIG5_ROC2.npassed}
-SW_Coin_ROC2_pTRIG6_Accepted_Triggers	     :		{pTRIG6_ROC2.npassed}
-
-SW_HMS_Singles_Triggers	  		     : 		{HMS_event.npassed}
-SW_SHMS_Singles_Triggers		     :		{SHMS_event.npassed}
-SW_Coincidence_Triggers			     :		{ALL_COIN_events.npassed}
-SW_All_Triggers				     :		{ALL_events.npassed}
-
 ***************************
 ** Shift Checklist Info ***
 ***************************
@@ -218,11 +206,15 @@ SHMS Aero Pion Eff		      :   {SHMSAeroDidpi.npassed/(SHMSAeroShouldpi.npassed+0
 
 This is only useful for negatove polarity run and calculates electron efficiency
 
-PNGCdidel		    :   {SHMSNGCDidel.npassed}
-PNGCshouldel		    :	{SHMSNGCShouldel.npassed}
+PNGCdidelxpos	    		    :   {SHMSNGCDidelxpos.npassed}
+PNGCshouldelxpos		    :	{SHMSNGCShouldelxpos.npassed}
 
-SHMS NGC Elec Eff		      :   {SHMSNGCDidel.npassed/(SHMSNGCShouldel.npassed+0.0001):%8.4f} +- {(sqrt(SHMSNGCShouldel.npassed-SHMSNGCDidel.npassed)/(SHMSNGCShouldel.npassed+.0001)):%8.4f}
+SHMS NGC Elec Eff (Positive X)		      :   {SHMSNGCDidelxpos.npassed/(SHMSNGCShouldelxpos.npassed+0.0001):%8.4f} +- {(sqrt(SHMSNGCShouldelxpos.npassed-SHMSNGCDidelxpos.npassed)/(SHMSNGCShouldelxpos.npassed+.0001)):%8.4f}
 
+PNGCdidelxneg	    		    :   {SHMSNGCDidelxneg.npassed}
+PNGCshouldelxneg		    :	{SHMSNGCShouldelxneg.npassed}
+
+SHMS NGC Elec Eff (Negative X)		      :   {SHMSNGCDidelxneg.npassed/(SHMSNGCShouldelxneg.npassed+0.0001):%8.4f} +- {(sqrt(SHMSNGCShouldelxneg.npassed-SHMSNGCDidelxneg.npassed)/(SHMSNGCShouldelxneg.npassed+.0001)):%8.4f}
 
 =:=:=:=:=:=:=:=:=:=:=:=:=
 =      HMS Cerenkov     =
@@ -287,3 +279,21 @@ S2XY : {hhodo_s2XY_eff}
 
 3_of_4 EFF : {hhodo_3_of_4_eff}
 4_of_4 EFF : {hhodo_4_of_4_eff}
+
+===================
+== Triggers Info ==
+===================
+
+This info may not be accurate
+
+SW_Coin_ROC2_pTRIG1_Accepted_Triggers	     :		{pTRIG1_ROC2.npassed}
+SW_Coin_ROC2_pTRIG2_Accepted_Triggers	     :	   	{pTRIG2_ROC2.npassed}
+SW_Coin_ROC2_pTRIG3_Accepted_Triggers	     :		{pTRIG3_ROC2.npassed}
+SW_Coin_ROC2_pTRIG4_Accepted_Triggers	     :		{pTRIG4_ROC2.npassed}
+SW_Coin_ROC2_pTRIG5_Accepted_Triggers	     :		{pTRIG5_ROC2.npassed}
+SW_Coin_ROC2_pTRIG6_Accepted_Triggers	     :		{pTRIG6_ROC2.npassed}
+
+SW_HMS_Singles_Triggers	  		     : 		{HMS_event.npassed}
+SW_SHMS_Singles_Triggers		     :		{SHMS_event.npassed}
+SW_Coincidence_Triggers			     :		{ALL_COIN_events.npassed}
+SW_All_Triggers				     :		{ALL_events.npassed}

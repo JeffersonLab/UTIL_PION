@@ -1,4 +1,4 @@
-i#################################
+#################################
 ###### Author - Ali Usman #######
 ##### University of Regina ######
 ###### Created - May, 2021 ######
@@ -131,7 +131,7 @@ HMScoindcindipole	H.dc.InsideDipoleExit == 1
 HMSGEN		   HMSScinGood && HMShodstarttime && HMScoindcindipole
 HMSCalelec         H.cal.etottracknorm > 0.05
 
-HMSHGCShouldelec         HMSGEN && SHMSCT && HMSCalelec 
+HMSHGCShouldelec         HMSGEN && HMSCalelec 
 HMSHGCDidelec            HMSHGCShouldelec && H.cer.npeSum > 1.5
 
 HMS_TRACK_FOUND      H.dc.ntrack > 0 && ALL_HMS_events_NOEDTM

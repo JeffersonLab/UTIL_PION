@@ -108,10 +108,10 @@ for i,val in enumerate(psActual):
         else:
             PS4 = int(psValue[i])
     if val == PS5:
-        if(val == -1):
-            PS5 = 0
-        else:
-            PS5 = int(psValue[i])
+        # if(val == -1):
+        #     PS5 = 0
+        # else:
+        PS5 = int(psValue[i])
 
 if TestVar != 13 and TestVar > 13 :
     print(" !!! WARNING IN reportfile_HeePSing.py !!! \n More than expected matching entries found, some information may have been overwritten \n !!! WARNING IN reportfile_HeePSing.py !!!")

@@ -59,8 +59,8 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   SHMS->AddEvtType(7);
   gHaApps->Add(SHMS);
   // Add Noble Gas Cherenkov to SHMS apparatus
-  //THcCherenkov* pngcer = new THcCherenkov("ngcer", "Noble Gas Cherenkov");
-  //SHMS->AddDetector(pngcer);
+  THcCherenkov* pngcer = new THcCherenkov("ngcer", "Noble Gas Cherenkov");
+  SHMS->AddDetector(pngcer);
   // Add drift chambers to SHMS apparatus
   THcDC* pdc = new THcDC("dc", "Drift Chambers");
   SHMS->AddDetector(pdc);
@@ -151,8 +151,8 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   THcHodoEff* heff = new THcHodoEff("hhodeff", "HMS hodo efficiency", "H.hod");
   gHaPhysics->Add(heff);
   // Add BCM Current check
-  // THcBCMCurrent* hbc = new THcBCMCurrent("H.bcm", "BCM current check");
-  // gHaPhysics->Add(hbc);
+  THcBCMCurrent* hbc = new THcBCMCurrent("H.bcm", "BCM current check");
+  gHaPhysics->Add(hbc);
 
   // Add event handler for scaler events
   THcScalerEvtHandler *hscaler = new THcScalerEvtHandler("H", "Hall C scaler event type 4");  
@@ -257,7 +257,7 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Define DEF-file+
   analyzer->SetOdefFile("UTIL_PION/config/DEF-files/luminosity_coin.def");
   // Define cuts file
-  analyzer->SetCutFile("UTIL_PION/config/DEF-files/coin_production_cuts.def");  // optional
+  analyzer->SetCutFile("UTIL_PION/config/DEF-files/luminosity_coin_cuts.def");  // optional
   // File to record accounting information for cuts
   analyzer->SetSummaryFile(Form("UTIL_PION/config/REPORT_OUTPUT/summary_luminosity_%d_%d.report", RunNumber, MaxEvent)); // optional
   // Start the actual analysis.

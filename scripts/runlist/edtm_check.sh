@@ -19,7 +19,7 @@ fi
 RUNNUMBER=$1
 RUNTYPE=$2
 TARGET=$3
-RUNLIST="${REPLAYPATH}/UTIL_PION/runlist_pionLT_2021.csv"
+RUNLIST="${REPLAYPATH}/edtm_check.csv"
 # Need to fix paths rather than give relative paths, also need to check information is still in these files and that it can grab it correctly
 KINFILE="${REPLAYPATH}/DBASE/COIN/standard.kinematics"
 # Get report file based upon run type
@@ -49,9 +49,9 @@ EBeam=`echo ${KINFILE_INFO} | cut -d ','  -f7`
 # Get information available in the report file
 if [[ -f ${REPORTFILE} ]]; then
     if [[ ${RUNTYPE} != "HeePSing" ]]; then
-	REPORTFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/reportfile.py ${REPORTFILE}`
+	REPORTFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/edtm_reportfile.py ${REPORTFILE}`
     elif [[ ${RUNTYPE} == "HeePSing" ]]; then
-	REPORTFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/reportfile_HeePSing.py ${REPORTFILE}`
+	REPORTFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/edtm_reportfile_HeePSing.py ${REPORTFILE}`
     fi
     Current=`echo ${REPORTFILE_INFO} | cut -d ',' -f1`
     PS1=`echo ${REPORTFILE_INFO} | cut -d ',' -f2`
@@ -66,6 +66,8 @@ if [[ -f ${REPORTFILE} ]]; then
     Raw_COIN=`echo ${REPORTFILE_INFO} | cut -d ',' -f11`
     EDTM=`echo ${REPORTFILE_INFO} | cut -d ',' -f12`
     Tracking=`echo ${REPORTFILE_INFO} | cut -d ',' -f13`
+    HMStime=`echo ${REPORTFILE_INFO} | cut -d ',' -f14`
+    SHMStime=`echo ${REPORTFILE_INFO} | cut -d ',' -f15`
 elif [[ ! -f ${REPORTFILE} ]]; then
     Current="ERROR"
     PS1="ERROR"
@@ -80,6 +82,8 @@ elif [[ ! -f ${REPORTFILE} ]]; then
     Raw_COIN="ERROR"
     EDTM="ERROR"
     Tracking="ERROR"
+    HMStime="ERROR"
+    SHMStime="ERROR"
 fi
 
 echo "========================================================================="
@@ -120,24 +124,26 @@ if [[ ${RUNTYPE} != "HeePSing" ]]; then
     echo "SHMS hadron tracking: $Tracking"
 else echo "SHMS electron tracking: $Tracking"
 fi
+echo "HMStime: $HMStime"
+echo "SHMStime: $SHMStime"
 echo "========================================================================="
 
-while true; do
-    read -p "Do these values all look correct? (Please answer yes or no) " yn
-    case $yn in
-        [Yy]* ) break;;
-        [Nn]* ) exit;;
-        * ) echo "Please answer yes or no.";;
-    esac
-done
+#while true; do
+#    read -p "Do these values all look correct? (Please answer yes or no) " yn
+#    case $yn in
+#        [Yy]* ) break;;
+#        [Nn]* ) exit;;
+#        * ) echo "Please answer yes or no.";;
+#    esac
+#done
 
 # Ask user for a comment
-read -p "Enter number of pi/n events and/or any other comments: " Comment
+#read -p "Enter number of pi/n events and/or any other comments: " Comment
 Comment=$(echo "$Comment" | tr "," " ") # Remove any commas from the comment line as this will cause... issues
 Comment=$(echo "$Comment" | tr ";" " ") # Remove any semicolons from the comment line as well, grammar get out!
 Comment=$(echo "$Comment" | tr "\t" " ") # Tabs can go to hell too
 # Need to fix widths of entries with blank space at some point, see the test file for widths (based on headers)
-RUNLIST_INFO="${RUNNUMBER},${RUNTYPE},${TARGET},${EBeam},${SHMS_P},${SHMS_Angle},${HMS_P},${HMS_Angle},${Current},${PS1},${PS4},${PS5},${HMS_Rate},${SHMS_Rate},${COIN_Rate},${Charge},${Raw_HMS},${Raw_SHMS},${Raw_COIN},${EDTM},${Tracking},${Comment}"
+RUNLIST_INFO="${RUNNUMBER},${RUNTYPE},${TARGET},${EBeam},${SHMS_P},${SHMS_Angle},${HMS_P},${HMS_Angle},${Current},${PS1},${PS4},${PS5},${HMS_Rate},${SHMS_Rate},${COIN_Rate},${Charge},${Raw_HMS},${Raw_SHMS},${Raw_COIN},${EDTM},${Tracking},${HMStime},${SHMStime},${Comment}"
 
 # Check if there is already an entry for this run number, if there is, ask if you want to overwrite it, if not, print it to the file
 DuplicateLines=() # Array to store line numbers of duplicated entries

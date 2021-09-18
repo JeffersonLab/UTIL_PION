@@ -83,7 +83,7 @@ HMSScinDid            HMSScinShould && H.dc.ntrack > 0
 HMSScinDide           HMSScinShoulde && H.dc.ntrack > 0
 
 HMS_CAL_FOUND      H.cal.etotnorm > 0.7 && ALL_COIN_events_NO_EDTM
-SHMS_CAL_FOUND     P.cal.etotnorm < 0.8 && ALL_COIN_events_NO_EDTM
+SHMS_CAL_FOUND     ALL_COIN_events_NO_EDTM
 
 GOOD_HMS_TRACK	      	      HMS_CAL_FOUND && H.dc.ntrack > 0
 GOOD_SHMS_TRACK	      	      SHMS_CAL_FOUND && P.dc.ntrack > 0
@@ -126,8 +126,11 @@ SHMSAeroDidpi            SHMSAeroShouldpi && P.aero.npeSum > 1.0
 
 SHMSCalel	P.cal.etottracknorm > 0.7
 
-SHMSNGCShouldel         SHMSGEN && SHMSCalel && SHMSHGCpi
-SHMSNGCDidel            SHMSNGCShouldel && P.ngcer.npeSum > 0.2
+SHMSNGCShouldelxpos         SHMSGEN && SHMSCalel && SHMSHGCpi && P.ngcer.xAtCer > 0
+SHMSNGCDidelxpos	    SHMSNGCShouldelxpos && P.ngcer.npeSum > 0.5
+
+SHMSNGCShouldelxneg         SHMSGEN && SHMSCalel && SHMSHGCpi && P.ngcer.xAtCer < 0
+SHMSNGCDidelxneg	    SHMSNGCShouldelxneg && P.ngcer.npeSum > 0.5
 
 ##################
 ###   HMS HGC  ###
@@ -148,7 +151,7 @@ HMSHGCDidelec            HMSHGCShouldelec && H.cer.npeSum > 1.5
 
 DELTA_SHMS           P.gtr.dp>-15.5&&P.gtr.dp<25. 
 DELTA_HMS            H.gtr.dp>-10&&H.gtr.dp<10. 
-HMS_ELEC             H.cal.etottracknorm>.35&&H.cer.npeSum>0.5
+HMS_ELEC             H.cal.etottracknorm>.5&&H.cer.npeSum>0.5
 GOOD_EVENT           DELTA_SHMS&&DELTA_HMS&&HMS_ELEC
 
 Physics_master GOOD_EVENT

@@ -77,5 +77,39 @@ fi
 
 sleep 3
 
+################################################################################################################################                                                                                   
+# Section for pion analysis script
+#if [ -f "${UTILPATH}/OUTPUT/Analysis/Lumi/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
+#    read -p "Pion production analysis file already exists, do you want to reprocess it? <Y/N> " option1
+#    if [[ $option1 == "y" || $option1 == "Y" || $option1 == "yes" || $option1 == "Yes" ]]; then
+#	rm "${UTILPATH}/OUTPUT/Analysis/Lumi/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root"
+#	echo "Reprocessing"
+#	python3 ${UTILPATH}/scripts/online_pion_physics/pion_prod_analysis_sw.py Pion_replay_luminosity ${RUNNUMBER} ${MAXEVENTS}
+#    else
+#	echo "Skipping python analysis script step"
+#    fi
+#elif [ ! -f "${UTILPATH}/OUTPUT/Analysis/Lumi/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
+#	python3 ${UTILPATH}/scripts/online_pion_physics/pion_prod_analysis_sw.py Pion_replay_luminosity ${RUNNUMBER} ${MAXEVENTS}
+#fi
+#
+#sleep 3
+
+##################################################################################################################################
+# Section for pion physics ploting script
+#if [ -f "${UTILPATH}/OUTPUT/Analysis/Lumi/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
+#    read -p "Pion physics plots already exits, do you want to reprocess them? <Y/N> " option2
+#    if [[ $option2 == "y" || $option2 == "Y" || $option2 == "yes" || $option2 == "Yes" ]]; then
+#	rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root"
+#	echo "Reprocessing"
+#	python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw.py Analysed_Data ${RUNNUMBER} ${MAXEVENTS}
+#    else
+#	echo "Skipping python physics plotting script step"
+#    fi
+#elif [ ! -f  "${UTILPATH}/OUTPUT/Analysis/Lumi/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
+#	python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw.py Analysed_Data ${RUNNUMBER} ${MAXEVENTS}
+#fi
+#evince "${UTILPATH}/OUTPUT/Analysis/Lumi/${RUNNUMBER}_${MAXEVENTS}_sw_Pion_Analysis_Distributions.pdf" &
+#exit 0
+
 cd ${REPLAYPATH}/UTIL_PION/scripts/luminosity/src/
 python3 lumiyield.py Pion_replay_luminosity ${RUNNUMBER} ${MAXEVENTS}

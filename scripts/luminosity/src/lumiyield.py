@@ -16,11 +16,6 @@ import scipy.integrate as integrate
 import matplotlib.pyplot as plt
 import sys, math, os, subprocess
 
-sys.path.insert(0, '../../../bin/python/')
-import kaonlt as klt
-
-import scaler
-
 ROOTPrefix = sys.argv[1]
 runNum = sys.argv[2]
 MaxEvent=sys.argv[3]
@@ -38,15 +33,39 @@ elif ("cdaq" in HOST[1]):
 elif ("trottar" in HOST[1]):
     REPLAYPATH = "/home/trottar/Analysis/hallc_replay_lt"
 
+sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
+import kaonlt as klt
+import scaler
+
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 
-# thres_curr = 2.5
-thres_curr = 10.0
+thres_curr = 2.5
 
-filename = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/lumi_data.csv" % REPLAYPATH
-rootName = "%s/UTIL_PION/ROOTfiles/Analysis/Lumi/%s_%s_%s.root" % (REPLAYPATH,ROOTPrefix,runNum,MaxEvent)
+out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/lumi_data.csv" % REPLAYPATH
+
+# Construct the name of the rootfile based upon the info we provided
+OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/PionLT" % REPLAYPATH        # Output folder location
+rootName = "%s/UTIL_PION/ROOTfiles/Analysis/Lumi/%s_%s_%s.root" % (REPLAYPATH,ROOTPrefix,runNum,MaxEvent)     # Input file location and variables taking
+print ("Attempting to process %s" %(rootName))
+if os.path.exists(OUTPATH):
+    if os.path.islink(OUTPATH):
+        pass
+    elif os.path.isdir(OUTPATH):
+        pass
+    else:
+        print ("%s exists but is not a directory or sym link, check your directory/link and try again" % (OUTPATH))
+        sys.exit(2)
+else:
+    print("Output path not found, please make a sym link or directory called OUTPUT in UTIL_PION to store output")
+    sys.exit(3)
+if os.path.isfile(rootName):
+    print ("%s exists, processing" % (rootName))
+else:
+    print ("%s not found - do you have the correct sym link/folder set up?" % (rootName))
+    sys.exit(4)
+print("Output path checks out, outputting to %s" % (OUTPATH))
+
 report = "%s/UTIL_PION/REPORT_OUTPUT/Analysis/Lumi/%s_%s_%s.report" % (REPLAYPATH,ROOTPrefix,runNum,MaxEvent)
-# report = "%s/UTIL_PION/REPORT_OUTPUT/replay_coin_Lumi_%s_-1.report" % (REPLAYPATH,runNum)
 
 f = open(report)
     
@@ -60,17 +79,14 @@ for line in f:
     curr_data = line.split(':')
     if ('SW_BCM4A_Beam_Cut_Current' in curr_data[0]) :
         report_current_tmp = curr_data[1].split("uA")[0].strip()
-        print("report_current_tmp",report_current_tmp)
     if ('SW_SHMS_Hadron_Singles_TRACK_EFF' in curr_data[0]):
         SHMS_track_info = curr_data[1].split("+-")
-        print("\n\nSHMS track info ",SHMS_track_info)
-    if ('SW_HMS_Hadron_Singles_TRACK_EFF' in curr_data[0]):
-        HMS_track_info = curr_data[1]
+    if ('SW_HMS_Electron_Singles_TRACK_EFF' in curr_data[0]):
+        HMS_track_info = curr_data[1].split("+-")
     for i, obj in enumerate(psList) :
         if (psList[i] in data[0]) : 
             if (i == 0) :  
                 ps1_tmp = data[1].strip()
-                print("ps1",ps1_tmp)
             if (i == 1) : 
                 ps2_tmp = data[1].strip()
             if (i == 2) :
@@ -90,6 +106,8 @@ ps6=int(ps6_tmp)
 report_current = float(report_current_tmp)
 SHMS_track_eff = float(SHMS_track_info[0])
 SHMS_track_uncern = float(SHMS_track_info[1])
+HMS_track_eff = float(HMS_track_info[0])
+HMS_track_uncern = float(HMS_track_info[1])
 
 for i,index in enumerate(psActual):
     #psValue
@@ -127,11 +145,18 @@ f.close()
 
 print("\nPre-scale values...\nPS1:{0}, PS2:{1}, PS3:{2}, PS4:{3}, PS5:{4}, PS6:{5}\n".format(PS1,PS2,PS3,PS4,PS5,PS6))
 
-PS_used = [["PS1",PS1],["PS2",PS2],["PS3",PS3],["PS4",PS4],["PS5",PS5],["PS6",PS6]]
+PS_list = [["PS1",PS1],["PS2",PS2],["PS3",PS3],["PS4",PS4],["PS5",PS5],["PS6",PS6]]
+PS_used = []
 
-for val in PS_used:
-    if val[1] == 0:
-        PS_used.remove(val)
+for val in PS_list:
+    if val[1] != 0:
+        PS_used.append(val)
+
+PS_names = [PS_used[0][0],PS_used[1][0],PS_used[2][0]]
+SHMS_PS = PS_used[0][1]
+HMS_PS = PS_used[1][1]
+COIN_PS = PS_used[2][1]
+
 
 '''
 SCALER TREE, TSP
@@ -149,7 +174,7 @@ ANALYSIS TREE, T
 tree = up.open(rootName)["T"]
 branch = klt.pyBranch(tree)
 
-if PS_used[1][0] is "PS3" or PS_used[1][0] is "PS4":
+if PS_names[1] is "PS3" or PS_names[1] is "PS4":
     W = tree.array("H.kin.primary.W")
     H_cal_etotnorm = tree.array("H.cal.etotnorm")
     H_cer_npeSum = tree.array("H.cer.npeSum")
@@ -179,7 +204,7 @@ if PS_used[1][0] is "PS3" or PS_used[1][0] is "PS4":
     
     H_bcm_bcm4a_AvgCurrent = tree.array("H.bcm.bcm4a.AvgCurrent")
 
-if PS_used[0][0] is "PS1" or PS_used[0][0] is "PS2":
+if PS_names[0] is "PS1" or PS_names[0] is "PS2":
     #W = tree.array("P.kin.primary.W")
     P_cal_etotnorm = tree.array("P.cal.etotnorm")
     P_hgcer_npeSum = tree.array("P.hgcer.npeSum")
@@ -194,6 +219,7 @@ if PS_used[0][0] is "PS1" or PS_used[0][0] is "PS2":
     P_hod_betanotrack = tree.array("P.hod.betanotrack")
     P_hod_goodstarttime = tree.array("P.hod.goodstarttime")
     P_dc_ntrack = tree.array("P.dc.ntrack")
+    P_ngcer_npeSum = tree.array("P.ngcer.npeSum")
     
     P_dc_1x1_nhit = tree.array("P.dc.1x1.nhit")
     P_dc_1u2_nhit = tree.array("P.dc.1u2.nhit")
@@ -207,40 +233,38 @@ if PS_used[0][0] is "PS1" or PS_used[0][0] is "PS2":
     P_dc_2v1_nhit = tree.array("P.dc.2v1.nhit")
     P_dc_2x2_nhit = tree.array("P.dc.2x2.nhit")
     P_dc_2v2_nhit = tree.array("P.dc.2v2.nhit")
-    
-    P_bcm_bcm4a_AvgCurrent = tree.array("P.bcm.bcm4a.AvgCurrent")
 
-if PS_used[0][0] is "PS1" or PS_used[1][0] is "PS1":
+if PS_names[0] is "PS1":
     T_coin_pTRIG_SHMS_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG1_ROC1_tdcTimeRaw")
     T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG1_ROC2_tdcTimeRaw")
     T_coin_pTRIG_SHMS_ROC1_tdcTime = tree.array("T.coin.pTRIG1_ROC1_tdcTime")
     T_coin_pTRIG_SHMS_ROC2_tdcTime = tree.array("T.coin.pTRIG1_ROC2_tdcTime")
 
-if PS_used[0][0] is "PS2" or PS_used[1][0] is "PS2":
+if PS_names[0] is "PS2":
     T_coin_pTRIG_SHMS_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG2_ROC1_tdcTimeRaw")
     T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG2_ROC2_tdcTimeRaw")
     T_coin_pTRIG_SHMS_ROC1_tdcTime = tree.array("T.coin.pTRIG2_ROC1_tdcTime")
     T_coin_pTRIG_SHMS_ROC2_tdcTime = tree.array("T.coin.pTRIG2_ROC2_tdcTime")
 
-if PS_used[0][0] is "PS3" or PS_used[1][0] is "PS3":
+if PS_names[1] is "PS3":
     T_coin_pTRIG_HMS_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG3_ROC1_tdcTimeRaw")
     T_coin_pTRIG_HMS_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG3_ROC2_tdcTimeRaw")
     T_coin_pTRIG_HMS_ROC1_tdcTime = tree.array("T.coin.pTRIG3_ROC1_tdcTime")
     T_coin_pTRIG_HMS_ROC2_tdcTime = tree.array("T.coin.pTRIG3_ROC2_tdcTime")
 
-if PS_used[0][0] is "PS4" or PS_used[1][0] is "PS4":
+if PS_names[1] is "PS4":
     T_coin_pTRIG_HMS_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG4_ROC1_tdcTimeRaw")
     T_coin_pTRIG_HMS_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG4_ROC2_tdcTimeRaw")
     T_coin_pTRIG_HMS_ROC1_tdcTime = tree.array("T.coin.pTRIG4_ROC1_tdcTime")
     T_coin_pTRIG_HMS_ROC2_tdcTime = tree.array("T.coin.pTRIG4_ROC2_tdcTime")
 
-if PS_used[0][0] is "PS5" or PS_used[1][0] is "PS5":
+if PS_names[2] is "PS5":
     T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG5_ROC1_tdcTimeRaw")
     T_coin_pTRIG_COIN_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG5_ROC2_tdcTimeRaw")
     T_coin_pTRIG_COIN_ROC1_tdcTime = tree.array("T.coin.pTRIG5_ROC1_tdcTime")
     T_coin_pTRIG_COIN_ROC2_tdcTime = tree.array("T.coin.pTRIG5_ROC2_tdcTime")
 
-if PS_used[0][0] is "PS6" or PS_used[1][0] is "PS6":
+if PS_names[2] is "PS6":
     T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG6_ROC1_tdcTimeRaw")
     T_coin_pTRIG_COIN_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG6_ROC2_tdcTimeRaw")
     T_coin_pTRIG_COIN_ROC1_tdcTime = tree.array("T.coin.pTRIG6_ROC1_tdcTime")
@@ -259,7 +283,7 @@ fout = REPLAYPATH+'/UTIL_PION/DB/CUTS/run_type/lumi.cuts'
 # read in cuts file and make dictionary
 c = klt.pyPlot(REPLAYPATH)
 # apply RF cuts to timing cuts file
-c.cut_RF(runNum,MaxEvent)
+#c.cut_RF(runNum,MaxEvent)
 readDict = c.read_dict(fout,runNum)
 
 # This method calls several methods in kaonlt package. It is required to create properly formated
@@ -368,7 +392,7 @@ def pid_cuts():
     plt.xlabel('P_aero_npeSum')
     plt.ylabel('Count')    
     
-def analysis(SHMS_PS, HMS_PS, thres_curr):
+def analysis():
     
     bcm_before = H_bcm_bcm4a_AvgCurrent
     bcm_after = [x for x in H_bcm_bcm4a_AvgCurrent if x > thres_curr ]
@@ -393,9 +417,9 @@ def analysis(SHMS_PS, HMS_PS, thres_curr):
              if bcm > thres_curr]
 
     SHMSTRIG_cut = [trig1
-                 for (trig1,evt,bcm) in zip(T_coin_pTRIG_SHMS_ROC2_tdcTime,EvtType,bcm_after)
-                 if bcm > thres_curr
-                 if evt == 1]
+                    for (trig1,evt,bcm) in zip(T_coin_pTRIG_SHMS_ROC2_tdcTime,EvtType,bcm_after)
+                    if bcm > thres_curr
+                    if evt == 1]
     
     # p_track_lumi_before
     p_track_lumi_before = c.add_cut(P_dc_ntrack,"p_track_lumi_before")
@@ -443,9 +467,9 @@ def analysis(SHMS_PS, HMS_PS, thres_curr):
     p_show_after  = c.add_cut(P_cal_etotnorm,"p_pcut_lumi_eff")
 
     HMSTRIG_cut = [ x
-                  for (x, evt, bcm ) in zip(T_coin_pTRIG_HMS_ROC1_tdcTime, EvtType, bcm_after)
-                  if bcm > thres_curr
-                  if evt == 2]
+                    for (x, evt, bcm ) in zip(T_coin_pTRIG_HMS_ROC1_tdcTime, EvtType, bcm_after)
+                    if bcm > thres_curr
+                    if evt == 2]
 
     # h_track_lumi_before
     h_track_lumi_before = c.add_cut(H_dc_ntrack,"h_track_lumi_before")
@@ -514,94 +538,48 @@ def analysis(SHMS_PS, HMS_PS, thres_curr):
     
     track_info = {
         
-        "HMS_evts_scalar" : len(h_hadcut_lumi_eff),
-        "HMS_evts_scalar_uncern" : math.sqrt(len(h_hadcut_lumi_eff)),
-        "SHMS_evts_scalar" : len(p_pcut_lumi_eff),
-        "SHMS_evts_scalar_uncern" : math.sqrt(len(p_pcut_lumi_eff)),
+        "HMS_evts_scaler" : len(h_hadcut_lumi_eff),
+        "HMS_evts_scaler_uncern" : math.sqrt(len(h_hadcut_lumi_eff)),
+        "SHMS_evts_scaler" : len(p_pcut_lumi_eff),
+        "SHMS_evts_scaler_uncern" : math.sqrt(len(p_pcut_lumi_eff)),
         "h_int_goodscin_evts" : scipy.integrate.simps(h_hadcuts_goodscinhit),
         "p_int_goodscin_evts" : scipy.integrate.simps(p_pcuts_goodscinhit),
         "SHMSTRIG_cut" : len(SHMSTRIG_cut),
         "HMSTRIG_cut" : len(HMSTRIG_cut),
-        "HMS_track" : len(h_track_lumi_after)/len(h_track_lumi_before),
-        "HMS_track_uncern" : (len(h_track_lumi_after)/len(h_track_lumi_before))*math.sqrt((1/len(h_track_lumi_after)) + (1/len(h_track_lumi_before))),
-        "etrack" : len(h_etrack_lumi_after)/len(h_etrack_lumi_before),
-        "etrack_uncern" : (len(h_etrack_lumi_after)/len(h_etrack_lumi_before))*math.sqrt((1/len(h_etrack_lumi_after)) + (1/len(h_etrack_lumi_before))),
-        "SHMS_track" : len(p_track_lumi_after)/len(p_track_lumi_before),
-        "SHMS_track_uncern" : (len(p_track_lumi_after)/len(p_track_lumi_before))*math.sqrt((1/len(p_track_lumi_after)) + (1/len(p_track_lumi_before))),
-        "hadtrack" : len(p_hadtrack_lumi_after)/len(p_hadtrack_lumi_before),
-        "hadtrack_uncern" : (len(p_hadtrack_lumi_after)/len(p_hadtrack_lumi_before))*math.sqrt((1/len(p_hadtrack_lumi_after)) + (1/len(p_hadtrack_lumi_before))),
-        "pitrack" : len(p_pitrack_lumi_after)/len(p_pitrack_lumi_before),
-        "pitrack_uncern" : (len(p_pitrack_lumi_after)/len(p_pitrack_lumi_before))*math.sqrt((1/len(p_pitrack_lumi_after)) + (1/len(p_pitrack_lumi_before))),
-        "Ktrack" : len(p_ktrack_lumi_after)/len(p_ktrack_lumi_before),
-        "Ktrack_uncern" : (len(p_ktrack_lumi_after)/len(p_ktrack_lumi_before))*math.sqrt((1/len(p_ktrack_lumi_after)) + (1/len(p_ktrack_lumi_before))),
-        "ptrack" : len(p_ptrack_lumi_after)/len(p_ptrack_lumi_before),
-        "ptrack_uncern" : (len(p_ptrack_lumi_after)/len(p_ptrack_lumi_before))*math.sqrt((1/len(p_ptrack_lumi_after)) + (1/len(p_ptrack_lumi_before))),
+        "HMS_track" : HMS_track_eff,
+        "HMS_track_uncern" : HMS_track_uncern,
+        "SHMS_track" : SHMS_track_eff,
+        "SHMS_track_uncern" : SHMS_track_uncern,
         "accp_edtm" : (len(EDTM)),
             
     }
 
     print("Terminate","Selection rules have been applied, plotting results")
-    print("Using prescale factors: %s %.0f, %s %.0f\n" % (PS_used[0][0],PS_used[1][0],PS_used[0][1],PS_used[1][1]))
+    print("Using prescale factors: %s %.0f, %s %.0f\n" % (PS_names[0],SHMS_PS,PS_names[1],HMS_PS))
     print("Total number of events: %.0f\n" % (len(EventType)))
     print("Number of EDTM  Events: %.0f\n" % (len(EDTM)))
-    print("Number of SHMSTRIG Events: %.0f\n" % (PS_used[1][0]*scipy.integrate.simps(SHMSTRIG_cut)))
-    print("Number of TRIG3 Events: %.0f\n" % (PS_used[1][1]*scipy.integrate.simps(HMSTRIG_cut)))
-    print("Number of TRIG5 Events: %.0f\n\n" % scipy.integrate.simps(TRIG5))
-
-    print("Number of HMS good events: %.0f +/- %.0f " % ((PS_used[1][1]*len(h_hadcut_lumi_eff))
-                                                         ,math.sqrt(PS_used[1][1]*len(h_hadcut_lumi_eff))))
-    print("Calculated tracking efficiency: %f +/- %f\n" %
-          (len(h_track_lumi_after)/len(h_track_lumi_before),
-           (len(h_track_lumi_after)/len(h_track_lumi_before))*math.sqrt((1/len(h_track_lumi_after))
-                                                         + (1/len(h_track_lumi_before)))))
-    print("Calculated electron tracking efficiency: %f +/- %f\n" %
-          (len(h_etrack_lumi_after)/len(h_etrack_lumi_before),
-           (len(h_etrack_lumi_after)/len(h_etrack_lumi_before))*math.sqrt((1/len(h_etrack_lumi_after))
-                                                           + (1/len(h_etrack_lumi_before)))))
-    print("Calculated HMS Cherenkov efficiency: %f +/- %f\n\n" %
-          (len(h_hadcut_lumi_eff)/len(h_etrack_lumi_after),
-           (len(h_hadcut_lumi_eff)/len(h_etrack_lumi_after))*math.sqrt((1/len(h_hadcut_lumi_eff))
-                                                    + (1/len(h_etrack_lumi_after)))))
-    print("Number of SHMS good events: %.0f +/- %.0f" % ((PS_used[1][0]*len(p_pcut_lumi_eff)),
-                                                         math.sqrt(PS_used[1][0]*len(p_pcut_lumi_eff))))
-    print("Calculated tracking efficiency: %f +/- %f\n" %
-          (len(p_track_lumi_after)/len(p_track_lumi_before),
-           (len(p_track_lumi_after)/len(p_track_lumi_before))*math.sqrt((1/len(p_track_lumi_after))
-                                                         + (1/len(p_track_lumi_before)))))
-    print("Calculated hadron tracking efficiency: %f +/- %f\n" %
-          (len(p_hadtrack_lumi_after)/len(p_hadtrack_lumi_before),
-           (len(p_hadtrack_lumi_after)/len(p_hadtrack_lumi_before))*math.sqrt((1/len(p_hadtrack_lumi_after))
-                                                               + (1/len(p_hadtrack_lumi_before)))))
-    print("Calculated pion tracking efficiency: %f +/- %f\n" %
-          (len(p_pitrack_lumi_after)/len(p_pitrack_lumi_before),
-           (len(p_pitrack_lumi_after)/len(p_pitrack_lumi_before))*math.sqrt((1/len(p_pitrack_lumi_after))
-                                                             + (1/len(p_pitrack_lumi_before)))))
-    print("Calculated kaon tracking efficiency: %f +/- %f\n" %
-          (len(p_ktrack_lumi_after)/len(p_ktrack_lumi_before),
-           (len(p_ktrack_lumi_after)/len(p_ktrack_lumi_before))*math.sqrt((1/len(p_ktrack_lumi_after))
-                                                           + (1/len(p_ktrack_lumi_before)))))
-    print("Calculated proton tracking efficiency: %f +/- %f\n" %
-          (len(p_ptrack_lumi_after)/len(p_ptrack_lumi_before),
-           (len(p_ptrack_lumi_after)/len(p_ptrack_lumi_before))*math.sqrt((1/len(p_ptrack_lumi_after))
-                                                           + (1/len(p_ptrack_lumi_before)))))
-    print("Calculated SHMS Cherenkov efficiency: %f +/- %f\n\n" %
-          (len(p_pcut_lumi_eff)/len(p_etrack_lumi_after),
-           (len(p_pcut_lumi_eff)/len(p_etrack_lumi_after))*math.sqrt((1/len(p_pcut_lumi_eff))
-                                                + (1/len(p_etrack_lumi_after)))))
+    print("Number of SHMSTRIG Events: %.0f\n" % (SHMS_PS*len(SHMSTRIG_cut)))
+    print("Number of HMSTRIG Events: %.0f\n" % (HMS_PS*len(HMSTRIG_cut)))
+    print("Number of HMS good events: %.0f +/- %.0f " % ((HMS_PS*len(h_hadcut_lumi_eff))
+                                                         ,math.sqrt(HMS_PS*len(h_hadcut_lumi_eff))))
+    print("Calculated HMS tracking efficiency: %f +/- %f\n" % ((HMS_track_eff), (HMS_track_uncern)))
+    print("Number of SHMS good events: %.0f +/- %.0f" % ((SHMS_PS*len(p_pcut_lumi_eff)),
+                                                         math.sqrt(SHMS_PS*len(p_pcut_lumi_eff))))
+    print("Calculated SHMS tracking efficiency: %f +/- %f\n" % ((SHMS_track_eff),(SHMS_track_uncern)))
     print("============================================================================\n\n")
           
     return track_info
 
 def main():
 
-    pid_cuts()
-    plt.show()
-    
-    # combine dictionaries
-    scalers = scaler.scaler(PS_used[1][0], PS_used[1][1], thres_curr,report_current,REPLAYPATH,runNum,MaxEvent,s_tree,s_branch) 
-    track_info = analysis([PS_used[0][0], PS_used[0][1]],PS_used[1][0], PS_used[1][1], thres_curr)
-    # lumi_data = {**scalers , **track_info} # only python 3.5+
+    #id_cuts()
+    #plt.show()
 
+    # combine dictionaries
+    scalers = scaler.scaler(PS_names, SHMS_PS, SHMS_PS, thres_curr,report_current,REPLAYPATH,runNum,MaxEvent,s_tree,s_branch) 
+    track_info = analysis()
+
+    # lumi_data = {**scalers , **track_info} # only python 3.5+
     data = {}
     for d in (scalers, track_info): 
         data.update(d)
@@ -610,12 +588,12 @@ def main():
     table  = pd.DataFrame([lumi_data], columns=lumi_data.keys())
     table = table.reindex(sorted(table.columns), axis=1)
     
-    file_exists = os.path.isfile(filename)
+    file_exists = os.path.isfile(out_f)
 
     if file_exists:
-        table.to_csv(filename, index = False, header=False, mode='a',)
+        table.to_csv(out_f, index = False, header=False, mode='a',)
     else:
-        table.to_csv(filename, index = False, header=True, mode='a',)
+        table.to_csv(out_f, index = False, header=True, mode='a',)
 
 if __name__ == '__main__':
     main()
