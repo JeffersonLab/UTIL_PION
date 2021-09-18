@@ -248,6 +248,7 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
                               // 2 = counter is event number
 
   analyzer->SetEvent(event);
+  analyzer->SetMarkInterval(10000);
   // Set EPICS event type
   analyzer->SetEpicsEvtType(180);
   // Define crate map
@@ -263,5 +264,5 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Start the actual analysis.
   analyzer->Process(run);
   // Create report file from template	       
-  analyzer->PrintReport("UTIL_PION/config/TEMPLATES/COIN/Online_Coin_Production.template", Form("UTIL_PION/REPORT_OUTPUT/Analysis/Lumi/Pion_replay_luminosity_%d_%d.report", RunNumber, MaxEvent)); // optional}
+  analyzer->PrintReport("UTIL_PION/config/TEMPLATES/Online_Lumi.template", Form("UTIL_PION/REPORT_OUTPUT/Analysis/Lumi/Pion_replay_luminosity_%d_%d.report", RunNumber, MaxEvent)); // optional}
 }

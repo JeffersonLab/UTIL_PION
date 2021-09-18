@@ -48,9 +48,15 @@ SW_Ps6_factor				   :		  {gHC_ti_ps_factors[5]}
 
 SW_Total_SHMS_3/4_Triggers                   :		{P.pTRIG1.scaler}
 SW_(current_cut)_Total_SHMS_3/4_Triggers     :		{P.pTRIG1.scalerCut}
-SW_Pre-Scaled_SHMS_3/4_Triggers              :		{(P.pTRIG1.scaler/gHC_ti_ps_factors[0]):%.0f}
+SW_Pre-Scaled_SHMS_3/4_Triggers              :		{(P.pTRIG1.scaler/gHC_ti_ps_factors[1]):%.0f}
 SW_SHMS_3/4_Trigger_Rate                     :		{P.pTRIG1.scalerCut/P.1MHz.scalerTimeCut/1000.:%.3f} kHz
 SW_Accepted_SHMS_Triggers                    :		{pTRIG1_ROC2.npassed}
+
+SW_Total_SHMS_EL-REAL_Triggers               :		{P.pTRIG2.scaler}
+SW_(current_cut)_Total_SHMS_EL-REAL_Triggers :		{P.pTRIG2.scalerCut}
+SW_Pre-Scaled_SHMS_EL-REAL_Triggers          :		{(P.pTRIG2.scaler/gHC_ti_ps_factors[1]):%.0f}
+SW_SHMS_EL-REAL_Trigger_Rate                 :		{P.pTRIG2.scalerCut/P.1MHz.scalerTimeCut/1000.:%.3f} kHz
+SW_Accepted_SHMS_EL-REAL_Triggers            :		{pTRIG2_ROC2.npassed}
 
 SW_Total_HMS_EL-REAL_Triggers                :		{P.pTRIG4.scaler}
 SW_(current_cut)_Total_HMS_EL-REAL_Triggers  :		{P.pTRIG4.scalerCut}
