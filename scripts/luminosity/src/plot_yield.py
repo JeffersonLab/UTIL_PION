@@ -29,11 +29,50 @@ elif ("cdaq" in HOST[1]):
 elif ("trottar" in HOST[1]):
     REPLAYPATH = "/home/trottar/Analysis/hallc_replay_lt"
 
+inp_name = sys.argv[1]
+print(inp_name)
+if "1" in inp_name:
+    if "LH2" in inp_name.upper():
+        target = "LH2"
+        inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_1/LH2/lumi_data_l1_lh2.csv" % str(REPLAYPATH)
+        out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_1/LH2/yield_data_l1_lh2.csv" % str(REPLAYPATH)
+        print("\nGrabbing input...\n\n%s" % str(inp_f))
+    if "LD2" in inp_name.upper():
+        target = "LD2"
+        inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_1/LD2/lumi_data_l1_ld2.csv" % str(REPLAYPATH)
+        out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_1/LD2/yield_data_l1_ld2.csv" % str(REPLAYPATH)
+        print("\nGrabbing input...\n\n%s" % str(inp_f))
+    if "C" in inp_name.upper():
+        target = "carbon"
+        inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_1/Carbon0p5/lumi_data_l1_c0p5.csv" % str(REPLAYPATH)
+        out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_1/Carbon0p5/yield_data_l1_c0p5.csv" % str(REPLAYPATH)
+        print("\nGrabbing input...\n\n%s" % str(inp_f))
+elif "2" in inp_name:
+    if "LH2" in inp_name.upper():
+        target = "LH2"
+        inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_2/LH2/lumi_data_l2_lh2.csv" % str(REPLAYPATH)
+        out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_2/LH2/yield_data_l2_lh2.csv" % str(REPLAYPATH)
+        print("\nGrabbing input...\n\n%s" % str(inp_f))
+    if "LD2" in inp_name.upper():
+        target = "LD2"
+        inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_2/LD2/lumi_data_l2_ld2.csv" % str(REPLAYPATH)
+        out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_2/LD2/yield_data_l2_ld2.csv" % str(REPLAYPATH)
+        print("\nGrabbing input...\n\n%s" % str(inp_f))
+    if "C" in inp_name.upper():
+        target = "carbon"
+        inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_2/Carbon0p5/lumi_data_l2_c0p5.csv" % str(REPLAYPATH)
+        out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_2/Carbon0p5/yield_data_l2_c0p5.csv" % str(REPLAYPATH)
+        print("\nGrabbing input...\n\n%s" % str(inp_f))
+elif inp_name == None:
+    inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/lumi_data.csv" % str(REPLAYPATH)
+    out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/yield_data.csv" % str(REPLAYPATH)
+    print("\nError: Invalid input...\nGrabbing default input...\n\n%s" % str(inp_f))
+else:
+    inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/lumi_data.csv" % str(REPLAYPATH)
+    out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/yield_data.csv" % str(REPLAYPATH)
+    print("\nGrabbing default input...\n\n%s" % str(inp_f))
 
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
-
-inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/lumi_data.csv" % str(REPLAYPATH)
-out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/yield_data.csv" % str(REPLAYPATH)
 
 try:
     lumi_data = dict(pd.read_csv(inp_f))
@@ -42,7 +81,6 @@ except IOError:
 print(lumi_data.keys())
     
 # prints first instance of run number-> print(lumi_data["run number"][0])
-target = "carbon"
 
 if "PS1" in lumi_data.keys():
     SHMS_PS = lumi_data["PS1"]
@@ -115,21 +153,21 @@ def calc_yield():
     for i,curr in enumerate(yield_dict["current"]):
         if curr == min(yield_dict["current"]):
             min_yield_HMS_scaler = yield_dict["yield_HMS_scaler"][i]
-            min_yield_SHMS_scaler = yield_dict["yield_HMS_scaler"][i]
+            min_yield_SHMS_scaler = yield_dict["yield_SHMS_scaler"][i]
     yield_dict.update({"min_yield_HMS_scaler" : min_yield_HMS_scaler})
     yield_dict.update({"min_yield_SHMS_scaler" : min_yield_SHMS_scaler})
                 
     for i,curr in enumerate(yield_dict["current"]):
         if curr == min(yield_dict["current"]):
             min_yield_HMS_notrack = yield_dict["yield_HMS_notrack"][i]
-            min_yield_SHMS_notrack = yield_dict["yield_HMS_notrack"][i]
+            min_yield_SHMS_notrack = yield_dict["yield_SHMS_notrack"][i]
     yield_dict.update({"min_yield_HMS_notrack" : min_yield_HMS_notrack})
     yield_dict.update({"min_yield_SHMS_notrack" : min_yield_SHMS_notrack})
 
     for i,curr in enumerate(yield_dict["current"]):
         if curr == min(yield_dict["current"]):
             min_yield_HMS_track = yield_dict["yield_HMS_track"][i]
-            min_yield_SHMS_track = yield_dict["yield_HMS_track"][i]
+            min_yield_SHMS_track = yield_dict["yield_SHMS_track"][i]
     yield_dict.update({"min_yield_HMS_track" : min_yield_HMS_track})
     yield_dict.update({"min_yield_SHMS_track" : min_yield_SHMS_track})
 

@@ -30,7 +30,9 @@ elif [[ ${RUNTYPE} = *"Lumi"* ]]; then
 elif [[ ${RUNTYPE} = *"HeePSing"* ]]; then
     REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_shms_production_${RUNNUMBER}_-1.report" # Finalised, all of the available info SHOULD be in the SHMS report file, don't need to look at both
 elif [[ ${RUNTYPE} = *"HeePCoin"* ]]; then
-    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_coin_production_${RUNNUMBER}_-1.report" # Finalised
+    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_coin_production_${RUNNUMBER}_-1.report" # Finalised 
+elif [[ ${RUNTYPE} = *"fADC"* ]]; then
+    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/PionLT/Pion_replay_coin_production_${RUNNUMBER}_-1.report" # Finalised, it just uses a PionLT replay
 else
     REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/General/Pion_replay_coin_production_${RUNNUMBER}_-1.report" # CHANGE WHEN FINALISED
 fi
@@ -48,10 +50,12 @@ EBeam=`echo ${KINFILE_INFO} | cut -d ','  -f7`
 
 # Get information available in the report file
 if [[ -f ${REPORTFILE} ]]; then
-    if [[ ${RUNTYPE} != "HeePSing" ]]; then
-	REPORTFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/reportfile.py ${REPORTFILE}`
+    if [[ ${RUNTYPE} == "Lumi" ]]; then
+	REPORTFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/reportfile_Lumi.py ${REPORTFILE}`
     elif [[ ${RUNTYPE} == "HeePSing" ]]; then
 	REPORTFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/reportfile_HeePSing.py ${REPORTFILE}`
+    elif [[ ${RUNTYPE} != "HeePSing" || ${RUNTYPE} == "Lumi" ]]; then
+	REPORTFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/reportfile.py ${REPORTFILE}`
     fi
     Current=`echo ${REPORTFILE_INFO} | cut -d ',' -f1`
     PS1=`echo ${REPORTFILE_INFO} | cut -d ',' -f2`
@@ -96,7 +100,7 @@ echo "HMS momentum: $HMS_P"
 echo "HMS angle: $HMS_Angle"
 echo "HMS particle mass : $HMS_mass"
 echo "Current: $Current"
-if [[ ${RUNTYPE} != "HeePSing" ]]; then
+if [[ ${RUNTYPE} != "HeePSing" && ${RUNTYPE} != "Lumi" ]]; then
     echo "PS1 : $PS1"
 else echo "PS2 : $PS1" # For HeepSingles we care about both ELReal triggers (2 and 4)
 fi
@@ -104,19 +108,19 @@ echo "PS4 : $PS4"
 echo "PS5 : $PS5"
 echo "Raw HMS rate [kHz]: $HMS_Rate"
 echo "Raw SHMS rate [kHz]: $SHMS_Rate"
-if [[ ${RUNTYPE} != "HeePSing" ]]; then
+if [[ ${RUNTYPE} != "HeePSing" && ${RUNTYPE} != "Lumi" ]]; then
     echo "Raw COIN rate [kHz]: $COIN_Rate"
 else echo "Raw COIN rate [kHz] (No coin - SHMS rate duplicated): $COIN_Rate"
 fi
 echo "Charge [mC]: $Charge"
 echo "Raw HMS: $Raw_HMS"
 echo "Raw SHMS: $Raw_SHMS"
-if [[ ${RUNTYPE} != "HeePSing" ]]; then
+if [[ ${RUNTYPE} != "HeePSing" && ${RUNTYPE} != "Lumi" ]]; then
     echo "Raw coin: $Raw_COIN"
 else echo "Raw coin (No coin - SHMS number duplicated): $Raw_COIN"
 fi
 echo "EDTM: $EDTM"
-if [[ ${RUNTYPE} != "HeePSing" ]]; then
+if [[ ${RUNTYPE} != "HeePSing" && ${RUNTYPE} != "Lumi" ]]; then
     echo "SHMS hadron tracking: $Tracking"
 else echo "SHMS electron tracking: $Tracking"
 fi

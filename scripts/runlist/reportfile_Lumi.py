@@ -37,7 +37,7 @@ for line in ReportFile:
         Current = float(((line.split(":")[1]).strip()).split(" ")[0]) # Need to split on : delimiter to get number, then space to remove unit
         TestVar+=1
         #print('Current', TestVar, "\n")
-    if "SW_Ps2_factor" in line : # In the HeePSingles runs, we actually only care about EL-Reals so we pick up the PS2 rate, to keep the number of columns down, this is #printed as "PS1"
+    if "SW_Ps2_factor" in line : # In the Lumi runs, we actually only care about EL-Reals so we pick up the PS2 rate, to keep the number of columns down, this is #printed as "PS1"
         PS2 = int((line.split(":"))[1])
         TestVar+=1
         #print('PS2', TestVar, "\n")
@@ -57,7 +57,7 @@ for line in ReportFile:
         SHMS_Rate = float(((line.split(":")[1]).strip()).split(" ")[0]) 
         TestVar+=1
         #print('SHMS_Rate', TestVar, "\n")
-        # Need to define both in this if statement since they have the same name, it is incremented twice
+    if "SW_SHMS_EL-REAL_Trigger_Rate" in line :
         COIN_Rate = float(((line.split(":")[1]).strip()).split(" ")[0]) 
         TestVar+=1
         #print('COIN_Rate', TestVar, "\n")
@@ -114,10 +114,10 @@ for i,val in enumerate(psActual):
         PS5 = int(psValue[i])
 
 if TestVar != 13 and TestVar > 13 :
-    print(" !!! WARNING IN reportfile_HeePSing.py !!! \n More than expected matching entries found, some information may have been overwritten \n !!! WARNING IN reportfile_HeePSing.py !!!")
+    print(" !!! WARNING IN reportfile_Lumi.py !!! \n More than expected matching entries found, some information may have been overwritten \n !!! WARNING IN reportfile_Lumi.py !!!")
     RunListEntry=("%.3f,%i,%i,%i,%.3f,%.3f,%.3f,%.3f,%ik,%ik,%ik,%ik,%.3f" % (Current, PS2, PS4, PS5, HMS_Rate, SHMS_Rate, COIN_Rate, Charge, Raw_HMS, Raw_SHMS, Raw_COIN, EDTM, Elec_Track) )
 elif TestVar != 13 and TestVar < 13 :
-    print(" !!! WARNING IN reportfile_HeePSing.py !!! \n Less than expected matching entries found, some information may have not have been gathered \n !!! WARNING IN reportfile_HeePSing.py !!!")
+    print(" !!! WARNING IN reportfile_Lumi.py !!! \n Less than expected matching entries found, some information may have not have been gathered \n !!! WARNING IN reportfile_Lumi.py !!!")
     RunListEntry=("%.3f,%i,%i,%i,%.3f,%.3f,%.3f,%.3f,%ik,%ik,%ik,%ik,%.3f" % (Current, PS2, PS4, PS5, HMS_Rate, SHMS_Rate, COIN_Rate, Charge, Raw_HMS, Raw_SHMS, Raw_COIN, EDTM, Elec_Track) )
 else :
     RunListEntry=("%.3f,%i,%i,%i,%.3f,%.3f,%.3f,%.3f,%ik,%ik,%ik,%ik,%.3f" % (Current, PS2, PS4, PS5, HMS_Rate, SHMS_Rate, COIN_Rate, Charge, Raw_HMS, Raw_SHMS, Raw_COIN, EDTM, Elec_Track) )

@@ -161,6 +161,8 @@ HMS Hodoscope S1X	   :	{H.S1X.scalerCut} [ {(H.S1X.scalerCut/H.1MHz.scalerTimeCu
 
 EDTM Accepted Triggers	   :	{edtm_accepted.npassed}
 EDTM Live Time		   :	{edtm_accepted.npassed/(P.EDTM.scalerCut+0.0001):%8.4f} +- {(sqrt(P.EDTM.scalerCut-edtm_accepted.npassed) / (P.EDTM.scalerCut+.0001)):%8.4f}
+# SJDK - 20/09/21 - Testing NON scaler cut values to see if number makes more sense
+EDTM Live Time		   :	{edtm_accepted.npassed/(P.EDTM.scaler+0.0001):%8.4f} +- {(sqrt(P.EDTM.scaler-edtm_accepted.npassed) / (P.EDTM.scaler+.0001)):%8.4f}
 
 =:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:
 =   Computer Live/Dead Times   = 

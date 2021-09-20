@@ -281,7 +281,7 @@ P_dp_vs_beta_pions_cut = ROOT.TH2D("P_dp_vs_beta_pions_cut", "SHMS #delta vs SHM
 P_MMpi_vs_beta_pions_cut = ROOT.TH2D("P_MMpi_vs_beta_pions_cut", "Missing Mass vs SHMS #beta (with cut); MM_{#pi}; SHMS_#beta", 100, 0, 2, 200, 0, 2)
 
 MMpi_vs_ePiCoinTime_pions_cut_prompt = ROOT.TH2D("MMpi_vs_ePiCoinTime_pions_cut_prompt","Missing Mass vs Electron-Pion CTime; MM_{#pi}; e #pi Coin_Time",100, 0, 2, 100, -2, 2)
-Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, 0.5, 4.5, 200, 2.7, 3.6)
+Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, 3.0, 8.0, 200, 2.7, 3.6)
 phiqvst_pions_cut = ROOT.TH2D("phiqvst_pions_cut","; #phi ;t", 12, -3.14, 3.14, 24, 0.0, 1.2)
 
 # 11/09/21 - SJDK - Adding some 3D XY NPE plots, need to take projections of these (which I need to figure out how to do in PyRoot. Making these manually from the command line for now.
@@ -423,7 +423,7 @@ for event in Cut_Pion_Events_Random_tree:
 #    P_RFTime_pions_cut_randm.Fill(event.P_RF_Dist)
     ePiCoinTime_pions_cut_randm.Fill(event.CTime_ePiCoinTime_ROC1)
     P_MMpi_pions_cut_randm.Fill(event.MMpi)
-
+7
 print("Histograms filled")
 
 ##############################################################################################################################################
@@ -552,6 +552,8 @@ P_yp_pions_cut.SetLineColor(4)
 P_yp_pions_cut.Draw("same")
 c1_acpt.cd(6)
 gPad.SetLogy()
+P_dp_pions_uncut.SetMinimum(0.1*P_dp_pions_cut.GetMinimum()+1) # SJDK 18/09/21 - Implemented same fixed as used above for HMS
+P_dp_pions_uncut.SetMaximum(10*P_dp_pions_uncut.GetMaximumBin())
 P_dp_pions_uncut.SetLineColor(2)
 P_dp_pions_uncut.Draw()
 P_dp_pions_cut.SetLineColor(4)

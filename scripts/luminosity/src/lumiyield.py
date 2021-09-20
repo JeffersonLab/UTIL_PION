@@ -79,7 +79,7 @@ for line in f:
     curr_data = line.split(':')
     if ('SW_BCM4A_Beam_Cut_Current' in curr_data[0]) :
         report_current_tmp = curr_data[1].split("uA")[0].strip()
-    if ('SW_SHMS_Hadron_Singles_TRACK_EFF' in curr_data[0]):
+    if ('SW_SHMS_Electron_Singles_TRACK_EFF' in curr_data[0]):
         SHMS_track_info = curr_data[1].split("+-")
     if ('SW_HMS_Electron_Singles_TRACK_EFF' in curr_data[0]):
         HMS_track_info = curr_data[1].split("+-")
@@ -152,10 +152,15 @@ for val in PS_list:
     if val[1] != 0:
         PS_used.append(val)
 
-PS_names = [PS_used[0][0],PS_used[1][0],PS_used[2][0]]
-SHMS_PS = PS_used[0][1]
-HMS_PS = PS_used[1][1]
-COIN_PS = PS_used[2][1]
+if len(PS_used) > 2:
+    PS_names = [PS_used[0][0],PS_used[1][0],PS_used[2][0]]
+    SHMS_PS = PS_used[0][1]
+    HMS_PS = PS_used[1][1]
+    COIN_PS = PS_used[2][1]
+else:
+    PS_names = [PS_used[0][0],PS_used[1][0]]
+    SHMS_PS = PS_used[0][1]
+    HMS_PS = PS_used[1][1]
 
 
 '''
@@ -258,17 +263,18 @@ if PS_names[1] is "PS4":
     T_coin_pTRIG_HMS_ROC1_tdcTime = tree.array("T.coin.pTRIG4_ROC1_tdcTime")
     T_coin_pTRIG_HMS_ROC2_tdcTime = tree.array("T.coin.pTRIG4_ROC2_tdcTime")
 
-if PS_names[2] is "PS5":
-    T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG5_ROC1_tdcTimeRaw")
-    T_coin_pTRIG_COIN_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG5_ROC2_tdcTimeRaw")
-    T_coin_pTRIG_COIN_ROC1_tdcTime = tree.array("T.coin.pTRIG5_ROC1_tdcTime")
-    T_coin_pTRIG_COIN_ROC2_tdcTime = tree.array("T.coin.pTRIG5_ROC2_tdcTime")
-
-if PS_names[2] is "PS6":
-    T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG6_ROC1_tdcTimeRaw")
-    T_coin_pTRIG_COIN_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG6_ROC2_tdcTimeRaw")
-    T_coin_pTRIG_COIN_ROC1_tdcTime = tree.array("T.coin.pTRIG6_ROC1_tdcTime")
-    T_coin_pTRIG_COIN_ROC2_tdcTime = tree.array("T.coin.pTRIG6_ROC2_tdcTime")
+if len(PS_used) > 2:
+    if PS_names[2] is "PS5":
+        T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG5_ROC1_tdcTimeRaw")
+        T_coin_pTRIG_COIN_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG5_ROC2_tdcTimeRaw")
+        T_coin_pTRIG_COIN_ROC1_tdcTime = tree.array("T.coin.pTRIG5_ROC1_tdcTime")
+        T_coin_pTRIG_COIN_ROC2_tdcTime = tree.array("T.coin.pTRIG5_ROC2_tdcTime")
+        
+        if PS_names[2] is "PS6":
+            T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG6_ROC1_tdcTimeRaw")
+            T_coin_pTRIG_COIN_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG6_ROC2_tdcTimeRaw")
+            T_coin_pTRIG_COIN_ROC1_tdcTime = tree.array("T.coin.pTRIG6_ROC1_tdcTime")
+            T_coin_pTRIG_COIN_ROC2_tdcTime = tree.array("T.coin.pTRIG6_ROC2_tdcTime")
 
 T_coin_pFADC_TREF_ROC2_adcPed = tree.array("T.coin.pFADC_TREF_ROC2_adcPed")
 T_coin_hFADC_TREF_ROC1_adcPed = tree.array("T.coin.hFADC_TREF_ROC1_adcPed")
@@ -407,10 +413,11 @@ def analysis():
              for x,bcm in zip(T_coin_pTRIG_HMS_ROC1_tdcTime,bcm_after)
              if bcm > thres_curr
              if x !=0.0]
-    COINTRIG  = [x
-             for x,bcm in zip(T_coin_pTRIG_COIN_ROC1_tdcTime,bcm_after)
-             if bcm > thres_curr
-             if x !=0.0]
+    if len(PS_used) > 2:
+        COINTRIG  = [x
+                     for x,bcm in zip(T_coin_pTRIG_COIN_ROC1_tdcTime,bcm_after)
+                     if bcm > thres_curr
+                     if x !=0.0]
     
     EventType = [x
              for x,bcm in zip(EvtType,bcm_after)
@@ -556,9 +563,9 @@ def analysis():
 
     print("Terminate","Selection rules have been applied, plotting results")
     print("Using prescale factors: %s %.0f, %s %.0f\n" % (PS_names[0],SHMS_PS,PS_names[1],HMS_PS))
-    print("Total number of events: %.0f\n" % (len(EventType)))
-    print("Number of EDTM  Events: %.0f\n" % (len(EDTM)))
-    print("Number of SHMSTRIG Events: %.0f\n" % (SHMS_PS*len(SHMSTRIG_cut)))
+    print("Total number of events: %.0f" % (len(EventType)))
+    print("Number of EDTM  Events: %.0f" % (len(EDTM)))
+    print("Number of SHMSTRIG Events: %.0f" % (SHMS_PS*len(SHMSTRIG_cut)))
     print("Number of HMSTRIG Events: %.0f\n" % (HMS_PS*len(HMSTRIG_cut)))
     print("Number of HMS good events: %.0f +/- %.0f " % ((HMS_PS*len(h_hadcut_lumi_eff))
                                                          ,math.sqrt(HMS_PS*len(h_hadcut_lumi_eff))))

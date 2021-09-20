@@ -549,8 +549,8 @@ P_yp_pions_cut.SetLineColor(4)
 P_yp_pions_cut.Draw("same")
 c1_acpt.cd(6)
 gPad.SetLogy()
-P_dp_pions_uncut.SetMinimum(0.1*P_dp_pions_cut.GetMinimum()+1) # SJDK 18/09/21 - Implemented same fixed as used above for HMS
-P_dp_pions_uncut.SetMaximum(10*P_dp_pions_uncut.GetBinContent(H_dp_pions_uncut.GetMaximumBin())) # 12/09/19 - NH - Slight change as the plotting max was broken 
+#P_dp_pions_uncut.SetMinimum(0.1*P_dp_pions_cut.GetMinimum()+1) # SJDK 18/09/21 - Implemented same fixed as used above for HMS
+#P_dp_pions_uncut.SetMaximum(10*P_dp_pions_uncut.GetBinContent(H_dp_pions_uncut.GetMaximumBin())) # 12/09/19 - NH - Slight change as the plotting max was broken 
 P_dp_pions_uncut.SetLineColor(2)
 P_dp_pions_uncut.Draw()
 P_dp_pions_cut.SetLineColor(4)
@@ -634,6 +634,7 @@ legend11.AddEntry("P_aero_npe_pions_uncut", "without cuts", "l")
 legend11.AddEntry("P_aero_npe_pions_cut", "with cuts (acpt/RF/PID)", "l")
 legend11.Draw("same")
 c2_pid.cd(3)
+gPad.SetLogy()
 P_ngcer_npe_pions_uncut.SetLineColor(2)
 P_ngcer_npe_pions_uncut.Draw()
 P_ngcer_npe_pions_cut.SetLineColor(4)
