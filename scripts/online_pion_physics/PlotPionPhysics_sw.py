@@ -36,9 +36,14 @@ maxbin = 0.98 # maximum bin for selecting neutrons events in missing mass distri
 ##################################################################################################################################################
 
 # Check the number of arguments provided to the script
+FilenameOverride=False # SJDK 21/09/21 - Added a secret 4th argument so that a full kinematic can be processed, the run number is needed for cuts, but for the kinematic analysis, the filename is not by run number
 if len(sys.argv)-1!=3:
-    print("!!!!! ERROR !!!!!\n Expected 3 arguments\n Usage is with - ROOTfilePrefix RunNumber MaxEvents \n!!!!! ERROR !!!!!")
-    sys.exit(1)
+    if len(sys.argv)-1!=4:
+        print("!!!!! ERROR !!!!!\n Expected 3 arguments\n Usage is with - ROOTfilePrefix RunNumber MaxEvents \n!!!!! ERROR !!!!!")
+        sys.exit(1)
+    else:
+        print ("!!!!! Running with secret 4th argument - FilenameOverride - Taking file name to process as stated EXACTLY in 4th arg !!!!!")
+        FilenameOverride=sys.argv[4] # If 4 arguments provided, set the FilenameOverride value to be arg 4
 
 ##################################################################################################################################################
 
@@ -51,7 +56,7 @@ USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
 HOST = subprocess.getstatusoutput("hostname")
 
 if ("farm" in HOST[1]):
-    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
+    REPLAYPATH = "/group/c-pionlt/online_analysis/hallc_replay_lt"
 elif ("qcd" in HOST[1]):
     REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
 elif ("cdaq" in HOST[1]):
@@ -73,8 +78,10 @@ Pion_Analysis_Distributions = "%s/%s_%s_sw_Pion_Analysis_Distributions.pdf" % (O
 #################################################################################################################################################
 
 # Construct the name of the rootfile based upon the info we provided
-rootName = "%s/UTIL_PION/OUTPUT/Analysis/PionLT/%s_%s_%s.root" % (REPLAYPATH, runNum, MaxEvent, ROOTPrefix)     # Input file location and variables taking
-#rootName = "/home/cdaq/hallc-online/hallc_replay_lt/UTIL_PION/OUTPUT/Analysis/PionLT/8076_-1_Analysed_Data.root" # Hard coded file for testing on cdaq
+if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
+    rootName = "%s/UTIL_PION/OUTPUT/Analysis/PionLT/%s_%s_%s.root" % (REPLAYPATH, runNum, MaxEvent, ROOTPrefix)     # Input file location and variables taking
+elif (FilenameOverride != False): # Special condition, with 4th arg, use 4th arg as file name
+    rootName = "%s/UTIL_PION/OUTPUT/Analysis/PionLT/%s" % (REPLAYPATH, FilenameOverride)
 print ("Attempting to process %s" %(rootName))
 if os.path.exists(OUTPATH):
     if os.path.islink(OUTPATH):
@@ -285,9 +292,9 @@ Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, 3.0, 8.0, 
 phiqvst_pions_cut = ROOT.TH2D("phiqvst_pions_cut","; #phi ;t", 12, -3.14, 3.14, 24, 0.0, 1.2)
 
 # 11/09/21 - SJDK - Adding some 3D XY NPE plots, need to take projections of these (which I need to figure out how to do in PyRoot. Making these manually from the command line for now.
-P_HGC_xy_npe_pions_uncut = ROOT.TH3D("P_HGC_xy_npe_pions_uncut", "SHMS HGC NPE as fn of yAtCer vs SHMS HGC xAtCer (with cuts); HGC_yAtCer(cm); HGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
-P_Aero_xy_npe_pions_uncut = ROOT.TH3D("P_Aero_xy_npe_pions_uncut", "SHMS Aerogel NPE as fn of yAtCer vs xAtCer (with cuts); Aero_yAtCer(cm); Aero_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
-P_NGC_xy_npe_pions_uncut = ROOT.TH3D("P_NGC_xy_npe_pions_uncut", "SHMS NGC NPE as fn of yAtCer vs xAtCer (with cuts); NGC_yAtCer(cm); NGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
+P_HGC_xy_npe_pions_uncut = ROOT.TH3D("P_HGC_xy_npe_pions_uncut", "SHMS HGC NPE as fn of yAtCer vs SHMS HGC xAtCer (no cuts); HGC_yAtCer(cm); HGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
+P_Aero_xy_npe_pions_uncut = ROOT.TH3D("P_Aero_xy_npe_pions_uncut", "SHMS Aerogel NPE as fn of yAtCer vs xAtCer (no cuts); Aero_yAtCer(cm); Aero_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
+P_NGC_xy_npe_pions_uncut = ROOT.TH3D("P_NGC_xy_npe_pions_uncut", "SHMS NGC NPE as fn of yAtCer vs xAtCer (no cuts); NGC_yAtCer(cm); NGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
 P_HGC_xy_npe_pions_cut = ROOT.TH3D("P_HGC_xy_npe_pions_cut", "SHMS HGC NPE as fn of yAtCer vs SHMS HGC xAtCer (with cuts); HGC_yAtCer(cm); HGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
 P_Aero_xy_npe_pions_cut = ROOT.TH3D("P_Aero_xy_npe_pions_cut", "SHMS Aerogel NPE as fn of yAtCer vs xAtCer (with cuts); Aero_yAtCer(cm); Aero_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
 P_NGC_xy_npe_pions_cut = ROOT.TH3D("P_NGC_xy_npe_pions_cut", "SHMS NGC NPE as fn of yAtCer vs xAtCer (with cuts); NGC_yAtCer(cm); NGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
@@ -794,7 +801,29 @@ c1_delta.cd(3)
 P_dp_vs_beta_pions_uncut.Draw("COLZ")
 c1_delta.cd(4)
 P_dp_vs_beta_pions_cut.Draw("COLZ")
-c1_delta.Print(Pion_Analysis_Distributions + ')')
+c1_delta.Print(Pion_Analysis_Distributions)
+
+c1_proj = TCanvas("c1_proj", "HGC/NGC/Aero XY Projection", 100, 0, 1000, 900)
+c1_proj.Divide(2,3)
+c1_proj.cd(1)
+HGC_proj_yx_uncut = ROOT.TH2D(P_HGC_xy_npe_pions_uncut.Project3D("HGC_proj_yx_uncut"))
+HGC_proj_yx_uncut.Draw("COLZ")
+c1_proj.cd(2)
+HGC_proj_yx_cut = ROOT.TH2D(P_HGC_xy_npe_pions_cut.Project3D("HGC_proj_yx_cut"))
+HGC_proj_yx_cut.Draw("COLZ")
+c1_proj.cd(3)
+NGC_proj_yx_uncut = ROOT.TH2D(P_NGC_xy_npe_pions_uncut.Project3D("NGC_proj_yx_uncut"))
+NGC_proj_yx_uncut.Draw("COLZ")
+c1_proj.cd(4)
+NGC_proj_yx_cut = ROOT.TH2D(P_NGC_xy_npe_pions_cut.Project3D("NGC_proj_yx_cut"))
+NGC_proj_yx_cut.Draw("COLZ")
+c1_proj.cd(5)
+Aero_proj_yx_uncut = ROOT.TH2D(P_Aero_xy_npe_pions_uncut.Project3D("Aero_proj_yx_uncut"))
+Aero_proj_yx_uncut.Draw("COLZ")
+c1_proj.cd(6)
+Aero_proj_yx_cut = ROOT.TH2D(P_Aero_xy_npe_pions_cut.Project3D("Aero_proj_yx_cut"))
+Aero_proj_yx_cut.Draw("COLZ")
+c1_proj.Print(Pion_Analysis_Distributions + ')')
 
 #############################################################################################################################################
 
@@ -857,6 +886,9 @@ P_ngcer_vs_aero_npe_pions_uncut.Write()
 H_dp_vs_beta_pions_uncut.Write()
 P_dp_vs_beta_pions_uncut.Write()
 P_MMpi_vs_beta_pions_uncut.Write()
+HGC_proj_yx_uncut.Write()
+NGC_proj_yx_uncut.Write()
+Aero_proj_yx_uncut.Write()
 P_HGC_xy_npe_pions_uncut.Write()
 P_Aero_xy_npe_pions_uncut.Write()
 P_NGC_xy_npe_pions_uncut.Write()
@@ -918,6 +950,9 @@ P_MMpi_vs_beta_pions_cut.Write()
 P_HGC_xy_npe_pions_cut.Write()
 P_Aero_xy_npe_pions_cut.Write()
 P_NGC_xy_npe_pions_cut.Write()
+HGC_proj_yx_cut.Write()
+NGC_proj_yx_cut.Write()
+Aero_proj_yx_cut.Write()
 
 d_Cut_Pion_Events_Prompt.cd()
 P_beta_pions_cut_prompt.Write()
@@ -935,4 +970,3 @@ P_MMpi_pions_cut_randm.Write()
 outHistFile.Close()
 infile.Close() 
 print ("Processing Complete")
-print("!!!!!!!!\n %i pi-n events \n!!!!!!!!" % BinIntegral)
