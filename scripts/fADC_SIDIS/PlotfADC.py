@@ -794,7 +794,7 @@ c1_delta.cd(3)
 P_dp_vs_beta_pions_uncut.Draw("COLZ")
 c1_delta.cd(4)
 P_dp_vs_beta_pions_cut.Draw("COLZ")
-c1_delta.Print(Pion_Analysis_Distributions + ')')
+c1_delta.Print(Pion_Analysis_Distributions)
 
 c1_proj = TCanvas("c1_proj", "HGC/NGC/Aero XY Projection", 100, 0, 1000, 900)
 c1_proj.Divide(2,3)
