@@ -293,8 +293,6 @@ P_Aero_xy_npe_pions_cut = ROOT.TH3D("P_Aero_xy_npe_pions_cut", "SHMS Aerogel NPE
 P_NGC_xy_npe_pions_cut = ROOT.TH3D("P_NGC_xy_npe_pions_cut", "SHMS NGC NPE as fn of yAtCer vs xAtCer (with cuts); NGC_yAtCer(cm); NGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
 #################################################################################################################################################
 
-
-
 # Filling Histograms for Pions
 for event in Cut_Pion_Events_noRF_tree:
     P_RFTime_pions_cut_noRF.Fill(event.P_RF_Dist)
