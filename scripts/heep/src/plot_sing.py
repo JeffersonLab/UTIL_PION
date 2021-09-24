@@ -40,15 +40,15 @@ sys.path.insert(0, 'python/')
 
 # Check the number of arguments provided to the script
 if len(sys.argv)-1!=4:
-    print("!!!!! ERROR !!!!!\n Expected 4 arguments\n Usage is with - ROOTfilePrefix RunNumber MaxEvents spec \n!!!!! ERROR !!!!!")
+    print("!!!!! ERROR !!!!!\n Expected 4 arguments\n Usage is with - ROOTfileSuffix RunNumber MaxEvents spec \n!!!!! ERROR !!!!!")
     sys.exit(1)
 
 ##################################################################################################################################################
 
 # Input params - run number and max number of events
-runNum = sys.argv[1]
-MaxEvent = sys.argv[2]
-ROOTPrefix = sys.argv[3]
+ROOTSuffix = sys.argv[1]
+runNum = sys.argv[2]
+MaxEvent = sys.argv[3]
 spec = sys.argv[4]
 
 spec = spec.upper()
@@ -85,7 +85,7 @@ Analysis_Distributions = "%s/%s_%s_sw_heep_%s_Analysis_Distributions.pdf" % (OUT
 #################################################################################################################################################
 
 # Construct the name of the rootfile based upon the info we provided
-rootName = "%s/UTIL_PION/OUTPUT/Analysis/HeeP/%s_%s_%s_%s.root" % (REPLAYPATH, spec, runNum, MaxEvent, ROOTPrefix)     # Input file location and variables taking
+rootName = "%s/UTIL_PION/OUTPUT/Analysis/HeeP/%s_%s_%s_%s.root" % (REPLAYPATH, spec, runNum, MaxEvent, ROOTSuffix)     # Input file location and variables taking
 print ("Attempting to process %s" %(rootName))
 if os.path.exists(OUTPATH):
     if os.path.islink(OUTPATH):

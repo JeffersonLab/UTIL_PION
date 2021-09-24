@@ -29,7 +29,7 @@ sys.path.insert(0, 'python/')
 
 # Defining some variables here
 minrangeuser = 0 # min range for -t vs phi plot
-maxrangeuser = 0.7 # max range for -t vs phi plot
+maxrangeuser = 1.2 # max range for -t vs phi plot
 minbin = 0.92 # minimum bin for selecting neutrons events in missing mass distribution
 maxbin = 0.98 # maximum bin for selecting neutrons events in missing mass distribution
 
@@ -39,7 +39,7 @@ maxbin = 0.98 # maximum bin for selecting neutrons events in missing mass distri
 FilenameOverride=False # SJDK 21/09/21 - Added a secret 4th argument so that a full kinematic can be processed, the run number is needed for cuts, but for the kinematic analysis, the filename is not by run number
 if len(sys.argv)-1!=3:
     if len(sys.argv)-1!=4:
-        print("!!!!! ERROR !!!!!\n Expected 3 arguments\n Usage is with - ROOTfilePrefix RunNumber MaxEvents \n!!!!! ERROR !!!!!")
+        print("!!!!! ERROR !!!!!\n Expected 3 arguments\n Usage is with - ROOTfileSuffix RunNumber MaxEvents \n!!!!! ERROR !!!!!")
         sys.exit(1)
     else:
         print ("!!!!! Running with secret 4th argument - FilenameOverride - Taking file name to process as stated EXACTLY in 4th arg !!!!!")
@@ -48,7 +48,7 @@ if len(sys.argv)-1!=3:
 ##################################################################################################################################################
 
 # Input params - run number and max number of events
-ROOTPrefix = sys.argv[1]
+ROOTSuffix = sys.argv[1]
 runNum = sys.argv[2]
 MaxEvent = sys.argv[3]
 
@@ -79,7 +79,7 @@ Pion_Analysis_Distributions = "%s/%s_%s_sw_Pion_Analysis_Distributions.pdf" % (O
 
 # Construct the name of the rootfile based upon the info we provided
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
-    rootName = "%s/UTIL_PION/OUTPUT/Analysis/PionLT/%s_%s_%s.root" % (REPLAYPATH, runNum, MaxEvent, ROOTPrefix)     # Input file location and variables taking
+    rootName = "%s/UTIL_PION/OUTPUT/Analysis/PionLT/%s_%s_%s.root" % (REPLAYPATH, runNum, MaxEvent, ROOTSuffix)     # Input file location and variables taking
 elif (FilenameOverride != False): # Special condition, with 4th arg, use 4th arg as file name
     rootName = "%s/UTIL_PION/OUTPUT/Analysis/PionLT/%s" % (REPLAYPATH, FilenameOverride)
 print ("Attempting to process %s" %(rootName))
@@ -488,7 +488,7 @@ for k in range(0, 7):
      Arc.SetLineWidth(2)
      # To change the arc radius we have to change number 0.825 in the lower line.
      Arc.DrawArc(0,0,0.825*(k+1)/(10),0.,360.,"same")
-tradius = TGaxis(0,0,0.575,0,0,0.7,10,"-+")
+tradius = TGaxis(0,0,0.575,0,minrangeuser,maxrangeuser,10,"-+")
 tradius.SetLineColor(2)
 tradius.SetLabelColor(2)
 tradius.Draw()
@@ -558,7 +558,7 @@ P_yp_pions_cut.Draw("same")
 c1_acpt.cd(6)
 gPad.SetLogy()
 P_dp_pions_uncut.SetMinimum(0.1*P_dp_pions_cut.GetMinimum()+1) # SJDK 18/09/21 - Implemented same fixed as used above for HMS
-P_dp_pions_uncut.SetMaximum(10*P_dp_pions_uncut.GetMaximumBin())
+P_dp_pions_uncut.SetMaximum(10*P_dp_pions_uncut.GetBinContent(P_dp_pions_uncut.GetMaximumBin()))
 P_dp_pions_uncut.SetLineColor(2)
 P_dp_pions_uncut.Draw()
 P_dp_pions_cut.SetLineColor(4)
@@ -970,3 +970,4 @@ P_MMpi_pions_cut_randm.Write()
 outHistFile.Close()
 infile.Close() 
 print ("Processing Complete")
+print("!!!!!!!!\n %i pi-n events \n!!!!!!!!" % BinIntegral)

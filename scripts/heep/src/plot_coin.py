@@ -46,15 +46,15 @@ maxbin = 0.05 # maxbin for selecting neutrons events in missing mass distributio
 
 # Check the number of arguments provided to the script
 if len(sys.argv)-1!=3:
-    print("!!!!! ERROR !!!!!\n Expected 3 arguments\n Usage is with - ROOTfilePrefix RunNumber MaxEvents \n!!!!! ERROR !!!!!")
+    print("!!!!! ERROR !!!!!\n Expected 3 arguments\n Usage is with - ROOTfileSuffix RunNumber MaxEvents \n!!!!! ERROR !!!!!")
     sys.exit(1)
 
 ##################################################################################################################################################
 
 # Input params - run number and max number of events
-runNum = sys.argv[1]
-MaxEvent = sys.argv[2]
-ROOTPrefix = sys.argv[3]
+ROOTSuffix = sys.argv[1]
+runNum = sys.argv[2]
+MaxEvent = sys.argv[3]
 
 USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
 HOST = subprocess.getstatusoutput("hostname")
@@ -88,7 +88,7 @@ Proton_Analysis_Distributions = "%s/%s_%s_sw_heep_Proton_Analysis_Distributions.
 #################################################################################################################################################
 
 # Construct the name of the rootfile based upon the info we provided
-rootName = "%s/UTIL_PION/OUTPUT/Analysis/HeeP/%s_%s_%s.root" % (REPLAYPATH, runNum, MaxEvent, ROOTPrefix)     # Input file location and variables taking
+rootName = "%s/UTIL_PION/OUTPUT/Analysis/HeeP/%s_%s_%s.root" % (REPLAYPATH, runNum, MaxEvent, ROOTSuffix)     # Input file location and variables taking
 print ("Attempting to process %s" %(rootName))
 if os.path.exists(OUTPATH):
     if os.path.islink(OUTPATH):

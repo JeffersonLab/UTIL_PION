@@ -124,12 +124,12 @@ if [ -f "${UTILPATH}/OUTPUT/Analysis/HeeP/${spec}_${RUNNUMBER}_${MAXEVENTS}_Outp
     if [[ $option2 == "y" || $option2 == "Y" || $option2 == "yes" || $option2 == "Yes" ]]; then
 	rm "${UTILPATH}/OUTPUT/Analysis/HeeP/${spec}_${RUNNUMBER}_${MAXEVENTS}_Output_Data.root"
 	echo "Reprocessing"
-	python3 ${UTILPATH}/scripts/heep/src/plot_sing.py ${RUNNUMBER} ${MAXEVENTS} Analysed_Data ${SPEC}
+	python3 ${UTILPATH}/scripts/heep/src/plot_sing.py Analysed_Data ${RUNNUMBER} ${MAXEVENTS} ${SPEC}
     else
 	echo "Skipping python physics plotting script step"
     fi
 elif [ ! -f  "${UTILPATH}/OUTPUT/Analysis/HeeP/${spec}_${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
-	python3 ${UTILPATH}/scripts/heep/src/plot_sing.py ${RUNNUMBER} ${MAXEVENTS} Analysed_Data ${SPEC}
+	python3 ${UTILPATH}/scripts/heep/src/plot_sing.py Analysed_Data ${RUNNUMBER} ${MAXEVENTS} ${SPEC}
 else echo "Pion physics output root file already found in ${UTILPATH}/OUTPUT/Analysis/HeeP/ - Skipped python output script step"
 fi
 evince "${UTILPATH}/OUTPUT/Analysis/HeeP/${RUNNUMBER}_${MAXEVENTS}_sw_heep_${SPEC}_Analysis_Distributions.pdf" &
