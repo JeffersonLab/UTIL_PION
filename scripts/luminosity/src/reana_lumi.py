@@ -3,7 +3,7 @@
 #
 # Description:
 # ================================================================
-# Time-stamp: "2021-09-24 07:03:55 trottar"
+# Time-stamp: "2021-09-24 22:18:35 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -19,9 +19,12 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-reana","--reanalyze", help="Reanalyze lumi data",action="store_true")
 args = parser.parse_args() 
 
+'''
 lumi_list = [12126,12128,12129,12130,12131,12132,12133,12135,12137,12140,12141,12142,12143,12144,12145,12147,12148,12150,
              12151,12152,12153,12154,12156,12157,12158,12159,12160,12161,12162,12163,12164,12166,12167,12170,12171,12172,
              12173,12174,12175,12178,12179,12181,12184,12185,12186,12187,12189,12190,12191,12192,12193,12194,12195,112196,12197,12198,12199]
+'''
+lumi_list = [12126]
 
 if args.reanalyze:
     for l in lumi_list:
@@ -32,7 +35,7 @@ USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
 HOST = subprocess.getstatusoutput("hostname")
 
 if ("farm" in HOST[1]):
-    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
+    REPLAYPATH="/group/c-pionlt/online_analysis/hallc_replay_lt"
 elif ("lark" in HOST[1]):
     REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
 elif ("cdaq" in HOST[1]):

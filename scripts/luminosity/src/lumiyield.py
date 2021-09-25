@@ -1,7 +1,7 @@
 #! /usr/bin/python
 # Description:
 # ================================================================
-# Time-stamp: "2021-08-31 00:21:09 trottar"
+# Time-stamp: "2021-09-24 22:14:09 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -25,7 +25,7 @@ USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
 HOST = subprocess.getstatusoutput("hostname")
 
 if ("farm" in HOST[1]):
-    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
+    REPLAYPATH="/group/c-pionlt/online_analysis/hallc_replay_lt"
 elif ("lark" in HOST[1]):
     REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
 elif ("cdaq" in HOST[1]):
