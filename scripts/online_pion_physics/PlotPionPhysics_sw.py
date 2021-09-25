@@ -48,6 +48,7 @@ if len(sys.argv)-1!=3:
 ##################################################################################################################################################
 
 # Input params - run number and max number of events
+# 23/09/21 - SJDK - Changed ROOTPrefix to ROOTSuffix so that this is actually accurate (and the insturctions printed above make sense)
 ROOTSuffix = sys.argv[1]
 runNum = sys.argv[2]
 MaxEvent = sys.argv[3]

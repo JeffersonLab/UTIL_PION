@@ -226,7 +226,6 @@ def scaler(PS_names, SHMS_PS, HMS_PS, thres_curr,report_current,REPLAYPATH,runNu
         "charge": charge_sum[2],
         "SHMSTRIG_scaler": trig_sum[shms_ps_ix],
         "HMSTRIG_scaler": trig_sum[hms_ps_ix],
-#        "CPULT_scaler": acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS)),
         "CPULT_scaler": 1-acctrig_sum/((trig_sum[shms_ps_ix]) + (trig_sum[hms_ps_ix])),
         "CPULT_scaler_uncern": (acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS)))*np.sqrt((1/(trig_sum[shms_ps_ix]/SHMS_PS))+(1/(trig_sum[hms_ps_ix]/HMS_PS))+(1/acctrig_sum)),
         "HMS_eLT": 1 - ((6/5)*(PRE_sum[1]-PRE_sum[2])/(PRE_sum[1])),

@@ -22,7 +22,7 @@ void replay_coin_heep (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   pathList.push_back("./raw");
   pathList.push_back("./raw/../raw.copiedtotape");
   pathList.push_back("./cache");
-  pathList.push_back("./raw_volatile");
+  pathList.push_back("./raw.volatile");
 
   //const char* RunFileNamePattern = "raw/coin_all_%05d.dat";
   const char* ROOTFileNamePattern = "UTIL_PION/ROOTfiles/Analysis/HeeP/Pion_coin_replay_production_%d_%d.root";
@@ -248,6 +248,7 @@ void replay_coin_heep (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
                               // 2 = counter is event number
 
   analyzer->SetEvent(event);
+  analyzer->SetMarkInterval(10000);
   // Set EPICS event type
   analyzer->SetEpicsEvtType(180);
   // Define crate map

@@ -113,6 +113,7 @@ sleep 3
 ##################################################################################################################################
 
 # Section for HeeP physics ploting script
+# 23/09/21 - SJDK - Changed the ordering of the arguments given to the python script to make them consistent
 if [ -f "${UTILPATH}/OUTPUT/Analysis/HeeP/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
     read -p "HeeP output plots file already exists, do you want to reprocess it? <Y/N> " option2
     if [[ $option2 == "y" || $option2 == "Y" || $option2 == "yes" || $option2 == "Yes" ]]; then

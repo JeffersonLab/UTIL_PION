@@ -545,6 +545,7 @@ def analysis():
     
     track_info = {
         
+        "tot_events" : len(EventType),
         "HMS_evts_scaler" : len(h_hadcut_lumi_eff),
         "HMS_evts_scaler_uncern" : math.sqrt(len(h_hadcut_lumi_eff)),
         "SHMS_evts_scaler" : len(p_pcut_lumi_eff),
@@ -563,16 +564,19 @@ def analysis():
 
     print("Terminate","Selection rules have been applied, plotting results")
     print("Using prescale factors: %s %.0f, %s %.0f\n" % (PS_names[0],SHMS_PS,PS_names[1],HMS_PS))
-    print("Total number of events: %.0f" % (len(EventType)))
-    print("Number of EDTM  Events: %.0f" % (len(EDTM)))
-    print("Number of SHMSTRIG Events: %.0f" % (SHMS_PS*len(SHMSTRIG_cut)))
-    print("Number of HMSTRIG Events: %.0f\n" % (HMS_PS*len(HMSTRIG_cut)))
-    print("Number of HMS good events: %.0f +/- %.0f " % ((HMS_PS*len(h_hadcut_lumi_eff))
-                                                         ,math.sqrt(HMS_PS*len(h_hadcut_lumi_eff))))
-    print("Calculated HMS tracking efficiency: %f +/- %f\n" % ((HMS_track_eff), (HMS_track_uncern)))
-    print("Number of SHMS good events: %.0f +/- %.0f" % ((SHMS_PS*len(p_pcut_lumi_eff)),
-                                                         math.sqrt(SHMS_PS*len(p_pcut_lumi_eff))))
-    print("Calculated SHMS tracking efficiency: %f +/- %f\n" % ((SHMS_track_eff),(SHMS_track_uncern)))
+    print("Total number of events: %.0f" % (track_info["tot_events"]))
+    print("Number of EDTM  Events: %.0f" % (track_info["accp_edtm"]))
+    print("Number of HMSTRIG Events: %.0f" % (HMS_PS*track_info["HMSTRIG_cut"]))
+    print("Number of SHMSTRIG Events: %.0f" % (SHMS_PS*track_info["SHMSTRIG_cut"]))
+
+    print("\nNumber of HMS good events: %.0f +/- %.0f " % ((HMS_PS*track_info["h_int_goodscin_evts"])
+                                                         ,math.sqrt(HMS_PS*track_info["h_int_goodscin_evts"])))
+    print("Calculated HMS tracking efficiency: %f +/- %f\n" % ((track_info["HMS_track"]), (track_info["HMS_track_uncern"])))
+
+    print("Number of SHMS good events: %.0f +/- %.0f " % ((SHMS_PS*track_info["h_int_goodscin_evts"])
+                                                         ,math.sqrt(SHMS_PS*track_info["h_int_goodscin_evts"])))
+    print("Calculated SHMS tracking efficiency: %f +/- %f\n" % ((track_info["SHMS_track"]), (track_info["SHMS_track_uncern"])))
+
     print("============================================================================\n\n")
           
     return track_info
