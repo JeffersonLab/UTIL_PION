@@ -3,7 +3,7 @@
 #
 # Description:
 # ================================================================
-# Time-stamp: "2021-09-24 22:14:17 trottar"
+# Time-stamp: "2021-09-24 22:37:36 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -127,7 +127,7 @@ def calc_yield():
     # Calculate yield values
 
     yield_HMS_scaler = (yield_dict["HMS_scaler_accp"])/(makeList("charge")*makeList("CPULT_scaler")*makeList("HMS_eLT"))
-    yield_HMS_notrack = makeList("h_int_goodscin_evts")/(makeList("charge")*makeList("CPULT_scaler"))
+    yield_HMS_notrack = makeList("h_int_goodscin_evts")/(makeList("charge")*yield_dict["TLT"])
     yield_HMS_track = makeList("h_int_goodscin_evts")/(makeList("charge")*yield_dict["TLT"]*makeList("HMS_track"))
     yield_dict.update({"yield_HMS_scaler" : yield_HMS_scaler})
     yield_dict.update({"yield_HMS_notrack" : yield_HMS_notrack})
