@@ -22,6 +22,10 @@ if [[ $r_flag = "true" ]]; then
     echo
     echo "Reanalyzing all luminosity data..."
     python3 reana_lumi.py --reana
+    LUMIFILE="OUTPUTS/lumi_data.csv"
+    if [[ -f "${LUMIFILE}" ]]; then
+	rm $LUMIFILE
+    fi
 else
     python3 reana_lumi.py
 fi

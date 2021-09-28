@@ -3,7 +3,7 @@
 #
 # Description:
 # ================================================================
-# Time-stamp: "2021-09-24 22:37:36 trottar"
+# Time-stamp: "2021-09-27 23:49:38 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -216,13 +216,13 @@ def plot_yield():
     plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_scaler"],color='blue',zorder=4)
     plt.ylabel('Rel. Yield Scaler', fontsize=16)
     if target == 'LD2' :
-        plt.title('HMS LD2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('HMS LD2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
     elif target == 'LH2' :
-        plt.title('HMS LH2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('HMS LH2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
     else :
-        plt.title('HMS Carbon %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('HMS Carbon %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
 
     #HMS plot no track
@@ -235,13 +235,13 @@ def plot_yield():
     plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_notrack"],color='blue',zorder=4)
     plt.ylabel('Rel. Yield no track', fontsize=16)
     if target == 'LD2' :
-        plt.title('HMS LD2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('HMS LD2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
     elif target == 'LH2' :
-        plt.title('HMS LH2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('HMS LH2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
     else :
-        plt.title('HMS Carbon %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('HMS Carbon %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
 
     #HMS plot track
@@ -254,13 +254,13 @@ def plot_yield():
     plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_track"],color='blue',zorder=4)
     plt.ylabel('Rel. Yield track', fontsize=16)
     if target == 'LD2' :
-        plt.title('HMS LD2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('HMS LD2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
     elif target == 'LH2' :
-        plt.title('HMS LH2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('HMS LH2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
     else :
-        plt.title('HMS Carbon %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('HMS Carbon %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
 
         
@@ -274,13 +274,13 @@ def plot_yield():
     plt.scatter(yield_data["current"],yield_data["yieldRel_SHMS_scaler"],color='blue',zorder=4)
     plt.ylabel('Rel. Yield Scaler', fontsize=16)
     if target == 'LD2' :
-        plt.title('SHMS LD2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('SHMS LD2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
     elif target == 'LH2' :
-        plt.title('SHMS LH2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('SHMS LH2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
     else :
-        plt.title('SHMS Carbon %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('SHMS Carbon %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
 
     #SHMS plot no track
@@ -293,13 +293,13 @@ def plot_yield():
     plt.scatter(yield_data["current"],yield_data["yieldRel_SHMS_notrack"],color='blue',zorder=4)
     plt.ylabel('Rel. Yield no track', fontsize=16)
     if target == 'LD2' :
-        plt.title('SHMS LD2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('SHMS LD2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
     elif target == 'LH2' :
-        plt.title('SHMS LH2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('SHMS LH2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
     else :
-        plt.title('SHMS Carbon %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('SHMS Carbon %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
 
     #SHMS plot track
@@ -312,13 +312,13 @@ def plot_yield():
     plt.scatter(yield_data["current"],yield_data["yieldRel_SHMS_track"],color='blue',zorder=4)
     plt.ylabel('Rel. Yield track', fontsize=16)
     if target == 'LD2' :
-        plt.title('SHMS LD2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('SHMS LD2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
     elif target == 'LH2' :
-        plt.title('SHMS LH2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('SHMS LH2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
     else :
-        plt.title('SHMS Carbon %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('SHMS Carbon %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)      
 
     plt.tight_layout()      
@@ -332,13 +332,13 @@ def plot_yield():
     plt.scatter(yield_data["current"],yield_data["accp_edtm"],color='blue',zorder=4)
     plt.ylabel('Accept EDTM', fontsize=16)
     if target == 'LD2' :
-        plt.title('LD2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('LD2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
     elif target == 'LH2' :
-        plt.title('LH2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('LH2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
     else :
-        plt.title('Carbon %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('Carbon %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
 
     #HMS rate vs Current
@@ -348,13 +348,13 @@ def plot_yield():
     plt.scatter(yield_data["current"],yield_data["rate_HMS"]/1000,color='blue',zorder=4)
     plt.ylabel('HMS Rate [kHz]', fontsize=16)
     if target == 'LD2' :
-        plt.title('LD2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('LD2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
     elif target == 'LH2' :
-        plt.title('LH2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('LH2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
     else :
-        plt.title('Carbon %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('Carbon %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
 
     #EDTM vs HMS Rate
@@ -366,13 +366,13 @@ def plot_yield():
     #plt.scatter(yield_data["rate_HMS"]/1000,yield_data["accp_edtm"],color='blue',zorder=4)
     #plt.ylabel('Accept EDTM', fontsize=16)
     if target == 'LD2' :
-        plt.title('HMS LD2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('HMS LD2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('HMS Rate [kHz]', fontsize =16)
     elif target == 'LH2' :
-        plt.title('HMS LH2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('HMS LH2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('HMS Rate [kHz]', fontsize =16)
     else :
-        plt.title('HMS Carbon %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('HMS Carbon %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('HMS Rate [kHz]', fontsize =16)
 
     #TLT vs Current
@@ -382,13 +382,13 @@ def plot_yield():
     plt.scatter(yield_data["current"],yield_data["TLT"],color='blue',zorder=4)
     plt.ylabel('TLT', fontsize=16)
     if target == 'LD2' :
-        plt.title('LD2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('LD2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
     elif target == 'LH2' :
-        plt.title('LH2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('LH2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
     else :
-        plt.title('Carbon %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('Carbon %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
 
     #SHMS rate vs Current
@@ -398,13 +398,13 @@ def plot_yield():
     plt.scatter(yield_data["current"],yield_data["rate_SHMS"]/1000,color='blue',zorder=4)
     plt.ylabel('SHMS Rate [kHz]', fontsize=16)
     if target == 'LD2' :
-        plt.title('LD2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('LD2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
     elif target == 'LH2' :
-        plt.title('LH2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('LH2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
     else :
-        plt.title('Carbon %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('Carbon %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('Current [uA]', fontsize =16)
 
     #EDTM vs SHMS Rate
@@ -416,13 +416,13 @@ def plot_yield():
     #plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["accp_edtm"],color='blue',zorder=4)
     #plt.ylabel('Accept EDTM', fontsize=16)
     if target == 'LD2' :
-        plt.title('SHMS LD2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('SHMS LD2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('SHMS Rate [kHz]', fontsize =16)
     elif target == 'LH2' :
-        plt.title('SHMS LH2 %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('SHMS LH2 %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('SHMS Rate [kHz]', fontsize =16)
     else :
-        plt.title('SHMS Carbon %s-%s' % (yield_data["run number"][0],yield_data["run number"][numRuns-1]), fontsize =16)
+        plt.title('SHMS Carbon %s-%s' % (int(yield_data["run number"][0]),int(yield_data["run number"][numRuns-1])), fontsize =16)
         plt.xlabel('SHMS Rate [kHz]', fontsize =16)
 
 

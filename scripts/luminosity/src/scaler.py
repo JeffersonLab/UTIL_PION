@@ -3,7 +3,7 @@
 #
 # Description:
 # ================================================================
-# Time-stamp: "2021-09-24 22:57:14 trottar"
+# Time-stamp: "2021-09-27 23:46:24 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -159,6 +159,9 @@ def scaler(PS_names, SHMS_PS, HMS_PS, thres_curr,report_current,REPLAYPATH,runNu
     EDTM_sum = 0
     EDTM_current = 0
     previous_EDTM = 0
+
+    # Threshold current
+    thres_curr = 2.5
         
     for ibcm in range(0, 5):
         previous_acctrig = (acctrig_value[0] - EDTM_current)
@@ -196,19 +199,19 @@ def scaler(PS_names, SHMS_PS, HMS_PS, thres_curr,report_current,REPLAYPATH,runNu
                 for iRATE in range(0, SHMSNRATE):
                     SHMS_rate_sum[iRATE] += (SHMS_rate_value[iRATE][i] - SHMS_previous_rate[iRATE])
                 # RLT 09/24/21, indented one tab to include BCM cuts
-                previous_acctrig = (acctrig_value[i] - EDTM_current)
-                previous_EDTM = EDTM_value[i]
-                for itrig in range(0, NTRIG):
-                    previous_trig[itrig] = trig_value[itrig][i]
-                for iPRE in range(0, NPRE):
-                    previous_PRE[iPRE] = PRE_value[iPRE][i]
-                    SHMS_previous_PRE[iPRE] = SHMS_PRE_value[iPRE][i]
-                for iRATE in range(0, NRATE):
-                    previous_rate[iRATE] = rate_value[iRATE][i]
-                for iRATE in range(0, SHMSNRATE):
-                    SHMS_previous_rate[iRATE] = SHMS_rate_value[iRATE][i]
-                previous_time[ibcm] = time_value[i]
-                previous_charge[ibcm] = bcm_value[ibcm][i]
+            previous_acctrig = (acctrig_value[i] - EDTM_current)
+            previous_EDTM = EDTM_value[i]
+            for itrig in range(0, NTRIG):
+                previous_trig[itrig] = trig_value[itrig][i]
+            for iPRE in range(0, NPRE):
+                previous_PRE[iPRE] = PRE_value[iPRE][i]
+                SHMS_previous_PRE[iPRE] = SHMS_PRE_value[iPRE][i]
+            for iRATE in range(0, NRATE):
+                previous_rate[iRATE] = rate_value[iRATE][i]
+            for iRATE in range(0, SHMSNRATE):
+                SHMS_previous_rate[iRATE] = SHMS_rate_value[iRATE][i]
+            previous_time[ibcm] = time_value[i]
+            previous_charge[ibcm] = bcm_value[ibcm][i]
 
     if PS_names[0] is "PS1":
         shms_ps_ix = 0
@@ -221,7 +224,7 @@ def scaler(PS_names, SHMS_PS, HMS_PS, thres_curr,report_current,REPLAYPATH,runNu
         
     scalers = {
         "run number" : runNum,
-        "%s" % PS_names[shms_ps_ix]: SHMS_PS,
+        "%s" % PS_names[0]: SHMS_PS,
         "%s" % PS_names[1]: HMS_PS,
         "time": time_sum[2],
         "charge": charge_sum[2],
@@ -250,12 +253,8 @@ def scaler(PS_names, SHMS_PS, HMS_PS, thres_curr,report_current,REPLAYPATH,runNu
     print("L1ACC counts: %.0f, \n%s Prescaled Pretrigger Counts: %.0f \n%s Prescaled Pretrigger Counts: %.0f \nComputer Livetime: %f +/- %f" %
           (acctrig_sum, trig_name[0], scalers["SHMSTRIG_scaler"], trig_name[2], scalers["HMSTRIG_scaler"], scalers["CPULT_scaler"], scalers["CPULT_scaler_uncern"]))
 
-    print("HMS Electronic livetime: %f +/- %f" %
-          (scalers["HMS_eLT"], scalers["HMS_eLT_uncern"]))
-
-    print("SHMS Electronic livetime: %f +/- %f" %
-          (scalers["SHMS_eLT"], scalers["SHMS_eLT_uncern"]))
-
+    print("HMS Electronic livetime: %f +/- %f" % (scalers["HMS_eLT"], scalers["HMS_eLT_uncern"]))
+    print("SHMS Electronic livetime: %f +/- %f" % (scalers["SHMS_eLT"], scalers["SHMS_eLT_uncern"]))
     print("EDTM Events: %.0f" % scalers["sent_edtm"])
 
     return scalers
