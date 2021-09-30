@@ -1,5 +1,20 @@
 #!/bin/bash
 
+# Set path depending upon hostname. Change or add more as needed  
+if [[ "${HOSTNAME}" = *"farm"* ]]; then  
+    REPLAYPATH="/group/c-pionlt/USERS/${USER}/hallc_replay_lt"
+elif [[ "${HOSTNAME}" = *"qcd"* ]]; then
+    REPLAYPATH="/group/c-pionlt/USERS/${USER}/hallc_replay_lt"
+elif [[ "${HOSTNAME}" = *"cdaq"* ]]; then
+    REPLAYPATH="/home/cdaq/hallc-online/hallc_replay_lt"
+elif [[ "${HOSTNAME}" = *"phys.uregina.ca"* ]]; then
+    REPLAYPATH="/home/${USER}/work/JLab/hallc_replay_lt"
+elif [[ "${HOSTNAME}" = *"trottar"* ]]; then
+    REPLAYPATH="/home/trottar/Analysis/hallc_replay_lt"
+fi
+
+UTILPATH="${REPLAYPATH}/UTIL_PIONLT"
+
 while getopts 'hrp' flag; do
     case "${flag}" in
 	h)
@@ -21,15 +36,15 @@ cd src/
 if [[ $r_flag = "true" ]]; then
     echo
     echo "Reanalyzing all luminosity data..."
-    python3 reana_lumi.py --reana
-    LUMIFILE="OUTPUTS/lumi_data.csv"
+    LUMIFILE="${UTILPATH}/scripts/luminosity/OUTPUTS/lumi_data.csv"
     if [[ -f "${LUMIFILE}" ]]; then
-	rm $LUMIFILE
+	echo "Removing ${LUMIFILE}"
+	rm -rf $LUMIFILE
     fi
+    python3 reana_lumi.py --reana
 else
     python3 reana_lumi.py
 fi
-
 if [[ $p_flag = "true" ]]; then
     if [[ ${PLOTINFO} == "" ]]; then
 	echo

@@ -1,7 +1,7 @@
 #! /usr/bin/python
 # Description:
 # ================================================================
-# Time-stamp: "2021-09-27 23:44:48 trottar"
+# Time-stamp: "2021-09-30 07:15:40 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -36,6 +36,7 @@ elif ("trottar" in HOST[1]):
 sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
 import kaonlt as klt
 import scaler
+#import scaler_nocut as scaler
 
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 
@@ -74,13 +75,11 @@ psValue = [-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
 
 for line in f:
     data = line.split(':')
-    curr_data = line.split(':')
-    if ('SW_BCM4A_Beam_Cut_Current' in curr_data[0]) :
-        report_current_tmp = curr_data[1].split("uA")[0].strip()
-    if ('SW_SHMS_Electron_Singles_TRACK_EFF' in curr_data[0]):
-        SHMS_track_info = curr_data[1].split("+-")
-    if ('SW_HMS_Electron_Singles_TRACK_EFF' in curr_data[0]):
-        HMS_track_info = curr_data[1].split("+-")
+    track_data = line.split(':')
+    if ('SW_SHMS_Electron_Singles_TRACK_EFF' in track_data[0]):
+        SHMS_track_info = track_data[1].split("+-")
+    if ('SW_HMS_Electron_Singles_TRACK_EFF' in track_data[0]):
+        HMS_track_info = track_data[1].split("+-")
     for i, obj in enumerate(psList) :
         if (psList[i] in data[0]) : 
             if (i == 0) :  
@@ -101,7 +100,6 @@ ps3=int(ps3_tmp)
 ps4=int(ps4_tmp)
 ps5=int(ps5_tmp)
 ps6=int(ps6_tmp)
-report_current = float(report_current_tmp)
 SHMS_track_eff = float(SHMS_track_info[0])
 SHMS_track_uncern = float(SHMS_track_info[1])
 HMS_track_eff = float(HMS_track_info[0])
@@ -278,8 +276,7 @@ T_coin_pFADC_TREF_ROC2_adcPed = tree.array("T.coin.pFADC_TREF_ROC2_adcPed")
 T_coin_hFADC_TREF_ROC1_adcPed = tree.array("T.coin.hFADC_TREF_ROC1_adcPed")
 T_coin_pFADC_TREF_ROC2_adcPulseTimeRaw = tree.array("T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw")
 T_coin_hFADC_TREF_ROC1_adcPulseTimeRaw = tree.array("T.coin.hFADC_TREF_ROC1_adcPulseTimeRaw")
-# T_coin_pEDTM_tdcTime = tree.array("T.coin.pEDTM_tdcTime")
-T_coin_pEDTM_tdcTime = tree.array("T.coin.pEDTM_tdcTimeRaw")
+T_coin_pEDTM_tdcTimeRaw = tree.array("T.coin.pEDTM_tdcTimeRaw")
 EvtType = tree.array("fEvtHdr.fEvtType")
 
 fout = REPLAYPATH+'/UTIL_PION/DB/CUTS/run_type/lumi.cuts'
@@ -290,12 +287,14 @@ c = klt.pyPlot(REPLAYPATH)
 #c.cut_RF(runNum,MaxEvent)
 readDict = c.read_dict(fout,runNum)
 
-# This method calls several methods in kaonlt package. It is required to create properly formated
-# dictionaries. The evaluation must be in the analysis script because the analysis variables (i.e. the
-# leaves of interest) are not defined in the kaonlt package. This makes the system more flexible
-# overall, but a bit more cumbersome in the analysis script. Perhaps one day a better solution will be
-# implimented.
 def make_cutDict(cut,inputDict=None):
+    '''
+    This method calls several methods in kaonlt package. It is required to create properly formated
+    dictionaries. The evaluation must be in the analysis script because the analysis variables (i.e. the
+    leaves of interest) are not defined in the kaonlt package. This makes the system more flexible
+    overall, but a bit more cumbersome in the analysis script. Perhaps one day a better solution will be
+    implimented.
+    '''
 
     global c
 
@@ -303,6 +302,14 @@ def make_cutDict(cut,inputDict=None):
     x = c.w_dict(cut)
     print("\n%s" % cut)
     print(x, "\n")
+
+    # Threshold current
+    if cut == "c_curr":
+        global thres_curr, report_current
+        # e.g. Grabbing threshold current (ie 2.5) from something like this [' {"H_bcm_bcm4a_AvgCurrent" : (abs(H_bcm_bcm4a_AvgCurrent-55) < 2.5)}']
+        thres_curr = float(x[0].split(":")[1].split("<")[1].split(")")[0].strip())
+        # e.g. Grabbing set current for run (ie 55) from something like this [' {"H_bcm_bcm4a_AvgCurrent" : (abs(H_bcm_bcm4a_AvgCurrent-55) < 2.5)}']
+        report_current = float(x[0].split(":")[1].split("<")[0].split(")")[0].split("-")[1].strip())
     
     if inputDict == None:
         inputDict = {}
@@ -388,7 +395,7 @@ def pid_cuts():
     
 def analysis():
 
-    EDTM = c.add_cut(T_coin_pEDTM_tdcTime,"c_edtm")
+    EDTM = c.add_cut(T_coin_pEDTM_tdcTimeRaw,"c_edtm")
     
     SHMSTRIG = [x
                 for x in c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_curr")
@@ -453,7 +460,7 @@ def main():
     #plt.show()
 
     # combine dictionaries
-    scalers = scaler.scaler(PS_names, SHMS_PS, SHMS_PS, report_current,REPLAYPATH,runNum,MaxEvent,s_tree,s_branch) 
+    scalers = scaler.scaler(PS_names, SHMS_PS, SHMS_PS, thres_curr, report_current, REPLAYPATH, runNum, MaxEvent, s_tree, s_branch) 
     track_info = analysis()
 
     # lumi_data = {**scalers , **track_info} # only python 3.5+

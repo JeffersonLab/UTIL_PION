@@ -3,7 +3,7 @@
 #
 # Description:
 # ================================================================
-# Time-stamp: "2021-09-30 01:22:07 trottar"
+# Time-stamp: "2021-09-28 22:33:18 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -14,7 +14,7 @@ import uproot as up
 import numpy as np
 
 
-def scaler(PS_names, SHMS_PS, HMS_PS, thres_curr, report_current, REPLAYPATH, runNum, MaxEvent, s_tree, s_branch):
+def scaler(PS_names, SHMS_PS, HMS_PS, report_current,REPLAYPATH,runNum,MaxEvent,s_tree,s_branch):
 
     '''
     SCALER TREE, TSP
@@ -178,10 +178,9 @@ def scaler(PS_names, SHMS_PS, HMS_PS, thres_curr, report_current, REPLAYPATH, ru
             if (time_value[i] != previous_time[ibcm]):
                 current_I = (bcm_value[ibcm][i] -
                              previous_charge[ibcm])/(time_value[i] - previous_time[ibcm])
-            if (abs( current[ibcm][i]-report_current) < thres_curr ):
                 charge_sum[ibcm] += (bcm_value[ibcm][i] - previous_charge[ibcm])
                 time_sum[ibcm] += (time_value[i] - previous_time[ibcm])
-            if (ibcm == 2 and abs( current[ibcm][i]-report_current) < thres_curr):
+            if (ibcm == 2):
                 EDTM_current = (EDTM_value[i] - previous_EDTM)
                 EDTM_sum += EDTM_current
                 acctrig_sum += ((acctrig_value[i] - EDTM_current) - previous_acctrig)
@@ -239,7 +238,6 @@ def scaler(PS_names, SHMS_PS, HMS_PS, thres_curr, report_current, REPLAYPATH, ru
 
 
     print("Using prescale factors: %s %.0f, %s %.0f\n" % (PS_names[0],SHMS_PS,PS_names[1],HMS_PS))
-    print("\n\nUsed current threshold value: %.2f uA" % thres_curr)
 
     for ibcm in range(0, NBCM):
         print("%s charge: %.3f uC, Beam over threshold for %.3f s" %
