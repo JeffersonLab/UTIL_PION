@@ -118,11 +118,9 @@ if [ $TestingVar == 1 ]; then
 	fi
     fi
     # SJDK 21/09/21 - This last step needs tweaking a little, this is the analysis of the FULL kinematic, NOT each individual run. We need the plotting script to pick up the file we generated above and THEN plot it (and save it with a sensible name)
-    if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${runNum}_-1_Output_Data.root" ]; then
-        python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw.py Analysed_Data ${runNum} -1
-    elif [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${runNum}_-1_sw_Pion_Analysis_Distributions.pdf" ]; then
-	python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw.py Analysed_Data ${runNum} -1
-    else echo "Pion plots already found in - ${UTILPATH}/OUTPUT/Analysis/PionLT/${runNum}_-1_Output_Data.root and .pdf - Plotting macro skipped"
+    if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf" ]; then
+	python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw.py -1 ${runNum} -1 ${KINFILE}
+    else echo "Pion analysis plots already found in - ${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf - Plotting macro skipped"
     fi
 fi
 

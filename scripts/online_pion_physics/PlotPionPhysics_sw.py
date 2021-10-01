@@ -74,7 +74,10 @@ OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/PionLT" % REPLAYPATH        # Output fol
 sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
 import kaonlt as klt # Import kaonlt module, need the path setting line above prior to importing this                                                                                                         
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
-Pion_Analysis_Distributions = "%s/%s_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, runNum, MaxEvent)
+if (FilenameOverride == False):
+    Pion_Analysis_Distributions = "%s/%s_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, runNum, MaxEvent)
+elif (FilenameOverride != False): # If filename override set, format the file name based upon the override file name
+    Pion_Analysis_Distributions = "%s/%s_Pion_Analysis_Distributions.pdf" %(OUTPATH, (FilenameOverride.split("_Analysed_Data.root",1)[0]))
 
 #################################################################################################################################################
 
