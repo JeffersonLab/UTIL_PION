@@ -3,7 +3,7 @@
 #
 # Description:
 # ================================================================
-# Time-stamp: "2021-09-30 07:04:51 trottar"
+# Time-stamp: "2021-10-01 10:55:28 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -317,8 +317,8 @@ def plot_yield():
     plt.subplot(2,3,1)    
     plt.grid(zorder=1)
     #plt.xlim(0,100)
-    plt.scatter(yield_data["current"],yield_data["accp_edtm"],color='blue',zorder=4)
-    plt.ylabel('Accept EDTM', fontsize=16)
+    plt.scatter(yield_data["current"],yield_data["sent_edtm"]/(yield_data["time"]*1000),color='blue',zorder=4)
+    plt.ylabel('EDTM Scaler Rate [kHz]', fontsize=16)
     plt.xlabel('Current [uA]', fontsize =16)
     if target == 'LD2' :
         plt.title('LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)

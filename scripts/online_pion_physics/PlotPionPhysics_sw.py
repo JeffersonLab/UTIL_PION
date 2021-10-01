@@ -74,7 +74,18 @@ OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/PionLT" % REPLAYPATH        # Output fol
 sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
 import kaonlt as klt # Import kaonlt module, need the path setting line above prior to importing this                                                                                                         
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
-Pion_Analysis_Distributions = "%s/%s_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, runNum, MaxEvent)
+#Pion_Analysis_Distributions = "%s/%s_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, runNum, MaxEvent)
+#Pion_Analysis_Distributions = "%s/Q1p6W3p08right_high_LH+_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, MaxEvent)
+#Pion_Analysis_Distributions = "%s/Q1p6W3p08center_high_LH+_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, MaxEvent)
+Pion_Analysis_Distributions = "%s/Q1p6W3p08left_high_LH+_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, MaxEvent)
+#Pion_Analysis_Distributions = "%s/Q1p6W3p08right_high_LD+_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, MaxEvent)
+#Pion_Analysis_Distributions = "%s/Q1p6W3p08center_high_LD+_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, MaxEvent)
+#Pion_Analysis_Distributions = "%s/Q1p6W3p08left1_high_LD+_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, MaxEvent)
+#Pion_Analysis_Distributions = "%s/Q1p6W3p08left2_high_LD+_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, MaxEvent)
+#Pion_Analysis_Distributions = "%s/Q1p6W3p08right1_high_LD-_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, MaxEvent)
+#Pion_Analysis_Distributions = "%s/Q1p6W3p08right2_high_LD-_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, MaxEvent)
+#Pion_Analysis_Distributions = "%s/Q1p6W3p08center_high_LD-_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, MaxEvent)
+#Pion_Analysis_Distributions = "%s/Q1p6W3p08left_high_LD-_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, MaxEvent)
 
 #################################################################################################################################################
 
@@ -238,9 +249,10 @@ P_RFTime_pions_cut = ROOT.TH1D("P_RFTime_pions_cut", "SHMS RFTime; SHMS_RFTime; 
 ePiCoinTime_pions_cut = ROOT.TH1D("ePiCoinTime_pions_cut", "Electron-Pion CTime (with cuts); e #pi Coin_Time; Counts", 200, -50, 50)
 Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2; Q2; Counts", 200, 2, 4)
 W_pions_cut = ROOT.TH1D("W_pions_cut", "W; W; Counts", 200, 2.2, 4)
-epsilon_pions_cut = ROOT.TH1D("epsilon_pions_cut", "epsilon; epsilon; Counts", 200, 0, 0.8)
+#epsilon_pions_cut = ROOT.TH1D("epsilon_pions_cut", "epsilon; epsilon; Counts", 200, 0, 0.8)
 phiq_pions_cut = ROOT.TH1D("phiq_pions_cut", "phiq; #phi; Counts", 200, -10, 10)
 t_pions_cut = ROOT.TH1D("t_pions_cut", "t; t; Counts", 200, -1, 0.5)
+epsilon_pions_cut = ROOT.TH1D("epsilon_pions_cut", "epsilon; epsilon; Counts", 200, 0.3, 1)
 
 P_beta_pions_cut_prompt = ROOT.TH1D("P_beta_pions_cut_prompt", "SHMS beta; SHMS_#beta; Counts", 200, 0.8, 1.2)
 P_RFTime_pions_cut_prompt = ROOT.TH1D("P_RFTime_pions_cut_prompt", "SHMS RFTime; SHMS_RFTime; Counts", 200, 0, 4)
@@ -289,8 +301,9 @@ P_dp_vs_beta_pions_cut = ROOT.TH2D("P_dp_vs_beta_pions_cut", "SHMS #delta vs SHM
 P_MMpi_vs_beta_pions_cut = ROOT.TH2D("P_MMpi_vs_beta_pions_cut", "Missing Mass vs SHMS #beta (with cut); MM_{#pi}; SHMS_#beta", 100, 0, 2, 200, 0, 2)
 
 MMpi_vs_ePiCoinTime_pions_cut_prompt = ROOT.TH2D("MMpi_vs_ePiCoinTime_pions_cut_prompt","Missing Mass vs Electron-Pion CTime; MM_{#pi}; e #pi Coin_Time",100, 0, 2, 100, -2, 2)
-Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, 3.0, 8.0, 200, 2.7, 3.6)
+#Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, 3.0, 8.0, 200, 2.7, 3.6)
 phiqvst_pions_cut = ROOT.TH2D("phiqvst_pions_cut","; #phi ;t", 12, -3.14, 3.14, 24, 0.0, 1.2)
+Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, -1.0, 5.0, 200, 2.4, 3.8)
 
 # 11/09/21 - SJDK - Adding some 3D XY NPE plots, need to take projections of these (which I need to figure out how to do in PyRoot. Making these manually from the command line for now.
 P_HGC_xy_npe_pions_uncut = ROOT.TH3D("P_HGC_xy_npe_pions_uncut", "SHMS HGC NPE as fn of yAtCer vs SHMS HGC xAtCer (no cuts); HGC_yAtCer(cm); HGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
@@ -829,7 +842,8 @@ c1_proj.Print(Pion_Analysis_Distributions + ')')
 #############################################################################################################################################
 
 # Making directories in output file
-outHistFile = ROOT.TFile.Open("%s/%s_%s_Output_Data.root" % (OUTPATH, runNum, MaxEvent), "RECREATE")                                                                                                    
+#outHistFile = ROOT.TFile.Open("%s/%s_%s_Output_Data.root" % (OUTPATH, runNum, MaxEvent), "RECREATE")                                                                                                    
+outHistFile = ROOT.TFile.Open("%s/Output_%s" % (OUTPATH, FilenameOverride), "RECREATE")
 d_Uncut_Pion_Events = outHistFile.mkdir("Uncut_Pion_Events")
 d_Cut_Pion_Events_All = outHistFile.mkdir("Cut_Pion_Events_All")
 d_Cut_Pion_Events_Prompt = outHistFile.mkdir("Cut_Pion_Events_Prompt")
