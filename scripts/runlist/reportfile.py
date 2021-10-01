@@ -87,9 +87,9 @@ for line in ReportFile:
         #print('Had_Track', TestVar, "\n")
 
 #Round these values to nearest 1000
-Raw_HMS=int(round(Raw_HMS,-3)/1000)
-Raw_SHMS=int(round(Raw_SHMS,-3)/1000)
-Raw_COIN=int(round(Raw_COIN,-3)/1000)
+Raw_HMS=abs(int(round(Raw_HMS,-3)/1000))
+Raw_SHMS=abs(int(round(Raw_SHMS,-3)/1000))
+Raw_COIN=abs(int(round(Raw_COIN,-3)/1000))
 EDTM=int(round(EDTM,-3)/1000)
 
 # Need to convert PS actual value which is read in above as PS1/PS4/PS5 to the PS value (-1 to 16) that is actually filled in the run list

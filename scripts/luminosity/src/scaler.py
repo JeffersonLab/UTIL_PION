@@ -195,19 +195,20 @@ def scaler(PS_names, SHMS_PS, HMS_PS, thres_curr,report_current,REPLAYPATH,runNu
                     rate_sum[iRATE] += (rate_value[iRATE][i] - previous_rate[iRATE])
                 for iRATE in range(0, SHMSNRATE):
                     SHMS_rate_sum[iRATE] += (SHMS_rate_value[iRATE][i] - SHMS_previous_rate[iRATE])
-            previous_acctrig = (acctrig_value[i] - EDTM_current)
-            previous_EDTM = EDTM_value[i]
-            for itrig in range(0, NTRIG):
-                previous_trig[itrig] = trig_value[itrig][i]
-            for iPRE in range(0, NPRE):
-                previous_PRE[iPRE] = PRE_value[iPRE][i]
-                SHMS_previous_PRE[iPRE] = SHMS_PRE_value[iPRE][i]
-            for iRATE in range(0, NRATE):
-                previous_rate[iRATE] = rate_value[iRATE][i]
-            for iRATE in range(0, SHMSNRATE):
-                SHMS_previous_rate[iRATE] = SHMS_rate_value[iRATE][i]
-            previous_time[ibcm] = time_value[i]
-            previous_charge[ibcm] = bcm_value[ibcm][i]
+                # RLT 09/24/21, indented one tab to include BCM cuts
+                previous_acctrig = (acctrig_value[i] - EDTM_current)
+                previous_EDTM = EDTM_value[i]
+                for itrig in range(0, NTRIG):
+                    previous_trig[itrig] = trig_value[itrig][i]
+                for iPRE in range(0, NPRE):
+                    previous_PRE[iPRE] = PRE_value[iPRE][i]
+                    SHMS_previous_PRE[iPRE] = SHMS_PRE_value[iPRE][i]
+                for iRATE in range(0, NRATE):
+                    previous_rate[iRATE] = rate_value[iRATE][i]
+                for iRATE in range(0, SHMSNRATE):
+                    SHMS_previous_rate[iRATE] = SHMS_rate_value[iRATE][i]
+                previous_time[ibcm] = time_value[i]
+                previous_charge[ibcm] = bcm_value[ibcm][i]
 
     if PS_names[0] is "PS1":
         shms_ps_ix = 0

@@ -443,7 +443,9 @@ def debug():
     print("DEBUG data")
     print("=======================")
     ### Debug prints
-    print("TLT",data[["TLT","CPULT_scaler"]])
+    print(data[["sent_edtm","TLT","CPULT_scaler","current","time"]])
+    print("EDTM scaler rate: ", data["sent_edtm"]/data["time"])
+    print("Accepted EDTM rate: ", data["accp_edtm"]/data["time"])
     ###
     print("=======================\n\n")
 
