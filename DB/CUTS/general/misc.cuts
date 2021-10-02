@@ -1,7 +1,7 @@
 ########
 # EDTM #
 ########
-c_noedtm = {"pEDTM_tdcTime" : (T_coin_pEDTM_tdcTime == misc.noedtm)}
-c_edtm = {"pEDTM_tdcTime" : (T_coin_pEDTM_tdcTime > misc.noedtm)}
+c_noedtm = {"pEDTM_tdcTime" : (T_coin_pEDTM_tdcTimeRaw == misc.noedtm)}
+c_edtm = {"pEDTM_tdcTime" : (T_coin_pEDTM_tdcTimeRaw > misc.noedtm)}
 starttime = {"P_hod_goodstarttime" : (P_hod_goodstarttime == misc.goodstarttime)}, {"H_hod_goodstarttime" : (H_hod_goodstarttime == misc.goodstarttime)}
 goodscinhit = {"P_hod_goodscinhit" : (P_hod_goodscinhit == misc.goodscinhit)}, {"H_hod_goodscinhit" : (H_hod_goodscinhit == misc.goodscinhit)}
