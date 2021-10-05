@@ -28,22 +28,26 @@ sys.path.insert(0, 'python/')
 ##################################################################################################################################################
 
 # Defining some variables here
-minrangeuser = 0 # min range for -t vs phi plot
-maxrangeuser = 0.7 # max range for -t vs phi plot
 minbin = 0.92 # minimum bin for selecting neutrons events in missing mass distribution
 maxbin = 0.98 # maximum bin for selecting neutrons events in missing mass distribution
 
 ##################################################################################################################################################
 
 # Check the number of arguments provided to the script
+FilenameOverride=False # SJDK 21/09/21 - Added a secret 4th argument so that a full kinematic can be processed, the run number is needed for cuts, but for the kinematic analysis, the filename is not by run number
 if len(sys.argv)-1!=3:
-    print("!!!!! ERROR !!!!!\n Expected 3 arguments\n Usage is with - ROOTfilePrefix RunNumber MaxEvents \n!!!!! ERROR !!!!!")
-    sys.exit(1)
+    if len(sys.argv)-1!=4:
+        print("!!!!! ERROR !!!!!\n Expected 3 arguments\n Usage is with - ROOTfileSuffix RunNumber MaxEvents \n!!!!! ERROR !!!!!")
+        sys.exit(1)
+    else:
+        print ("!!!!! Running with secret 4th argument - FilenameOverride - Taking file name to process as stated EXACTLY in 4th arg !!!!!")
+        FilenameOverride=sys.argv[4] # If 4 arguments provided, set the FilenameOverride value to be arg 4
 
 ##################################################################################################################################################
 
 # Input params - run number and max number of events
-ROOTPrefix = sys.argv[1]
+# 23/09/21 - SJDK - Changed ROOTPrefix to ROOTSuffix so that this is actually accurate (and the insturctions printed above make sense)
+ROOTSuffix = sys.argv[1]
 runNum = sys.argv[2]
 MaxEvent = sys.argv[3]
 
@@ -51,7 +55,7 @@ USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
 HOST = subprocess.getstatusoutput("hostname")
 
 if ("farm" in HOST[1]):
-    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
+    REPLAYPATH = "/group/c-pionlt/online_analysis/hallc_replay_lt"
 elif ("qcd" in HOST[1]):
     REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
 elif ("cdaq" in HOST[1]):
@@ -68,13 +72,58 @@ OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/PionLT" % REPLAYPATH        # Output fol
 sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
 import kaonlt as klt # Import kaonlt module, need the path setting line above prior to importing this                                                                                                         
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
-Pion_Analysis_Distributions = "%s/%s_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, runNum, MaxEvent)
+if (FilenameOverride == False):
+    Pion_Analysis_Distributions = "%s/%s_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, runNum, MaxEvent)
+elif (FilenameOverride != False): # If filename override set, format the file name based upon the override file name
+    Pion_Analysis_Distributions = "%s/%s_Pion_Analysis_Distributions.pdf" %(OUTPATH, (FilenameOverride.split("_Analysed_Data.root",1)[0]))
+
+# SJDK 04/10/21 - This is not what I wanted for this really, this is basically just hard coding a value, if we do this for every setting, it will bloat the file enormously.
+# For the kinematic settings, we have the Q2 and W which we should use to set these values in the file name, MANIPULATE THE STRING to get two variables, the Q2 and W
+# THEN, from this, set the range. You should get the Q2 and set some sensible range (+/- 1?) as the min/max, same for W.
+# KEEP THE BIN WIDTH CONSISTENT - Make sure it is a SENSIBLE width too, e.g. 0.5 per bin (not some weird value like 0.333333333333333333333333333333333333333333333333333333 or anything)
+# You should just pick some range of t that will work for all settings, 1-1.3 should be OK. I've already done this for epsilon
+# Also, you should not alter this script in a way such that it will not work for a single run as you have with this block - I want to keep this version and the one on CDaq in sync, I can't do this if 
+# this script is altered such that it won't work on a single file.
+# See the naming in the block above for an example of how we could manipulate the string in python, use split to segment the string into chunks, then grab what you need. For example, look at the output of -
+
+#print(FilenameOverride.split("_"))
+#print(FilenameOverride.split("_")[0])
+#print((FilenameOverride.split("_")[0]).split("W"))
+#print(((FilenameOverride.split("_")[0]).split("W"))[0])
+
+# There are other nice functions you can use too. This is the advantage of KNOWING how our filename is formatted and doing it in a consistent way
+
+if ("Q1p6W3p08" in FilenameOverride):
+    minrangeuser = 0 # min range for -t vs phi plot
+    maxrangeuser = 0.7 # max range for -t vs phi plot
+    xminqvsw = -1.0 # min x-range for Q2vsW plot
+    xmaxqvsw = 5.0 # max x-range for Q2vsW plot
+    yminqvsw = 2.3 # min y-range for Q2vsW plot
+    ymaxqvsw = 3.8 # max y-range for Q2vsW plot
+
+elif ("Q6p0W3p19" in FilenameOverride):
+    minrangeuser = 0 # min range for -t vs phi plot
+    maxrangeuser = 1.3 # max range for -t vs phi plot
+    xminqvsw = 4.0 # min x-range for Q2vsW plot
+    xmaxqvsw = 8.0 # max x-range for Q2vsW plot
+    yminqvsw = 2.6 # min y-range for Q2vsW plot
+    ymaxqvsw = 3.6 # max y-range for Q2vsW plot
+
+else:
+    minrangeuser = 0 # min range for -t vs phi plot
+    maxrangeuser = 1.3 # max range for -t vs phi plot
+    xminqvsw = 4.0 # min x-range for Q2vsW plot
+    xmaxqvsw = 8.0 # max x-range for Q2vsW plot
+    yminqvsw = 2.6 # min y-range for Q2vsW plot
+    ymaxqvsw = 3.6 # max y-range for Q2vsW plot
 
 #################################################################################################################################################
 
 # Construct the name of the rootfile based upon the info we provided
-rootName = "%s/UTIL_PION/OUTPUT/Analysis/PionLT/%s_%s_%s.root" % (REPLAYPATH, runNum, MaxEvent, ROOTPrefix)     # Input file location and variables taking
-#rootName = "/home/cdaq/hallc-online/hallc_replay_lt/UTIL_PION/OUTPUT/Analysis/PionLT/8076_-1_Analysed_Data.root" # Hard coded file for testing on cdaq
+if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
+    rootName = "%s/UTIL_PION/OUTPUT/Analysis/PionLT/%s_%s_%s.root" % (REPLAYPATH, runNum, MaxEvent, ROOTSuffix)     # Input file location and variables taking
+elif (FilenameOverride != False): # Special condition, with 4th arg, use 4th arg as file name
+    rootName = "%s/UTIL_PION/OUTPUT/Analysis/PionLT/%s" % (REPLAYPATH, FilenameOverride)
 print ("Attempting to process %s" %(rootName))
 if os.path.exists(OUTPATH):
     if os.path.islink(OUTPATH):
@@ -193,7 +242,7 @@ P_RFTime_pions_uncut = ROOT.TH1D("P_RFTime_pions_uncut", "SHMS RFTime; SHMS_RFTi
 ePiCoinTime_pions_uncut = ROOT.TH1D("ePiCoinTime_pions_uncut", "Electron-Pion CTime (no cuts); e #pi Coin_Time; Counts", 200, -50, 50)
 Q2_pions_uncut = ROOT.TH1D("Q2_pions_uncut", "Q2; Q2; Counts", 200, 0, 6)
 W_pions_uncut = ROOT.TH1D("W_pions_uncut", "W; W; Counts", 200, 2, 4)
-epsilon_pions_uncut = ROOT.TH1D("epsilon_pions_uncut", "epsilon; epsilon; Counts", 200, 0, 0.8)
+epsilon_pions_uncut = ROOT.TH1D("epsilon_pions_uncut", "epsilon; epsilon; Counts", 200, 0, 1.0)
 phiq_pions_uncut = ROOT.TH1D("phiq_pions_uncut", "phiq; #phi; Counts", 200, -10, 10)
 t_pions_uncut = ROOT.TH1D("t_pions_uncut", "t; t; Counts", 200, -1.5, 1)
 
@@ -230,7 +279,7 @@ P_RFTime_pions_cut = ROOT.TH1D("P_RFTime_pions_cut", "SHMS RFTime; SHMS_RFTime; 
 ePiCoinTime_pions_cut = ROOT.TH1D("ePiCoinTime_pions_cut", "Electron-Pion CTime (with cuts); e #pi Coin_Time; Counts", 200, -50, 50)
 Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2; Q2; Counts", 200, 2, 4)
 W_pions_cut = ROOT.TH1D("W_pions_cut", "W; W; Counts", 200, 2.2, 4)
-epsilon_pions_cut = ROOT.TH1D("epsilon_pions_cut", "epsilon; epsilon; Counts", 200, 0, 0.8)
+epsilon_pions_cut = ROOT.TH1D("epsilon_pions_cut", "epsilon; epsilon; Counts", 200, 0, 1.0)
 phiq_pions_cut = ROOT.TH1D("phiq_pions_cut", "phiq; #phi; Counts", 200, -10, 10)
 t_pions_cut = ROOT.TH1D("t_pions_cut", "t; t; Counts", 200, -1, 0.5)
 
@@ -281,19 +330,24 @@ P_dp_vs_beta_pions_cut = ROOT.TH2D("P_dp_vs_beta_pions_cut", "SHMS #delta vs SHM
 P_MMpi_vs_beta_pions_cut = ROOT.TH2D("P_MMpi_vs_beta_pions_cut", "Missing Mass vs SHMS #beta (with cut); MM_{#pi}; SHMS_#beta", 100, 0, 2, 200, 0, 2)
 
 MMpi_vs_ePiCoinTime_pions_cut_prompt = ROOT.TH2D("MMpi_vs_ePiCoinTime_pions_cut_prompt","Missing Mass vs Electron-Pion CTime; MM_{#pi}; e #pi Coin_Time",100, 0, 2, 100, -2, 2)
-Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, 0.5, 4.5, 200, 2.7, 3.6)
+#Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, -1.0, 5.0, 200, 2.3, 3.8)
+
+if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
+    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, 4.0, 8.0, 200, 2.6, 3.6)
+elif (FilenameOverride != False): # Standard running condition, construct file name from run number and max events e.t.c.
+# You should only plot it this way IF the filename override is set, I want a consistent script between CDaq and the iFarm, it MUST work fine for individual files on CDaq
+    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, xminqvsw, xmaxqvsw, 200, yminqvsw, ymaxqvsw)
+
 phiqvst_pions_cut = ROOT.TH2D("phiqvst_pions_cut","; #phi ;t", 12, -3.14, 3.14, 24, 0.0, 1.2)
 
 # 11/09/21 - SJDK - Adding some 3D XY NPE plots, need to take projections of these (which I need to figure out how to do in PyRoot. Making these manually from the command line for now.
-P_HGC_xy_npe_pions_uncut = ROOT.TH3D("P_HGC_xy_npe_pions_uncut", "SHMS HGC NPE as fn of yAtCer vs SHMS HGC xAtCer (with cuts); HGC_yAtCer(cm); HGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
-P_Aero_xy_npe_pions_uncut = ROOT.TH3D("P_Aero_xy_npe_pions_uncut", "SHMS Aerogel NPE as fn of yAtCer vs xAtCer (with cuts); Aero_yAtCer(cm); Aero_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
-P_NGC_xy_npe_pions_uncut = ROOT.TH3D("P_NGC_xy_npe_pions_uncut", "SHMS NGC NPE as fn of yAtCer vs xAtCer (with cuts); NGC_yAtCer(cm); NGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
+P_HGC_xy_npe_pions_uncut = ROOT.TH3D("P_HGC_xy_npe_pions_uncut", "SHMS HGC NPE as fn of yAtCer vs SHMS HGC xAtCer (no cuts); HGC_yAtCer(cm); HGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
+P_Aero_xy_npe_pions_uncut = ROOT.TH3D("P_Aero_xy_npe_pions_uncut", "SHMS Aerogel NPE as fn of yAtCer vs xAtCer (no cuts); Aero_yAtCer(cm); Aero_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
+P_NGC_xy_npe_pions_uncut = ROOT.TH3D("P_NGC_xy_npe_pions_uncut", "SHMS NGC NPE as fn of yAtCer vs xAtCer (no cuts); NGC_yAtCer(cm); NGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
 P_HGC_xy_npe_pions_cut = ROOT.TH3D("P_HGC_xy_npe_pions_cut", "SHMS HGC NPE as fn of yAtCer vs SHMS HGC xAtCer (with cuts); HGC_yAtCer(cm); HGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
 P_Aero_xy_npe_pions_cut = ROOT.TH3D("P_Aero_xy_npe_pions_cut", "SHMS Aerogel NPE as fn of yAtCer vs xAtCer (with cuts); Aero_yAtCer(cm); Aero_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
 P_NGC_xy_npe_pions_cut = ROOT.TH3D("P_NGC_xy_npe_pions_cut", "SHMS NGC NPE as fn of yAtCer vs xAtCer (with cuts); NGC_yAtCer(cm); NGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
 #################################################################################################################################################
-
-
 
 # Filling Histograms for Pions
 for event in Cut_Pion_Events_noRF_tree:
@@ -423,7 +477,7 @@ for event in Cut_Pion_Events_Random_tree:
 #    P_RFTime_pions_cut_randm.Fill(event.P_RF_Dist)
     ePiCoinTime_pions_cut_randm.Fill(event.CTime_ePiCoinTime_ROC1)
     P_MMpi_pions_cut_randm.Fill(event.MMpi)
-
+7
 print("Histograms filled")
 
 ##############################################################################################################################################
@@ -444,6 +498,7 @@ Q2vsW_pions_cut.Draw("COLZ")
 c1_kin.cd(2)
 epsilon_pions_cut.Draw()
 c1_kin.cd(3)
+phiqvst_pions_cut.SetStats(0)
 phiqvst_pions_cut.GetYaxis().SetRangeUser(minrangeuser,maxrangeuser)
 phiqvst_pions_cut.Draw("SURF2 POL")
 # Section for polar plotting
@@ -483,7 +538,7 @@ for k in range(0, 7):
      Arc.SetLineWidth(2)
      # To change the arc radius we have to change number 0.825 in the lower line.
      Arc.DrawArc(0,0,0.825*(k+1)/(10),0.,360.,"same")
-tradius = TGaxis(0,0,0.575,0,0,0.7,10,"-+")
+tradius = TGaxis(0,0,0.575,0,minrangeuser,maxrangeuser,10,"-+")
 tradius.SetLineColor(2)
 tradius.SetLabelColor(2)
 tradius.Draw()
@@ -552,6 +607,8 @@ P_yp_pions_cut.SetLineColor(4)
 P_yp_pions_cut.Draw("same")
 c1_acpt.cd(6)
 gPad.SetLogy()
+P_dp_pions_uncut.SetMinimum(0.1*P_dp_pions_cut.GetMinimum()+1) # SJDK 18/09/21 - Implemented same fixed as used above for HMS
+P_dp_pions_uncut.SetMaximum(10*P_dp_pions_uncut.GetBinContent(P_dp_pions_uncut.GetMaximumBin()))
 P_dp_pions_uncut.SetLineColor(2)
 P_dp_pions_uncut.Draw()
 P_dp_pions_cut.SetLineColor(4)
@@ -635,6 +692,7 @@ legend11.AddEntry("P_aero_npe_pions_uncut", "without cuts", "l")
 legend11.AddEntry("P_aero_npe_pions_cut", "with cuts (acpt/RF/PID)", "l")
 legend11.Draw("same")
 c2_pid.cd(3)
+gPad.SetLogy()
 P_ngcer_npe_pions_uncut.SetLineColor(2)
 P_ngcer_npe_pions_uncut.Draw()
 P_ngcer_npe_pions_cut.SetLineColor(4)
@@ -653,14 +711,19 @@ c3_pid.cd(1)
 gPad.SetLogz()
 P_hgcer_vs_aero_npe_pions_uncut.Draw("COLZ")
 c3_pid.cd(2)
+gPad.SetLogz()
 P_hgcer_vs_aero_npe_pions_cut.Draw("COLZ")
 c3_pid.cd(3)
+gPad.SetLogz()
 P_ngcer_vs_hgcer_npe_pions_uncut.Draw("COLZ")
 c3_pid.cd(4)
+gPad.SetLogz()
 P_ngcer_vs_hgcer_npe_pions_cut.Draw("COLZ")
 c3_pid.cd(5)
+gPad.SetLogz()
 P_ngcer_vs_aero_npe_pions_uncut.Draw("COLZ")
 c3_pid.cd(6)
+gPad.SetLogz()
 P_ngcer_vs_aero_npe_pions_cut.Draw("COLZ")
 c3_pid.Print(Pion_Analysis_Distributions)
 
@@ -794,12 +857,38 @@ c1_delta.cd(3)
 P_dp_vs_beta_pions_uncut.Draw("COLZ")
 c1_delta.cd(4)
 P_dp_vs_beta_pions_cut.Draw("COLZ")
-c1_delta.Print(Pion_Analysis_Distributions + ')')
+c1_delta.Print(Pion_Analysis_Distributions)
+
+c1_proj = TCanvas("c1_proj", "HGC/NGC/Aero XY Projection", 100, 0, 1000, 900)
+c1_proj.Divide(2,3)
+c1_proj.cd(1)
+HGC_proj_yx_uncut = ROOT.TProfile2D(P_HGC_xy_npe_pions_uncut.Project3DProfile("yx"))
+HGC_proj_yx_uncut.Draw("COLZ")
+c1_proj.cd(2)
+HGC_proj_yx_cut = ROOT.TProfile2D(P_HGC_xy_npe_pions_cut.Project3DProfile("yx"))
+HGC_proj_yx_cut.Draw("COLZ")
+c1_proj.cd(3)
+NGC_proj_yx_uncut = ROOT.TProfile2D(P_NGC_xy_npe_pions_uncut.Project3DProfile("yx"))
+NGC_proj_yx_uncut.Draw("COLZ")
+c1_proj.cd(4)
+NGC_proj_yx_cut = ROOT.TProfile2D(P_NGC_xy_npe_pions_cut.Project3DProfile("yx"))
+NGC_proj_yx_cut.Draw("COLZ")
+c1_proj.cd(5)
+Aero_proj_yx_uncut = ROOT.TProfile2D(P_Aero_xy_npe_pions_uncut.Project3DProfile("yx"))
+Aero_proj_yx_uncut.Draw("COLZ")
+c1_proj.cd(6)
+Aero_proj_yx_cut = ROOT.TProfile2D(P_Aero_xy_npe_pions_cut.Project3DProfile("yx"))
+Aero_proj_yx_cut.Draw("COLZ")
+c1_proj.Print(Pion_Analysis_Distributions + ')')
 
 #############################################################################################################################################
 
 # Making directories in output file
-outHistFile = ROOT.TFile.Open("%s/%s_%s_Output_Data.root" % (OUTPATH, runNum, MaxEvent), "RECREATE")                                                                                                    
+if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
+       outHistFile = ROOT.TFile.Open("%s/%s_%s_Output_Data.root" % (OUTPATH, runNum, MaxEvent), "RECREATE")
+elif (FilenameOverride != False): # Special condition, with 4th arg, use 4th arg as file name
+       outHistFile = ROOT.TFile.Open("%s/%s_%s_Output_Data.root" % (OUTPATH, (FilenameOverride.split("_Analysed_Data.root",1)[0]), MaxEvent), "RECREATE")
+
 d_Uncut_Pion_Events = outHistFile.mkdir("Uncut_Pion_Events")
 d_Cut_Pion_Events_All = outHistFile.mkdir("Cut_Pion_Events_All")
 d_Cut_Pion_Events_Prompt = outHistFile.mkdir("Cut_Pion_Events_Prompt")
@@ -857,6 +946,9 @@ P_ngcer_vs_aero_npe_pions_uncut.Write()
 H_dp_vs_beta_pions_uncut.Write()
 P_dp_vs_beta_pions_uncut.Write()
 P_MMpi_vs_beta_pions_uncut.Write()
+HGC_proj_yx_uncut.Write()
+NGC_proj_yx_uncut.Write()
+Aero_proj_yx_uncut.Write()
 P_HGC_xy_npe_pions_uncut.Write()
 P_Aero_xy_npe_pions_uncut.Write()
 P_NGC_xy_npe_pions_uncut.Write()
@@ -918,6 +1010,9 @@ P_MMpi_vs_beta_pions_cut.Write()
 P_HGC_xy_npe_pions_cut.Write()
 P_Aero_xy_npe_pions_cut.Write()
 P_NGC_xy_npe_pions_cut.Write()
+HGC_proj_yx_cut.Write()
+NGC_proj_yx_cut.Write()
+Aero_proj_yx_cut.Write()
 
 d_Cut_Pion_Events_Prompt.cd()
 P_beta_pions_cut_prompt.Write()

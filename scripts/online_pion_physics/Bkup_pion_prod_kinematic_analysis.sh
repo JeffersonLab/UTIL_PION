@@ -85,18 +85,18 @@ elif [ $TestingVar != 1 ]; then
 	    fi
 	done < "${UTILPATH}/scripts/online_pion_physics/Kinematics/${KINEMATIC}_MissingAnalyses"
 	yes y | eval "$REPLAYPATH/UTIL_BATCH/batch_scripts/run_batch_PionLT.sh ${KINEMATIC}_MissingAnalyses"
-    elif [ $Autosub != 1 ]; then
-	echo "Analyses missing, list copied to UTIL_BATCH directory, run on farm if desired"
-	read -p "Process python script for missing replays/analyses interactively? <Y/N> " prompt2
-	if [[ $prompt2 == "y" || $prompt2 == "Y" || $prompt2 == "yes" || $prompt2 == "Yes" ]]; then
-	    while IFS='' read -r line || [[ -n "$line" ]]; do
-		runNum=$line
-		if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${runNum}_-1_Analysed_Data.root" ]; then
-		    python3 $UTILPATH/scripts/online_pion_physics/pion_prod_analysis_sw.py "Pion_coin_replay_production" ${runNum} "-1"
-		fi
-	    done < "$RunListFile"
-	    else echo "Not processing python script interactively"
-	fi
+#    elif [ $Autosub != 1 ]; then
+#	echo "Analyses missing, list copied to UTIL_BATCH directory, run on farm if desired"
+#	read -p "Process python script for missing replays/analyses interactively? <Y/N> " prompt2
+#	if [[ $prompt2 == "y" || $prompt2 == "Y" || $prompt2 == "yes" || $prompt2 == "Yes" ]]; then
+#	    while IFS='' read -r line || [[ -n "$line" ]]; do
+#		runNum=$line
+#		if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${runNum}_-1_Analysed_Data.root" ]; then
+#		    python3 $UTILPATH/scripts/online_pion_physics/pion_prod_analysis_sw.py "Pion_coin_replay_production" ${runNum} "-1"
+#		fi
+#                done < "$RunListFile"
+#	    else echo "Not processing python script interactively"
+#	fi
     fi
 fi
 
@@ -118,12 +118,9 @@ if [ $TestingVar == 1 ]; then
 	fi
     fi
     # SJDK 21/09/21 - This last step needs tweaking a little, this is the analysis of the FULL kinematic, NOT each individual run. We need the plotting script to pick up the file we generated above and THEN plot it (and save it with a sensible name)
-    if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pions.root" ]; then
-#	python3 "${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw.py(\"${KINFILE}\", \"${KINEMATIC}_Pions\")"
-        python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw.py "Analysed_Data" ${runNum} "-1"
-    elif [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pions.pdf" ]; then
-	python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw.py "Analysed_Data" ${runNum} "-1"
-    else echo "Pion plots already found in - ${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pions.root and .pdf - Plotting macro skipped"
+    if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf" ]; then
+	python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw.py -1 ${runNum} -1 ${KINFILE}
+    else echo "Pion analysis plots already found in - ${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf - Plotting macro skipped"
     fi
 fi
 
