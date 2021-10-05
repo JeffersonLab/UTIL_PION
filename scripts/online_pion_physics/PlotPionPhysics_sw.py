@@ -453,6 +453,7 @@ Q2vsW_pions_cut.Draw("COLZ")
 c1_kin.cd(2)
 epsilon_pions_cut.Draw()
 c1_kin.cd(3)
+phiqvst_pions_cut.SetStats(0)
 phiqvst_pions_cut.GetYaxis().SetRangeUser(minrangeuser,maxrangeuser)
 phiqvst_pions_cut.Draw("SURF2 POL")
 # Section for polar plotting
