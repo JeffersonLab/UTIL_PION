@@ -1,4 +1,5 @@
 # SJDK - 18/09/21 - Some of these cuts make zero sense, someone needs to go through and make sure they ALL make sense at some point
+# SJDK - 05/10/21 - I guess it was me, I've trimmed these down so we shouldn't have duplicate cuts definitions being read in now
 ################
 # HMS pid cuts #
 ################
@@ -10,37 +11,18 @@ h_hadcut = {"H_gtr_beta" : ((abs(H_gtr_beta-1)) < pid.H_hadcut_H_beta)}, {"H_cer
 #################
 # SHMS pid cuts #
 #################
-p_ecut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_ecut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum > pid.P_ecut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_ecut_P_aero)}, {"P_cal_etotnorm" : (P_cal_etotnorm > pid.P_ecut_P_cal)}
+p_ecut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_ecut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum > pid.P_ecut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_ecut_P_aero)}, {"P_cal_etotnorm" : (P_cal_etotnorm > pid.P_ecut_P_cal)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum > pid.P_ecut_P_ngcer)}
 #
-p_picut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_picut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum > pid.P_picut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_picut_P_aero)}, {"P_cal_etotnorm" : (P_cal_etotnorm < pid.P_picut_P_cal)}
+p_picut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_picut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum > pid.P_picut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_picut_P_aero)}, {"P_cal_etotnorm" : (P_cal_etotnorm > pid.P_picut_P_cal)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum < pid.P_hadcut_P_ngcer)}
 #
-p_kcut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_kcut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum < pid.P_kcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_kcut_P_aero)}, {"P_cal_etotnorm" : (P_cal_etotnorm < pid.P_kcut_P_cal)}
+p_kcut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_kcut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum < pid.P_kcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_kcut_P_aero)}, {"P_cal_etotnorm" : (P_cal_etotnorm > pid.P_kcut_P_cal)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum < pid.P_hadcut_P_ngcer)}
 #
-p_pcut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_pcut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum <= pid.P_pcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum <= pid.P_pcut_P_aero)}, {"P_cal_etotnorm" : (P_cal_etotnorm < pid.P_pcut_P_cal) & (P_cal_etotnorm > 0.0)}
+p_pcut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_pcut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum <= pid.P_pcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum <= pid.P_pcut_P_aero)}, {"P_cal_etotnorm" : (P_cal_etotnorm <= pid.P_pcut_P_cal) & (P_cal_etotnorm > 0.0)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum < pid.P_hadcut_P_ngcer)}
 #
-p_hadcut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_hadcut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum > pid.P_hadcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_hadcut_P_aero)}, {"P_cal_etotnorm" : (P_cal_etotnorm < pid.P_hadcut_P_cal)}
+p_hadcut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_hadcut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum > pid.P_hadcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_hadcut_P_aero)}, {"P_cal_etotnorm" : (P_cal_etotnorm > pid.P_hadcut_P_cal)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum < pid.P_hadcut_P_ngcer)}
 #
-p_coin_picut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_ecut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum > pid.P_ecut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_ecut_P_aero)}, {"H_cal_etotnorm" : (H_cal_etotnorm > pid.H_hadcut_H_cal) & (H_cal_etotnorm < 1.5)}, {"P_cal_etotnorm" : (P_cal_etotnorm < pid.P_picut_P_cal)}
+p_coin_picut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_picut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum > pid.P_picut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_picut_P_aero)}, {"H_cal_etotnorm" : (H_cal_etotnorm > pid.H_hadcut_H_cal) & (H_cal_etotnorm < 1.5)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum < pid.P_hadcut_P_ngcer)}
 #
-p_coin_kcut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_kcut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum < pid.P_kcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_kcut_P_aero)}, {"H_cal_etotnorm" : (H_cal_etotnorm > pid.H_hadcut_H_cal) & (H_cal_etotnorm < 1.5)}
+p_coin_kcut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_kcut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum < pid.P_kcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_kcut_P_aero)}, {"H_cal_etotnorm" : (H_cal_etotnorm > pid.H_hadcut_H_cal) & (H_cal_etotnorm < 1.5)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum < pid.P_hadcut_P_ngcer)}
 #
-p_coin_pcut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_pcut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum < pid.P_pcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum < pid.P_pcut_P_aero)},  {"H_cal_etotnorm" : (H_cal_etotnorm > pid.H_hadcut_H_cal) & (H_cal_etotnorm < 1.5)}
-# SJDK 18/09/21 Need to add in these NGC cuts to the main block above, should ONLY be a block of PID cuts that utilise all detectors per arm
-##################################################
-# Cuts with the noble gas cherenkov included too #
-##################################################
-p_ecut_ngcer = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_ecut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum > pid.P_ecut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_ecut_P_aero)}, {"P_cal_etotnorm" : (P_cal_etotnorm > pid.P_ecut_P_cal)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum > pid.P_ecut_P_ngcer)}
-#
-p_picut_ngcer = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_picut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum > pid.P_picut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_picut_P_aero)}, {"P_cal_etotnorm" : (P_cal_etotnorm > pid.P_picut_P_cal)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum < pid.P_hadcut_P_ngcer)}
-#
-p_kcut_ngcer = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_kcut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum < pid.P_kcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_kcut_P_aero)}, {"P_cal_etotnorm" : (P_cal_etotnorm > pid.P_kcut_P_cal)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum < pid.P_hadcut_P_ngcer)}
-#
-p_pcut_ngcer = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_pcut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum <= pid.P_pcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum <= pid.P_pcut_P_aero)}, {"P_cal_etotnorm" : (P_cal_etotnorm <= pid.P_pcut_P_cal) & (P_cal_etotnorm > 0.0)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum < pid.P_hadcut_P_ngcer)}
-#
-p_hadcut_ngcer = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_hadcut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum > pid.P_hadcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_hadcut_P_aero)}, {"P_cal_etotnorm" : (P_cal_etotnorm > pid.P_hadcut_P_cal)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum < pid.P_hadcut_P_ngcer)}
-#
-p_coin_picut_ngcer = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_ecut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum > pid.P_ecut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_ecut_P_aero)}, {"H_cal_etotnorm" : (H_cal_etotnorm > pid.H_hadcut_H_cal) & (H_cal_etotnorm < 1.5)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum < pid.P_hadcut_P_ngcer)}
-#
-p_coin_kcut_ngcer = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_kcut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum < pid.P_kcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_kcut_P_aero)}, {"H_cal_etotnorm" : (H_cal_etotnorm > pid.H_hadcut_H_cal) & (H_cal_etotnorm < 1.5)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum < pid.P_hadcut_P_ngcer)}
-#
-p_coin_pcut_ngcer = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_pcut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum < pid.P_pcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum < pid.P_pcut_P_aero)},  {"H_cal_etotnorm" : (H_cal_etotnorm > pid.H_hadcut_H_cal) & (H_cal_etotnorm < 1.5)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum < pid.P_hadcut_P_ngcer)}
+p_coin_pcut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_pcut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum < pid.P_pcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum < pid.P_pcut_P_aero)},  {"H_cal_etotnorm" : (H_cal_etotnorm > pid.H_hadcut_H_cal) & (H_cal_etotnorm < 1.5)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum < pid.P_hadcut_P_ngcer)}
