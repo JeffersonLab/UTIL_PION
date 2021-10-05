@@ -30,6 +30,8 @@ sys.path.insert(0, 'python/')
 # Defining some variables here
 minbin = 0.92 # minimum bin for selecting neutrons events in missing mass distribution
 maxbin = 0.98 # maximum bin for selecting neutrons events in missing mass distribution
+minrangeuser = 0 # min range for -t vs phi plot
+maxrangeuser = 1.3 # max range for -t vs phi plot
 
 ##################################################################################################################################################
 
@@ -92,29 +94,17 @@ elif (FilenameOverride != False): # If filename override set, format the file na
 #print(((FilenameOverride.split("_")[0]).split("W"))[0])
 
 # There are other nice functions you can use too. This is the advantage of KNOWING how our filename is formatted and doing it in a consistent way
-
-if ("Q1p6W3p08" in FilenameOverride):
-    minrangeuser = 0 # min range for -t vs phi plot
-    maxrangeuser = 0.7 # max range for -t vs phi plot
-    xminqvsw = -1.0 # min x-range for Q2vsW plot
-    xmaxqvsw = 5.0 # max x-range for Q2vsW plot
-    yminqvsw = 2.3 # min y-range for Q2vsW plot
-    ymaxqvsw = 3.8 # max y-range for Q2vsW plot
-
-elif ("Q6p0W3p19" in FilenameOverride):
-    minrangeuser = 0 # min range for -t vs phi plot
-    maxrangeuser = 1.3 # max range for -t vs phi plot
-    xminqvsw = 4.0 # min x-range for Q2vsW plot
-    xmaxqvsw = 8.0 # max x-range for Q2vsW plot
-    yminqvsw = 2.6 # min y-range for Q2vsW plot
-    ymaxqvsw = 3.6 # max y-range for Q2vsW plot
-else
-    minrangeuser = 0 # min range for -t vs phi plot
-    maxrangeuser = 1.3 # max range for -t vs phi plot
-    xminqvsw = 4.0 # min x-range for Q2vsW plot
-    xmaxqvsw = 8.0 # max x-range for Q2vsW plot
-    yminqvsw = 2.6 # min y-range for Q2vsW plot
-    ymaxqvsw = 3.6 # max y-range for Q2vsW plot
+if (FilenameOverride != False):
+    if ("Q1p6W3p08" in FilenameOverride):
+        xminqvsw = -1.0 # min x-range for Q2vsW plot
+        xmaxqvsw = 5.0 # max x-range for Q2vsW plot
+        yminqvsw = 2.3 # min y-range for Q2vsW plot
+        ymaxqvsw = 3.8 # max y-range for Q2vsW plot
+    elif ("Q6p0W3p19" in FilenameOverride):
+        xminqvsw = 4.0 # min x-range for Q2vsW plot
+        xmaxqvsw = 8.0 # max x-range for Q2vsW plot
+        yminqvsw = 2.6 # min y-range for Q2vsW plot
+        ymaxqvsw = 3.6 # max y-range for Q2vsW plot
 
 #################################################################################################################################################
 
