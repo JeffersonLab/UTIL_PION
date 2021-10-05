@@ -3,7 +3,7 @@
 #
 # Description:
 # ================================================================
-# Time-stamp: "2021-10-01 19:06:01 trottar"
+# Time-stamp: "2021-10-04 05:48:24 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -74,11 +74,25 @@ else:
 print("\nRunning as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 
 try:
-    lumi_data = dict(pd.read_csv(inp_f))
+    lumi_data = pd.read_csv(inp_f)
 except IOError:
     print("Error: %s does not appear to exist." % inp_f)
 print(lumi_data.keys())
-    
+
+def removeRun(runNum):
+    '''
+    Removes runs from DF and subsequently will not be plotted or included in yield csv output
+    '''
+    global lumi_data
+    lumi_data = lumi_data[lumi_data["run number"] != runNum].reset_index(drop=True)
+    return lumi_data
+
+# Remove runs, removeRun(runNumber)
+
+# Convert to dict for proper formatting when eventually merging dictionaries
+lumi_data = dict(lumi_data)
+print(lumi_data.keys())
+
 # prints first instance of run number-> print(lumi_data["run number"][0])
 
 if "PS1" in lumi_data.keys():
@@ -104,8 +118,8 @@ def calc_yield():
     
         "rate_HMS" : makeList("HMSTRIG_scaler")/makeList("time"),
         "rate_SHMS" : makeList("SHMSTRIG_scaler")/makeList("time"),
-        
-        "TLT" : 1-(makeList("accp_edtm")/makeList("sent_edtm")),
+
+        "sent_edtm_PS" : makeList("sent_edtm")/HMS_PS,
 
         "uncern_HMS_evts_scaler" : np.sqrt(makeList("HMSTRIG_scaler"))/makeList("HMSTRIG_scaler"),
 
@@ -119,10 +133,15 @@ def calc_yield():
 
         "uncern_SHMS_evts_track" : np.sqrt(makeList("p_int_goodscin_evts"))/makeList("p_int_goodscin_evts"),
 
-        "HMS_scaler_accp" : makeList("HMSTRIG_scaler")-makeList("sent_edtm"),
-
-        "SHMS_scaler_accp" : makeList("SHMSTRIG_scaler")-makeList("sent_edtm"),
     }
+
+    TLT = makeList("accp_edtm")/yield_dict["sent_edtm_PS"]
+    yield_dict.update({"TLT" : TLT})
+
+    HMS_scaler_accp = makeList("HMSTRIG_scaler")-yield_dict["sent_edtm_PS"]
+    SHMS_scaler_accp = makeList("SHMSTRIG_scaler")-yield_dict["sent_edtm_PS"]
+    yield_dict.update({"HMS_scaler_accp" : HMS_scaler_accp})
+    yield_dict.update({"SHMS_scaler_accp" : SHMS_scaler_accp})
 
     # Calculate yield values
 
@@ -311,14 +330,16 @@ def plot_yield():
 
     plt.tight_layout()      
 
+    #########################################################################################################################################################
+
     edtmPlot = plt.figure(figsize=(12,8))
 
-    #EDTM vs Current
+    #Ratio accp/total scaler vs current
     plt.subplot(2,3,1)    
     plt.grid(zorder=1)
     #plt.xlim(0,100)
-    plt.scatter(yield_data["current"],yield_data["sent_edtm"]/(yield_data["time"]*1000),color='blue',zorder=4)
-    plt.ylabel('EDTM Scaler Rate [kHz]', fontsize=16)
+    plt.scatter(yield_data["current"],(yield_data["HMS_scaler_accp"]+yield_data["SHMS_scaler_accp"])/(yield_data["HMSTRIG_scaler"]+yield_data["SHMSTRIG_scaler"]),color='blue',zorder=4)
+    plt.ylabel('Accp/Total scaler count', fontsize=16)
     plt.xlabel('Current [uA]', fontsize =16)
     if target == 'LD2' :
         plt.title('LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
@@ -327,12 +348,13 @@ def plot_yield():
     else :
         plt.title('Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
 
-    #HMS rate vs Current
+    #Scaler EDTM rate vs current
     plt.subplot(2,3,2)    
     plt.grid(zorder=1)
     #plt.xlim(0,100)
-    plt.scatter(yield_data["current"],yield_data["rate_HMS"]/1000,color='blue',zorder=4)
-    plt.ylabel('HMS Rate [kHz]', fontsize=16)
+    plt.scatter(yield_data["current"],yield_data["sent_edtm"]/yield_data["time"],color='blue',zorder=4)
+    plt.scatter(yield_data["current"],yield_data["sent_edtm_PS"]/yield_data["time"],color='red',zorder=4)
+    plt.ylabel('Scaler EDTM rate [Hz]', fontsize=16)
     plt.xlabel('Current [uA]', fontsize =16)
     if target == 'LD2' :
         plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
@@ -369,19 +391,20 @@ def plot_yield():
     else :
         plt.title('Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
 
-    #SHMS rate vs Current
+    #Time vs current
     plt.subplot(2,3,5)    
     plt.grid(zorder=1)
     #plt.xlim(0,100)
-    plt.scatter(yield_data["current"],yield_data["rate_SHMS"]/1000,color='blue',zorder=4)
-    plt.ylabel('SHMS Rate [kHz]', fontsize=16)
+    plt.scatter(yield_data["current"],yield_data["time"]/60,color='blue',zorder=4)
+    plt.ylabel('Time [min]', fontsize=16)
     plt.xlabel('Current [uA]', fontsize =16)
     if target == 'LD2' :
-        plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
     elif target == 'LH2' :
-        plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
     else :
-        plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+
 
     #EDTM vs SHMS Rate
     plt.subplot(2,3,6)    
@@ -398,6 +421,8 @@ def plot_yield():
         plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
 
     plt.tight_layout()      
+
+    #########################################################################################################################################################
 
     logPlot = plt.figure(figsize=(12,8))
 
@@ -536,10 +561,12 @@ def debug():
     print("DEBUG data")
     print("=======================")
     ### Debug prints
-    print(data[["run number","sent_edtm","TLT","CPULT_scaler","current","time"]])
+    print(data[["run number","PS4","sent_edtm","TLT","CPULT_scaler","current","time"]])
     print("EDTM scaler rate: ", data["sent_edtm"]/data["time"])
     print("Accepted EDTM rate: ", data["accp_edtm"]/data["time"])
     print("Run numbers: ", data["run number"].sort_values())
+    print("HMS scaler ratio",data["HMS_scaler_accp"]/data["HMSTRIG_scaler"])
+    print("SHMS scaler ratio",data["SHMS_scaler_accp"]/data["SHMSTRIG_scaler"])
     ###
     print("=======================\n\n")
 

@@ -8,7 +8,7 @@
 *.pdf
 *.nfs*
 OUTPUT
-*_MissingAnalyses*
+*MissingAnalyses*
 
 ROOTfiles
 ROOTfiles*

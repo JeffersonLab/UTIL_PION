@@ -3,7 +3,7 @@
 #
 # Description:
 # ================================================================
-# Time-stamp: "2021-10-01 19:06:46 trottar"
+# Time-stamp: "2021-10-03 00:29:04 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -14,7 +14,7 @@ import uproot as up
 import numpy as np
 
 
-def scaler(PS_names, SHMS_PS, HMS_PS, thres_curr, report_current, REPLAYPATH, runNum, MaxEvent, s_tree, s_branch):
+def scaler(PS_names, HMS_PS, SHMS_PS, thres_curr, report_current, REPLAYPATH, runNum, MaxEvent, s_tree, s_branch):
 
     '''
     SCALER TREE, TSP

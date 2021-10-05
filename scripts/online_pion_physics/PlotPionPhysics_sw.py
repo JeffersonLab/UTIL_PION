@@ -28,8 +28,6 @@ sys.path.insert(0, 'python/')
 ##################################################################################################################################################
 
 # Defining some variables here
-minrangeuser = 0 # min range for -t vs phi plot
-maxrangeuser = 1.2 # max range for -t vs phi plot
 minbin = 0.92 # minimum bin for selecting neutrons events in missing mass distribution
 maxbin = 0.98 # maximum bin for selecting neutrons events in missing mass distribution
 
@@ -78,6 +76,45 @@ if (FilenameOverride == False):
     Pion_Analysis_Distributions = "%s/%s_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, runNum, MaxEvent)
 elif (FilenameOverride != False): # If filename override set, format the file name based upon the override file name
     Pion_Analysis_Distributions = "%s/%s_Pion_Analysis_Distributions.pdf" %(OUTPATH, (FilenameOverride.split("_Analysed_Data.root",1)[0]))
+
+# SJDK 04/10/21 - This is not what I wanted for this really, this is basically just hard coding a value, if we do this for every setting, it will bloat the file enormously.
+# For the kinematic settings, we have the Q2 and W which we should use to set these values in the file name, MANIPULATE THE STRING to get two variables, the Q2 and W
+# THEN, from this, set the range. You should get the Q2 and set some sensible range (+/- 1?) as the min/max, same for W.
+# KEEP THE BIN WIDTH CONSISTENT - Make sure it is a SENSIBLE width too, e.g. 0.5 per bin (not some weird value like 0.333333333333333333333333333333333333333333333333333333 or anything)
+# You should just pick some range of t that will work for all settings, 1-1.3 should be OK. I've already done this for epsilon
+# Also, you should not alter this script in a way such that it will not work for a single run as you have with this block - I want to keep this version and the one on CDaq in sync, I can't do this if 
+# this script is altered such that it won't work on a single file.
+# See the naming in the block above for an example of how we could manipulate the string in python, use split to segment the string into chunks, then grab what you need. For example, look at the output of -
+
+#print(FilenameOverride.split("_"))
+#print(FilenameOverride.split("_")[0])
+#print((FilenameOverride.split("_")[0]).split("W"))
+#print(((FilenameOverride.split("_")[0]).split("W"))[0])
+
+# There are other nice functions you can use too. This is the advantage of KNOWING how our filename is formatted and doing it in a consistent way
+
+if ("Q1p6W3p08" in FilenameOverride):
+    minrangeuser = 0 # min range for -t vs phi plot
+    maxrangeuser = 0.7 # max range for -t vs phi plot
+    xminqvsw = -1.0 # min x-range for Q2vsW plot
+    xmaxqvsw = 5.0 # max x-range for Q2vsW plot
+    yminqvsw = 2.3 # min y-range for Q2vsW plot
+    ymaxqvsw = 3.8 # max y-range for Q2vsW plot
+
+elif ("Q6p0W3p19" in FilenameOverride):
+    minrangeuser = 0 # min range for -t vs phi plot
+    maxrangeuser = 1.3 # max range for -t vs phi plot
+    xminqvsw = 4.0 # min x-range for Q2vsW plot
+    xmaxqvsw = 8.0 # max x-range for Q2vsW plot
+    yminqvsw = 2.6 # min y-range for Q2vsW plot
+    ymaxqvsw = 3.6 # max y-range for Q2vsW plot
+else
+    minrangeuser = 0 # min range for -t vs phi plot
+    maxrangeuser = 1.3 # max range for -t vs phi plot
+    xminqvsw = 4.0 # min x-range for Q2vsW plot
+    xmaxqvsw = 8.0 # max x-range for Q2vsW plot
+    yminqvsw = 2.6 # min y-range for Q2vsW plot
+    ymaxqvsw = 3.6 # max y-range for Q2vsW plot
 
 #################################################################################################################################################
 
@@ -292,7 +329,14 @@ P_dp_vs_beta_pions_cut = ROOT.TH2D("P_dp_vs_beta_pions_cut", "SHMS #delta vs SHM
 P_MMpi_vs_beta_pions_cut = ROOT.TH2D("P_MMpi_vs_beta_pions_cut", "Missing Mass vs SHMS #beta (with cut); MM_{#pi}; SHMS_#beta", 100, 0, 2, 200, 0, 2)
 
 MMpi_vs_ePiCoinTime_pions_cut_prompt = ROOT.TH2D("MMpi_vs_ePiCoinTime_pions_cut_prompt","Missing Mass vs Electron-Pion CTime; MM_{#pi}; e #pi Coin_Time",100, 0, 2, 100, -2, 2)
-Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, 4.0, 8.0, 200, 2.6, 3.6)
+#Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, -1.0, 5.0, 200, 2.3, 3.8)
+
+if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
+    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, 4.0, 8.0, 200, 2.6, 3.6)
+elif (FilenameOverride != False): # Standard running condition, construct file name from run number and max events e.t.c.
+# You should only plot it this way IF the filename override is set, I want a consistent script between CDaq and the iFarm, it MUST work fine for individual files on CDaq
+    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, xminqvsw, xmaxqvsw, 200, yminqvsw, ymaxqvsw)
+
 phiqvst_pions_cut = ROOT.TH2D("phiqvst_pions_cut","; #phi ;t", 12, -3.14, 3.14, 24, 0.0, 1.2)
 
 # 11/09/21 - SJDK - Adding some 3D XY NPE plots, need to take projections of these (which I need to figure out how to do in PyRoot. Making these manually from the command line for now.
@@ -453,6 +497,7 @@ Q2vsW_pions_cut.Draw("COLZ")
 c1_kin.cd(2)
 epsilon_pions_cut.Draw()
 c1_kin.cd(3)
+phiqvst_pions_cut.SetStats(0)
 phiqvst_pions_cut.GetYaxis().SetRangeUser(minrangeuser,maxrangeuser)
 phiqvst_pions_cut.Draw("SURF2 POL")
 # Section for polar plotting
@@ -838,7 +883,11 @@ c1_proj.Print(Pion_Analysis_Distributions + ')')
 #############################################################################################################################################
 
 # Making directories in output file
-outHistFile = ROOT.TFile.Open("%s/%s_%s_Output_Data.root" % (OUTPATH, runNum, MaxEvent), "RECREATE")                                                                                                    
+if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
+       outHistFile = ROOT.TFile.Open("%s/%s_%s_Output_Data.root" % (OUTPATH, runNum, MaxEvent), "RECREATE")
+elif (FilenameOverride != False): # Special condition, with 4th arg, use 4th arg as file name
+       outHistFile = ROOT.TFile.Open("%s/%s_%s_Output_Data.root" % (OUTPATH, (FilenameOverride.split("_Analysed_Data.root",1)[0]), MaxEvent), "RECREATE")
+
 d_Uncut_Pion_Events = outHistFile.mkdir("Uncut_Pion_Events")
 d_Cut_Pion_Events_All = outHistFile.mkdir("Cut_Pion_Events_All")
 d_Cut_Pion_Events_Prompt = outHistFile.mkdir("Cut_Pion_Events_Prompt")

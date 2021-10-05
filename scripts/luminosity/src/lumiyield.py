@@ -1,7 +1,7 @@
 #! /usr/bin/python
 # Description:
 # ================================================================
-# Time-stamp: "2021-09-30 07:15:40 trottar"
+# Time-stamp: "2021-10-05 01:57:04 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -266,11 +266,11 @@ if len(PS_used) > 2:
         T_coin_pTRIG_COIN_ROC1_tdcTime = tree.array("T.coin.pTRIG5_ROC1_tdcTime")
         T_coin_pTRIG_COIN_ROC2_tdcTime = tree.array("T.coin.pTRIG5_ROC2_tdcTime")
         
-        if PS_names[2] is "PS6":
-            T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG6_ROC1_tdcTimeRaw")
-            T_coin_pTRIG_COIN_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG6_ROC2_tdcTimeRaw")
-            T_coin_pTRIG_COIN_ROC1_tdcTime = tree.array("T.coin.pTRIG6_ROC1_tdcTime")
-            T_coin_pTRIG_COIN_ROC2_tdcTime = tree.array("T.coin.pTRIG6_ROC2_tdcTime")
+    if PS_names[2] is "PS6":
+        T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG6_ROC1_tdcTimeRaw")
+        T_coin_pTRIG_COIN_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG6_ROC2_tdcTimeRaw")
+        T_coin_pTRIG_COIN_ROC1_tdcTime = tree.array("T.coin.pTRIG6_ROC1_tdcTime")
+        T_coin_pTRIG_COIN_ROC2_tdcTime = tree.array("T.coin.pTRIG6_ROC2_tdcTime")
 
 T_coin_pFADC_TREF_ROC2_adcPed = tree.array("T.coin.pFADC_TREF_ROC2_adcPed")
 T_coin_hFADC_TREF_ROC1_adcPed = tree.array("T.coin.hFADC_TREF_ROC1_adcPed")
@@ -342,6 +342,10 @@ cutDict = make_cutDict("h_picut_lumi_eff",cutDict)
 cutDict = make_cutDict("h_hadcut_lumi_eff",cutDict)
 cutDict = make_cutDict("c_noedtm",cutDict)
 cutDict = make_cutDict("c_edtm",cutDict)
+cutDict = make_cutDict("c_ptrigHMS",cutDict)
+cutDict = make_cutDict("c_ptrigSHMS",cutDict)
+if len(PS_used) > 2:
+    cutDict = make_cutDict("c_ptrigCOIN",cutDict)
 cutDict = make_cutDict("c_curr",cutDict)
 c = klt.pyPlot(REPLAYPATH,cutDict)
 
@@ -398,25 +402,25 @@ def analysis():
     EDTM = c.add_cut(T_coin_pEDTM_tdcTimeRaw,"c_edtm")
     
     SHMSTRIG = [x
-                for x in c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_curr")
+                for x in c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_ptrigSHMS")
                 if x != 0.0]
     HMSTRIG  = [x
-                for x in c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_curr")
+                for x in c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_ptrigHMS")
                 if x !=0.0]
 
     if len(PS_used) > 2:
         COINTRIG  = [x
-                     for x in c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTime,"c_curr")
+                     for x in c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTime,"c_ptrigCOIN")
                      if x !=0.0]
     
     EventType = c.add_cut(EvtType,"c_curr")
 
     SHMSTRIG_cut = [trig1
-                    for (trig1,evt) in zip(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_curr"),EvtType)
+                    for (trig1,evt) in zip(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_ptrigSHMS"),EvtType)
                     if evt == 1]
 
     HMSTRIG_cut = [ x
-                    for (x, evt) in zip(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_curr"), EvtType)
+                    for (x, evt) in zip(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_ptrigHMS"), EvtType)
                     if evt == 2]
 
     # goodscinhit cut
@@ -460,7 +464,7 @@ def main():
     #plt.show()
 
     # combine dictionaries
-    scalers = scaler.scaler(PS_names, SHMS_PS, SHMS_PS, thres_curr, report_current, REPLAYPATH, runNum, MaxEvent, s_tree, s_branch) 
+    scalers = scaler.scaler(PS_names, HMS_PS, SHMS_PS, thres_curr, report_current, REPLAYPATH, runNum, MaxEvent, s_tree, s_branch) 
     track_info = analysis()
 
     # lumi_data = {**scalers , **track_info} # only python 3.5+

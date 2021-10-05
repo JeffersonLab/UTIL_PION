@@ -48,5 +48,9 @@ p_aero = current.bcm4a+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.
 # EDTM
 c_noedtm = current.bcm4a+misc.c_noedtm
 c_edtm = current.bcm4a+misc.c_edtm
+c_ptrigHMS = current.bcm4a+misc.c_ptrigHMS
+c_ptrigSHMS = current.bcm4a+misc.c_ptrigSHMS
+c_ptrigCOIN = current.bcm4a+misc.c_ptrigCOIN
 # Current only (note: there is a threshold cut in the scalers that is seprate from this!)
 c_curr = current.bcm4a
+c_nozero = current.bcm4a+misc.c_nozero

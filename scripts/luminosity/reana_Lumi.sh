@@ -39,7 +39,7 @@ if [[ $r_flag = "true" ]]; then
     LUMIFILE="${UTILPATH}/scripts/luminosity/OUTPUTS/lumi_data.csv"
     if [[ -f "${LUMIFILE}" ]]; then
 	echo "Removing ${LUMIFILE}"
-	rm -rf $LUMIFILE
+	#rm -rf $LUMIFILE
     fi
     python3 reana_lumi.py --reana
 else
