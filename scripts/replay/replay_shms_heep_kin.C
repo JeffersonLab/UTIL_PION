@@ -1,4 +1,4 @@
-void replay_shms_heep (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
+void replay_shms_heep_kin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -257,7 +257,7 @@ void replay_shms_heep (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Define output ROOT file
   analyzer->SetOutFile(ROOTFileName.Data());
   // Define DEF-file+
-  analyzer->SetOdefFile("UTIL_PION/config/DEF-files/shms_heep.def");
+  analyzer->SetOdefFile("UTIL_PION/config/DEF-files/shms_heep_kin.def");
   // Define cuts file
   //analyzer->SetCutFile("UTIL_PION/config/DEF-files/HeePSing_SHMS_Cuts.def");  // optional
   analyzer->SetCutFile("UTIL_PION/config/DEF-files/HeePSing_SHMS_Cuts.def");  // optional
