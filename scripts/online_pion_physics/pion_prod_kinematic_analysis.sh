@@ -1,12 +1,6 @@
 #!/bin/bash
 # 23/07/21 - Stephen Kay, University of Regina
 # Script to analyse an entire pion kinematic setting
-# !!! 31/08/21 !!!
-# !!! WARNING !!!
-# This needs updating, Junaid removed some of the old scripts and created new versions
-# This script will need to be tweaked to run the newer scripts instead of the old ones 
-# !!! WARNING !!!
-# !!! 31/08/21 !!!
 
 KINEMATIC=$1
 
@@ -120,7 +114,6 @@ if [ $TestingVar == 1 ]; then
 	else echo "Not removing and remaking, will attempt to proces existing file"
 	fi
     fi
-    # SJDK 21/09/21 - This last step needs tweaking a little, this is the analysis of the FULL kinematic, NOT each individual run. We need the plotting script to pick up the file we generated above and THEN plot it (and save it with a sensible name)
     if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf" ]; then
 	python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw.py -1 ${runNum} -1 ${KINFILE}
     else echo "Pion analysis plots already found in - ${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf - Plotting macro skipped"
