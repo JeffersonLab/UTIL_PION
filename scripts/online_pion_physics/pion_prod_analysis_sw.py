@@ -96,8 +96,6 @@ e_tree = up.open(rootName)["T"]
 CTime_ePiCoinTime_ROC1 = e_tree.array("CTime.ePiCoinTime_ROC1")  #
 CTime_eKCoinTime_ROC1 = e_tree.array("CTime.eKCoinTime_ROC1")    #
 CTime_epCoinTime_ROC1 = e_tree.array("CTime.epCoinTime_ROC1")    #
-#P_RF_tdcTime = e_tree.array("T.coin.pRF_tdcTime")               #
-#P_hod_fpHitsTime = e_tree.array("P.hod.fpHitsTime")             #
 H_RF_Dist = e_tree.array("RFTime.HMS_RFtimeDist")            #
 P_RF_Dist = e_tree.array("RFTime.SHMS_RFtimeDist")           #
 
@@ -120,8 +118,6 @@ H_cer_npeSum = e_tree.array("H.cer.npeSum")                      #
 # SHMS info
 P_hod_goodscinhit = e_tree.array("P.hod.goodscinhit")            #
 P_hod_goodstarttime = e_tree.array("P.hod.goodstarttime")        #
-# RLT 09/11/21...applied an offset to the SHMS beta of 0.5
-#P_gtr_beta = e_tree.array("P.gtr.beta")+0.5                     # Beta is velocity of particle between pairs of hodoscopes
 P_gtr_beta = e_tree.array("P.gtr.beta")                          # Beta is velocity of particle between pairs of hodoscopes
 P_gtr_xp = e_tree.array("P.gtr.th")                              # xpfp -> Theta
 P_gtr_yp = e_tree.array("P.gtr.ph")                              # ypfp -> Phi
@@ -149,8 +145,6 @@ Q2 = e_tree.array("H.kin.primary.Q2")                            #
 W = e_tree.array("H.kin.primary.W")                              #
 epsilon = e_tree.array("H.kin.primary.epsilon")                  #
 ph_q = e_tree.array("P.kin.secondary.ph_xq")                     #
-#emiss = e_tree.array("P.kin.secondary.emiss")                   #
-#pmiss = e_tree.array("P.kin.secondary.pmiss")                   #
 MMpi = e_tree.array("P.kin.secondary.MMpi")                      #
 MMK = e_tree.array("P.kin.secondary.MMK")                        #
 MMp = e_tree.array("P.kin.secondary.MMp")                        #
