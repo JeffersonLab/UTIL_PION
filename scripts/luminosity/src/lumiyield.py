@@ -1,7 +1,7 @@
 #! /usr/bin/python
 # Description:
 # ================================================================
-# Time-stamp: "2021-10-05 01:57:04 trottar"
+# Time-stamp: "2021-10-06 07:24:46 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -283,8 +283,6 @@ fout = REPLAYPATH+'/UTIL_PION/DB/CUTS/run_type/lumi.cuts'
 
 # read in cuts file and make dictionary
 c = klt.pyPlot(REPLAYPATH)
-# apply RF cuts to timing cuts file
-#c.cut_RF(runNum,MaxEvent)
 readDict = c.read_dict(fout,runNum)
 
 def make_cutDict(cut,inputDict=None):
