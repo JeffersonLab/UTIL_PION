@@ -41,6 +41,7 @@ p_picut_lumi_eff = current.bcm4a+accept.delta+pid.p_picut-pid.p_picut.P_gtr_beta
 p_kcut_lumi_eff = current.bcm4a+accept.delta+pid.p_kcut-pid.p_kcut.P_gtr_beta
 p_pcut_lumi_eff = current.bcm4a+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta
 p_hadcut_lumi_eff = current.bcm4a+accept.delta+pid.p_hadcut-pid.p_hadcut.P_gtr_beta
+###################
 # pid cut
 p_cal = current.bcm4a+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_hgcer_npeSum-pid.p_pcut.P_aero_npeSum
 p_hgcer = current.bcm4a+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_cal_etotnorm-pid.p_pcut.P_aero_npeSum

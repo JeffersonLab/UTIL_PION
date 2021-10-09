@@ -7,6 +7,8 @@
 # This version of script is for shift workers at JLab
 # To run this script, execute: python3 scriptname runnumber
 
+# 05/October/21: Jacob Murphy added in another page of plots with focal plane variables vs beta.
+
 ###################################################################################################################################################
 
 # Import relevant packages
@@ -30,6 +32,8 @@ sys.path.insert(0, 'python/')
 # Defining some variables here
 minbin = 0.92 # minimum bin for selecting neutrons events in missing mass distribution
 maxbin = 0.98 # maximum bin for selecting neutrons events in missing mass distribution
+minrangeuser = 0 # min range for -t vs phi plot
+maxrangeuser = 1.2 #  max range for -t vs phi plot
 
 ##################################################################################################################################################
 
@@ -92,30 +96,17 @@ elif (FilenameOverride != False): # If filename override set, format the file na
 #print(((FilenameOverride.split("_")[0]).split("W"))[0])
 
 # There are other nice functions you can use too. This is the advantage of KNOWING how our filename is formatted and doing it in a consistent way
-
-if ("Q1p6W3p08" in FilenameOverride):
-    minrangeuser = 0 # min range for -t vs phi plot
-    maxrangeuser = 0.7 # max range for -t vs phi plot
-    xminqvsw = -1.0 # min x-range for Q2vsW plot
-    xmaxqvsw = 5.0 # max x-range for Q2vsW plot
-    yminqvsw = 2.3 # min y-range for Q2vsW plot
-    ymaxqvsw = 3.8 # max y-range for Q2vsW plot
-
-elif ("Q6p0W3p19" in FilenameOverride):
-    minrangeuser = 0 # min range for -t vs phi plot
-    maxrangeuser = 1.3 # max range for -t vs phi plot
-    xminqvsw = 4.0 # min x-range for Q2vsW plot
-    xmaxqvsw = 8.0 # max x-range for Q2vsW plot
-    yminqvsw = 2.6 # min y-range for Q2vsW plot
-    ymaxqvsw = 3.6 # max y-range for Q2vsW plot
-
-else:
-    minrangeuser = 0 # min range for -t vs phi plot
-    maxrangeuser = 1.3 # max range for -t vs phi plot
-    xminqvsw = 4.0 # min x-range for Q2vsW plot
-    xmaxqvsw = 8.0 # max x-range for Q2vsW plot
-    yminqvsw = 2.6 # min y-range for Q2vsW plot
-    ymaxqvsw = 3.6 # max y-range for Q2vsW plot
+if (FilenameOverride != False):
+    if ("Q1p6W3p08" in FilenameOverride):
+        xminqvsw = -1.0 # min x-range for Q2vsW plot
+        xmaxqvsw = 5.0 # max x-range for Q2vsW plot
+        yminqvsw = 2.3 # min y-range for Q2vsW plot
+        ymaxqvsw = 3.8 # max y-range for Q2vsW plot
+    elif ("Q6p0W3p19" in FilenameOverride):
+        xminqvsw = 4.0 # min x-range for Q2vsW plot
+        xmaxqvsw = 8.0 # max x-range for Q2vsW plot
+        yminqvsw = 2.7 # min y-range for Q2vsW plot
+        ymaxqvsw = 3.6 # max y-range for Q2vsW plot
 
 #################################################################################################################################################
 
@@ -312,6 +303,14 @@ P_ngcer_vs_hgcer_npe_pions_uncut = ROOT.TH2D("P_ngcer_vs_hgcer_npe_pions_uncut",
 P_ngcer_vs_aero_npe_pions_uncut = ROOT.TH2D("P_ngcer_vs_aero_npe_pions_uncut", "SHMS NGC npeSum vs SHMS aero npeSum (no cut); SHMS_ngcer_npeSum; SHMS_aero_npeSum", 100, 0, 50, 100, 0, 50)
 H_dp_vs_beta_pions_uncut = ROOT.TH2D("H_dp_vs_beta_pions_uncut", "HMS #delta vs HMS #beta (no cut); HMS #delta; HMS_#beta", 200, -12, 12, 200, 0, 2)
 P_dp_vs_beta_pions_uncut = ROOT.TH2D("P_dp_vs_beta_pions_uncut", "SHMS #delta vs SHMS #beta (no cut); SHMS #delta; HMS_#beta", 200, -12, 12, 200, 0, 2)
+H_xfp_vs_beta_pions_uncut = ROOT.TH2D("H_xfp_vs_beta_pions_uncut", "HMS X_{fp} vs HMS #beta (no cut); HMS X_{fp}; HMS_#beta", 160, -40, 40, 200, 0, 2)
+P_xfp_vs_beta_pions_uncut = ROOT.TH2D("P_xfp_vs_beta_pions_uncut", "SHMS X_{fp} vs SHMS #beta (no cut); SHMS X_{fp}; SHMS_#beta", 160, -40, 40, 200, 0, 2)
+H_yfp_vs_beta_pions_uncut = ROOT.TH2D("H_yfp_vs_beta_pions_uncut", "HMS Y_{fp} vs HMS #beta (no cut); HMS Y_{fp}; HMS_#beta", 100, -25, 25, 200, 0, 2)
+P_yfp_vs_beta_pions_uncut = ROOT.TH2D("P_yfp_vs_beta_pions_uncut", "SHMS Y_{fp} vs SHMS #beta (no cut); SHMS Y_{fp}; SHMS_#beta", 160, -40, 40, 200, 0, 2)
+H_xpfp_vs_beta_pions_uncut = ROOT.TH2D("H_xpfp_vs_beta_pions_uncut", "HMS X'_{fp} vs HMS #beta (no cut); HMS X'_{fp}; HMS_#beta", 160, -0.4, 0.4, 200, 0, 2)
+P_xpfp_vs_beta_pions_uncut = ROOT.TH2D("P_xpfp_vs_beta_pions_uncut", "SHMS X'_{fp} vs SHMS #beta (no cut); SHMS X'_{fp}; SHMS_#beta", 160, -0.4, 0.4, 200, 0, 2)
+H_ypfp_vs_beta_pions_uncut = ROOT.TH2D("H_ypfp_vs_beta_pions_uncut", "HMS Y'_{fp} vs HMS #beta (no cut); HMS Y'_{fp}; HMS_#beta", 160, -0.4, 0.4, 200, 0, 2)
+P_ypfp_vs_beta_pions_uncut = ROOT.TH2D("P_ypfp_vs_beta_pions_uncut", "SHMS Y'_{fp} vs SHMS #beta (no cut); SHMS Y'_{fp}; SHMS_#beta", 160, -0.4, 0.4, 200, 0, 2)
 P_MMpi_vs_beta_pions_uncut = ROOT.TH2D("P_MMpi_vs_beta_pions_uncut", "Missing Mass vs SHMS #beta (no cut); MM_{#pi}; SHMS_#beta", 100, 0, 2, 200, 0, 2)
 
 H_cal_etottracknorm_vs_cer_npe_pions_cut = ROOT.TH2D("H_cal_etottracknorm_vs_cer_npe_pions_cut","HMS cal etottracknorm vs HMS cer npeSum (with cuts); H_cal_etottracknorm; H_cer_npeSum",100, 0.5, 1.5, 100, 0, 40)
@@ -327,6 +326,14 @@ P_ngcer_vs_hgcer_npe_pions_cut = ROOT.TH2D("P_ngcer_vs_hgcer_npe_pions_cut", "SH
 P_ngcer_vs_aero_npe_pions_cut = ROOT.TH2D("P_ngcer_vs_aero_npe_pions_cut", "SHMS NGC npeSum vs SHMS aero npeSum (with cuts); SHMS_ngcer_npeSum; SHMS_aero_npeSum", 100, 0, 50, 100, 0, 50)
 H_dp_vs_beta_pions_cut = ROOT.TH2D("H_dp_vs_beta_pions_cut", "HMS #delta vs HMS #beta (with cut); HMS #delta; HMS_#beta", 200, -12, 12, 200, 0, 2)
 P_dp_vs_beta_pions_cut = ROOT.TH2D("P_dp_vs_beta_pions_cut", "SHMS #delta vs SHMS #beta (with cut); SHMS #delta; SHMS_#beta", 200, -30, 30, 200, 0, 2)
+H_xfp_vs_beta_pions_cut = ROOT.TH2D("H_xfp_vs_beta_pions_cut", "HMS X_{fp} vs HMS #beta (with cut); HMS X_{fp}; HMS_#beta", 160, -40, 40, 200, 0, 2)
+P_xfp_vs_beta_pions_cut = ROOT.TH2D("P_xfp_vs_beta_pions_cut", "SHMS X_{fp} vs SHMS #beta (with cut); SHMS X_{fp}; SHMS_#beta", 160, -40, 40, 200, 0, 2)
+H_yfp_vs_beta_pions_cut = ROOT.TH2D("H_yfp_vs_beta_pions_cut", "HMS Y_{fp} vs HMS #beta (with cut); HMS Y_{fp}; HMS_#beta", 100, -25, 25, 200, 0, 2)
+P_yfp_vs_beta_pions_cut = ROOT.TH2D("P_yfp_vs_beta_pions_cut", "SHMS Y_{fp} vs SHMS #beta (with cut); SHMS Y_{fp}; SHMS_#beta", 160, -40, 40, 200, 0, 2)
+H_xpfp_vs_beta_pions_cut = ROOT.TH2D("H_xpfp_vs_beta_pions_cut", "HMS X'_{fp} vs HMS #beta (with cut); HMS X'_{fp}; HMS_#beta", 160, -40, 40, 200, 0, 2)
+P_xpfp_vs_beta_pions_cut = ROOT.TH2D("P_xpfp_vs_beta_pions_cut", "SHMS X'_{fp} vs SHMS #beta (with cut); SHMS X'_{fp}; SHMS_#beta", 160, -40, 40, 200, 0, 2)
+H_ypfp_vs_beta_pions_cut = ROOT.TH2D("H_ypfp_vs_beta_pions_cut", "HMS Y'_{fp} vs HMS #beta (with cut); HMS Y'_{fp}; HMS_#beta", 160, -40, 40, 200, 0, 2)
+P_ypfp_vs_beta_pions_cut = ROOT.TH2D("P_ypfp_vs_beta_pions_cut", "SHMS Y'_{fp} vs SHMS #beta (with cut); SHMS Y'_{fp}; SHMS_#beta", 160, -40, 40, 200, 0, 2)
 P_MMpi_vs_beta_pions_cut = ROOT.TH2D("P_MMpi_vs_beta_pions_cut", "Missing Mass vs SHMS #beta (with cut); MM_{#pi}; SHMS_#beta", 100, 0, 2, 200, 0, 2)
 
 MMpi_vs_ePiCoinTime_pions_cut_prompt = ROOT.TH2D("MMpi_vs_ePiCoinTime_pions_cut_prompt","Missing Mass vs Electron-Pion CTime; MM_{#pi}; e #pi Coin_Time",100, 0, 2, 100, -2, 2)
@@ -403,6 +410,14 @@ for event in Uncut_Pion_Events_tree:
     P_ngcer_vs_aero_npe_pions_uncut.Fill(event.P_ngcer_npeSum, event.P_aero_npeSum)
     H_dp_vs_beta_pions_uncut.Fill(event.H_gtr_dp, event.H_gtr_beta) 
     P_dp_vs_beta_pions_uncut.Fill(event.P_gtr_dp, event.P_gtr_beta) 
+    H_xfp_vs_beta_pions_uncut.Fill(event.H_dc_xfp, event.H_gtr_beta)
+    P_xfp_vs_beta_pions_uncut.Fill(event.P_dc_xfp, event.P_gtr_beta)
+    H_xpfp_vs_beta_pions_uncut.Fill(event.H_dc_xpfp, event.H_gtr_beta)
+    P_xpfp_vs_beta_pions_uncut.Fill(event.P_dc_xpfp, event.P_gtr_beta)
+    H_yfp_vs_beta_pions_uncut.Fill(event.H_dc_yfp, event.H_gtr_beta)
+    P_yfp_vs_beta_pions_uncut.Fill(event.P_dc_yfp, event.P_gtr_beta)
+    H_ypfp_vs_beta_pions_uncut.Fill(event.H_dc_ypfp, event.H_gtr_beta)
+    P_ypfp_vs_beta_pions_uncut.Fill(event.P_dc_ypfp, event.P_gtr_beta)
     P_MMpi_vs_beta_pions_uncut.Fill(event.MMpi, event.P_gtr_beta)
     P_HGC_xy_npe_pions_uncut.Fill(event.P_hgcer_yAtCer,event.P_hgcer_xAtCer,event.P_hgcer_npeSum)
     P_Aero_xy_npe_pions_uncut.Fill(event.P_aero_yAtAero,event.P_aero_xAtAero,event.P_aero_npeSum)
@@ -460,6 +475,14 @@ for event in Cut_Pion_Events_All_tree:
     P_ngcer_vs_aero_npe_pions_cut.Fill(event.P_ngcer_npeSum, event.P_aero_npeSum)
     H_dp_vs_beta_pions_cut.Fill(event.H_gtr_dp, event.H_gtr_beta) 
     P_dp_vs_beta_pions_cut.Fill(event.P_gtr_dp, event.P_gtr_beta) 
+    H_xfp_vs_beta_pions_cut.Fill(event.H_dc_xfp, event.H_gtr_beta)
+    P_xfp_vs_beta_pions_cut.Fill(event.P_dc_xfp, event.P_gtr_beta)
+    H_xpfp_vs_beta_pions_cut.Fill(event.H_dc_xpfp, event.H_gtr_beta)
+    P_xpfp_vs_beta_pions_cut.Fill(event.P_dc_xpfp, event.P_gtr_beta)
+    H_yfp_vs_beta_pions_cut.Fill(event.H_dc_yfp, event.H_gtr_beta)
+    P_yfp_vs_beta_pions_cut.Fill(event.P_dc_yfp, event.P_gtr_beta)
+    H_ypfp_vs_beta_pions_cut.Fill(event.H_dc_ypfp, event.H_gtr_beta)
+    P_ypfp_vs_beta_pions_cut.Fill(event.P_dc_ypfp, event.P_gtr_beta)
     P_MMpi_vs_beta_pions_cut.Fill(event.MMpi, event.P_gtr_beta) 
     P_HGC_xy_npe_pions_cut.Fill(event.P_hgcer_yAtCer,event.P_hgcer_xAtCer,event.P_hgcer_npeSum)
     P_Aero_xy_npe_pions_cut.Fill(event.P_aero_yAtAero,event.P_aero_xAtAero,event.P_aero_npeSum)
@@ -477,7 +500,7 @@ for event in Cut_Pion_Events_Random_tree:
 #    P_RFTime_pions_cut_randm.Fill(event.P_RF_Dist)
     ePiCoinTime_pions_cut_randm.Fill(event.CTime_ePiCoinTime_ROC1)
     P_MMpi_pions_cut_randm.Fill(event.MMpi)
-7
+
 print("Histograms filled")
 
 ##############################################################################################################################################
@@ -533,11 +556,11 @@ ptphithreepi = TPaveText(0.419517,0.00514928,0.487128,0.0996315,"NDC")
 ptphithreepi.AddText("#phi = #frac{3#pi}{2}")
 ptphithreepi.Draw()
 Arc = TArc()
-for k in range(0, 7):
+for k in range(0, 6):
      Arc.SetFillStyle(0)
      Arc.SetLineWidth(2)
      # To change the arc radius we have to change number 0.825 in the lower line.
-     Arc.DrawArc(0,0,0.825*(k+1)/(10),0.,360.,"same")
+     Arc.DrawArc(0,0,0.95*(k+1)/(10),0.,360.,"same")
 tradius = TGaxis(0,0,0.575,0,minrangeuser,maxrangeuser,10,"-+")
 tradius.SetLineColor(2)
 tradius.SetLabelColor(2)
@@ -859,6 +882,30 @@ c1_delta.cd(4)
 P_dp_vs_beta_pions_cut.Draw("COLZ")
 c1_delta.Print(Pion_Analysis_Distributions)
 
+c1_fpH = TCanvas("c1_fp_hms", "HMS Focal Plane and Beta", 100, 0, 1000, 900)
+c1_fpH.Divide(2,2)
+c1_fpH.cd(1)
+H_xfp_vs_beta_pions_uncut.Draw("COLZ")
+c1_fpH.cd(2)
+H_xfp_vs_beta_pions_cut.Draw("COLZ")
+c1_fpH.cd(3)
+H_yfp_vs_beta_pions_uncut.Draw("COLZ")
+c1_fpH.cd(4)
+H_yfp_vs_beta_pions_cut.Draw("COLZ")
+c1_fpH.Print(Pion_Analysis_Distributions)
+
+c1_fpP = TCanvas("c1_fp_shms", "SHMS Focal Plane and Beta", 100, 0, 1000, 900)
+c1_fpP.Divide(2,2)
+c1_fpP.cd(1)
+P_xfp_vs_beta_pions_uncut.Draw("COLZ")
+c1_fpP.cd(2)
+P_xfp_vs_beta_pions_cut.Draw("COLZ")
+c1_fpP.cd(3)
+P_yfp_vs_beta_pions_uncut.Draw("COLZ")
+c1_fpP.cd(4)
+P_yfp_vs_beta_pions_cut.Draw("COLZ")
+c1_fpP.Print(Pion_Analysis_Distributions)
+
 c1_proj = TCanvas("c1_proj", "HGC/NGC/Aero XY Projection", 100, 0, 1000, 900)
 c1_proj.Divide(2,3)
 c1_proj.cd(1)
@@ -945,6 +992,14 @@ P_ngcer_vs_hgcer_npe_pions_uncut.Write()
 P_ngcer_vs_aero_npe_pions_uncut.Write()
 H_dp_vs_beta_pions_uncut.Write()
 P_dp_vs_beta_pions_uncut.Write()
+H_xfp_vs_beta_pions_uncut.Write()
+H_xpfp_vs_beta_pions_uncut.Write()
+P_xfp_vs_beta_pions_uncut.Write()
+P_xpfp_vs_beta_pions_uncut.Write()
+H_yfp_vs_beta_pions_uncut.Write()
+H_ypfp_vs_beta_pions_uncut.Write()
+P_yfp_vs_beta_pions_uncut.Write()
+P_ypfp_vs_beta_pions_uncut.Write()
 P_MMpi_vs_beta_pions_uncut.Write()
 HGC_proj_yx_uncut.Write()
 NGC_proj_yx_uncut.Write()
@@ -1006,6 +1061,14 @@ P_ngcer_vs_hgcer_npe_pions_cut.Write()
 P_ngcer_vs_aero_npe_pions_cut.Write()
 H_dp_vs_beta_pions_cut.Write()
 P_dp_vs_beta_pions_cut.Write()
+H_xfp_vs_beta_pions_cut.Write()
+H_xpfp_vs_beta_pions_cut.Write()
+P_xfp_vs_beta_pions_cut.Write()
+P_xpfp_vs_beta_pions_cut.Write()
+H_yfp_vs_beta_pions_cut.Write()
+H_ypfp_vs_beta_pions_cut.Write()
+P_yfp_vs_beta_pions_cut.Write()
+P_ypfp_vs_beta_pions_cut.Write()
 P_MMpi_vs_beta_pions_cut.Write()
 P_HGC_xy_npe_pions_cut.Write()
 P_Aero_xy_npe_pions_cut.Write()

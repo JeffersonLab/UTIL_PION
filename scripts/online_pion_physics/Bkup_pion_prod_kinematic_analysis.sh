@@ -56,7 +56,7 @@ cd $REPLAYPATH
 
 if [ -f "${UTILPATH}/scripts/online_pion_physics/Kinematics/${KINEMATIC}_MissingAnalyses" ]; then
     rm "${UTILPATH}/scripts/online_pion_physics/Kinematics/${KINEMATIC}_MissingAnalyses"
-else touch "${UTILPATH}/scripts/online_pion_physics/Kinematics/${KINEMATIC}_MissingAnalyses"
+else touch "${UTILPATH}/scripts/online_pion_physics/Kinematics/${KINEMATIC}_MissingAnalyses" && chmod 775 "${UTILPATH}/scripts/online_pion_physics/Kinematics/${KINEMATIC}_MissingAnalyses"
 fi
 
 TestingVar=$((1))
@@ -73,7 +73,8 @@ if [ $TestingVar == 1 ]; then
     echo "All PionLT  analysis files found"
     rm "${UTILPATH}/scripts/online_pion_physics/Kinematics/${KINEMATIC}_MissingAnalyses"
 elif [ $TestingVar != 1 ]; then
-    cp "${UTILPATH}/scripts/online_pion_physics/Kinematics/${KINEMATIC}_MissingAnalyses" "$REPLAYPATH/UTIL_BATCH/InputRunLists/${KINEMATIC}_MissingAnalyses"
+    cp "${UTILPATH}/scripts/online_pion_physics/Kinematics/${KINEMATIC}_MissingAnalyses" "$REPLAYPATH/UTIL_BATCH/InputRunLists/Pion_Data/${KINEMATIC}_MissingAnalyses"
+    chmod 775 "$REPLAYPATH/UTIL_BATCH/InputRunLists/Pion_Data/${KINEMATIC}_MissingAnalyses"
     if [ $Autosub == 1 ]; then
 	while IFS='' read -r line || [[ -n "$line" ]]; do
 	    runNum=$line
@@ -84,7 +85,9 @@ elif [ $TestingVar != 1 ]; then
 		rm "${UTILPATH}/ROOTfiles/Analysis/PionLT/Pion_coin_replay_production_${runNum}_-1.root"
 	    fi
 	done < "${UTILPATH}/scripts/online_pion_physics/Kinematics/${KINEMATIC}_MissingAnalyses"
-	yes y | eval "$REPLAYPATH/UTIL_BATCH/batch_scripts/run_batch_PionLT.sh ${KINEMATIC}_MissingAnalyses"
+	yes y | eval "$REPLAYPATH/UTIL_BATCH/batch_scripts/run_batch_PionLT.sh Pion_Data/${KINEMATIC}_MissingAnalyses"
+	sleep 2
+	rm "$REPLAYPATH/UTIL_BATCH/InputRunLists/Pion_Data/${KINEMATIC}_MissingAnalyses" 
 #    elif [ $Autosub != 1 ]; then
 #	echo "Analyses missing, list copied to UTIL_BATCH directory, run on farm if desired"
 #	read -p "Process python script for missing replays/analyses interactively? <Y/N> " prompt2
