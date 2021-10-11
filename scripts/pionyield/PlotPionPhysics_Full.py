@@ -79,33 +79,22 @@ import kaonlt as klt # Import kaonlt module, need the path setting line above pr
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 if (FilenameOverride == False):
     Pion_Analysis_Distributions = "%s/%s_%s_Full_Pion_Analysis_Distributions.pdf" % (OUTPATH, runNum, MaxEvent)
-elif (FilenameOverride != False): # If filename override set, format the file name based upon the override file name
-    Pion_Analysis_Distributions = "%s/%s_Full_Pion_Analysis_Distributions.pdf" %(OUTPATH, (FilenameOverride.split("_Analysed_Data.root",1)[0]))
-if (FilenameOverride == False):
     Kaon_Analysis_Distributions = "%s/%s_%s_Full_Kaon_Analysis_Distributions.pdf" % (OUTPATH, runNum, MaxEvent)
-elif (FilenameOverride != False): # If filename override set, format the file name based upon the override file name
-    Kaon_Analysis_Distributions = "%s/%s_Full_Kaon_Analysis_Distributions.pdf" %(OUTPATH, (FilenameOverride.split("_Analysed_Data.root",1)[0]))
-if (FilenameOverride == False):
     Proton_Analysis_Distributions = "%s/%s_%s_Full_Proton_Analysis_Distributions.pdf" % (OUTPATH, runNum, MaxEvent)
 elif (FilenameOverride != False): # If filename override set, format the file name based upon the override file name
+    Pion_Analysis_Distributions = "%s/%s_Full_Pion_Analysis_Distributions.pdf" %(OUTPATH, (FilenameOverride.split("_Analysed_Data.root",1)[0]))
+    Kaon_Analysis_Distributions = "%s/%s_Full_Kaon_Analysis_Distributions.pdf" %(OUTPATH, (FilenameOverride.split("_Analysed_Data.root",1)[0]))
     Proton_Analysis_Distributions = "%s/%s_Full_Proton_Analysis_Distributions.pdf" %(OUTPATH, (FilenameOverride.split("_Analysed_Data.root",1)[0]))
 
-#print(FilenameOverride.split("_"))
-#print(FilenameOverride.split("_")[0])
-#print((FilenameOverride.split("_")[0]).split("W"))
-#print(((FilenameOverride.split("_")[0]).split("W"))[0])
-
 if (FilenameOverride != False):
-    if ("Q1p6W3p08" in FilenameOverride):
-        xminqvsw = -1.0 # min x-range for Q2vsW plot
-        xmaxqvsw = 5.0 # max x-range for Q2vsW plot
-        yminqvsw = 2.3 # min y-range for Q2vsW plot
-        ymaxqvsw = 3.8 # max y-range for Q2vsW plot
-    elif ("Q6p0W3p19" in FilenameOverride):
-        xminqvsw = 4.0 # min x-range for Q2vsW plot
-        xmaxqvsw = 8.0 # max x-range for Q2vsW plot
-        yminqvsw = 2.7 # min y-range for Q2vsW plot
-        ymaxqvsw = 3.6 # max y-range for Q2vsW plot
+    # Split string on W value, replace p with . and strip the leading Q before converting to a float
+    Q2Val = float(((FilenameOverride.split("W")[0]).replace("p",".")).lstrip("Q"))
+    # Split string on W, replace p with . and strip leading W, THEN split based on numeric characters and non numeric characters. Select the first entry and convert it to a float with 1 DP precision
+    WVal = round(float(re.split('[a-zAZ]',((FilenameOverride.split("W")[1]).replace("p",".")).lstrip("W"))[0]),1)
+    Q2min = Q2Val - 2 # Minimum value of Q2 on the Q2 vs W plot
+    Q2max = Q2Val + 2 # Maximum value of Q2 on the Q2 vs W plot
+    Wmin = WVal - 0.5 # min y-range for Q2vsW plot
+    Wmax = WVal + 0.5 # max y-range for Q2vsW plot
 
 #################################################################################################################################################
 
@@ -528,7 +517,7 @@ if (FilenameOverride == False): # Standard running condition, construct file nam
     Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, -1.0, 5.0, 200, 2.3, 3.8)
 #    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, 4.0, 8.0, 200, 2.6, 3.6)
 elif (FilenameOverride != False): # Standard running condition, construct file name from run number and max events e.t.c.
-    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, xminqvsw, xmaxqvsw, 200, yminqvsw, ymaxqvsw)
+    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, Q2min, Q2max, 200, Wmin, Wmax)
 
 phiqvst_pions_cut = ROOT.TH2D("phiqvst_pions_cut","; #phi ;t", 12, -3.14, 3.14, 24, 0.0, 1.2)
 
@@ -586,7 +575,7 @@ if (FilenameOverride == False): # Standard running condition, construct file nam
     Q2vsW_kaons_cut = ROOT.TH2D("Q2vsW_kaons_cut", "Q2 vs W; Q2; W", 200, -1.0, 5.0, 200, 2.3, 3.8)
 #    Q2vsW_kaons_cut = ROOT.TH2D("Q2vsW_kaons_cut", "Q2 vs W; Q2; W", 200, 4.0, 8.0, 200, 2.6, 3.6)
 elif (FilenameOverride != False): # Standard running condition, construct file name from run number and max events e.t.c.
-    Q2vsW_kaons_cut = ROOT.TH2D("Q2vsW_kaons_cut", "Q2 vs W; Q2; W", 200, xminqvsw, xmaxqvsw, 200, yminqvsw, ymaxqvsw)
+    Q2vsW_kaons_cut = ROOT.TH2D("Q2vsW_kaons_cut", "Q2 vs W; Q2; W", 200, Q2min, Q2max, 200, Wmin, Wmax)
 
 phiqvst_kaons_cut = ROOT.TH2D("phiqvst_kaons_cut","; #phi ;t", 12, -3.14, 3.14, 24, 0.0, 1.2)
 
@@ -646,7 +635,7 @@ if (FilenameOverride == False): # Standard running condition, construct file nam
 #    Q2vsW_protons_cut = ROOT.TH2D("Q2vsW_protons_cut", "Q2 vs W; Q2; W", 200, 4.0, 8.0, 200, 2.6, 3.6)
 elif (FilenameOverride != False): # Standard running condition, construct file name from run number and max events e.t.c.
 # You should only plot it this way IF the filename override is set, I want a consistent script between CDaq and the iFarm, it MUST work fine for individual files on CDaq
-    Q2vsW_protons_cut = ROOT.TH2D("Q2vsW_protons_cut", "Q2 vs W; Q2; W", 200, xminqvsw, xmaxqvsw, 200, yminqvsw, ymaxqvsw)
+    Q2vsW_protons_cut = ROOT.TH2D("Q2vsW_protons_cut", "Q2 vs W; Q2; W", 200, Q2min, Q2max, 200, Wmin, Wmax)
 
 # SJDK 09/10/21 - See above, should be u rather than t
 #phiqvst_protons_cut = ROOT.TH2D("phiqvst_protons_cut","; #phi ;t", 12, -3.14, 3.14, 24, 0.0, 1.2)
