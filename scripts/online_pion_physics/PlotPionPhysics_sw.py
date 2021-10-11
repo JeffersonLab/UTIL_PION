@@ -8,22 +8,15 @@
 # To run this script, execute: python3 scriptname runnumber
 
 # 05/October/21: Jacob Murphy added in another page of plots with focal plane variables vs beta.
+# 11/10/21 - SJDK - There's lots of commented out plots in here, if they aren't being used anymore, can they please just be deleted?
 
 ###################################################################################################################################################
 
 # Import relevant packages
-import uproot as up
-import numpy as np
-import root_numpy as rnp
-import pandas as pd
-import root_pandas as rpd
 import ROOT
-import scipy
-import scipy.integrate as integrate
-import matplotlib.pyplot as plt
 import sys, math, os, subprocess
 import array
-import re # For string manipulation later
+import re # Regexp package - for string manipulation
 from ROOT import TCanvas, TColor, TGaxis, TH1F, TH2F, TPad, TStyle, gStyle, gPad, TGaxis, TLine, TMath, TPaveText, TArc, TGraphPolar 
 from ROOT import kBlack, kBlue, kRed
 sys.path.insert(0, 'python/')
@@ -323,12 +316,11 @@ P_MMpi_vs_beta_pions_cut = ROOT.TH2D("P_MMpi_vs_beta_pions_cut", "Missing Mass v
 MMpi_vs_ePiCoinTime_pions_cut_prompt = ROOT.TH2D("MMpi_vs_ePiCoinTime_pions_cut_prompt","Missing Mass vs Electron-Pion CTime; MM_{#pi}; e #pi Coin_Time",100, 0, 2, 100, -2, 2)
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
     Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, 6, 10, 200, 2.3, 3.3)
-elif (FilenameOverride != False): # Standard running condition, construct file name from run number and max events e.t.c.
+elif (FilenameOverride != False): # Special case, run with specifc file name, construct histo with ranges based upon filename
     Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, Q2min, Q2max, 200, Wmin, Wmax)
 
 phiqvst_pions_cut = ROOT.TH2D("phiqvst_pions_cut","; #phi ;t", 12, -3.14, 3.14, 24, 0.0, 1.2)
 
-# 11/09/21 - SJDK - Adding some 3D XY NPE plots, need to take projections of these (which I need to figure out how to do in PyRoot. Making these manually from the command line for now.
 P_HGC_xy_npe_pions_uncut = ROOT.TH3D("P_HGC_xy_npe_pions_uncut", "SHMS HGC NPE as fn of yAtCer vs SHMS HGC xAtCer (no cuts); HGC_yAtCer(cm); HGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
 P_Aero_xy_npe_pions_uncut = ROOT.TH3D("P_Aero_xy_npe_pions_uncut", "SHMS Aerogel NPE as fn of yAtCer vs xAtCer (no cuts); Aero_yAtCer(cm); Aero_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
 P_NGC_xy_npe_pions_uncut = ROOT.TH3D("P_NGC_xy_npe_pions_uncut", "SHMS NGC NPE as fn of yAtCer vs xAtCer (no cuts); NGC_yAtCer(cm); NGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
@@ -653,7 +645,6 @@ legend8_pions.AddEntry("P_cal_etottracknorm_pions_uncut", "without cuts", "l")
 legend8_pions.AddEntry("P_cal_etottracknorm_pions_cut", "with cuts (acpt/RF/PID)", "l")
 legend8_pions.Draw("same")
 c1_pions_pid.cd(4)
-#
 c1_pions_pid.Print(Pion_Analysis_Distributions)
 
 c1_pions_RF = TCanvas("c1_pions_RF", "Electron-Pion RF Distributions", 100, 0, 1000, 900)
