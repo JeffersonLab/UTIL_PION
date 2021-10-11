@@ -215,8 +215,8 @@ P_yngcer_pions_uncut = ROOT.TH1D("P_yngcer_pions_uncut", "SHMS NGC yAtCer; SHMS_
 P_MMpi_pions_uncut = ROOT.TH1D("P_MMpi_pions_uncut", "MIssing Mass (no cuts); MM_{#pi}; Counts", 200, 0.5, 1.8)
 P_RFTime_pions_uncut = ROOT.TH1D("P_RFTime_pions_uncut", "SHMS RFTime; SHMS_RFTime; Counts", 200, 0, 4)
 ePiCoinTime_pions_uncut = ROOT.TH1D("ePiCoinTime_pions_uncut", "Electron-Pion CTime (no cuts); e #pi Coin_Time; Counts", 200, -50, 50)
-Q2_pions_uncut = ROOT.TH1D("Q2_pions_uncut", "Q2; Q2; Counts", 200, 0, 6)
-W_pions_uncut = ROOT.TH1D("W_pions_uncut", "W; W; Counts", 200, 2, 4)
+Q2_pions_uncut = ROOT.TH1D("Q2_pions_uncut", "Q2; Q2; Counts", 200, 0, 10)
+W_pions_uncut = ROOT.TH1D("W_pions_uncut", "W; W; Counts", 200, 2.3, 3.3)
 epsilon_pions_uncut = ROOT.TH1D("epsilon_pions_uncut", "epsilon; epsilon; Counts", 200, 0, 1.0)
 phiq_pions_uncut = ROOT.TH1D("phiq_pions_uncut", "phiq; #phi; Counts", 200, -10, 10)
 t_pions_uncut = ROOT.TH1D("t_pions_uncut", "t; t; Counts", 200, -1.5, 1)
@@ -252,8 +252,8 @@ P_yngcer_pions_cut = ROOT.TH1D("P_yngcer_pions_cut", "SHMS NGC yAtCer; SHMS_ngce
 P_MMpi_pions_cut = ROOT.TH1D("P_MMpi_pions_cut", "Missing Mass (with cuts); MM_{#pi}; Counts", 200, 0.5, 1.8)
 P_RFTime_pions_cut = ROOT.TH1D("P_RFTime_pions_cut", "SHMS RFTime; SHMS_RFTime; Counts", 200, 0, 4)
 ePiCoinTime_pions_cut = ROOT.TH1D("ePiCoinTime_pions_cut", "Electron-Pion CTime (with cuts); e #pi Coin_Time; Counts", 200, -50, 50)
-Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2; Q2; Counts", 200, 2, 4)
-W_pions_cut = ROOT.TH1D("W_pions_cut", "W; W; Counts", 200, 2.2, 4)
+Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2; Q2; Counts", 200, 0, 10)
+W_pions_cut = ROOT.TH1D("W_pions_cut", "W; W; Counts", 200, 2.3, 3.3)
 epsilon_pions_cut = ROOT.TH1D("epsilon_pions_cut", "epsilon; epsilon; Counts", 200, 0, 1.0)
 phiq_pions_cut = ROOT.TH1D("phiq_pions_cut", "phiq; #phi; Counts", 200, -10, 10)
 t_pions_cut = ROOT.TH1D("t_pions_cut", "t; t; Counts", 200, -1, 0.5)
@@ -321,12 +321,9 @@ P_ypfp_vs_beta_pions_cut = ROOT.TH2D("P_ypfp_vs_beta_pions_cut", "SHMS Y'_{fp} v
 P_MMpi_vs_beta_pions_cut = ROOT.TH2D("P_MMpi_vs_beta_pions_cut", "Missing Mass vs SHMS #beta (with cut); MM_{#pi}; SHMS_#beta", 100, 0, 2, 200, 0, 2)
 
 MMpi_vs_ePiCoinTime_pions_cut_prompt = ROOT.TH2D("MMpi_vs_ePiCoinTime_pions_cut_prompt","Missing Mass vs Electron-Pion CTime; MM_{#pi}; e #pi Coin_Time",100, 0, 2, 100, -2, 2)
-#Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, -1.0, 5.0, 200, 2.3, 3.8)
-
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
-    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, 4.0, 8.0, 200, 2.6, 3.6)
+    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, 6, 10, 200, 2.3, 3.3)
 elif (FilenameOverride != False): # Standard running condition, construct file name from run number and max events e.t.c.
-# You should only plot it this way IF the filename override is set, I want a consistent script between CDaq and the iFarm, it MUST work fine for individual files on CDaq
     Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, Q2min, Q2max, 200, Wmin, Wmax)
 
 phiqvst_pions_cut = ROOT.TH2D("phiqvst_pions_cut","; #phi ;t", 12, -3.14, 3.14, 24, 0.0, 1.2)
