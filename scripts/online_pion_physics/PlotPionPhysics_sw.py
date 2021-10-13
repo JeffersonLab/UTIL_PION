@@ -27,7 +27,7 @@ sys.path.insert(0, 'python/')
 minbin = 0.92 # minimum bin for selecting neutrons events in missing mass distribution
 maxbin = 0.98 # maximum bin for selecting neutrons events in missing mass distribution
 minrangeuser = 0 # min range for -t vs phi plot
-maxrangeuser = 1.2 #  max range for -t vs phi plot
+maxrangeuser = 1.8 #  max range for -t vs phi plot
 
 ##################################################################################################################################################
 
@@ -264,7 +264,7 @@ if (FilenameOverride == False): # Standard running condition, construct file nam
 elif (FilenameOverride != False): # Special case, run with specifc file name, construct histo with ranges based upon filename
     Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, Q2min, Q2max, 200, Wmin, Wmax)
 
-phiqvst_pions_cut = ROOT.TH2D("phiqvst_pions_cut","; #phi ;t", 12, -3.14, 3.14, 24, 0.0, 1.2)
+phiqvst_pions_cut = ROOT.TH2D("phiqvst_pions_cut","; #phi ;t", 12, -3.14, 3.14, 48, 0.0, 2.4) #2021 08 12 - NH doubled binning range and # bins
 
 P_HGC_xy_npe_pions_uncut = ROOT.TH3D("P_HGC_xy_npe_pions_uncut", "SHMS HGC NPE as fn of yAtCer vs SHMS HGC xAtCer (no cuts); HGC_yAtCer(cm); HGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
 P_Aero_xy_npe_pions_uncut = ROOT.TH3D("P_Aero_xy_npe_pions_uncut", "SHMS Aerogel NPE as fn of yAtCer vs xAtCer (no cuts); Aero_yAtCer(cm); Aero_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
@@ -434,7 +434,7 @@ for k in range(0, 6):
      Arc_pions.SetLineWidth(2)
      # To change the arc radius we have to change number 0.825 in the lower line.
      Arc_pions.DrawArc(0,0,0.95*(k+1)/(10),0.,360.,"same")
-tradius_pions = TGaxis(0,0,0.575,0,minrangeuser,maxrangeuser,10,"-+")
+tradius_pions = TGaxis(0,0,0.575,0,minrangeuser,maxrangeuser,6,"-+N") # NH 2021 08 12 - added "N" option which forces there to be 6 divisions, meaning we should be able to change the range of this plot without having to fiddle with the drawing of the arcs!
 tradius_pions.SetLineColor(2)
 tradius_pions.SetLabelColor(2)
 tradius_pions.Draw()
