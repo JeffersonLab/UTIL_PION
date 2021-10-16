@@ -32,6 +32,7 @@ fi
 UTILPATH="${REPLAYPATH}/UTIL_PION"
 cd $REPLAYPATH
 
+# Define flags for grabbing trigger windows of one or multiple runs
 while getopts 'hpa' flag; do
     case "${flag}" in
 	h)
@@ -47,6 +48,7 @@ while getopts 'hpa' flag; do
     esac
 done
 
+# Grab inputs depending on flags used
 if [[ $p_flag != "true" && $a_flag != "true" ]]; then
     echo "p I take as arguments the Run Number and max number of events!"
     RUNNUMBER=$1
@@ -74,9 +76,8 @@ elif [[ $a_flag != "true" ]]; then
 	MAXEVENTS=-1 
     fi
 fi
-
 echo "Starting Luminosity Script"
-
+# If no flags then run replays
 if [[ $p_flag != "true" && $a_flag != "true" ]]; then
 
     ###################################################################################################################################################
@@ -118,13 +119,13 @@ EOF
     python3 trigcuts.py Lumi Pion_replay_luminosity ${RUNNUMBER} ${MAXEVENTS}
 
 fi
-
+# Get trigger windows for a particular run
 if [[ $p_flag = "true" ]]; then
     source /apps/root/6.18.04/setroot_CUE.bash
     cd ${REPLAYPATH}/UTIL_PION/scripts/trig_windows/src/
     python3 plot_trig.py Lumi Pion_replay_luminosity ${RUNNUMBER} ${MAXEVENTS}
 fi
-
+# Get trigger windows for all runs
 if [[ $a_flag = "true" ]]; then
     source /apps/root/6.18.04/setroot_CUE.bash
     cd ${REPLAYPATH}/UTIL_PION/scripts/trig_windows/src/

@@ -15,6 +15,7 @@ fi
 
 UTILPATH="${REPLAYPATH}/UTIL_PIONLT"
 
+# Flags for plotting yield or reanalyzing all data
 while getopts 'hrp' flag; do
     case "${flag}" in
 	h)

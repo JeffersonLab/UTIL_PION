@@ -1,3 +1,0 @@
-# Ignore batch job text files created from bash script
-*.txt
-tmp

@@ -9,6 +9,9 @@
 
 # SJDK 09/10/21 - Given how long the script for pions took on longer runs, I'm not neccessarily sure we want to process over all three types in a single script
 # Looping over large trees is relatively time consuming in python
+# Probably better if this is actually three separate scripts (or one with a flag), one per particle type. You don't always care about processing all three each time
+# If you do it as an individual script, you could just get a shell script to execute all three in sequence
+# It also trims down the number of lines in a given script
 
 ###################################################################################################################################################
 
@@ -31,10 +34,16 @@ sys.path.insert(0, 'python/')
 ##################################################################################################################################################
 
 # Defining some constants here
-minbin = 0.92 # minimum bin for selecting neutrons events in missing mass distribution
-maxbin = 0.98 # maximum bin for selecting neutrons events in missing mass distribution
+# Will need a pion/kaon/proton value for this
+minbin_pions = 0.92 # minimum bin for selecting neutrons events in missing mass distribution
+maxbin_pions = 0.98 # maximum bin for selecting neutrons events in missing mass distribution
+minbin_kaons = 1.06 # minimum bin for selecting lambda events in missing mass distribution
+maxbin_kaons = 1.16 # maximum bin for selecting lambda events in missing mass distribution
+# SJDK 11/10/21 - The omega has a mass of 782 MeV/c^{2}, the previous values below made no sense
+minbin_protons = 0.762 # minimum bin for selecting omega events in missing mass distribution
+maxbin_protons = 0.802 # maximum bin for selecting omega events in missing mass distribution
 minrangeuser = 0 # min range for -t vs phi plot
-maxrangeuser = 1.2 #  max range for -t vs phi plot
+maxrangeuser = 0.6 #  max range for -t vs phi plot
 
 ##################################################################################################################################################
 
@@ -68,7 +77,6 @@ elif ("phys.uregina" in HOST[1]):
     REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
 elif("skynet" in HOST[1]):
     REPLAYPATH = "/home/%s/Work/JLab/hallc_replay_lt" % USER[1]
-
 
 #################################################################################################################################################
 
@@ -228,7 +236,7 @@ Q2_pions_uncut = ROOT.TH1D("Q2_pions_uncut", "Q2; Q2; Counts", 200, 0, 6)
 W_pions_uncut = ROOT.TH1D("W_pions_uncut", "W; W; Counts", 200, 2, 4)
 epsilon_pions_uncut = ROOT.TH1D("epsilon_pions_uncut", "epsilon; epsilon; Counts", 200, 0, 1.0)
 phiq_pions_uncut = ROOT.TH1D("phiq_pions_uncut", "phiq; #phi; Counts", 200, -10, 10)
-# SJDK 09/10/21 - Iassume this is mandelstam t?
+# SJDK 09/10/21 - I assume this is mandelstam t?
 t_pions_uncut = ROOT.TH1D("t_pions_uncut", "t; t; Counts", 200, -1.5, 1)
 
 H_beta_pions_cut = ROOT.TH1D("H_beta_pions_cut", "HMS #beta; HMS_gtr_#beta; Counts", 200, 0.5, 1.5)
@@ -409,7 +417,7 @@ Q2_protons_uncut = ROOT.TH1D("Q2_protons_uncut", "Q2; Q2; Counts", 200, 0, 6)
 W_protons_uncut = ROOT.TH1D("W_protons_uncut", "W; W; Counts", 200, 2, 4)
 epsilon_protons_uncut = ROOT.TH1D("epsilon_protons_uncut", "epsilon; epsilon; Counts", 200, 0, 1.0)
 phiq_protons_uncut = ROOT.TH1D("phiq_protons_uncut", "phiq; #phi; Counts", 200, -10, 10)
-#t_protons_uncut = ROOT.TH1D("t_protons_uncut", "t; t; Counts", 200, -1.5, 1)
+u_protons_uncut = ROOT.TH1D("u_protons_uncut", "u; u; Counts", 200, -1.5, 1)
 
 H_beta_protons_cut = ROOT.TH1D("H_beta_protons_cut", "HMS #beta; HMS_gtr_#beta; Counts", 200, 0.5, 1.5)
 H_xp_protons_cut = ROOT.TH1D("H_xp_protons_cut", "HMS x'; HMS_gtr_xp; Counts", 200, -0.2, 0.2)
@@ -446,7 +454,7 @@ Q2_protons_cut = ROOT.TH1D("Q2_protons_cut", "Q2; Q2; Counts", 200, 2, 4)
 W_protons_cut = ROOT.TH1D("W_protons_cut", "W; W; Counts", 200, 2.2, 4)
 epsilon_protons_cut = ROOT.TH1D("epsilon_protons_cut", "epsilon; epsilon; Counts", 200, 0, 1.0)
 phiq_protons_cut = ROOT.TH1D("phiq_protons_cut", "phiq; #phi; Counts", 200, -10, 10)
-#t_protons_cut = ROOT.TH1D("t_protons_cut", "t; t; Counts", 200, -1, 0.5)
+u_protons_cut = ROOT.TH1D("u_protons_cut", "u; u; Counts", 200, -1, 0.5)
 
 P_beta_protons_cut_prompt = ROOT.TH1D("P_beta_protons_cut_prompt", "SHMS beta; SHMS_#beta; Counts", 200, 0.8, 1.2)
 P_RFTime_protons_cut_prompt = ROOT.TH1D("P_RFTime_protons_cut_prompt", "SHMS RFTime; SHMS_RFTime; Counts", 200, 0, 4)
@@ -511,12 +519,10 @@ P_ypfp_vs_beta_pions_cut = ROOT.TH2D("P_ypfp_vs_beta_pions_cut", "SHMS Y'_{fp} v
 P_MMpi_vs_beta_pions_cut = ROOT.TH2D("P_MMpi_vs_beta_pions_cut", "Missing Mass vs SHMS #beta (with cut); MM_{#pi}; SHMS_#beta", 100, 0, 2, 200, 0, 2)
 
 MMpi_vs_ePiCoinTime_pions_cut_prompt = ROOT.TH2D("MMpi_vs_ePiCoinTime_pions_cut_prompt","Missing Mass vs Electron-Pion CTime; MM_{#pi}; e #pi Coin_Time",100, 0, 2, 100, -2, 2)
-#Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, -1.0, 5.0, 200, 2.3, 3.8)
 
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
     Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, -1.0, 5.0, 200, 2.3, 3.8)
-#    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, 4.0, 8.0, 200, 2.6, 3.6)
-elif (FilenameOverride != False): # Standard running condition, construct file name from run number and max events e.t.c.
+elif (FilenameOverride != False): # Run with specific file name
     Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, Q2min, Q2max, 200, Wmin, Wmax)
 
 phiqvst_pions_cut = ROOT.TH2D("phiqvst_pions_cut","; #phi ;t", 12, -3.14, 3.14, 24, 0.0, 1.2)
@@ -569,12 +575,10 @@ P_ypfp_vs_beta_kaons_cut = ROOT.TH2D("P_ypfp_vs_beta_kaons_cut", "SHMS Y'_{fp} v
 P_MMK_vs_beta_kaons_cut = ROOT.TH2D("P_MMK_vs_beta_kaons_cut", "Missing Mass vs SHMS #beta (with cut); MM_{K}; SHMS_#beta", 100, 0, 2, 200, 0, 2)
 
 MMK_vs_eKCoinTime_kaons_cut_prompt = ROOT.TH2D("MMK_vs_eKCoinTime_kaons_cut_prompt","Missing Mass vs Electron-Kaon CTime; MM_{K}; e K Coin_Time",100, 0, 2, 100, -2, 2)
-#Q2vsW_kaons_cut = ROOT.TH2D("Q2vsW_kaons_cut", "Q2 vs W; Q2; W", 200, -1.0, 5.0, 200, 2.3, 3.8)
 
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
     Q2vsW_kaons_cut = ROOT.TH2D("Q2vsW_kaons_cut", "Q2 vs W; Q2; W", 200, -1.0, 5.0, 200, 2.3, 3.8)
-#    Q2vsW_kaons_cut = ROOT.TH2D("Q2vsW_kaons_cut", "Q2 vs W; Q2; W", 200, 4.0, 8.0, 200, 2.6, 3.6)
-elif (FilenameOverride != False): # Standard running condition, construct file name from run number and max events e.t.c.
+elif (FilenameOverride != False):
     Q2vsW_kaons_cut = ROOT.TH2D("Q2vsW_kaons_cut", "Q2 vs W; Q2; W", 200, Q2min, Q2max, 200, Wmin, Wmax)
 
 phiqvst_kaons_cut = ROOT.TH2D("phiqvst_kaons_cut","; #phi ;t", 12, -3.14, 3.14, 24, 0.0, 1.2)
@@ -628,17 +632,13 @@ P_ypfp_vs_beta_protons_cut = ROOT.TH2D("P_ypfp_vs_beta_protons_cut", "SHMS Y'_{f
 P_MMp_vs_beta_protons_cut = ROOT.TH2D("P_MMp_vs_beta_protons_cut", "Missing Mass vs SHMS #beta (with cut); MM_{p}; SHMS_#beta", 100, 0, 2, 200, 0, 2)
 
 MMp_vs_epCoinTime_protons_cut_prompt = ROOT.TH2D("MMp_vs_epCoinTime_protons_cut_prompt","Missing Mass vs Electron-Proton CTime; MM_{p}; e p Coin_Time",100, 0, 2, 100, -2, 2)
-#Q2vsW_protons_cut = ROOT.TH2D("Q2vsW_protons_cut", "Q2 vs W; Q2; W", 200, -1.0, 5.0, 200, 2.3, 3.8)
 
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
     Q2vsW_protons_cut = ROOT.TH2D("Q2vsW_protons_cut", "Q2 vs W; Q2; W", 200, -1.0, 5.0, 200, 2.3, 3.8)
-#    Q2vsW_protons_cut = ROOT.TH2D("Q2vsW_protons_cut", "Q2 vs W; Q2; W", 200, 4.0, 8.0, 200, 2.6, 3.6)
-elif (FilenameOverride != False): # Standard running condition, construct file name from run number and max events e.t.c.
-# You should only plot it this way IF the filename override is set, I want a consistent script between CDaq and the iFarm, it MUST work fine for individual files on CDaq
+elif (FilenameOverride != False):
     Q2vsW_protons_cut = ROOT.TH2D("Q2vsW_protons_cut", "Q2 vs W; Q2; W", 200, Q2min, Q2max, 200, Wmin, Wmax)
 
-# SJDK 09/10/21 - See above, should be u rather than t
-#phiqvst_protons_cut = ROOT.TH2D("phiqvst_protons_cut","; #phi ;t", 12, -3.14, 3.14, 24, 0.0, 1.2)
+phiqvsu_protons_cut = ROOT.TH2D("phiqvsu_protons_cut","; #phi ;u", 12, -3.14, 3.14, 24, 0.0, 1.2)
 
 ############################################################################################################################################################################################################
 # 3D Histograms for pions, kaons and protons
@@ -989,7 +989,7 @@ for event in Uncut_Proton_Events_tree:
     W_protons_uncut.Fill(event.W)
     epsilon_protons_uncut.Fill(event.epsilon)
     phiq_protons_uncut.Fill(event.ph_q)
-    #t_protons_uncut.Fill(-event.MandelT)
+    u_protons_uncut.Fill(-event.MandelU)
     H_cal_etottracknorm_vs_cer_npe_protons_uncut.Fill(event.H_cal_etottracknorm, event.H_cer_npeSum)
     P_hgcer_vs_aero_npe_protons_uncut.Fill(event.P_hgcer_npeSum, event.P_aero_npeSum)
     epCoinTime_vs_MMp_protons_uncut.Fill(event.CTime_epCoinTime_ROC1, event.MMp)
@@ -1052,7 +1052,7 @@ for event in Cut_Proton_Events_All_tree:
     W_protons_cut.Fill(event.W)
     epsilon_protons_cut.Fill(event.epsilon)
     phiq_protons_cut.Fill(event.ph_q)
-    #t_protons_cut.Fill(-event.MandelT)
+    u_protons_cut.Fill(-event.MandelU)
     H_cal_etottracknorm_vs_cer_npe_protons_cut.Fill(event.H_cal_etottracknorm, event.H_cer_npeSum)
     P_hgcer_vs_aero_npe_protons_cut.Fill(event.P_hgcer_npeSum, event.P_aero_npeSum)
     P_hgcer_yx_protons_cut.Fill(event.P_hgcer_yAtCer, event.P_hgcer_xAtCer)
@@ -1061,7 +1061,7 @@ for event in Cut_Proton_Events_All_tree:
     epCoinTime_vs_MMp_protons_cut.Fill(event.CTime_epCoinTime_ROC1, event.MMp)
     P_RFTime_vs_MMp_protons_cut.Fill(event.P_RF_Dist, event.MMp)
     Q2vsW_protons_cut.Fill(event.Q2, event.W)
-    #phiqvst_protons_cut.Fill(event.ph_q, -event.MandelT)
+    phiqvsu_protons_cut.Fill(event.ph_q, -event.MandelU)
     P_cal_etottracknorm_vs_ngcer_npe_protons_cut.Fill(event.P_cal_etottracknorm, event.P_ngcer_npeSum)
     P_ngcer_yx_protons_cut.Fill(event.P_ngcer_yAtCer, event.P_ngcer_xAtCer)
     P_ngcer_vs_hgcer_npe_protons_cut.Fill(event.P_ngcer_npeSum, event.P_hgcer_npeSum)
@@ -1203,11 +1203,11 @@ P_MMpi_pions_cut_randm_sub.Draw("hist")
 shadedpeak_pions = P_MMpi_pions_cut_randm_sub.Clone()
 shadedpeak_pions.SetFillColor(2)
 shadedpeak_pions.SetFillStyle(3244)
-shadedpeak_pions.GetXaxis().SetRangeUser(minbin, maxbin)
+shadedpeak_pions.GetXaxis().SetRangeUser(minbin_pions, maxbin_pions)
 shadedpeak_pions.Draw("samehist")
 NeutronEvt_pions = TPaveText(0.58934,0.675,0.95,0.75,"NDC")
-BinLow_pions = P_MMpi_pions_cut_randm_sub.GetXaxis().FindBin(minbin)
-BinHigh_pions = P_MMpi_pions_cut_randm_sub.GetXaxis().FindBin(maxbin)
+BinLow_pions = P_MMpi_pions_cut_randm_sub.GetXaxis().FindBin(minbin_pions)
+BinHigh_pions = P_MMpi_pions_cut_randm_sub.GetXaxis().FindBin(maxbin_pions)
 BinIntegral_pions = int(P_MMpi_pions_cut_randm_sub.Integral(BinLow_pions, BinHigh_pions))
 NeutronEvt_pions.SetLineColor(2)
 NeutronEvt_pions.AddText("e #pi n Events: %i" %(BinIntegral_pions))
@@ -1567,27 +1567,27 @@ tvsphi_title_kaons.Draw()
 ptphizero_kaons = TPaveText(0.923951,0.513932,0.993778,0.574551,"NDC")
 ptphizero_kaons.AddText("#phi = 0")
 ptphizero_kaons.Draw()
-phihalfpi_kaons = TLine(0,0,0,0.6)
-phihalfpi_kaons.SetLineColor(kBlack)
-phihalfpi_kaons.SetLineWidth(2)
-phihalfpi_kaons.Draw()
-ptphihalfpi_kaons = TPaveText(0.417855,0.901876,0.486574,0.996358,"NDC")
-ptphihalfpi_kaons.AddText("#phi = #frac{#pi}{2}")
-ptphihalfpi_kaons.Draw()
-phipi_kaons = TLine(0,0,-0.6,0)
-phipi_kaons.SetLineColor(kBlack)
-phipi_kaons.SetLineWidth(2)
-phipi_kaons.Draw()
-ptphipi_kaons = TPaveText(0.0277092,0.514217,0.096428,0.572746,"NDC")
-ptphipi_kaons.AddText("#phi = #pi")
-ptphipi_kaons.Draw()
-phithreepi_kaons = TLine(0,0,0,-0.6)
-phithreepi_kaons.SetLineColor(kBlack)
-phithreepi_kaons.SetLineWidth(2)
-phithreepi_kaons.Draw()
-ptphithreepi_kaons = TPaveText(0.419517,0.00514928,0.487128,0.0996315,"NDC")
-ptphithreepi_kaons.AddText("#phi = #frac{3#pi}{2}")
-ptphithreepi_kaons.Draw()
+phihalfk_kaons = TLine(0,0,0,0.6)
+phihalfk_kaons.SetLineColor(kBlack)
+phihalfk_kaons.SetLineWidth(2)
+phihalfk_kaons.Draw()
+ptphihalfk_kaons = TPaveText(0.417855,0.901876,0.486574,0.996358,"NDC")
+ptphihalfk_kaons.AddText("#phi = #frac{#pi}{2}")
+ptphihalfk_kaons.Draw()
+phik_kaons = TLine(0,0,-0.6,0)
+phik_kaons.SetLineColor(kBlack)
+phik_kaons.SetLineWidth(2)
+phik_kaons.Draw()
+ptphik_kaons = TPaveText(0.0277092,0.514217,0.096428,0.572746,"NDC")
+ptphik_kaons.AddText("#phi = #pi")
+ptphik_kaons.Draw()
+phithreek_kaons = TLine(0,0,0,-0.6)
+phithreek_kaons.SetLineColor(kBlack)
+phithreek_kaons.SetLineWidth(2)
+phithreek_kaons.Draw()
+ptphithreek_kaons = TPaveText(0.419517,0.00514928,0.487128,0.0996315,"NDC")
+ptphithreek_kaons.AddText("#phi = #frac{3#pi}{2}")
+ptphithreek_kaons.Draw()
 Arc_kaons = TArc()
 for k in range(0, 6):
      Arc_kaons.SetFillStyle(0)
@@ -1609,11 +1609,11 @@ P_MMK_kaons_cut_randm_sub.Draw("hist")
 shadedpeak_kaons = P_MMK_kaons_cut_randm_sub.Clone()
 shadedpeak_kaons.SetFillColor(2)
 shadedpeak_kaons.SetFillStyle(3244)
-shadedpeak_kaons.GetXaxis().SetRangeUser(minbin, maxbin)
+shadedpeak_kaons.GetXaxis().SetRangeUser(minbin_kaons, maxbin_kaons)
 shadedpeak_kaons.Draw("samehist")
 NeutronEvt_kaons = TPaveText(0.58934,0.675,0.95,0.75,"NDC")
-BinLow_kaons = P_MMK_kaons_cut_randm_sub.GetXaxis().FindBin(minbin)
-BinHigh_kaons = P_MMK_kaons_cut_randm_sub.GetXaxis().FindBin(maxbin)
+BinLow_kaons = P_MMK_kaons_cut_randm_sub.GetXaxis().FindBin(minbin_kaons)
+BinHigh_kaons = P_MMK_kaons_cut_randm_sub.GetXaxis().FindBin(maxbin_kaons)
 BinIntegral_kaons = int(P_MMK_kaons_cut_randm_sub.Integral(BinLow_kaons, BinHigh_kaons))
 NeutronEvt_kaons.SetLineColor(2)
 NeutronEvt_kaons.AddText("e K n Events: %i" %(BinIntegral_kaons))
@@ -1832,7 +1832,7 @@ legend22_kaons = ROOT.TLegend(0.4, 0.815, 0.78, 0.9)
 legend22_kaons.AddEntry("P_MMK_kaons_cut", "MM with cuts (acpt/RF/PID)", "l")
 legend22_kaons.AddEntry("P_MMK_kaons_cut_prompt", "MM_prompt with cuts (acpt/RF/PID)", "l")
 legend22_kaons.AddEntry("P_MMK_kaons_cut_randm", "MM_randoms with cuts (acpt/RF/PID)", "l")
-legend15_kaons.Draw("same")
+legend22_kaons.Draw("same")
 c1_kaons_MM.cd(5)
 P_MMK_vs_beta_kaons_uncut.Draw("COLZ")
 c1_kaons_MM.cd(6)
@@ -1961,54 +1961,54 @@ c1_protons_kin.cd(2)
 epsilon_protons_cut.Draw()
 c1_protons_kin.cd(3)
 # SJDK - Commented for now, will need to be u vs phi
-# phiqvst_protons_cut.SetStats(0)
-# phiqvst_protons_cut.GetYaxis().SetRangeUser(minrangeuser,maxrangeuser)
-# phiqvst_protons_cut.Draw("SURF2 POL")
-# # Section for polar plotting
-# gStyle.SetPalette(55)
-# gPad.SetTheta(90)
-# gPad.SetPhi(180)
-# tvsphi_title_protons = TPaveText(0.0277092,0.89779,0.096428,0.991854,"NDC")
-# tvsphi_title_protons.AddText("-t vs #phi")
-# tvsphi_title_protons.Draw()
-# ptphizero_protons = TPaveText(0.923951,0.513932,0.993778,0.574551,"NDC")
-# ptphizero_protons.AddText("#phi = 0")
-# ptphizero_protons.Draw()
-# phihalfpi_protons = TLine(0,0,0,0.6)
-# phihalfpi_protons.SetLineColor(kBlack)
-# phihalfpi_protons.SetLineWidth(2)
-# phihalfpi_protons.Draw()
-# ptphihalfpi_protons = TPaveText(0.417855,0.901876,0.486574,0.996358,"NDC")
-# ptphihalfpi_protons.AddText("#phi = #frac{#pi}{2}")
-# ptphihalfpi_protons.Draw()
-# phipi_protons = TLine(0,0,-0.6,0)
-# phipi_protons.SetLineColor(kBlack)
-# phipi_protons.SetLineWidth(2)
-# phipi_protons.Draw()
-# ptphipi_protons = TPaveText(0.0277092,0.514217,0.096428,0.572746,"NDC")
-# ptphipi_protons.AddText("#phi = #pi")
-# ptphipi_protons.Draw()
-# phithreepi_protons = TLine(0,0,0,-0.6)
-# phithreepi_protons.SetLineColor(kBlack)
-# phithreepi_protons.SetLineWidth(2)
-# phithreepi_protons.Draw()
-# ptphithreepi_protons = TPaveText(0.419517,0.00514928,0.487128,0.0996315,"NDC")
-# ptphithreepi_protons.AddText("#phi = #frac{3#pi}{2}")
-# ptphithreepi_protons.Draw()
-# Arc_protons = TArc()
-# for k in range(0, 6):
-#      Arc_protons.SetFillStyle(0)
-#      Arc_protons.SetLineWidth(2)
-#      # To change the arc radius we have to change number 0.825 in the lower line.
-#      Arc_protons.DrawArc(0,0,0.95*(k+1)/(10),0.,360.,"same")
-# tradius_protons = TGaxis(0,0,0.575,0,minrangeuser,maxrangeuser,10,"-+")
-# tradius_protons.SetLineColor(2)
-# tradius_protons.SetLabelColor(2)
-# tradius_protons.Draw()
-# phizero_protons = TLine(0,0,0.6,0)
-# phizero_protons.SetLineColor(kBlack)
-# phizero_protons.SetLineWidth(2)
-# phizero_protons.Draw()
+phiqvsu_protons_cut.SetStats(0)
+phiqvsu_protons_cut.GetYaxis().SetRangeUser(minrangeuser,maxrangeuser)
+phiqvsu_protons_cut.Draw("SURF2 POL")
+ # Section for polar plotting
+gStyle.SetPalette(55)
+gPad.SetTheta(90)
+gPad.SetPhi(180)
+uvsphi_title_protons = TPaveText(0.0277092,0.89779,0.096428,0.991854,"NDC")
+uvsphi_title_protons.AddText("-u vs #phi")
+uvsphi_title_protons.Draw()
+puphizero_protons = TPaveText(0.923951,0.513932,0.993778,0.574551,"NDC")
+puphizero_protons.AddText("#phi = 0")
+puphizero_protons.Draw()
+phihalfp_protons = TLine(0,0,0,0.6)
+phihalfp_protons.SetLineColor(kBlack)
+phihalfp_protons.SetLineWidth(2)
+phihalfp_protons.Draw()
+puphihalfp_protons = TPaveText(0.417855,0.901876,0.486574,0.996358,"NDC")
+puphihalfp_protons.AddText("#phi = #frac{#pi}{2}")
+puphihalfp_protons.Draw()
+phip_protons = TLine(0,0,-0.6,0)
+phip_protons.SetLineColor(kBlack)
+phip_protons.SetLineWidth(2)
+phip_protons.Draw()
+puphip_protons = TPaveText(0.0277092,0.514217,0.096428,0.572746,"NDC")
+puphip_protons.AddText("#phi = #pi")
+puphip_protons.Draw()
+phithreep_protons = TLine(0,0,0,-0.6)
+phithreep_protons.SetLineColor(kBlack)
+phithreep_protons.SetLineWidth(2)
+phithreep_protons.Draw()
+puphithreep_protons = TPaveText(0.419517,0.00514928,0.487128,0.0996315,"NDC")
+puphithreep_protons.AddText("#phi = #frac{3#pi}{2}")
+puphithreep_protons.Draw()
+Arc_protons = TArc()
+for k in range(0, 6):
+     Arc_protons.SetFillStyle(0)
+     Arc_protons.SetLineWidth(2)
+     # To change the arc radius we have to change number 0.825 in the lower line.
+     Arc_protons.DrawArc(0,0,0.95*(k+1)/(10),0.,360.,"same")
+uradius_protons = TGaxis(0,0,0.575,0,minrangeuser,maxrangeuser,10,"-+")
+uradius_protons.SetLineColor(2)
+uradius_protons.SetLabelColor(2)
+uradius_protons.Draw()
+phizero_protons = TLine(0,0,0.6,0)
+phizero_protons.SetLineColor(kBlack)
+phizero_protons.SetLineWidth(2)
+phizero_protons.Draw()
 # End of polar plotting section
 c1_protons_kin.cd(4)
 P_MMp_protons_cut_randm_sub.Draw("hist")
@@ -2016,11 +2016,11 @@ P_MMp_protons_cut_randm_sub.Draw("hist")
 shadedpeak_protons = P_MMp_protons_cut_randm_sub.Clone()
 shadedpeak_protons.SetFillColor(2)
 shadedpeak_protons.SetFillStyle(3244)
-shadedpeak_protons.GetXaxis().SetRangeUser(minbin, maxbin)
+shadedpeak_protons.GetXaxis().SetRangeUser(minbin_protons, maxbin_protons)
 shadedpeak_protons.Draw("samehist")
 NeutronEvt_protons = TPaveText(0.58934,0.675,0.95,0.75,"NDC")
-BinLow_protons = P_MMp_protons_cut_randm_sub.GetXaxis().FindBin(minbin)
-BinHigh_protons = P_MMp_protons_cut_randm_sub.GetXaxis().FindBin(maxbin)
+BinLow_protons = P_MMp_protons_cut_randm_sub.GetXaxis().FindBin(minbin_protons)
+BinHigh_protons = P_MMp_protons_cut_randm_sub.GetXaxis().FindBin(maxbin_protons)
 BinIntegral_protons = int(P_MMp_protons_cut_randm_sub.Integral(BinLow_protons, BinHigh_protons))
 NeutronEvt_protons.SetLineColor(2)
 NeutronEvt_protons.AddText("e p n Events: %i" %(BinIntegral_protons))

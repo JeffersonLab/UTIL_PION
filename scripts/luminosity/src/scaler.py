@@ -1,9 +1,9 @@
 #! /usr/bin/python
-
 #
-# Description:
+# Description: This is where the scaler variables for the yield calculations are formulated.
+# Variables calculated: SHMS_PS, HMS_PS, time, charge, SHMSTRIG_scaler, HMSTRIG_scaler, CPULT_scaler, CPULT_scaler_uncern, HMS_eLT, HMS_eLT_uncern, SHMS_eLT, SHMS_eLT_uncern, sent_edtm
 # ================================================================
-# Time-stamp: "2021-10-03 00:29:04 trottar"
+# Time-stamp: "2021-10-15 08:00:15 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -174,28 +174,40 @@ def scaler(PS_names, HMS_PS, SHMS_PS, thres_curr, report_current, REPLAYPATH, ru
             SHMS_previous_rate[iRATE] = SHMS_rate_value[iRATE][0]
         previous_time[ibcm] = time_value[0]
         previous_charge[ibcm] = bcm_value[ibcm][0]
+        # Iterate over all scaler events to get various scaler values
         for i, evt in enumerate(s_evts):
             if (time_value[i] != previous_time[ibcm]):
+                # Current calculation using iterative charge and time values.
+                # Iterate over current value then subtracting previous so that there is no double counting. Subtracted values are uncut.
                 current_I = (bcm_value[ibcm][i] -
                              previous_charge[ibcm])/(time_value[i] - previous_time[ibcm])
             if (abs( current[ibcm][i]-report_current) < thres_curr ):
+                # Iterate over current value then subtracting previous so that there is no double counting. Subtracted values are uncut.
                 charge_sum[ibcm] += (bcm_value[ibcm][i] - previous_charge[ibcm])
                 time_sum[ibcm] += (time_value[i] - previous_time[ibcm])
+            # Current cuts and selection of BCM4A
             if (ibcm == 2 and abs( current[ibcm][i]-report_current) < thres_curr):
+                # EDTM scaler iteration.
+                # Iterate over current value then subtracting previous so that there is no double counting. Subtracted values are uncut.
                 EDTM_current = (EDTM_value[i] - previous_EDTM)
                 EDTM_sum += EDTM_current
+                # Accquired trigger sum calculation using iterative level 1 accepted values.
+                # Iterate over current value then subtracting previous so that there is no double counting. Subtracted values are uncut.
                 acctrig_sum += ((acctrig_value[i] - EDTM_current) - previous_acctrig)
                 for itrig in range(0, NTRIG):
+                    # Trigger scaler iteration.
+                    # Iterate over current value then subtracting previous so that there is no double counting. Subtracted values are uncut.
                     trig_sum[itrig] += (trig_value[itrig][i] - previous_trig[itrig])
                     # print("trig_value[%s] = " %(itrig),trig_value[itrig][i])
                 for iPRE in range(0, NPRE):
+                    # Pre-trig scaler iteration. Used in electronic LT calculations.
+                    # Iterate over current value then subtracting previous so that there is no double counting. Subtracted values are uncut.
                     PRE_sum[iPRE] += (PRE_value[iPRE][i] - previous_PRE[iPRE])
                     SHMS_PRE_sum[iPRE] += (SHMS_PRE_value[iPRE][i] - SHMS_previous_PRE[iPRE])
                 for iRATE in range(0, NRATE):
                     rate_sum[iRATE] += (rate_value[iRATE][i] - previous_rate[iRATE])
                 for iRATE in range(0, SHMSNRATE):
                     SHMS_rate_sum[iRATE] += (SHMS_rate_value[iRATE][i] - SHMS_previous_rate[iRATE])
-                # RLT 09/24/21, indented one tab to include BCM cuts
             previous_acctrig = (acctrig_value[i] - EDTM_current)
             previous_EDTM = EDTM_value[i]
             for itrig in range(0, NTRIG):
@@ -210,6 +222,7 @@ def scaler(PS_names, HMS_PS, SHMS_PS, thres_curr, report_current, REPLAYPATH, ru
             previous_time[ibcm] = time_value[i]
             previous_charge[ibcm] = bcm_value[ibcm][i]
 
+    # Define counter for trigger of interest
     if PS_names[0] is "PS1":
         shms_ps_ix = 0
     if PS_names[0] is "PS2":
@@ -218,7 +231,14 @@ def scaler(PS_names, HMS_PS, SHMS_PS, thres_curr, report_current, REPLAYPATH, ru
         hms_ps_ix = 2
     if PS_names[1] is "PS4":
         hms_ps_ix = 3
+    # Check if COIN trigger is used
+    if len(PS_names) > 2:
+        if PS_names[2] is "PS5":
+            coin_ps_ix = 4
+        if PS_names[2] is "PS6":
+            coin_ps_ix = 5
         
+    # Creates a dictionary for the calculated luminosity values 
     scalers = {
         "run number" : runNum,
         "%s" % PS_names[0]: SHMS_PS,
@@ -236,6 +256,27 @@ def scaler(PS_names, HMS_PS, SHMS_PS, thres_curr, report_current, REPLAYPATH, ru
         "sent_edtm": EDTM_sum
             
     }
+    # Check if COIN trigger is used
+    if len(PS_names) > 2:
+        # Creates a dictionary for the calculated luminosity values 
+        scalers = {
+            "run number" : runNum,
+            "%s" % PS_names[0]: SHMS_PS,
+            "%s" % PS_names[1]: HMS_PS,
+            "time": time_sum[2],
+            "charge": charge_sum[2],
+            "SHMSTRIG_scaler": trig_sum[shms_ps_ix],
+            "HMSTRIG_scaler": trig_sum[hms_ps_ix],
+            "COINTRIG_scaler": trig_sum[coin_ps_ix],
+            "CPULT_scaler": 1-acctrig_sum/((trig_sum[shms_ps_ix]) + (trig_sum[hms_ps_ix])),
+            "CPULT_scaler_uncern": (acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS)))*np.sqrt((1/(trig_sum[shms_ps_ix]/SHMS_PS))+(1/(trig_sum[hms_ps_ix]/HMS_PS))+(1/acctrig_sum)),
+            "HMS_eLT": 1 - ((6/5)*(PRE_sum[1]-PRE_sum[2])/(PRE_sum[1])),
+            "HMS_eLT_uncern": (PRE_sum[1]-PRE_sum[2])/(PRE_sum[1])*np.sqrt((np.sqrt(PRE_sum[1]) + np.sqrt(PRE_sum[2]))/(PRE_sum[1] - PRE_sum[2]) + (np.sqrt(PRE_sum[1])/PRE_sum[1])),
+            "SHMS_eLT": 1 - ((6/5)*(SHMS_PRE_sum[1]-SHMS_PRE_sum[2])/(SHMS_PRE_sum[1])),
+            "SHMS_eLT_uncern": (SHMS_PRE_sum[1]-SHMS_PRE_sum[2])/(SHMS_PRE_sum[1])*np.sqrt((np.sqrt(SHMS_PRE_sum[1]) + np.sqrt(SHMS_PRE_sum[2]))/(SHMS_PRE_sum[1] - SHMS_PRE_sum[2]) + (np.sqrt(SHMS_PRE_sum[1])/SHMS_PRE_sum[1])),
+            "sent_edtm": EDTM_sum
+            
+        }
 
 
     print("Using prescale factors: %s %.0f, %s %.0f\n" % (PS_names[0],SHMS_PS,PS_names[1],HMS_PS))
@@ -249,6 +290,11 @@ def scaler(PS_names, HMS_PS, SHMS_PS, thres_curr, report_current, REPLAYPATH, ru
 
     print("L1ACC counts: %.0f, \n%s Prescaled Pretrigger Counts: %.0f \n%s Prescaled Pretrigger Counts: %.0f \nComputer Livetime: %f +/- %f" %
           (acctrig_sum, trig_name[0], scalers["SHMSTRIG_scaler"], trig_name[2], scalers["HMSTRIG_scaler"], scalers["CPULT_scaler"], scalers["CPULT_scaler_uncern"]))
+    # Check if COIN trigger is used
+    if len(PS_names) > 2:
+        print("L1ACC counts: %.0f, \n%s Prescaled Pretrigger Counts: %.0f \n%s Prescaled Pretrigger Counts: %.0f \n%s Prescaled Pretrigger Counts: %.0f \nComputer Livetime: %f +/- %f" %
+              (acctrig_sum, trig_name[0], scalers["SHMSTRIG_scaler"], trig_name[2], scalers["HMSTRIG_scaler"], trig_name[3], scalers["COINTRIG_scaler"], 
+               scalers["CPULT_scaler"], scalers["CPULT_scaler_uncern"]))
 
     print("HMS Electronic livetime: %f +/- %f" % (scalers["HMS_eLT"], scalers["HMS_eLT_uncern"]))
     print("SHMS Electronic livetime: %f +/- %f" % (scalers["SHMS_eLT"], scalers["SHMS_eLT_uncern"]))

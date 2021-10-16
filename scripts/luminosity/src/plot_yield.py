@@ -1,9 +1,9 @@
 #! /usr/bin/python
-
 #
-# Description:
+# Description: Grabs lumi data from corresponding csv depending on run setting. Then plots the yields and creates a comprehensive table.
+# Variables calculated: current, rate_HMS, rate_SHMS, sent_edtm_PS, uncern_HMS_evts_scaler, uncern_SHMS_evts_scaler, uncern_HMS_evts_notrack, uncern_SHMS_evts_notrack, uncern_HMS_evts_track, uncern_SHMS_evts_track
 # ================================================================
-# Time-stamp: "2021-10-04 05:48:24 trottar"
+# Time-stamp: "2021-10-15 09:52:58 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -29,6 +29,7 @@ elif ("cdaq" in HOST[1]):
 elif ("trottar" in HOST[1]):
     REPLAYPATH = "/home/trottar/Analysis/hallc_replay_lt"
 
+# Depending on input, the corresponding data setting csv data will be grabbed
 inp_name = sys.argv[1]
 if "1" in inp_name:
     if "LH2" in inp_name.upper():
@@ -73,6 +74,7 @@ else:
 
 print("\nRunning as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 
+# Converts csv data to dataframe
 try:
     lumi_data = pd.read_csv(inp_f)
 except IOError:
@@ -93,8 +95,7 @@ def removeRun(runNum):
 lumi_data = dict(lumi_data)
 print(lumi_data.keys())
 
-# prints first instance of run number-> print(lumi_data["run number"][0])
-
+# Define prescale variables
 if "PS1" in lumi_data.keys():
     SHMS_PS = lumi_data["PS1"]
 if "PS2" in lumi_data.keys():
@@ -102,17 +103,29 @@ if "PS2" in lumi_data.keys():
 if "PS3" in lumi_data.keys():
     HMS_PS = lumi_data["PS3"]
 if "PS4" in lumi_data.keys():
-    HMS_PS = lumi_data["PS4"]    
+    HMS_PS = lumi_data["PS4"]
+if "PS5" in lumi_data.keys():
+    COIN_PS = lumi_data["PS5"]
+if "PS5" in lumi_data.keys():
+    COIN_PS = lumi_data["PS6"]
 
+# Define number of runs to analyze
 numRuns = len(lumi_data["run number"])
 
 def makeList(lumi_input):
+    '''
+    Takes input list and converts to numpy (with NaN converted to zeros) so it can be used mathematically
+    '''
     new_lst = [lumi_data[lumi_input][i] for i,evts in enumerate(lumi_data["run number"])]
     new_lst = np.asarray(pd.Series(new_lst).fillna(0)) # changes NaN to zeros and convert to numpy
     return new_lst
 
 def calc_yield():
+    '''
+    Creates a new dictionary with yield calculations. The relative yield is defined relative to the maximum current.
+    '''
 
+    # Create dictionary for calculations that were not calculated in previous scripts.
     yield_dict = {
         "current" : makeList("charge")/makeList("time"),
     
@@ -134,14 +147,46 @@ def calc_yield():
         "uncern_SHMS_evts_track" : np.sqrt(makeList("p_int_goodscin_evts"))/makeList("p_int_goodscin_evts"),
 
     }
+    # Check if coin trigger was used
+    if COIN_PS in locals():
+        # Create dictionary for calculations that were not calculated in previous scripts.
+        yield_dict = {
+            "current" : makeList("charge")/makeList("time"),
+            
+            "rate_HMS" : makeList("HMSTRIG_scaler")/makeList("time"),
+            "rate_SHMS" : makeList("SHMSTRIG_scaler")/makeList("time"),
+            "rate_COIN" : makeList("COINTRIG_scaler")/makeList("time"),
+            
+            "sent_edtm_PS" : makeList("sent_edtm")/HMS_PS,
+            
+            "uncern_HMS_evts_scaler" : np.sqrt(makeList("HMSTRIG_scaler"))/makeList("HMSTRIG_scaler"),
+    
+            "uncern_SHMS_evts_scaler" : np.sqrt(makeList("SHMSTRIG_scaler"))/makeList("SHMSTRIG_scaler"),
 
+            "uncern_COIN_evts_scaler" : np.sqrt(makeList("COINTRIG_scaler"))/makeList("COINTRIG_scaler"),
+            
+            "uncern_HMS_evts_notrack" : np.sqrt(makeList("h_int_goodscin_evts"))/makeList("h_int_goodscin_evts"),
+            
+            "uncern_SHMS_evts_notrack" : np.sqrt(makeList("p_int_goodscin_evts"))/makeList("p_int_goodscin_evts"),
+            
+            "uncern_HMS_evts_track" : np.sqrt(makeList("h_int_goodscin_evts"))/makeList("h_int_goodscin_evts"),
+
+            "uncern_SHMS_evts_track" : np.sqrt(makeList("p_int_goodscin_evts"))/makeList("p_int_goodscin_evts"),
+
+        }
+
+    # Total livetime calculation
     TLT = makeList("accp_edtm")/yield_dict["sent_edtm_PS"]
     yield_dict.update({"TLT" : TLT})
 
+    # Accepted scalers 
     HMS_scaler_accp = makeList("HMSTRIG_scaler")-yield_dict["sent_edtm_PS"]
     SHMS_scaler_accp = makeList("SHMSTRIG_scaler")-yield_dict["sent_edtm_PS"]
     yield_dict.update({"HMS_scaler_accp" : HMS_scaler_accp})
     yield_dict.update({"SHMS_scaler_accp" : SHMS_scaler_accp})
+    if COIN_PS in locals():
+        COIN_scaler_accp = makeList("COINTRIG_scaler")-yield_dict["sent_edtm_PS"]
+        yield_dict.update({"COIN_scaler_accp" : COIN_scaler_accp})
 
     # Calculate yield values
 
@@ -159,20 +204,20 @@ def calc_yield():
     yield_dict.update({"yield_SHMS_notrack" : yield_SHMS_notrack})
     yield_dict.update({"yield_SHMS_track" : yield_SHMS_track})
 
+
+    # Define relative yield relative to maximum current
     for i,curr in enumerate(yield_dict["current"]):
         if curr == max(yield_dict["current"]):
             max_yield_HMS_scaler = yield_dict["yield_HMS_scaler"][i]
             max_yield_SHMS_scaler = yield_dict["yield_SHMS_scaler"][i]
     yield_dict.update({"max_yield_HMS_scaler" : max_yield_HMS_scaler})
-    yield_dict.update({"max_yield_SHMS_scaler" : max_yield_SHMS_scaler})
-                
+    yield_dict.update({"max_yield_SHMS_scaler" : max_yield_SHMS_scaler})                
     for i,curr in enumerate(yield_dict["current"]):
         if curr == max(yield_dict["current"]):
             max_yield_HMS_notrack = yield_dict["yield_HMS_notrack"][i]
             max_yield_SHMS_notrack = yield_dict["yield_SHMS_notrack"][i]
     yield_dict.update({"max_yield_HMS_notrack" : max_yield_HMS_notrack})
     yield_dict.update({"max_yield_SHMS_notrack" : max_yield_SHMS_notrack})
-
     for i,curr in enumerate(yield_dict["current"]):
         if curr == max(yield_dict["current"]):
             max_yield_HMS_track = yield_dict["yield_HMS_track"][i]
@@ -194,12 +239,16 @@ def calc_yield():
     yield_dict.update({"yieldRel_SHMS_notrack" : yieldRel_SHMS_notrack})
     yield_dict.update({"yieldRel_SHMS_track" : yieldRel_SHMS_track})
 
+    # Restructure dictionary to dataframe format so it matches lumi_data
     yield_table = pd.DataFrame(yield_dict, columns=yield_dict.keys())
     yield_table = yield_table.reindex(sorted(yield_table.columns), axis=1)
 
     return yield_table
 
 def mergeDicts():
+    '''
+    Merge dictionaries/dataframes, convert to dataframe and sort
+    '''
     yield_data = calc_yield()
     # data = {**lumi_data, **yield_data} # only python 3.5+
     
@@ -217,7 +266,9 @@ def mergeDicts():
     return table
 
 def plot_yield():
-
+    '''
+    Plot yields and various other analysis plots
+    '''
     yield_data = mergeDicts()
 
     for i, val in enumerate(yield_data["run number"]):

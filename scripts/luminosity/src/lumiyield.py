@@ -1,7 +1,9 @@
 #! /usr/bin/python
-# Description:
+#
+# Description: This is where the variables for the yield calculations are formulated.
+# Variables calculated: tot_events, h_int_goodscin_evts, p_int_goodscin_evts, SHMSTRIG_cut, HMSTRIG_cut, HMS_track, HMS_track_uncern, SHMS_track, SHMS_track_uncern, accp_edtm
 # ================================================================
-# Time-stamp: "2021-10-06 07:24:46 trottar"
+# Time-stamp: "2021-10-15 06:55:02 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -24,6 +26,7 @@ MaxEvent=sys.argv[3]
 USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
 HOST = subprocess.getstatusoutput("hostname")
 
+# Set path depending upon hostname. Change or add more as needed  
 if ("farm" in HOST[1]):
     REPLAYPATH="/group/c-pionlt/online_analysis/hallc_replay_lt"
 elif ("lark" in HOST[1]):
@@ -33,13 +36,16 @@ elif ("cdaq" in HOST[1]):
 elif ("trottar" in HOST[1]):
     REPLAYPATH = "/home/trottar/Analysis/hallc_replay_lt"
 
+# Import package for cuts
 sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
 import kaonlt as klt
+
+# Import scaler table
 import scaler
-#import scaler_nocut as scaler
 
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 
+# Output for luminosity table
 out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/lumi_data.csv" % REPLAYPATH
 
 # Construct the name of the rootfile based upon the info we provided
@@ -64,15 +70,16 @@ else:
     sys.exit(4)
 print("Output path checks out, outputting to %s" % (OUTPATH))
 
+# Open report file to grab prescale values and tracking efficiency
 report = "%s/UTIL_PION/REPORT_OUTPUT/Analysis/Lumi/%s_%s_%s.report" % (REPLAYPATH,ROOTPrefix,runNum,MaxEvent)
-
 f = open(report)
-    
 psList = ['SW_Ps1_factor','SW_Ps2_factor','SW_Ps3_factor','SW_Ps4_factor','SW_Ps5_factor','SW_Ps6_factor']
     
+# Prescale input value (psValue) to its actual DAQ understanding (psActual)
 psActual = [-1,1,2,3,5,9,17,33,65,129,257,513,1025,2049,4097,8193,16385,32769]
 psValue = [-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
 
+# Search root file for prescale values and tracking efficiency, then save as variables
 for line in f:
     data = line.split(':')
     track_data = line.split(':')
@@ -105,6 +112,7 @@ SHMS_track_uncern = float(SHMS_track_info[1])
 HMS_track_eff = float(HMS_track_info[0])
 HMS_track_uncern = float(HMS_track_info[1])
 
+# Convert the prescale input values to their actual DAQ values
 for i,index in enumerate(psActual):
     #psValue
     if (index == ps1) :
@@ -141,13 +149,14 @@ f.close()
 
 print("\nPre-scale values...\nPS1:{0}, PS2:{1}, PS3:{2}, PS4:{3}, PS5:{4}, PS6:{5}\n".format(PS1,PS2,PS3,PS4,PS5,PS6))
 
+# Save only the used prescale triggers to the PS_used list
 PS_list = [["PS1",PS1],["PS2",PS2],["PS3",PS3],["PS4",PS4],["PS5",PS5],["PS6",PS6]]
 PS_used = []
-
 for val in PS_list:
     if val[1] != 0:
         PS_used.append(val)
 
+# Check if COIN trigger is used by seeing it was saved in the PS_used list
 if len(PS_used) > 2:
     PS_names = [PS_used[0][0],PS_used[1][0],PS_used[2][0]]
     SHMS_PS = PS_used[0][1]
@@ -259,6 +268,7 @@ if PS_names[1] is "PS4":
     T_coin_pTRIG_HMS_ROC1_tdcTime = tree.array("T.coin.pTRIG4_ROC1_tdcTime")
     T_coin_pTRIG_HMS_ROC2_tdcTime = tree.array("T.coin.pTRIG4_ROC2_tdcTime")
 
+# Check if COIN trigger is used
 if len(PS_used) > 2:
     if PS_names[2] is "PS5":
         T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG5_ROC1_tdcTimeRaw")
@@ -342,12 +352,16 @@ cutDict = make_cutDict("c_noedtm",cutDict)
 cutDict = make_cutDict("c_edtm",cutDict)
 cutDict = make_cutDict("c_ptrigHMS",cutDict)
 cutDict = make_cutDict("c_ptrigSHMS",cutDict)
+# Check if COIN trigger is used
 if len(PS_used) > 2:
     cutDict = make_cutDict("c_ptrigCOIN",cutDict)
 cutDict = make_cutDict("c_curr",cutDict)
 c = klt.pyPlot(REPLAYPATH,cutDict)
 
 def pid_cuts():
+    '''
+    Plots of pid cuts that will be applied to the event selection
+    '''
 
     f = plt.figure(figsize=(11.69,8.27))
     ax = f.add_subplot(231)
@@ -396,38 +410,60 @@ def pid_cuts():
     plt.ylabel('Count')    
     
 def analysis():
+    '''
+    Calculate variables for table
+    '''
 
+    # Applies edtm window cuts to edtm to get accepted edtm events
     EDTM = c.add_cut(T_coin_pEDTM_tdcTimeRaw,"c_edtm")
     
+    # Applies trigger window cuts to trigger to get accepted trigger events
     SHMSTRIG = [x
                 for x in c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_ptrigSHMS")
                 if x != 0.0]
+    # Applies trigger window cuts to trigger to get accepted trigger events
     HMSTRIG  = [x
                 for x in c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_ptrigHMS")
                 if x !=0.0]
-
+    # Check if COIN trigger is used
     if len(PS_used) > 2:
+        # Applies trigger window cuts to trigger to get accepted trigger events
         COINTRIG  = [x
                      for x in c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTime,"c_ptrigCOIN")
                      if x !=0.0]
     
+    # Cuts event type with current cut, probably pointless?
     EventType = c.add_cut(EvtType,"c_curr")
 
+    # Applies trigger window cuts to trigger to get accepted trigger events
     SHMSTRIG_cut = [trig1
                     for (trig1,evt) in zip(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_ptrigSHMS"),EvtType)
                     if evt == 1]
-
+    # Applies trigger window cuts to trigger to get accepted trigger events
     HMSTRIG_cut = [ x
                     for (x, evt) in zip(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_ptrigHMS"), EvtType)
                     if evt == 2]
+    # Check if COIN trigger is used
+    if len(PS_used) > 2:
+        # Applies trigger window cuts to trigger to get accepted trigger events
+        COINTRIG_cut = [ x
+                         for (x, evt) in zip(c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTime,"c_ptrigCOIN"), EvtType)
+                         if (evt == 1 or evt == 2)]
 
-    # goodscinhit cut
+    # Applies PID cuts, once integrated this will give the events (no track)
+    h_W = c.add_cut(W,"h_hadcut_lumi_eff")
+    p_W = c.add_cut(W,"p_pcut_lumi_eff")
+
+    # Applies PID cuts, once integrated this will give the events (track)
     h_hadcuts_goodscinhit = c.add_cut(H_hod_goodscinhit,"h_hadcut_lumi_eff")
     p_pcuts_goodscinhit = c.add_cut(P_hod_goodscinhit,"p_pcut_lumi_eff")
     
+    # Creates a dictionary for the calculated luminosity values 
     track_info = {
         
         "tot_events" : len(EventType),
+        "h_int_W_evts" : scipy.integrate.simps(h_W),
+        "p_int_W_evts" : scipy.integrate.simps(p_W),
         "h_int_goodscin_evts" : scipy.integrate.simps(h_hadcuts_goodscinhit),
         "p_int_goodscin_evts" : scipy.integrate.simps(p_pcuts_goodscinhit),
         "SHMSTRIG_cut" : len(SHMSTRIG_cut),
@@ -439,6 +475,26 @@ def analysis():
         "accp_edtm" : (len(EDTM)),
             
     }
+    # Check if COIN trigger is used
+    if len(PS_used) > 2:
+        # Creates a dictionary for the calculated luminosity values 
+        track_info = {
+        
+            "tot_events" : len(EventType),
+            "h_int_W_evts" : scipy.integrate.simps(h_W),
+            "p_int_W_evts" : scipy.integrate.simps(p_W),
+            "h_int_goodscin_evts" : scipy.integrate.simps(h_hadcuts_goodscinhit),
+            "p_int_goodscin_evts" : scipy.integrate.simps(p_pcuts_goodscinhit),
+            "SHMSTRIG_cut" : len(SHMSTRIG_cut),
+            "HMSTRIG_cut" : len(HMSTRIG_cut),
+            "COINTRIG_cut" : len(COINTRIG_cut),
+            "HMS_track" : HMS_track_eff,
+            "HMS_track_uncern" : HMS_track_uncern,
+            "SHMS_track" : SHMS_track_eff,
+            "SHMS_track_uncern" : SHMS_track_uncern,
+            "accp_edtm" : (len(EDTM)),
+            
+        }
 
     print("\nTerminate","Selection rules have been applied, plotting results")
     print("Total number of events: %.0f" % (track_info["tot_events"]))
@@ -461,21 +517,25 @@ def main():
     #id_cuts()
     #plt.show()
 
-    # combine dictionaries
+    # lumi_data = {**scalers , **track_info} # only python 3.5+
+
+    # Import dictionaries
     scalers = scaler.scaler(PS_names, HMS_PS, SHMS_PS, thres_curr, report_current, REPLAYPATH, runNum, MaxEvent, s_tree, s_branch) 
     track_info = analysis()
 
-    # lumi_data = {**scalers , **track_info} # only python 3.5+
+    # Merge and sort the two dictionaries of calculations
     data = {}
     for d in (scalers, track_info): 
         data.update(d)
     lumi_data = {i : data[i] for i in sorted(data.keys())}
 
+    # Convert merged dictionary to a pandas dataframe then sort it
     table  = pd.DataFrame([lumi_data], columns=lumi_data.keys())
     table = table.reindex(sorted(table.columns), axis=1)
     
     file_exists = os.path.isfile(out_f)
 
+    # Updates csv file with luminosity calculated values for later analysis (see plot_yield.py)
     if file_exists:
         table.to_csv(out_f, index = False, header=False, mode='a',)
     else:

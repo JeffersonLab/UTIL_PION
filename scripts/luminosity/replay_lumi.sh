@@ -84,11 +84,13 @@ sleep 3
 source /site/12gev_phys/softenv.sh 2.3
 source /apps/root/6.18.04/setroot_CUE.bash
 
+# Sets trigger windows
 echo
 echo "Running trigWindows.sh ${RUNNUMBER}..."
 cd ${REPLAYPATH}/UTIL_PION/scripts/trig_windows/
 source trigWindows.sh ${RUNNUMBER}
 
+# Analyzes lumi runs
 echo "Running lumiyield.py ${RUNNUMBER} ${MAXEVENTS}..."
 cd ${REPLAYPATH}/UTIL_PION/scripts/luminosity/src/
 python3 lumiyield.py Pion_replay_luminosity ${RUNNUMBER} ${MAXEVENTS}
