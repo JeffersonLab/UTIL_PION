@@ -9,6 +9,7 @@
 
 # 05/October/21: Jacob Murphy added in another page of plots with focal plane variables vs beta.
 # 11/10/21 - SJDK - There's lots of commented out plots in here, if they aren't being used anymore, can they please just be deleted?
+# 16/10/21 - JM - Added in X/Y Calo with projections of ADC hits (SJDK Stop-Gap Measure)
 
 ###################################################################################################################################################
 
@@ -185,6 +186,7 @@ P_xp_pions_uncut = ROOT.TH1D("P_xp_pions_uncut", "SHMS x'; SHMS_gtr_xp; Counts",
 P_yp_pions_uncut = ROOT.TH1D("P_yp_pions_uncut", "SHMS y'; SHMS_gtr_yp; Counts", 200, -0.2, 0.2)
 P_dp_pions_uncut = ROOT.TH1D("P_dp_pions_uncut", "SHMS #delta; SHMS_gtr_dp; Counts", 200, -30, 30)
 P_cal_etottracknorm_pions_uncut = ROOT.TH1D("P_cal_etottracknorm_pions_uncut", "SHMS cal etottracknorm; SHMS_cal_etottracknorm; Counts", 200, 0, 1.6)
+P_cal_fly_numGoodAdcHits_pions_uncut = ROOT.TH1D("P_cal_fly_numGoodAdcHits_pions_uncut", "SHMS Shower Good Occupancy; PMT Number; Number of Good ADC Hits", 224, 0.5, 224.5)
 P_hgcer_npe_pions_uncut = ROOT.TH1D("P_hgcer_npe_pions_uncut", "SHMS HGC npeSum; SHMS_hgcer_npeSum; Counts", 200, 0, 50)
 P_aero_npe_pions_uncut = ROOT.TH1D("P_aero_npe_pions_uncut", "SHMS aero npeSum; SHMS_aero_npeSum; Counts", 200, 0, 50)
 P_ngcer_npe_pions_uncut = ROOT.TH1D("P_ngcer_npe_pions_uncut", "SHMS NGC npeSum; SHMS_ngcer_npeSum; Counts", 200, 0, 50)
@@ -200,6 +202,7 @@ P_xp_pions_cut = ROOT.TH1D("P_xp_pions_cut", "SHMS x'; SHMS_gtr_xp; Counts", 200
 P_yp_pions_cut = ROOT.TH1D("P_yp_pions_cut", "SHMS y'; SHMS_gtr_yp; Counts", 200, -0.2, 0.2)
 P_dp_pions_cut = ROOT.TH1D("P_dp_pions_cut", "SHMS #delta; SHMS_gtr_dp; Counts", 200, -15, 15)
 P_cal_etottracknorm_pions_cut = ROOT.TH1D("P_cal_etottracknorm_pions_cut", "SHMS cal etottracknorm; SHMS_cal_etottracknorm; Counts", 200, 0, 1.6)
+P_cal_fly_numGoodAdcHits_pions_cut = ROOT.TH1D("P_cal_fly_numGoodAdcHits_pions_cut", "SHMS Shower Good Occupancy; PMT Number; Number of Good ADC Hits", 224, 0.5, 224.5)
 P_hgcer_npe_pions_cut = ROOT.TH1D("P_hgcer_npe_pions_cut", "SHMS HGC npeSum; SHMS_hgcer_npeSum; Counts", 200, 0, 50)
 P_aero_npe_pions_cut = ROOT.TH1D("P_aero_npe_pions_cut", "SHMS aero npeSum; SHMS_aero_npeSum; Counts", 200, 0, 50)
 P_ngcer_npe_pions_cut = ROOT.TH1D("P_ngcer_npe_pions_cut", "SHMS NGC npeSum; SHMS_ngcer_npeSum; Counts", 200, 0, 50)
@@ -225,6 +228,7 @@ ePiCoinTime_vs_MMpi_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_MMpi_pions_uncut","E
 ePiCoinTime_vs_beta_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_beta_pions_uncut", "Electron-Pion CTime vs SHMS #beta (no cut); e #pi Coin_Time; SHMS_#beta", 200, -40, 40, 200, 0, 2)
 P_RFTime_vs_MMpi_pions_uncut = ROOT.TH2D("P_RFTime_vs_MMpi_pions_uncut", "SHMS RFTime vs Missing Mass (no cuts); SHMS_RFTime_Dist; MM_{#pi}", 100, 0, 4, 100, 0, 2)
 P_cal_etottracknorm_vs_ngcer_npe_pions_uncut = ROOT.TH2D("P_cal_etottracknorm_vs_ngcer_npe_pions_uncut", "SHMS cal etottracknorm vs SHMS NGC xAtCer (no cut); SHMS_cal_etottracknorm; SHMS_ngcer_xAtCer", 100, -10, 10, 100, -10, 10)
+P_cal_fly_numGoodAdcHits_col_row_uncut = ROOT.TH2D("P_cal_fly_numGoodAdcHits_col_row_uncut","SHMS Shower  Occupancy ; Col Number ;  Row Number",14,0,14,16,0,16)
 P_ngcer_vs_hgcer_npe_pions_uncut = ROOT.TH2D("P_ngcer_vs_hgcer_npe_pions_uncut", "SHMS NGC npeSum vs SHMS HGC npeSum (no cut); SHMS_ngcer_npeSum; SHMS_hgcer_npeSum", 100, 0, 50, 100, 0, 50)
 P_ngcer_vs_aero_npe_pions_uncut = ROOT.TH2D("P_ngcer_vs_aero_npe_pions_uncut", "SHMS NGC npeSum vs SHMS aero npeSum (no cut); SHMS_ngcer_npeSum; SHMS_aero_npeSum", 100, 0, 50, 100, 0, 50)
 H_dp_vs_beta_pions_uncut = ROOT.TH2D("H_dp_vs_beta_pions_uncut", "HMS #delta vs HMS #beta (no cut); HMS #delta; HMS_#beta", 200, -12, 12, 200, 0, 2)
@@ -238,6 +242,8 @@ P_xpfp_vs_beta_pions_uncut = ROOT.TH2D("P_xpfp_vs_beta_pions_uncut", "SHMS X'_{f
 H_ypfp_vs_beta_pions_uncut = ROOT.TH2D("H_ypfp_vs_beta_pions_uncut", "HMS Y'_{fp} vs HMS #beta (no cut); HMS Y'_{fp}; HMS_#beta", 160, -0.4, 0.4, 200, 0, 2)
 P_ypfp_vs_beta_pions_uncut = ROOT.TH2D("P_ypfp_vs_beta_pions_uncut", "SHMS Y'_{fp} vs SHMS #beta (no cut); SHMS Y'_{fp}; SHMS_#beta", 160, -0.4, 0.4, 200, 0, 2)
 P_MMpi_vs_beta_pions_uncut = ROOT.TH2D("P_MMpi_vs_beta_pions_uncut", "Missing Mass vs SHMS #beta (no cut); MM_{#pi}; SHMS_#beta", 100, 0, 2, 200, 0, 2)
+P_cal_xy_pions_uncut = ROOT.TH2D("P_cal_xy_pions_uncut", "SHMS Calorimeter yCalo vs xCalo (no cuts); cal_yCalo(cm); cal_xCalo(cm)", 140, -62.3, 62.3, 160, -71.2, 71.2)
+P_DPexit_xy_pions_uncut = ROOT.TH2D("P_DPexit_xy_pions_uncut", "SHMS Dipole Exit yCalo vs xCalo (no cuts); yExit(cm); xExit(cm)", 200, -50.0, 50.0, 200, -50.0, 50.0)
 
 H_cal_etottracknorm_vs_cer_npe_pions_cut = ROOT.TH2D("H_cal_etottracknorm_vs_cer_npe_pions_cut","HMS cal etottracknorm vs HMS cer npeSum (with cuts); H_cal_etottracknorm; H_cer_npeSum",100, 0.5, 1.5, 100, 0, 40)
 P_hgcer_vs_aero_npe_pions_cut = ROOT.TH2D("P_hgcer_vs_aero_npe_pions_cut", "SHMS HGC npeSum vs SHMS aero npeSum (with cuts); SHMS_hgcer_npeSum; SHMS_aero_npeSum", 100, 0, 50, 100, 0, 50)
@@ -245,6 +251,7 @@ ePiCoinTime_vs_MMpi_pions_cut = ROOT.TH2D("ePiCoinTime_vs_MMpi_pions_cut","Elect
 ePiCoinTime_vs_beta_pions_cut = ROOT.TH2D("ePiCoinTime_vs_beta_pions_cut", "Electron-Pion CTime vs SHMS #beta (with PID cuts); e #pi Coin_Time; SHMS_#beta", 100, -2, 2, 100, 0.6, 1.4)
 P_RFTime_vs_MMpi_pions_cut = ROOT.TH2D("P_RFTime_vs_MMpi_pions_cut", "SHMS RFTime vs Missing Mass (with cuts); SHMS_RFTime_Dist; MM_{#pi}", 100, 0, 4, 100, 0, 2)
 P_cal_etottracknorm_vs_ngcer_npe_pions_cut = ROOT.TH2D("P_cal_etottracknorm_vs_ngcer_npe_pions_cut", "P cal etottracknorm vs SHMS NGC xAtCer (with cuts); SHMS_cal_etottracknorm; SHMS_ngcer_xAtCer", 100, -10, 10, 100, -10, 10)
+P_cal_fly_numGoodAdcHits_col_row_cut = ROOT.TH2D("P_cal_fly_numGoodAdcHits_col_row_cut","SHMS Shower  Occupancy ; Col Number ;  Row Number",14,0,14,16,0,16)
 P_ngcer_vs_hgcer_npe_pions_cut = ROOT.TH2D("P_ngcer_vs_hgcer_npe_pions_cut", "SHMS NGC npeSum vs SHMS HGC npeSum (with cuts); SHMS_ngcer_npeSum; SHMS_hgcer_npeSum", 100, 0, 50, 100, 0, 50)
 P_ngcer_vs_aero_npe_pions_cut = ROOT.TH2D("P_ngcer_vs_aero_npe_pions_cut", "SHMS NGC npeSum vs SHMS aero npeSum (with cuts); SHMS_ngcer_npeSum; SHMS_aero_npeSum", 100, 0, 50, 100, 0, 50)
 H_dp_vs_beta_pions_cut = ROOT.TH2D("H_dp_vs_beta_pions_cut", "HMS #delta vs HMS #beta (with cut); HMS #delta; HMS_#beta", 200, -12, 12, 200, 0, 2)
@@ -258,6 +265,8 @@ P_xpfp_vs_beta_pions_cut = ROOT.TH2D("P_xpfp_vs_beta_pions_cut", "SHMS X'_{fp} v
 H_ypfp_vs_beta_pions_cut = ROOT.TH2D("H_ypfp_vs_beta_pions_cut", "HMS Y'_{fp} vs HMS #beta (with cut); HMS Y'_{fp}; HMS_#beta", 160, -40, 40, 200, 0, 2)
 P_ypfp_vs_beta_pions_cut = ROOT.TH2D("P_ypfp_vs_beta_pions_cut", "SHMS Y'_{fp} vs SHMS #beta (with cut); SHMS Y'_{fp}; SHMS_#beta", 160, -40, 40, 200, 0, 2)
 P_MMpi_vs_beta_pions_cut = ROOT.TH2D("P_MMpi_vs_beta_pions_cut", "Missing Mass vs SHMS #beta (with cut); MM_{#pi}; SHMS_#beta", 100, 0, 2, 200, 0, 2)
+P_cal_xy_pions_cut = ROOT.TH2D("P_cal_xy_pions_cut", "SHMS Calorimeter yCalo vs xCalo (with cuts); cal_yCalo(cm); cal_xCalo(cm)", 140, -62.3, 62.3, 160, -71.2, 71.2)
+P_DPexit_xy_pions_cut = ROOT.TH2D("P_DPexit_xy_pions_cut", "SHMS Dipole Exit yCalo vs xCalo (with cuts); yExit(cm); xExit(cm)", 200, -50.0, 50.0, 200, -50.0, 50.0)
 
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
     Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, 6, 10, 200, 2.3, 3.3)
@@ -269,9 +278,13 @@ phiqvst_pions_cut = ROOT.TH2D("phiqvst_pions_cut","; #phi ;t", 12, -3.14, 3.14, 
 P_HGC_xy_npe_pions_uncut = ROOT.TH3D("P_HGC_xy_npe_pions_uncut", "SHMS HGC NPE as fn of yAtCer vs SHMS HGC xAtCer (no cuts); HGC_yAtCer(cm); HGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
 P_Aero_xy_npe_pions_uncut = ROOT.TH3D("P_Aero_xy_npe_pions_uncut", "SHMS Aerogel NPE as fn of yAtCer vs xAtCer (no cuts); Aero_yAtCer(cm); Aero_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
 P_NGC_xy_npe_pions_uncut = ROOT.TH3D("P_NGC_xy_npe_pions_uncut", "SHMS NGC NPE as fn of yAtCer vs xAtCer (no cuts); NGC_yAtCer(cm); NGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
+P_cal_xy_etottracknorm_pions_uncut = ROOT.TH3D("P_cal_xy_etottracknorm_pions_uncut", "SHMS Calorimeter etottracknorm as fn of yCalo vs xCalo (no cuts); cal_yCalo(cm); cal_xCalo(cm); etottracknorm", 140, -62.3, 62.3, 160, -71.2, 71.2, 100, 0.1 , 50)
+P_cal_xy_hits_pions_uncut = ROOT.TH3D("P_cal_xy_hits_pions_uncut", "SHMS Calorimeter total ADC hits as fn of yCalo vs xCalo (no cuts); cal_yCalo(cm); cal_xCalo(cm); Adc_Hits", 140, -62.3, 62.3, 160, -71.2, 71.2, 100, 0 , 2000)
 P_HGC_xy_npe_pions_cut = ROOT.TH3D("P_HGC_xy_npe_pions_cut", "SHMS HGC NPE as fn of yAtCer vs SHMS HGC xAtCer (with cuts); HGC_yAtCer(cm); HGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
 P_Aero_xy_npe_pions_cut = ROOT.TH3D("P_Aero_xy_npe_pions_cut", "SHMS Aerogel NPE as fn of yAtCer vs xAtCer (with cuts); Aero_yAtCer(cm); Aero_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
 P_NGC_xy_npe_pions_cut = ROOT.TH3D("P_NGC_xy_npe_pions_cut", "SHMS NGC NPE as fn of yAtCer vs xAtCer (with cuts); NGC_yAtCer(cm); NGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
+P_cal_xy_etottracknorm_pions_cut = ROOT.TH3D("P_cal_xy_etottracknorm_pions_cut", "SHMS Calorimeter etottracknorm as fn of yCalo vs xCalo (with cuts); cal_yCalo(cm); cal_xCalo(cm); etottracknorm", 140, -62.3, 62.3, 160, -71.2, 71.2, 100, 0.1 , 50)
+P_cal_xy_hits_pions_cut = ROOT.TH3D("P_cal_xy_hits_pions_cut", "SHMS Calorimeter total ADC hits as fn of yCalo vs xCalo (with cuts); cal_yCalo(cm); cal_xCalo(cm); Adc_Hits", 140, -62.3, 62.3, 160, -71.2, 71.2, 100, 0 , 2000)
 #################################################################################################################################################
 
 # Filling Histograms for Pions
@@ -311,9 +324,13 @@ for event in Uncut_Pion_Events_tree:
     H_ypfp_vs_beta_pions_uncut.Fill(event.H_dc_ypfp, event.H_gtr_beta)
     P_ypfp_vs_beta_pions_uncut.Fill(event.P_dc_ypfp, event.P_gtr_beta)
     P_MMpi_vs_beta_pions_uncut.Fill(event.MMpi, event.P_gtr_beta)
+    P_cal_xy_pions_uncut.Fill(event.yCalo, event.xCalo)
+    P_DPexit_xy_pions_uncut.Fill(event.yExit, event.xExit)
     P_HGC_xy_npe_pions_uncut.Fill(event.P_hgcer_yAtCer,event.P_hgcer_xAtCer,event.P_hgcer_npeSum)
     P_Aero_xy_npe_pions_uncut.Fill(event.P_aero_yAtAero,event.P_aero_xAtAero,event.P_aero_npeSum)
     P_NGC_xy_npe_pions_uncut.Fill(event.P_ngcer_yAtCer,event.P_ngcer_xAtCer,event.P_ngcer_npeSum)
+    P_cal_xy_etottracknorm_pions_uncut.Fill(event.yCalo,event.xCalo,event.P_cal_etottracknorm)
+    P_cal_xy_hits_pions_uncut.Fill(event.yCalo,event.xCalo,event.Cal_Adc_Hits)
 
 for event in Cut_Pion_Events_All_tree:
     H_xp_pions_cut.Fill(event.H_gtr_xp)
@@ -351,10 +368,14 @@ for event in Cut_Pion_Events_All_tree:
     P_yfp_vs_beta_pions_cut.Fill(event.P_dc_yfp, event.P_gtr_beta)
     H_ypfp_vs_beta_pions_cut.Fill(event.H_dc_ypfp, event.H_gtr_beta)
     P_ypfp_vs_beta_pions_cut.Fill(event.P_dc_ypfp, event.P_gtr_beta)
-    P_MMpi_vs_beta_pions_cut.Fill(event.MMpi, event.P_gtr_beta) 
+    P_MMpi_vs_beta_pions_cut.Fill(event.MMpi, event.P_gtr_beta)
+    P_cal_xy_pions_cut.Fill(event.yCalo, event.xCalo)
+    P_DPexit_xy_pions_cut.Fill(event.yExit, event.xExit)
     P_HGC_xy_npe_pions_cut.Fill(event.P_hgcer_yAtCer,event.P_hgcer_xAtCer,event.P_hgcer_npeSum)
     P_Aero_xy_npe_pions_cut.Fill(event.P_aero_yAtAero,event.P_aero_xAtAero,event.P_aero_npeSum)
     P_NGC_xy_npe_pions_cut.Fill(event.P_ngcer_yAtCer,event.P_ngcer_xAtCer,event.P_ngcer_npeSum)
+    P_cal_xy_etottracknorm_pions_cut.Fill(event.yCalo,event.xCalo,event.P_cal_etottracknorm)
+    P_cal_xy_hits_pions_cut.Fill(event.yCalo,event.xCalo,event.Cal_Adc_Hits)
 
 for event in Cut_Pion_Events_Prompt_tree:
     ePiCoinTime_pions_cut_prompt.Fill(event.CTime_ePiCoinTime_ROC1)
@@ -383,6 +404,12 @@ NGC_proj_yx_pions_uncut = ROOT.TProfile2D(P_NGC_xy_npe_pions_uncut.Project3DProf
 NGC_proj_yx_pions_cut = ROOT.TProfile2D(P_NGC_xy_npe_pions_cut.Project3DProfile("yx"))
 Aero_proj_yx_pions_uncut = ROOT.TProfile2D(P_Aero_xy_npe_pions_uncut.Project3DProfile("yx"))
 Aero_proj_yx_pions_cut = ROOT.TProfile2D(P_Aero_xy_npe_pions_cut.Project3DProfile("yx"))
+
+
+Calo_proj_yx_pions_uncut = ROOT.TProfile2D(P_cal_xy_etottracknorm_pions_uncut.Project3DProfile("yx"))
+Calo_proj_yx_pions_cut = ROOT.TProfile2D(P_cal_xy_etottracknorm_pions_cut.Project3DProfile("yx"))
+Calo_proj_hits_yx_pions_uncut = ROOT.TProfile2D(P_cal_xy_hits_pions_uncut.Project3DProfile("yx"))
+Calo_proj_hits_yx_pions_cut = ROOT.TProfile2D(P_cal_xy_hits_pions_cut.Project3DProfile("yx"))
 
 ############################################################################################################################################
 
@@ -771,6 +798,31 @@ c1_pions_fpP.cd(4)
 P_yfp_vs_beta_pions_cut.Draw("COLZ")
 c1_pions_fpP.Print(Pion_Analysis_Distributions)
 
+c1_pions_cal_proj = TCanvas("c1_pions_cal_proj", "SHMS Cal XY Projections", 100, 0, 1000, 900)
+c1_pions_cal_proj.Divide(2,3)
+c1_pions_cal_proj.cd(1)
+P_cal_xy_pions_uncut.Draw("COLZ")
+c1_pions_cal_proj.cd(2)
+P_cal_xy_pions_cut.Draw("COLZ")
+c1_pions_cal_proj.cd(3)
+Calo_proj_yx_pions_uncut.Draw("COLZ")
+c1_pions_cal_proj.cd(4)
+Calo_proj_yx_pions_cut.Draw("COLZ")
+c1_pions_cal_proj.cd(5)
+Calo_proj_hits_yx_pions_uncut.Draw("COLZ")
+c1_pions_cal_proj.cd(6)
+Calo_proj_hits_yx_pions_cut.Draw("COLZ")
+c1_pions_cal_proj.Print(Pion_Analysis_Distributions)
+
+
+c1_pions_dp_proj = TCanvas("c1_pions_dp_proj", "SHMS Dipole Exit XY Projections", 100, 0, 1000, 900)
+c1_pions_dp_proj.Divide(1,2)
+c1_pions_dp_proj.cd(1)
+P_DPexit_xy_pions_uncut.Draw("COLZ")
+c1_pions_dp_proj.cd(2)
+P_DPexit_xy_pions_cut.Draw("COLZ")
+c1_pions_dp_proj.Print(Pion_Analysis_Distributions)
+
 c1_pions_proj = TCanvas("c1_pions_proj", "HGC/NGC/Aero XY Projection", 100, 0, 1000, 900)
 c1_pions_proj.Divide(2,3)
 c1_pions_proj.cd(1)
@@ -835,12 +887,16 @@ H_ypfp_vs_beta_pions_uncut.Write()
 P_yfp_vs_beta_pions_uncut.Write()
 P_ypfp_vs_beta_pions_uncut.Write()
 P_MMpi_vs_beta_pions_uncut.Write()
+P_cal_xy_pions_uncut.Write()
 HGC_proj_yx_pions_uncut.Write()
 NGC_proj_yx_pions_uncut.Write()
 Aero_proj_yx_pions_uncut.Write()
 P_HGC_xy_npe_pions_uncut.Write()
 P_Aero_xy_npe_pions_uncut.Write()
 P_NGC_xy_npe_pions_uncut.Write()
+Calo_proj_yx_pions_uncut.Write()
+Calo_proj_hits_yx_pions_uncut.Write()
+P_DPexit_xy_pions_uncut.Write()
 
 d_Cut_Pion_Events_All.cd()
 H_xp_pions_cut.Write()
@@ -880,13 +936,16 @@ H_ypfp_vs_beta_pions_cut.Write()
 P_yfp_vs_beta_pions_cut.Write()
 P_ypfp_vs_beta_pions_cut.Write()
 P_MMpi_vs_beta_pions_cut.Write()
+P_cal_xy_pions_cut.Write()
 P_HGC_xy_npe_pions_cut.Write()
 P_Aero_xy_npe_pions_cut.Write()
 P_NGC_xy_npe_pions_cut.Write()
 HGC_proj_yx_pions_cut.Write()
 NGC_proj_yx_pions_cut.Write()
 Aero_proj_yx_pions_cut.Write()
-
+Calo_proj_yx_pions_cut.Write()
+Calo_proj_hits_yx_pions_cut.Write()
+P_DPexit_xy_pions_cut.Write()
 d_Cut_Pion_Events_Prompt.cd()
 ePiCoinTime_pions_cut_prompt.Write()
 P_MMpi_pions_cut_prompt.Write()

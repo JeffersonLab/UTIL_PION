@@ -1,9 +1,9 @@
 #! /usr/bin/python
 
 #
-# Description:
+# Description: Script for plotting trigger windows
 # ================================================================
-# Time-stamp: "2021-10-06 05:58:34 trottar"
+# Time-stamp: "2021-10-15 03:21:49 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -28,6 +28,7 @@ MaxEvent=sys.argv[4]
 USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
 HOST = subprocess.getstatusoutput("hostname")
 
+# Set path depending upon hostname. Change or add more as needed  
 if ("farm" in HOST[1]):
     REPLAYPATH="/group/c-pionlt/online_analysis/hallc_replay_lt"
 elif ("lark" in HOST[1]):
@@ -37,26 +38,44 @@ elif ("cdaq" in HOST[1]):
 elif ("trottar" in HOST[1]):
     REPLAYPATH = "/home/trottar/Analysis/hallc_replay_lt"
 
+# Import package for cuts
 sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
 import kaonlt as klt
 
+# Construct the name of the rootfile based upon the info we provided
+OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/PionLT" % REPLAYPATH        # Output folder location
 rootName = "%s/UTIL_PION/ROOTfiles/Analysis/%s/%s_%s_%s.root" % (REPLAYPATH,RunType,ROOTPrefix,runNum,MaxEvent)     # Input file location and variables taking
-report = "%s/UTIL_PION/REPORT_OUTPUT/Analysis/%s/%s_%s_%s.report" % (REPLAYPATH,RunType,ROOTPrefix,runNum,MaxEvent)
+print ("Attempting to process %s" %(rootName))
+if os.path.exists(OUTPATH):
+    if os.path.islink(OUTPATH):
+        pass
+    elif os.path.isdir(OUTPATH):
+        pass
+    else:
+        print ("%s exists but is not a directory or sym link, check your directory/link and try again" % (OUTPATH))
+        sys.exit(2)
+else:
+    print("Output path not found, please make a sym link or directory called OUTPUT in UTIL_PION to store output")
+    sys.exit(3)
+if os.path.isfile(rootName):
+    print ("%s exists, processing" % (rootName))
+else:
+    print ("%s not found - do you have the correct sym link/folder set up?" % (rootName))
+    sys.exit(4)
+print("Output path checks out, outputting to %s" % (OUTPATH))
 
+# Open report file to grab prescale values
+report = "%s/UTIL_PION/REPORT_OUTPUT/Analysis/%s/%s_%s_%s.report" % (REPLAYPATH,RunType,ROOTPrefix,runNum,MaxEvent)
 f = open(report)
-    
 psList = ['SW_Ps1_factor','SW_Ps2_factor','SW_Ps3_factor','SW_Ps4_factor','SW_Ps5_factor','SW_Ps6_factor']
     
+# Prescale input value (psValue) to its actual DAQ understanding (psActual)
 psActual = [-1,1,2,3,5,9,17,33,65,129,257,513,1025,2049,4097,8193,16385,32769]
 psValue = [-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
 
+# Search root file for prescale values, then save as variables
 for line in f:
     data = line.split(':')
-    track_data = line.split(':')
-    if ('SW_SHMS_Electron_Singles_TRACK_EFF' in track_data[0]):
-        SHMS_track_info = track_data[1].split("+-")
-    if ('SW_HMS_Electron_Singles_TRACK_EFF' in track_data[0]):
-        HMS_track_info = track_data[1].split("+-")
     for i, obj in enumerate(psList) :
         if (psList[i] in data[0]) : 
             if (i == 0) :  
@@ -77,11 +96,8 @@ ps3=int(ps3_tmp)
 ps4=int(ps4_tmp)
 ps5=int(ps5_tmp)
 ps6=int(ps6_tmp)
-SHMS_track_eff = float(SHMS_track_info[0])
-SHMS_track_uncern = float(SHMS_track_info[1])
-HMS_track_eff = float(HMS_track_info[0])
-HMS_track_uncern = float(HMS_track_info[1])
 
+# Convert the prescale input values to their actual DAQ values
 for i,index in enumerate(psActual):
     #psValue
     if (index == ps1) :
@@ -116,15 +132,16 @@ for i,index in enumerate(psActual):
             PS6 = psActual[i]            
 f.close()
 
-#print("\nPre-scale values...\nPS1:{0}, PS2:{1}, PS3:{2}, PS4:{3}, PS5:{4}, PS6:{5}\n".format(PS1,PS2,PS3,PS4,PS5,PS6))
+print("\nPre-scale values...\nPS1:{0}, PS2:{1}, PS3:{2}, PS4:{3}, PS5:{4}, PS6:{5}\n".format(PS1,PS2,PS3,PS4,PS5,PS6))
 
+# Save only the used prescale triggers to the PS_used list
 PS_list = [["PS1",PS1],["PS2",PS2],["PS3",PS3],["PS4",PS4],["PS5",PS5],["PS6",PS6]]
 PS_used = []
-
 for val in PS_list:
     if val[1] != 0:
         PS_used.append(val)
 
+# Check if COIN trigger is used by seeing it was saved in the PS_used list
 if len(PS_used) > 2:
     PS_names = [PS_used[0][0],PS_used[1][0],PS_used[2][0]]
     SHMS_PS = PS_used[0][1]
@@ -168,6 +185,7 @@ if PS_names[1] is "PS4":
     T_coin_pTRIG_HMS_ROC1_tdcTime = tree.array("T.coin.pTRIG4_ROC1_tdcTime")
     T_coin_pTRIG_HMS_ROC2_tdcTime = tree.array("T.coin.pTRIG4_ROC2_tdcTime")
 
+# Check if COIN trigger is used
 if len(PS_used) > 2:
     if PS_names[2] is "PS5":
         T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG5_ROC1_tdcTimeRaw")
@@ -233,15 +251,20 @@ cutDict = make_cutDict("c_noedtm",cutDict)
 cutDict = make_cutDict("c_edtm",cutDict)
 cutDict = make_cutDict("c_ptrigHMS",cutDict)
 cutDict = make_cutDict("c_ptrigSHMS",cutDict)
+# Check if COIN trigger is used
 if len(PS_used) > 2:
     cutDict = make_cutDict("c_ptrigCOIN",cutDict)
 cutDict = make_cutDict("c_curr",cutDict)
 c = klt.pyPlot(REPLAYPATH,cutDict)
 
 def trig_Plots():
+    '''
+    Plots of the triggers with and without the window cuts
+    '''
 
     f = plt.figure(figsize=(11.69,8.27))
 
+    # Check if COIN trigger is used
     if len(PS_used) > 2:
 
         ax = f.add_subplot(241)
@@ -329,21 +352,21 @@ def trig_Plots():
         
         ax = f.add_subplot(234)
         ax.hist(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_nozero"),bins=200,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_ptrigHMS"),bins=200,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_ptrigHMS"),bins=200,label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('T_coin_pTRIG_HMS_ROC1_tdcTime')
         plt.ylabel('Count')
 
         ax = f.add_subplot(235)
         ax.hist(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_nozero"),bins=200,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_ptrigSHMS"),bins=200,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_ptrigSHMS"),bins=200,label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('T_coin_pTRIG_SHMS_ROC2_tdcTime')
         plt.ylabel('Count')
 
         ax = f.add_subplot(236)
         ax.hist(c.add_cut(T_coin_pEDTM_tdcTime,"c_nozero"),bins=200,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(T_coin_pEDTM_tdcTime,"c_edtm"),bins=200,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pEDTM_tdcTime,"c_edtm"),bins=200,label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('T_coin_pEDTM_tdcTime')
         plt.ylabel('Count')
@@ -352,6 +375,9 @@ def trig_Plots():
     plt.savefig('%s/UTIL_PION/scripts/trig_windows/OUTPUTS/trig_%s_%s.png' % (REPLAYPATH,ROOTPrefix,runNum))     # Input file location and variables taking)
 
 def currentPlots():
+    '''
+    Plots of the currents with and without cuts
+    '''
 
     f = plt.figure(figsize=(11.69,8.27))
 

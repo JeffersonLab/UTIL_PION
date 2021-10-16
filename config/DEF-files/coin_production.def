@@ -13,6 +13,9 @@ block H.hod.goodstarttime
 block H.cer.npeSum
 block P.cal.etotnorm
 block P.cal.etottracknorm
+block P.cal.fly.earray
+block P.cal.fly.goodAdcPulseInt
+block P.cal.pr.eplane
 block P.aero.npeSum
 block P.hgcer.npeSum
 block P.ngcer.npeSum
@@ -44,6 +47,7 @@ block T.coin.pRF*
 block T.coin.hRF*
 block H.dc.InsideDipoleExit
 block P.dc.InsideDipoleExit
+block P.cal.fly.numGoodAdcHits
 
 # For debugging cherenkovs, all variables for them are included for now
 block P.ngcer.*
