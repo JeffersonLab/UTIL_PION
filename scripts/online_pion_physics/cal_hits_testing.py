@@ -300,7 +300,7 @@ def main():
     # Need to create a dict for all the branches we grab
     data = {}
     data.update(COIN_Pion_Data)
-    print(type(pd.DataFrame(data.get("Cut_Pion_Events_Prompt"))[31][1]))
+    print(pd.DataFrame(data.get("Cut_Pion_Events_Prompt"))[31])
     data_keys = list(data.keys()) # Create a list of all the keys in all dicts added above, each is an array of data
 #    print(data_keys)
  #   print(len(data))
