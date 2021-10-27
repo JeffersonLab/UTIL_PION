@@ -82,18 +82,18 @@ elif [ $TestingVar != 1 ]; then
 	yes y | eval "$REPLAYPATH/UTIL_BATCH/batch_scripts/run_batch_PionLT.sh Pion_Data/${KINEMATIC}_MissingAnalyses"
 	sleep 2
 	rm "$REPLAYPATH/UTIL_BATCH/InputRunLists/Pion_Data/${KINEMATIC}_MissingAnalyses" 
-#    elif [ $Autosub != 1 ]; then
-#	echo "Analyses missing, list copied to UTIL_BATCH directory, run on farm if desired"
-#	read -p "Process python script for missing replays/analyses interactively? <Y/N> " prompt2
-#	if [[ $prompt2 == "y" || $prompt2 == "Y" || $prompt2 == "yes" || $prompt2 == "Yes" ]]; then
-#	    while IFS='' read -r line || [[ -n "$line" ]]; do
-#		runNum=$line
-#		if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${runNum}_-1_Analysed_Data.root" ]; then
-#		    python3 $UTILPATH/scripts/online_pion_physics/pion_prod_analysis_sw.py "Pion_coin_replay_production" ${runNum} "-1"
-#		fi
-#                done < "$RunListFile"
-#	    else echo "Not processing python script interactively"
-#	fi
+    elif [ $Autosub != 1 ]; then
+	echo "Analyses missing, list copied to UTIL_BATCH directory, run on farm if desired"
+	read -p "Process python script for missing replays/analyses interactively? <Y/N> " prompt2
+	if [[ $prompt2 == "y" || $prompt2 == "Y" || $prompt2 == "yes" || $prompt2 == "Yes" ]]; then
+	    while IFS='' read -r line || [[ -n "$line" ]]; do
+		runNum=$line
+		if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${runNum}_-1_Analysed_Data.root" ]; then
+		    python3 $UTILPATH/scripts/online_pion_physics/pion_prod_analysis_sw.py "Pion_coin_replay_production" ${runNum} "-1"
+		fi
+            done < "$RunListFile"
+	else echo "Not processing python script interactively"
+	fi
     fi
 fi
 

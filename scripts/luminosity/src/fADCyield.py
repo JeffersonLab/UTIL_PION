@@ -47,7 +47,7 @@ import scaler
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 
 # Output for luminosity table
-out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/lumi_data.csv" % REPLAYPATH
+out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/fADC_data.csv" % REPLAYPATH
 
 # Construct the name of the rootfile based upon the info we provided
 OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/PionLT" % REPLAYPATH        # Output folder location
@@ -290,7 +290,7 @@ T_coin_hFADC_TREF_ROC1_adcPulseTimeRaw = tree.array("T.coin.hFADC_TREF_ROC1_adcP
 T_coin_pEDTM_tdcTimeRaw = tree.array("T.coin.pEDTM_tdcTimeRaw")
 EvtType = tree.array("fEvtHdr.fEvtType")
 
-fout = REPLAYPATH+'/UTIL_PION/DB/CUTS/run_type/lumi.cuts'
+fout = REPLAYPATH+'/UTIL_PION/DB/CUTS/run_type/fADCdeadtime.cuts'
 
 # read in cuts file and make dictionary
 c = klt.pyPlot(REPLAYPATH)
@@ -515,8 +515,8 @@ def analysis():
 
 def main():
 
-    #id_cuts()
-    #plt.show()
+    pid_cuts()
+    plt.show()
 
     # lumi_data = {**scalers , **track_info} # only python 3.5+
 

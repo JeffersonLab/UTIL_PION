@@ -451,7 +451,7 @@ def analysis():
                          if (evt == 1 or evt == 2)]
 
     # Applies PID cuts, once integrated this will give the events (no track)
-    h_W = c.add_cut(W,"h_hadcut_lumi_eff")
+    h_W = c.add_cut(W,"h_hadcut_lumi_eff") 
     p_W = c.add_cut(W,"p_pcut_lumi_eff")
 
     # Applies PID cuts, once integrated this will give the events (track)
