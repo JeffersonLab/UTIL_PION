@@ -172,6 +172,7 @@ Cut_Pion_Events_noRF_tree = infile.Get("Cut_Pion_Events_noRF")
 Cut_Pion_Events_All_tree = infile.Get("Cut_Pion_Events_All")
 Cut_Pion_Events_Prompt_tree = infile.Get("Cut_Pion_Events_Prompt")
 Cut_Pion_Events_Random_tree = infile.Get("Cut_Pion_Events_Random")
+Cut_Pion_Events_Prompt_MM_tree = infile.Get("Cut_Pion_Events_Prompt_MM")
 
 ###############################################################################################################################################
 
@@ -209,7 +210,7 @@ P_ngcer_npe_pions_cut = ROOT.TH1D("P_ngcer_npe_pions_cut", "SHMS NGC npeSum; SHM
 P_MMpi_pions_cut = ROOT.TH1D("P_MMpi_pions_cut", "Missing Mass (with cuts); MM_{#pi}; Counts", 200, 0.5, 1.8)
 P_RFTime_pions_cut = ROOT.TH1D("P_RFTime_pions_cut", "SHMS RFTime; SHMS_RFTime; Counts", 200, 0, 4)
 ePiCoinTime_pions_cut = ROOT.TH1D("ePiCoinTime_pions_cut", "Electron-Pion CTime (with cuts); e #pi Coin_Time; Counts", 200, -50, 50)
-epsilon_pions_cut = ROOT.TH1D("epsilon_pions_cut", "epsilon; epsilon; Counts", 200, 0, 1.0)
+epsilon_pions_cut = ROOT.TH1D("epsilon_pions_cut", "Epsilon Dist for Prompt Events (Incl MM Cut); epsilon; Counts", 200, 0, 1.0)
 
 ePiCoinTime_pions_cut_prompt = ROOT.TH1D("ePiCoinTime_pions_cut_prompt", "Electron-Pion CTime; e #pi Coin_Time; Counts", 8, -2, 2)
 P_MMpi_pions_cut_prompt = ROOT.TH1D("P_MMpi_pions_cut_prompt", "Missing Mass; MM_{#pi}; Counts", 200, 0.5, 1.8)
@@ -219,15 +220,15 @@ P_MMpi_pions_cut_randm = ROOT.TH1D("P_MMpi_pions_cut_randm", "Missing Mass; MM_{
 
 P_MMpi_pions_cut_randm_scaled = ROOT.TH1D("P_MMpi_pions_cut_randm_scaled", "Missing Mass; MM_{#pi}; Counts", 200, 0.5, 1.8)
 P_MMpi_pions_cut_randm_sub = ROOT.TH1D("P_MMpi_pions_cut_randm_sub", "Missing Mass Rndm Sub; MM_{#pi}; Counts", 200, 0.5, 1.8)
-phiq_plot = ROOT.TH1D("Phiq", "#phi; #phi; counts", 12, -3.14, 3.14) # 2021/10/25 NH - added these at garths request
-t_plot = ROOT.TH1D("-t", "-t; -t; counts", 48, 0, 2.4) 
+# SJDK - 26/10/21 - Changed the plot title to be more accurate
+phiq_plot = ROOT.TH1D("Phiq", "#phi Dist for Prompt Events (Incl MM Cut); #phi; counts", 12, -3.14, 3.14) # 2021/10/25 NH - added these at garths request
+t_plot = ROOT.TH1D("-t", "-t Dist for Prompt Events (Incl MM Cut); -t; counts", 48, 0, 2.4) 
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
-    Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2; Q2; counts", 200, 6, 10) 
-    W_pions_cut = ROOT.TH1D("W_pions_cut", "W; W; counts", 200, 2.3, 3.3)
+    Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; counts", 200, 6, 10) 
+    W_pions_cut = ROOT.TH1D("W_pions_cut", "W Dist for Prompt Events (Incl MM Cut); W; counts", 200, 2.3, 3.3)
 elif (FilenameOverride != False): # Special case, run with specifc file name, construct histo with ranges based upon filename
-    Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2; Q2; counts", 200, Q2min, Q2max) 
-    W_pions_cut = ROOT.TH1D("W_pions_cut", "W; W; counts", 200, Wmin, Wmax)  
-
+    Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; counts", 200, Q2min, Q2max) 
+    W_pions_cut = ROOT.TH1D("W_pions_cut", "W Dist for Prompt Events (Incl MM Cut); W; counts", 200, Wmin, Wmax)  
 
 ##############################################################################################################################################
 
@@ -276,13 +277,13 @@ P_ypfp_vs_beta_pions_cut = ROOT.TH2D("P_ypfp_vs_beta_pions_cut", "SHMS Y'_{fp} v
 P_MMpi_vs_beta_pions_cut = ROOT.TH2D("P_MMpi_vs_beta_pions_cut", "Missing Mass vs SHMS #beta (with cut); MM_{#pi}; SHMS_#beta", 100, 0, 2, 200, 0, 2)
 P_cal_xy_pions_cut = ROOT.TH2D("P_cal_xy_pions_cut", "SHMS Calorimeter yCalo vs xCalo (with cuts); cal_yCalo(cm); cal_xCalo(cm)", 14, -62.3, 62.3, 16, -71.2, 71.2)
 P_DPexit_xy_pions_cut = ROOT.TH2D("P_DPexit_xy_pions_cut", "SHMS Dipole Exit  yExit vs xExit (with cuts); yExit(cm); xExit(cm)", 200, -50.0, 50.0, 200, -50.0, 50.0)
-
+# SJDK - 26/10/21 - Changed the plot title to be more accurate
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
-    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, 6, 10, 200, 2.3, 3.3)
+    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W Dist for Prompt Events (Incl MM Cut); Q2; W", 200, 6, 10, 200, 2.3, 3.3)
 elif (FilenameOverride != False): # Special case, run with specifc file name, construct histo with ranges based upon filename
-    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W; Q2; W", 200, Q2min, Q2max, 200, Wmin, Wmax)
-
-phiqvst_pions_cut = ROOT.TH2D("phiqvst_pions_cut","; #phi ;t", 12, -3.14, 3.14, 48, 0.0, 2.4) #2021 08 12 - NH doubled binning range and # bins
+    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W Dist for Prompt Events (Incl MM Cut); Q2; W", 200, Q2min, Q2max, 200, Wmin, Wmax)
+# SJDK - 26/10/21 - Changed the plot title to be more accurate
+phiqvst_pions_cut = ROOT.TH2D("phiqvst_pions_cut","#phi vs -t Dist for Prompt Events (Incl MM Cut); #phi ;-t", 12, -3.14, 3.14, 48, 0.0, 2.4) #2021 08 12 - NH doubled binning range and # bins
 
 
 P_HGC_xy_npe_pions_uncut = ROOT.TH3D("P_HGC_xy_npe_pions_uncut", "SHMS HGC NPE as fn of yAtCer vs SHMS HGC xAtCer (no cuts); HGC_yAtCer(cm); HGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
@@ -342,11 +343,8 @@ for event in Uncut_Pion_Events_tree:
     P_cal_xy_etottracknorm_pions_uncut.Fill(event.yCalo,event.xCalo,event.P_cal_etottracknorm)
     P_cal_xy_hits_pions_uncut.Fill(event.yCalo,event.xCalo,event.Cal_Adc_Hits)
 
+# SJDK - 26/10/21 - Moved filling of kinematic quantity distributions to a different loop (one over tree with MM cut applied)
 for event in Cut_Pion_Events_All_tree:
-    phiq_plot.Fill(event.ph_q)
-    t_plot.Fill(-event.MandelT) 
-    Q2_pions_cut.Fill(event.Q2)
-    W_pions_cut.Fill(event.W)
     H_xp_pions_cut.Fill(event.H_gtr_xp)
     H_yp_pions_cut.Fill(event.H_gtr_yp)
     H_dp_pions_cut.Fill(event.H_gtr_dp)
@@ -361,14 +359,11 @@ for event in Cut_Pion_Events_All_tree:
     P_MMpi_pions_cut.Fill(event.MMpi)
     P_RFTime_pions_cut.Fill(event.P_RF_Dist)
     ePiCoinTime_pions_cut.Fill(event.CTime_ePiCoinTime_ROC1)
-    epsilon_pions_cut.Fill(event.epsilon)
     H_cal_etottracknorm_vs_cer_npe_pions_cut.Fill(event.H_cal_etottracknorm, event.H_cer_npeSum)    
     P_hgcer_vs_aero_npe_pions_cut.Fill(event.P_hgcer_npeSum, event.P_aero_npeSum)
     ePiCoinTime_vs_beta_pions_cut.Fill(event.CTime_ePiCoinTime_ROC1, event.P_gtr_beta)
     ePiCoinTime_vs_MMpi_pions_cut.Fill(event.CTime_ePiCoinTime_ROC1, event.MMpi)
     P_RFTime_vs_MMpi_pions_cut.Fill(event.P_RF_Dist, event.MMpi)    
-    Q2vsW_pions_cut.Fill(event.Q2, event.W)
-    phiqvst_pions_cut.Fill(event.ph_q, -event.MandelT)
     P_cal_etottracknorm_vs_ngcer_npe_pions_cut.Fill(event.P_cal_etottracknorm, event.P_ngcer_npeSum)
     P_ngcer_vs_hgcer_npe_pions_cut.Fill(event.P_ngcer_npeSum, event.P_hgcer_npeSum)
     P_ngcer_vs_aero_npe_pions_cut.Fill(event.P_ngcer_npeSum, event.P_aero_npeSum)
@@ -398,6 +393,16 @@ for event in Cut_Pion_Events_Prompt_tree:
 for event in Cut_Pion_Events_Random_tree:
     ePiCoinTime_pions_cut_randm.Fill(event.CTime_ePiCoinTime_ROC1)
     P_MMpi_pions_cut_randm.Fill(event.MMpi)
+
+# SJDK 26/10/21 - For kinematic quantities, fill the histograms from the tree with the pion MM cut
+for event in Cut_Pion_Events_Prompt_MM_tree:
+    phiq_plot.Fill(event.ph_q)
+    t_plot.Fill(-event.MandelT) 
+    Q2_pions_cut.Fill(event.Q2)
+    W_pions_cut.Fill(event.W)
+    epsilon_pions_cut.Fill(event.epsilon)
+    Q2vsW_pions_cut.Fill(event.Q2, event.W)
+    phiqvst_pions_cut.Fill(event.ph_q, -event.MandelT)
 
 print("Histograms filled")
 
