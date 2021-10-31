@@ -290,11 +290,13 @@ T_coin_hFADC_TREF_ROC1_adcPulseTimeRaw = tree.array("T.coin.hFADC_TREF_ROC1_adcP
 T_coin_pEDTM_tdcTimeRaw = tree.array("T.coin.pEDTM_tdcTimeRaw")
 EvtType = tree.array("fEvtHdr.fEvtType")
 
+#list of all cuts that are used
+cuts = ["h_cal", "h_cer", "p_cal", "p_hgcer", "p_aero", "p_ecut_lumi_eff", "p_picut_lumi_eff", "p_kcut_lumi_eff", "p_pcut_lumi_eff", "p_hadcut_lumi_eff", "h_ecut_lumi_eff", "h_picut_lumi_eff", "h_hadcut_lumi_eff", "c_noedtm", "c_edtm", "c_ptrigHMS", "c_ptrigSHMS", "c_ptrigCOIN", "c_curr"]     
 fout = REPLAYPATH+'/UTIL_PION/DB/CUTS/run_type/fADCdeadtime.cuts'
 
 # read in cuts file and make dictionary
 c = klt.pyPlot(REPLAYPATH)
-readDict = c.read_dict(fout,runNum)
+readDict = c.read_dict(cuts,fout,runNum)
 
 def make_cutDict(cut,inputDict=None):
     '''
@@ -336,27 +338,12 @@ def make_cutDict(cut,inputDict=None):
         
     return inputDict
 
-cutDict = make_cutDict("h_cal")
-cutDict = make_cutDict("h_cer",cutDict)
-cutDict = make_cutDict("p_cal",cutDict)
-cutDict = make_cutDict("p_hgcer",cutDict)
-cutDict = make_cutDict("p_aero",cutDict)
-cutDict = make_cutDict("p_ecut_lumi_eff",cutDict)
-cutDict = make_cutDict("p_picut_lumi_eff",cutDict)
-cutDict = make_cutDict("p_kcut_lumi_eff",cutDict)
-cutDict = make_cutDict("p_pcut_lumi_eff",cutDict)
-cutDict = make_cutDict("p_hadcut_lumi_eff",cutDict)
-cutDict = make_cutDict("h_ecut_lumi_eff",cutDict)
-cutDict = make_cutDict("h_picut_lumi_eff",cutDict)
-cutDict = make_cutDict("h_hadcut_lumi_eff",cutDict)
-cutDict = make_cutDict("c_noedtm",cutDict)
-cutDict = make_cutDict("c_edtm",cutDict)
-cutDict = make_cutDict("c_ptrigHMS",cutDict)
-cutDict = make_cutDict("c_ptrigSHMS",cutDict)
-# Check if COIN trigger is used
-if len(PS_used) > 2:
-    cutDict = make_cutDict("c_ptrigCOIN",cutDict)
-cutDict = make_cutDict("c_curr",cutDict)
+for i,c in enumerate(cuts):
+    if i == 0:
+        cutDict = make_cutDict("%s" % c )
+    else:
+        cutDict = make_cutDict("%s" % c,cutDict)
+
 c = klt.pyPlot(REPLAYPATH,cutDict)
 
 def pid_cuts():
@@ -515,8 +502,8 @@ def analysis():
 
 def main():
 
-    pid_cuts()
-    plt.show()
+    #pid_cuts()
+    #plt.show()
 
     # lumi_data = {**scalers , **track_info} # only python 3.5+
 
