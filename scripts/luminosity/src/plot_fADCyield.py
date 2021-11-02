@@ -3,7 +3,7 @@
 # Description: Grabs lumi data from corresponding csv depending on run setting. Then plots the yields and creates a comprehensive table.
 # Variables calculated: current, rate_HMS, rate_SHMS, sent_edtm_PS, uncern_HMS_evts_scaler, uncern_SHMS_evts_scaler, uncern_HMS_evts_notrack, uncern_SHMS_evts_notrack, uncern_HMS_evts_track, uncern_SHMS_evts_track
 # ================================================================
-# Time-stamp: "2021-11-02 00:58:27 trottar"
+# Time-stamp: "2021-10-30 05:42:15 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -64,13 +64,16 @@ elif "2" in inp_name:
         out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_2/Carbon0p5/yield_data_l2_c0p5.csv" % str(REPLAYPATH)
         print("\nGrabbing input...\n\n%s" % str(inp_f))
 elif inp_name == None:
-    inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/lumi_data.csv" % str(REPLAYPATH)
-    out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/yield_data.csv" % str(REPLAYPATH)
+    target = "LH2"
+    inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/fADC_data.csv" % str(REPLAYPATH)
+    out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/fADCyield_data.csv" % str(REPLAYPATH)
     print("\nError: Invalid input...\nGrabbing default input...\n\n%s" % str(inp_f))
 else:
-    inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/lumi_data.csv" % str(REPLAYPATH)
-    out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/yield_data.csv" % str(REPLAYPATH)
+    target = "LH2"
+    inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/fADC_data.csv" % str(REPLAYPATH)
+    out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/fADCyield_data.csv" % str(REPLAYPATH)
     print("\nGrabbing default input...\n\n%s" % str(inp_f))
+
 
 print("\nRunning as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 
@@ -143,9 +146,9 @@ def calc_yield():
 
         "uncern_SHMS_evts_scaler" : np.sqrt(makeList("SHMSTRIG_scaler"))/makeList("SHMSTRIG_scaler"),
 
-        "uncern_HMS_evts_notrack" : np.sqrt(makeList("h_int_etotnorm_evts"))/makeList("h_int_etotnorm_evts"),
+        "uncern_HMS_evts_notrack" : np.sqrt(makeList("h_int_W_evts"))/makeList("h_int_W_evts"),
 
-        "uncern_SHMS_evts_notrack" : np.sqrt(makeList("p_int_etotnorm_evts"))/makeList("p_int_etotnorm_evts"),
+        "uncern_SHMS_evts_notrack" : np.sqrt(makeList("p_int_W_evts"))/makeList("p_int_W_evts"),
 
         "uncern_HMS_evts_track" : np.sqrt(makeList("h_int_goodscin_evts"))/makeList("h_int_goodscin_evts"),
 
@@ -170,9 +173,9 @@ def calc_yield():
 
             "uncern_COIN_evts_scaler" : np.sqrt(makeList("COINTRIG_scaler"))/makeList("COINTRIG_scaler"),
             
-            "uncern_HMS_evts_notrack" : np.sqrt(makeList("h_int_etotnorm_evts"))/makeList("h_int_etotnorm_evts"),
+            "uncern_HMS_evts_notrack" : np.sqrt(makeList("h_int_W_evts"))/makeList("h_int_W_evts"),
             
-            "uncern_SHMS_evts_notrack" : np.sqrt(makeList("p_int_etotnorm_evts"))/makeList("p_int_etotnorm_evts"),
+            "uncern_SHMS_evts_notrack" : np.sqrt(makeList("p_int_W_evts"))/makeList("p_int_W_evts"),
             
             "uncern_HMS_evts_track" : np.sqrt(makeList("h_int_goodscin_evts"))/makeList("h_int_goodscin_evts"),
 
@@ -196,15 +199,15 @@ def calc_yield():
     # Calculate yield values
 
     yield_HMS_scaler = (yield_dict["HMS_scaler_accp"])/(makeList("charge")*makeList("CPULT_scaler")*makeList("HMS_eLT"))
-    yield_HMS_notrack = (makeList("h_int_etotnorm_evts")*makeList("PS4"))/(makeList("charge"))#*yield_dict["TLT"])
+    yield_HMS_notrack = (makeList("h_int_W_evts")*makeList("PS4"))/(makeList("charge")*yield_dict["TLT"])
     yield_HMS_track = (makeList("h_int_goodscin_evts")*makeList("PS4"))/(makeList("charge")*yield_dict["TLT"]*makeList("HMS_track"))
     yield_dict.update({"yield_HMS_scaler" : yield_HMS_scaler})
     yield_dict.update({"yield_HMS_notrack" : yield_HMS_notrack})
     yield_dict.update({"yield_HMS_track" : yield_HMS_track})
 
     yield_SHMS_scaler = (yield_dict["SHMS_scaler_accp"])/(makeList("charge")*makeList("CPULT_scaler")*makeList("SHMS_eLT"))
-    yield_SHMS_notrack = (makeList("p_int_etotnorm_evts")*makeList("PS2"))/(makeList("charge"))#*yield_dict["TLT"])
-    yield_SHMS_track = (makeList("p_int_goodscin_evts")*makeList("PS2"))/(makeList("charge")*yield_dict["TLT"]*makeList("SHMS_track"))
+    yield_SHMS_notrack = (makeList("p_int_W_evts")*makeList("PS1"))/(makeList("charge")*yield_dict["TLT"])
+    yield_SHMS_track = (makeList("p_int_goodscin_evts")*makeList("PS1"))/(makeList("charge")*yield_dict["TLT"]*makeList("SHMS_track"))
     yield_dict.update({"yield_SHMS_scaler" : yield_SHMS_scaler})
     yield_dict.update({"yield_SHMS_notrack" : yield_SHMS_notrack})
     yield_dict.update({"yield_SHMS_track" : yield_SHMS_track})
@@ -385,12 +388,7 @@ def plot_yield():
         plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
 
     plt.tight_layout()
-    if target == 'LD2' :
-        plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/%s_yield_%s.png' % (REPLAYPATH,"ld2","relYieldPlot"))
-    elif target == 'LH2' :
-        plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/%s_yield_%s.png' % (REPLAYPATH,"lh2","relYieldPlot"))
-    else :
-        plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/%s_yield_%s.png' % (REPLAYPATH,"c","relYieldPlot"))
+    plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/yield_%s.png' % (REPLAYPATH,"relYieldPlot"))     # Input file location and variables taking)
 
     #########################################################################################################################################################
 
@@ -483,13 +481,7 @@ def plot_yield():
         plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
 
     plt.tight_layout()      
-
-    if target == 'LD2' :
-        plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/%s_yield_%s.png' % (REPLAYPATH,"ld2","edtmPlot"))
-    elif target == 'LH2' :
-        plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/%s_yield_%s.png' % (REPLAYPATH,"lh2","edtmPlot"))
-    else :
-        plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/%s_yield_%s.png' % (REPLAYPATH,"c","edtmPlot"))
+    plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/yield_%s.png' % (REPLAYPATH,"edtmPlot"))
 
     #########################################################################################################################################################
 
@@ -614,12 +606,7 @@ def plot_yield():
         plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
 
     plt.tight_layout()            
-    if target == 'LD2' :
-        plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/%s_yield_%s.png' % (REPLAYPATH,"ld2","logPlot"))
-    elif target == 'LH2' :
-        plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/%s_yield_%s.png' % (REPLAYPATH,"lh2","logPlot"))
-    else :
-        plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/%s_yield_%s.png' % (REPLAYPATH,"c","logPlot"))
+    plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/yield_%s.png' % (REPLAYPATH,"logPlot"))
         
     plt.show()
 
@@ -636,14 +623,14 @@ def debug():
     print("DEBUG data")
     print("=======================")
     ### Debug prints
-    print(data[["run number","PS2","PS4","sent_edtm","TLT","CPULT_scaler","current","time"]])
+    print(data[["run number","PS1","PS4","sent_edtm","TLT","CPULT_scaler","current","time"]])
    # print("EDTM scaler rate: ", data["sent_edtm"]/data["time"])
    # print("Accepted EDTM rate: ", data["accp_edtm"]/data["time"])
    # print("Run numbers: ", data["run number"].sort_values())
    # print("HMS scaler ratio",data["HMS_scaler_accp"]/data["HMSTRIG_scaler"])
    # print("SHMS scaler ratio",data["SHMS_scaler_accp"]/data["SHMSTRIG_scaler"])
-    print("HMS Cal etotnorm\n",data[["h_int_etotnorm_evts","current"]])
-    print("SHMS Cal etotnorm\n",data[["p_int_etotnorm_evts","current"]])
+    print("HMS W events\n",data[["h_int_W_evts","current"]])
+    print("SHMS W events\n",data[["p_int_W_evts","current"]])
     print("HMS yield\n",data["yield_HMS_notrack"])
     print("SHMS yield\n",data["yield_SHMS_notrack"])
     ###

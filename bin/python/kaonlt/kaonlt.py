@@ -18,20 +18,26 @@ array  = tree.array("leaf")
 r = klt.pyRoot()
 
 fout = "<path_to_run_type_cut>"
+
+cuts = ["<list of cuts>"]
+
 c = klt.pyPlot(None) # See below for pyPlot class definition
 readDict = c.read_dict(fout) # read in run type cuts file and makes dictionary
 
-# This method calls several methods in kaonlt package. It is required to create properly formated
-# dictionaries. The evaluation must be in the analysis script because the analysis variables (i.e. the
-# leaves of interest) are not defined in the kaonlt package. This makes the system more flexible
-# overall, but a bit more cumbersome in the analysis script. Perhaps one day a better solution will be
-# implimented.
 def make_cutDict(cut,inputDict=None):
-
+''
+This method calls several methods in kaonlt package. It is required to create properly formated
+dictionaries. The evaluation must be in the analysis script because the analysis variables (i.e. the
+leaves of interest) are not defined in the kaonlt package. This makes the system more flexible
+overall, but a bit more cumbersome in the analysis script. Perhaps one day a better solution will be
+implimented.
+''
     global c
 
     c = klt.pyPlot(readDict)
     x = c.w_dict(cut)
+    print("\n%s" % cut)
+    print(x, "\n")
     
     # Only for first key of dictionary
     if inputDict == None:
@@ -53,9 +59,11 @@ def make_cutDict(cut,inputDict=None):
         
     return inputDict
 
-cutDict = make_cutDict("cut1")
-cutDict = make_cutDict("cut2",cutDict)
-# Continue this for all run type cuts required
+for i,c in enumerate(cuts):
+    if i == 0:
+        cutDict = make_cutDict("%s" % c )
+    else:
+        cutDict = make_cutDict("%s" % c,cutDict)
 
 # ---> If multple run type files are required then define a new run type file altogether. Do not try to 
 # chain run type files. It can be done, but is computationally wasteful and pointless.
@@ -99,23 +107,21 @@ import time, math, sys, subprocess
 import gc
 gc.collect()
 
-'''
-When calling kaonlt package, you may define a dictionary in the script. This dictionary will contain
-the cuts of interest (defined in a CUTS directory).  These cuts are read in through the read_dict()
-method of the pyPlot() class. The pyDict class is not explicitly called, but rather called implicitly
-by other classes.
-'''
 class pyDict(dict):
+    '''
+    When calling kaonlt package, you may define a dictionary in the script. This dictionary will contain
+    the cuts of interest (defined in a CUTS directory).  These cuts are read in through the read_dict()
+    method of the pyPlot() class. The pyDict class is not explicitly called, but rather called implicitly
+    by other classes.
+    '''
     
     def __init__(self,inputTree):
         self.inputTree = inputTree
         
-'''
-This class, with its findBranch method, will grab the leaves in a branch using uproot package. This
-takes the tree as an input.
-'''
 class pyBranch(pyDict):
-
+    '''
+    This class, with its findBranch method, will grab the leaves in a branch using uproot package. This takes the tree as an input.
+    '''
     def findBranch(self,inputBranch, inputLeaf):
         tree = self.inputTree
         branch = tree.array(inputBranch)
@@ -132,10 +138,10 @@ class pyBranch(pyDict):
 
         return np.array(leafHist)
 
-'''    
-This class is for converting files into root files after the analysis steps
-'''
 class pyRoot():
+    '''    
+    This class is for converting files into root files after the analysis steps
+    '''
 
     # Save arrays,lists,etc. from csv to root file as histograms
     def csv2root(self,inputDict,rootName):
@@ -161,30 +167,33 @@ class pyRoot():
         except TypeError:
             print("\nERROR 1: Only current accepting 1D array/list values\n")
 
-'''            
-This class stores a variety of equations often used in the KaonLT analysis procedure
-'''
 class pyEquation():
+    '''            
+    This class stores a variety of equations often used in the KaonLT analysis procedure
+    '''
 
     # Define missing mass calculation
     def missmass():
         print("missmass")
 
-'''
-This is the most extensive class of the kaonlt package. This class will perform many required tasks
-for doing in depth analysis in python. This class does not require, but will use the pyDict class to
-apply cuts. Set the dictionary to None if no cuts are required.
-'''
 class pyPlot(pyDict):
+    '''
+    This is the most extensive class of the kaonlt package. This class will perform many required tasks
+    for doing in depth analysis in python. This class does not require, but will use the pyDict class to
+    apply cuts. Set the dictionary to None if no cuts are required.
+    '''
     
     def __init__(self, REPLAYPATH,cutDict=None,DEBUG=False):
         self.REPLAYPATH = REPLAYPATH
         self.cutDict = cutDict
         self.DEBUG = DEBUG
 
-    # A method for defining a bin. This may be called in any matplotlib package plots.
-    # This will calculate a suitable bin width and use that to equally distribute the bin size
+
     def setbin(self,plot,numbin,xmin=None,xmax=None):
+        '''
+        A method for defining a bin. This may be called in any matplotlib package plots.
+        This will calculate a suitable bin width and use that to equally distribute the bin size
+        '''
         
         if (xmin or xmax):
             leaf = self.fixBin(plot,plot,xmin,xmax)
@@ -197,10 +206,11 @@ class pyPlot(pyDict):
 
         return bins
 
-    # This method is complimentary to setbin(). This will cut the distribution based off the min and max
-    # array values
     def fixBin(self,cut,plot,low,high):
-            
+        '''
+        This method is complimentary to setbin(). This will cut the distribution based off the min and max array values
+
+        '''
         arrCut = cut
         arrPlot = plot
         arrPlot = arrPlot[(arrCut > low) & (arrCut < high)]
@@ -237,320 +247,232 @@ class pyPlot(pyDict):
         P_hod_fpHitsTime = e_tree.array("P.hod.fpHitsTime")
         RF_CutDist = np.array([ ((RFTime-StartTime + RF_Offset)%(BunchSpacing)) for (RFTime, StartTime) in zip(P_RF_tdcTime, P_hod_fpHitsTime)]) # In python x % y is taking the modulo y of x
 
-    # This method reads in the CUTS and converts them to a dictionary. 
-    def read_dict(self,fout,runNum):
+    def read_dict(self,inp_cuts,fout,runNum):
+        '''
+        This method reads in the CUTS and converts them to a dictionary. 
+        '''
 
         # Open run type cuts of interest
         f = open(fout)
         cutDict = {}
-        for line in f:
-            if "#" in line:
-                continue
-            else:
-                
-                line = line.split("=",1)
-                # Grab run type cut name
-                typName = line[0].rstrip()
-                typName = typName.lstrip()
-                # Grab run type cuts required, note at this stage the cuts to be removed are bunched
-                # together still
-                typCuts = line[1].split("+")
+
+        # Matches run type cuts with the general cuts (e.g pid, track, etc.)
+        gencutDict = {
+            "pid" : self.REPLAYPATH+"/UTIL_PION/DB/CUTS/general/pid.cuts",
+            "track" : self.REPLAYPATH+"/UTIL_PION/DB/CUTS/general/track.cuts",
+            "accept" : self.REPLAYPATH+"/UTIL_PION/DB/CUTS/general/accept.cuts",
+            "coin_time" : self.REPLAYPATH+"/UTIL_PION/DB/CUTS/general/coin_time.cuts",
+            "current" : self.REPLAYPATH+"/UTIL_PION/DB/CUTS/general/current.cuts",
+            "misc" : self.REPLAYPATH+"/UTIL_PION/DB/CUTS/general/misc.cuts",
+        }
+
+        def genCut(cut_list,add_flag=True):
+            '''
+            Function to get the general cuts and calls the search_DB method to get the param values for each cut
+            '''
+            gencut = []
+            # Loop over cut arguments
+            for i,val in enumerate(cut_list):
+                cutgen = val.split(".")
                 if (self.DEBUG):
-                    print("Type ", typName)
-                    print("Cuts ", typCuts)
-                
-                # Loop over run type cuts
-                for i,evt in enumerate(typCuts):
-                    # Split any cuts to be removed
-                    minusCuts = evt.split("-")
-                    # Ignore first element, since it will always be an added cut
-                    minus = minusCuts[1:]
-                    # Define first cut to be added, any other cuts to be added will be done in future
-                    # iteration over run type cuts
-                    cutplus = minusCuts[0].rstrip()
-                    cutplus = cutplus.lstrip()
-                    if (self.DEBUG):
-                        print("+ ",cutplus)
-
-                    ##############
-                    # Added cuts #
-                    ##############
-                    
-                    # Matches run type cuts with the general cuts (e.g pid, track, etc.)
-                    if "pid" in cutplus:
-                        plusfout = self.REPLAYPATH+"/UTIL_PION/DB/CUTS/general/pid.cuts"
-                    elif "track" in cutplus:
-                        plusfout = self.REPLAYPATH+"/UTIL_PION/DB/CUTS/general/track.cuts"
-                    elif "accept" in cutplus:
-                        plusfout = self.REPLAYPATH+"/UTIL_PION/DB/CUTS/general/accept.cuts"
-                    elif "coin_time" in cutplus:
-                        plusfout = self.REPLAYPATH+"/UTIL_PION/DB/CUTS/general/coin_time.cuts"
-                    elif "current" in cutplus:
-                        plusfout = self.REPLAYPATH+"/UTIL_PION/DB/CUTS/general/current.cuts"
-                    elif "misc" in cutplus:
-                        plusfout = self.REPLAYPATH+"/UTIL_PION/DB/CUTS/general/misc.cuts"
-                    else:
-                        print("!!!!ERROR!!!!: Added cut %s not defined in /UTIL_PION/DB/CUTS/general/" % cutplus) # ERROR 2
-                        print("Cut must be pid, track, accept, coin_time or current")
+                    print("cutgen ", cutgen)
+                # Get the general cut name 
+                gencut.append(cutgen)
+                if cutgen[0].strip() not in gencutDict:
+                    print("!!!!ERROR!!!!: Added cut %s not defined in /UTIL_PION/DB/CUTS/general/" % cutgen[0]) # ERROR 2
+                    print("Cut must be pid, track, accept, coin_time or current")
+            if (self.DEBUG):
+                print("gencuts ", gencut)
+            for i,val in enumerate(gencut):
+                # Open general cuts file of interest to be added to dictionary
+                f = open(gencutDict[val[0]])
+                for cutline in f:
+                    # Ignore comments
+                    if "#" in cutline:
                         continue
-                    cutplus = cutplus.split(".")
-                    if len(cutplus) == 2:
-                        cutplus = str(cutplus[1])
-                        # print("cutplus ", cutplus)
-                    elif len(cutplus) > 2:
-                        cutplus = str(cutplus[2])
-                        # print("cutplus ", cutplus)
                     else:
-                        # print("ERROR 5: %s cut not found in %s" % (cutplus,plusfout))
-                        continue
-
-                    # Open general cuts file of interest to be added to dictionary
-                    fplus = open(plusfout)
-                    for lplus in fplus:
-                        if "#" in lplus:
-                            continue
-                        else:
-                            lplus  = lplus.split("=",1)
-                            cuts = lplus[1]
-                            # print(cutplus, " ++ ", lplus[0])
-                            # Check if cut is in file
-                            if cutplus in lplus[0]:
+                        # Redefine cut as 2nd element of list split at = (but only the first instance of =)
+                        # This 2nd element are the general cuts
+                        cutName = cutline.split("=",1)[0].strip().strip("\n")
+                        cuts = cutline.split("=",1)[1].strip().strip("\n")
+                        if add_flag:
+                            # Check for general cut that was called
+                            if val[1] == cutName:
                                 # Check if run type is already defined in dictionary
                                 if typName in cutDict.keys():
                                     if cuts not in cutDict.items():
                                         # If run type already defined, then append dictionary key
                                         if (self.DEBUG):
-                                            print("cuts",cuts)
+                                            print("cuts ",cuts)
+                                            print("val ",val)
                                         # Grabs parameters from DB (see below)
                                         db_cut = self.search_DB(cuts,runNum)
                                         if (self.DEBUG):
                                             print(typName, " already found!!!!")
                                         cutDict[typName] += ","+db_cut
-                                        # print(lplus[0],"++>",cutDict[typName])
                                 else:
                                     # If run type not defined, then add key to dictionary
                                     if (self.DEBUG):
-                                        print("cuts",cuts)
+                                        print("cuts ",cuts)
+                                        print("val ",val)
                                     # Grabs parameters from DB (see below)
                                     db_cut = self.search_DB(cuts,runNum)
                                     cutName = {typName : db_cut}
                                     cutDict.update(cutName)
-                                    # print(lplus[0],"++>",cutDict[typName])
                             else:
-                                # print("ERROR 6: %s cut does not match %s" % (cutplus,lplus[0]))
                                 continue
+                        else:
+                            # Break down the cut to be removed to find specific leaf to be subtracted from
+                            # dictionary
+                            #minuscut = gencut[0]
+                            minuscut = val
+                            if len(minuscut) == 3:
+                                cutminus = minuscut[1]
+                                leafminus = minuscut[2].rstrip()
+                            elif minuscut == ['none']:
+                                cutminus = "none"
+                            else:
+                                print("!!!!ERROR!!!!: Invalid syntax for removing cut %s " % (minuscut)) # Error 4
+                                continue
+                            # Split cuts to check for the one to be removed.
+                            arr_cuts = cuts.split(",")
+                            # Check for general cut that was called
+                            if val[1] == cutName:
+                                for remove in arr_cuts:
+                                    # Check which cut matches the one wanted to be removed
+                                    if leafminus in remove:
+                                        # Grabs parameters from DB (see below)
+                                        remove = self.search_DB(remove,runNum)
+                                        if (self.DEBUG):
+                                            print("Removing... ",remove)
+                                        # Replace unwanted cut with blank string
+                                        cutDict[typName] = cutDict[typName].replace(remove,"")
+                f.close()
+            return gencut
 
-                    ###################
-                    # Subtracted cuts #
-                    ###################
-
-                    # Loop over cuts that need to be subtracted
-                    for cutminus in minus:
+        for ic in inp_cuts:
+            if (self.DEBUG):
+                print("\nInput ", ic)
+            f.seek(0)
+            for line in f:
+                # Ignore comments
+                if "#" in line:
+                    continue
+                else:
+                    line = line.split("=",1)
+                    # Grab run type cut name
+                    typName = line[0].strip()
+                    if ic == typName:
+                        # Grab run type cuts required, note at this stage the cuts to be removed are bunched
+                        # together still
+                        pluscut = line[1].split("+")
+                        pluscut = [i.strip().strip("\n") for i in pluscut]
                         if (self.DEBUG):
-                            print("- ",cutminus)
-                        # Matches run type cuts with the general cuts (e.g pid, track, etc.)
-                        if "pid" in cutminus:
-                            minusfout = self.REPLAYPATH+"/UTIL_PION/DB/CUTS/general/pid.cuts"
-                        elif "track" in cutminus:
-                            minusfout = self.REPLAYPATH+"/UTIL_PION/DB/CUTS/general/track.cuts"
-                        elif "accept" in cutminus:
-                            minusfout = self.REPLAYPATH+"/UTIL_PION/DB/CUTS/general/accept.cuts"
-                        elif "coin_time" in cutminus:
-                            minusfout = self.REPLAYPATH+"/UTIL_PION/DB/CUTS/general/coin_time.cuts"
-                        elif "current" in cutminus:
-                            minusfout = self.REPLAYPATH+"/UTIL_PION/DB/CUTS/general/current.cuts"
-                        elif "misc" in cutminus:
-                            minusfout = self.REPLAYPATH+"/UTIL_PION/DB/CUTS/general/misc.cuts"
-                        elif "none" in cutminus:
-                            minusfout = "none"
-                        else:
-                            print("!!!!ERROR!!!!: Subtracted cut %s not defined in /UTIL_PION/DB/CUTS/general/" % cutplus) # ERROR 3
-                            print("Cut must be pid, track, accept, coin_time or current")
-                            continue
-                        # Break down the cut to be removed to find specific leaf to be subtracted from
-                        # dictionary
-                        minuscut = cutminus.split(".")
-                        if len(minuscut) == 3:
-                            cutminus = minuscut[1]
-                            leafminus = minuscut[2].rstrip()
-                        elif minuscut == ['none']:
-                            cutminus = "none"
-                        else:
-                            print("!!!!ERROR!!!!: Invalid syntax for removing cut %s " % (minuscut)) # Error 4
-                            continue
-
-                        # Open general cuts file of interest to be removed from dictionary.
-                        fminus = open(minusfout)
-                            
-                        for lminus in fminus:
-                            if "#" in lminus:
-                                continue
+                            print("Type ", typName)
+                            print("Cuts ", pluscut)
+                        # Loop over run type cuts being split by +
+                        for i,evt in enumerate(pluscut):
+                            # Split any cuts to be removed
+                            cutminus = evt.split("-")
+                            if len(cutminus) > 1:
+                                # Define first cut to be added, any other cuts to be added will be done in future
+                                # iteration over run type cuts
+                                pluscut[i] = cutminus[0].strip()
+                                # Ignore first element, since it will always be an added cut
+                                minuscut = cutminus[1:]
                             else:
-                                lminus  = lminus.split("=",1)
-                                cuts = lminus[1]
-                                # Split cuts to check for the one to be removed.
-                                arr_cuts = cuts.split(",")
-                                # print(leafminus,": ",cutminus, " -- ", lminus[0])
-                                # Check if cut is in file
-                                if cutminus in lminus[0]:
-                                    for remove in arr_cuts:
-                                        # Check which cut matches the one wanted to be removed
-                                        if leafminus in remove:
-                                            # Grabs parameters from DB (see below)
-                                            remove = self.search_DB(remove,runNum)
-                                            if (self.DEBUG):
-                                                print("Removing... ",remove)
-                                            # Replace unwanted cut with blank string
-                                            cutDict[typName] = cutDict[typName].replace(remove,"")
-                                            # print(lminus[0],"-->",cutDict[typName])
-                                else:
-                                    # print("ERROR 7: %s cut does not match %s" % (cutminus,lminus[0]))
-                                    continue
-                        fplus.close()
-                        fminus.close()
-                if (self.DEBUG):   
-                    print("\n\n")
+                                minuscut = []
+                        if (self.DEBUG):
+                            print("+ ", pluscut)
+                            print("- ", minuscut)
+                        
+                        ##############
+                        # Added cuts #
+                        ##############
+                        if (self.DEBUG):
+                            print("Cuts added...")
+                        genpluscut = genCut(pluscut)
+
+                        ###################
+                        # Subtracted cuts #
+                        ###################
+                        if (self.DEBUG):
+                            print("Cuts subtracted...")                
+                        genminuscut = genCut(minuscut,add_flag=False)
+                        break
+
         f.close()
         if (self.DEBUG):
+            print("\n\n")
             print(cutDict.keys())
+            print("\n\n")
         return cutDict
 
-    # Grabs the cut parameters from the database. In essence this method simply replaces one string
-    # with another
     def search_DB(self,cuts,runNum):
-
+        '''
+        Grabs the cut parameters from the database. In essence this method simply replaces one string with another
+        '''
         # Split all cuts into a list
         cuts = cuts.split(",")
         db_cuts = []
+        
+        paramDict = {
+            "accept" : self.REPLAYPATH+"/UTIL_PION/DB/PARAM/Acceptance_Parameters.csv",
+            "track" : self.REPLAYPATH+"/UTIL_PION/DB/PARAM/Tracking_Parameters.csv",
+            "CT" : self.REPLAYPATH+"/UTIL_PION/DB/PARAM/Timing_Parameters.csv",
+            "pid" : self.REPLAYPATH+"/UTIL_PION/DB/PARAM/PID_Parameters.csv",
+            "misc" : self.REPLAYPATH+"/UTIL_PION/DB/PARAM/Misc_Parameters.csv",
+            "current" : self.REPLAYPATH+"/UTIL_PION/DB/PARAM/Current_Parameters.csv"
+        }
+
+        def grabCutData(paramName,cut):
+            # Find which cut is being called
+            if paramName in cut:
+                paramVal = cut.split(paramName)
+                for val in paramVal:
+                    if "." in val and "abs" not in val:
+                        paramVal = val.split(")")[0]
+                        paramVal = paramVal.split(".")[1]
+                        fout = paramDict[paramName]
+                        try:
+                            data = dict(pd.read_csv(fout))
+                        except IOError:
+                            print("ERROR 9: %s not found in %s" % (paramVal,fout))
+                        for i,evt in enumerate(data['Run_Start']):
+                            if data['Run_Start'][i] <= np.int64(runNum) <= data['Run_End'][i]:
+                                cut  = cut.replace(paramName+"."+paramVal,str(data[paramVal][i]))
+                                if (self.DEBUG):
+                                    print("paramVal ",paramVal, "= ",data[paramVal][i])
+                                pass
+                            else:
+                                # print("!!!!ERROR!!!!: Run %s not found in range %s-%s" % (np.int64(runNum),data['Run_Start'][i],data['Run_End'][i])) # Error 10
+                                continue
+                    else:
+                        continue
+            if paramName == "num":
+                cut = cut
+            db_cuts.append(cut.strip())
+
+        # Returns true if number is in string
+        def has_numbers(inputString):
+            return any(char.isdigit() for char in inputString)
+            
         for cut in cuts:
             # Find which cut is being called
             if "accept" in cut:
-                tmp = cut.split("accept")
-                for val in tmp:
-                    if "." in val:
-                        tmp = val.split(")")[0]
-                        tmp = tmp.split(".")[1]
-                        fout = self.REPLAYPATH+"/UTIL_PION/DB/PARAM/Acceptance_Parameters.csv"
-                        try:
-                            data = dict(pd.read_csv(fout))
-                        except IOError:
-                            print("ERROR 9: %s not found in %s" % (tmp,fout))
-                        for i,evt in enumerate(data['Run_Start']):
-                            if data['Run_Start'][i] <= np.int64(runNum) <= data['Run_End'][i]:
-                                # print("xxxx",tmp,str(data[tmp][i]))
-                                cut  = cut.replace("accept."+tmp,str(data[tmp][i]))
-                                pass
-                            else:
-                                # print("!!!!ERROR!!!!: Run %s not found in range %s-%s" % (np.int64(runNum),data['Run_Start'][i],data['Run_End'][i])) # Error 10
-                                continue
-                    else:
-                        continue
-                db_cuts.append(cut.rstrip())
+                grabCutData("accept",cut)
             elif "track" in cut:
-                tmp = cut.split("track")
-                for val in tmp:
-                    if "." in val:
-                        tmp = val.split(")")[0]
-                        tmp = tmp.split(".")[1]
-                        fout = self.REPLAYPATH+"/UTIL_PION/DB/PARAM/Tracking_Parameters.csv"
-                        try:
-                            data = dict(pd.read_csv(fout))
-                        except IOError:
-                            print("ERROR 9: %s not found in %s" % (tmp,fout))
-                        for i,evt in enumerate(data['Run_Start']):
-                            if data['Run_Start'][i] <= np.int64(runNum) <= data['Run_End'][i]:
-                                cut  = cut.replace("track."+tmp,str(data[tmp][i]))
-                                pass
-                            else:
-                                # print("!!!!ERROR!!!!: Run %s not found in range %s-%s" % (np.int64(runNum),data['Run_Start'][i],data['Run_End'][i])) # Error 10
-                                continue
-                    else:
-                        continue
-                db_cuts.append(cut.rstrip())
+                grabCutData("track",cut)
             elif "CT" in cut:
-                tmp = cut.split("CT")
-                for val in tmp:
-                    if "." in val:
-                        tmp = val.split(")")[0]
-                        tmp = tmp.split(".")[1]
-                        fout = self.REPLAYPATH+"/UTIL_PION/DB/PARAM/Timing_Parameters.csv"
-                        try:
-                            data = dict(pd.read_csv(fout))
-                        except IOError:
-                            print("ERROR 9: %s not found in %s" % (tmp,fout))
-                        for i,evt in enumerate(data['Run_Start']):
-                            if data['Run_Start'][i] <= np.int64(runNum) <= data['Run_End'][i]:
-                                cut  = cut.replace("CT."+tmp,str(data[tmp][i]))
-                                pass
-                            else:
-                                # print("!!!!ERROR!!!!: Run %s not found in range %s-%s" % (np.int64(runNum),data['Run_Start'][i],data['Run_End'][i])) # Error 10
-                                continue
-                    else:
-                        continue
-                db_cuts.append(cut.rstrip())
+                grabCutData("CT",cut)
             elif "pid" in cut:
-                tmp = cut.split("pid")
-                for val in tmp:
-                    if "." in val:
-                        tmp = val.split(")")[0]
-                        tmp = tmp.split(".")[1]
-                        fout = self.REPLAYPATH+"/UTIL_PION/DB/PARAM/PID_Parameters.csv"
-                        try:
-                            data = dict(pd.read_csv(fout))
-                        except IOError:
-                            print("ERROR 9: %s not found in %s" % (tmp,fout))
-                        for i,evt in enumerate(data['Run_Start']):
-                            if data['Run_Start'][i] <= np.int64(runNum) <= data['Run_End'][i]:
-                                cut  = cut.replace("pid."+tmp,str(data[tmp][i]))
-                                pass
-                            else:
-                                # print("!!!!ERROR!!!!: Run %s not found in range %s-%s" % (np.int64(runNum),data['Run_Start'][i],data['Run_End'][i])) # Error 10
-                                continue
-                    else:
-                        continue
-                db_cuts.append(cut.rstrip())
+                grabCutData("pid",cut)
             elif "misc" in cut:
-                tmp = cut.split("misc")
-                for val in tmp:
-                    if "." in val:
-                        tmp = val.split(")")[0]
-                        tmp = tmp.split(".")[1]
-                        fout = self.REPLAYPATH+"/UTIL_PION/DB/PARAM/Misc_Parameters.csv"
-                        try:
-                            data = dict(pd.read_csv(fout))
-                        except IOError:
-                            print("ERROR 9: %s not found in %s" % (tmp,fout))
-                        for i,evt in enumerate(data['Run_Start']):
-                            if data['Run_Start'][i] <= np.int64(runNum) <= data['Run_End'][i]:
-                                cut  = cut.replace("misc."+tmp,str(data[tmp][i]))
-                                pass
-                            else:
-                                # print("!!!!ERROR!!!!: Run %s not found in range %s-%s" % (np.int64(runNum),data['Run_Start'][i],data['Run_End'][i])) # Error 10
-                                continue
-                    else:
-                        continue
-                db_cuts.append(cut.rstrip())                
+                grabCutData("misc",cut)          
             elif "current" in cut:
-                tmp = cut.split("current")
-                for val in tmp:
-                    if "." in val:
-                        tmp = val.split(")")[0]
-                        tmp = tmp.split(".")[1]
-                        fout = self.REPLAYPATH+"/UTIL_PION/DB/PARAM/Current_Parameters.csv"
-                        try:
-                            data = dict(pd.read_csv(fout))
-                        except IOError:
-                            print("ERROR 9: %s not found in %s" % (tmp,fout))
-                        for i,evt in enumerate(data['Run_Start']):
-                            if data['Run_Start'][i] <= np.int64(runNum) <= data['Run_End'][i]:
-                                cut  = cut.replace("current."+tmp,str(data[tmp][i]))
-                                pass
-                            else:
-                                # print("!!!!ERROR!!!!: Run %s not found in range %s-%s" % (np.int64(runNum),data['Run_Start'][i],data['Run_End'][i])) # Error 10
-                                continue
-                    else:
-                        continue
-                db_cuts.append(cut.rstrip())
+                grabCutData("current",cut)
+            elif has_numbers(cut):
+                grabCutData("num",cut)
             else:
                 # print("ERROR 11: %s not defined" % cut)
                 continue
@@ -559,8 +481,10 @@ class pyPlot(pyDict):
         db_cuts  = ','.join(db_cuts)
         return db_cuts
 
-    # Create a working dictionary for cuts by converting string to array of cuts.
     def w_dict(self,cuts):
+        '''
+        Create a working dictionary for cuts by converting string to array of cuts.
+        '''
 
         inputDict = self.cutDict
         subDict = inputDict[cuts]
@@ -587,11 +511,13 @@ class pyPlot(pyDict):
         
         return tmp
 
-    # New version of applying cuts. The general idea is to apply cuts without sacrificing computation
-    # time. Array indexing is much faster than most methods in python. This method formats a string with
-    # the cuts required. This string is evaluated and the array index calls the cut() method.See
-    # description above for how the analysis script should be formatted. 
     def add_cut(self,arr, cuts):
+        '''
+        New version of applying cuts. The general idea is to apply cuts without sacrificing computation
+        time. Array indexing is much faster than most methods in python. This method formats a string with
+        the cuts required. This string is evaluated and the array index calls the cut() method.See
+        description above for how the analysis script should be formatted. 
+        '''
 
         arr_cut = arr  
         applycut = "arr_cut["
@@ -605,9 +531,11 @@ class pyPlot(pyDict):
         arr_cut = eval(applycut)        
         return arr_cut
 
-    # The array index that was evaluated in the add_cut() method calls this method. This method then
-    # grabs the properly formated dictionary (from class pyDict) and outputs arrays with cuts.
     def cut(self,key,cuts=None):
+        '''
+        The array index that was evaluated in the add_cut() method calls this method. This method then
+        grabs the properly formated dictionary (from class pyDict) and outputs arrays with cuts.
+        '''
 
         if cuts:
             inputDict = self.cutDict
@@ -618,8 +546,10 @@ class pyPlot(pyDict):
         else:
             return self.cutDict.get(key,"Leaf name not found")
 
-    # A simple progress bar to use in loops
     def progressBar(self,value, endvalue, bar_length):
+        '''
+        A simple progress bar to use in loops
+        '''
 
         percent = float(value) / endvalue
         arrow = '=' * int(round(percent * bar_length)-1) + '>'
@@ -628,9 +558,11 @@ class pyPlot(pyDict):
         sys.stdout.write(" \r[{0}] {1}%".format(arrow + spaces, int(round(percent * 100))))
         sys.stdout.flush()
 
-    # Creates nice density plots using matplotlib
     def densityPlot(self,x,y,title,xlabel,ylabel,binx,biny,pyMisc,
                     xmin=None,xmax=None,ymin=None,ymax=None,cuts=None,figure=None,ax=None,layered=True):
+        '''
+        Creates nice density plots using matplotlib
+        '''
         if cuts:
             xcut  = self.applyCuts(x,cuts)
             ycut = self.applyCuts(y,cuts)
@@ -662,9 +594,11 @@ class pyPlot(pyDict):
             binVal = [pyMisc.setbin(x,binx),pyMisc.setbin(y,biny)]
         return [binVal, fig]
 
-    # Creates polar plots (useful for kaonlt analysis). Old script, has not been checked in a while.
     def polarPlot(self,theta,r,title,thetalabel,rlabel,bintheta,binr,pyMisc,
                   thetamin=None,thetamax=None,rmin=None,rmax=None,cuts=None,figure=None,ax=None):
+        '''
+        Creates polar plots (useful for kaonlt analysis). Old script, has not been checked in a while.
+        '''
 
         if cuts:
             thetacut  = self.applyCuts(theta,cuts)

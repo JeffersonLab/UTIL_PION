@@ -115,8 +115,11 @@ echo
 echo "Running trigWindows.sh ${RUNNUMBER}..."
 cd ${REPLAYPATH}/UTIL_PION/scripts/trig_windows/
 source trigWindows.sh ${RUNNUMBER}
+cd ${REPLAYPATH}/UTIL_PION/scripts/trig_windows/
+source trigWindows.sh -p ${RUNNUMBER}
 
 # Analyzes lumi runs
+echo
 echo "Running lumiyield.py ${RUNNUMBER} ${MAXEVENTS}..."
 cd ${REPLAYPATH}/UTIL_PION/scripts/luminosity/src/
 python3 lumiyield.py Pion_replay_luminosity ${RUNNUMBER} ${MAXEVENTS}

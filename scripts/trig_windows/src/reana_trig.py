@@ -3,7 +3,7 @@
 #
 # Description: Script to plot all runs to check how trigger windows look
 # ================================================================
-# Time-stamp: "2021-10-15 03:32:53 trottar"
+# Time-stamp: "2021-10-30 00:48:30 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>

@@ -3,7 +3,7 @@
 #
 # Description: Script to dynamically set new trigger windows and update the param file with these values
 # ================================================================
-# Time-stamp: "2021-10-15 03:45:15 trottar"
+# Time-stamp: "2021-10-31 07:52:54 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -208,9 +208,14 @@ T_coin_pEDTM_tdcTime = tree.array("T.coin.pEDTM_tdcTime")
 
 fout = REPLAYPATH+'/UTIL_PION/DB/CUTS/run_type/lumi.cuts'
 
+cuts = ["c_nozero_edtm","c_nozero_ptrigHMS","c_nozero_ptrigSHMS"]
+# Check if COIN trigger is used
+if len(PS_used) > 2:
+    cuts = ["c_nozero_edtm","c_nozero_ptrigHMS","c_nozero_ptrigSHMS","c_nozero_ptrigCOIN"]
+
 # read in cuts file and make dictionary
 c = klt.pyPlot(REPLAYPATH)
-readDict = c.read_dict(fout,runNum)
+readDict = c.read_dict(cuts,fout,runNum)
 
 def make_cutDict(cut,inputDict=None):
     '''
@@ -244,7 +249,12 @@ def make_cutDict(cut,inputDict=None):
         
     return inputDict
 
-cutDict = make_cutDict("c_nozero")
+for i,c in enumerate(cuts):
+    if i == 0:
+        cutDict = make_cutDict("%s" % c )
+    else:
+        cutDict = make_cutDict("%s" % c,cutDict)
+
 c = klt.pyPlot(REPLAYPATH,cutDict)
 
 # Read in the Misc_Parameters.csv cut parameter file which has the trigger window information
@@ -263,23 +273,29 @@ def setWindows(runNum):
     2) Based off the threshold for the number of events, the min and max windows are set.  
     '''
 
-    def getBinEdges(branch,numbins,count_thres):
+    def getBinEdges(branch,cut,numbins):
+        # Calculate the geometric mean
+        def geo_mean(inp):
+            l_inp = np.log(inp[inp != 0])
+            return np.exp(l_inp.mean())
         # finds the number of events per bin (the zero events are cut out beforehand)
-        counts, bins = np.histogram(c.add_cut(branch,"c_nozero"),bins=numbins)
+        counts, bins = np.histogram(c.add_cut(branch,cut),bins=numbins)
+        # Set the threshold for the number of events an order of magnitude more than the geometric mean
+        thres_count = geo_mean(counts)*10
         # Finding the bins that are above the set threshold for the number of events
-        binVals = [b for c,b in zip(counts,bins) if c > count_thres]
+        binVals = [b for c,b in zip(counts,bins) if c > thres_count]
         # Set min and max windows
         minBin = min(binVals)
         maxBin = max(binVals)
         return [minBin, maxBin]
 
     # Get windows for {SPEC}_ROC1_tdcTimeRaw and pEDTM_tdcTimeRaw
-    c_T_coin_pTRIG_HMS_ROC1_tdcTimeRaw = getBinEdges(T_coin_pTRIG_HMS_ROC1_tdcTimeRaw,200,250)
-    c_T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw = getBinEdges(T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw,200,250)
+    c_T_coin_pTRIG_HMS_ROC1_tdcTimeRaw = getBinEdges(T_coin_pTRIG_HMS_ROC1_tdcTimeRaw,"c_nozero_ptrigHMS",200)
+    c_T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw = getBinEdges(T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw,"c_nozero_ptrigSHMS",200)
     # Check if COIN trigger is used
     if len(PS_used) > 2:
-        c_T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = getBinEdges(T_coin_pTRIG_COIN_ROC1_tdcTimeRaw,200,250)
-    c_T_coin_pEDTM_tdcTimeRaw = getBinEdges(T_coin_pEDTM_tdcTimeRaw,200,250)
+        c_T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = getBinEdges(T_coin_pTRIG_COIN_ROC1_tdcTimeRaw,"c_nozero_ptrigCOIN",200)
+    c_T_coin_pEDTM_tdcTimeRaw = getBinEdges(T_coin_pEDTM_tdcTimeRaw,"c_nozero_edtm",200)
 
     # Create a dictionary that contains the information that will be uploaded to Misc_Parameters.csv for a particular run
     new_row = {'Run_Start' : "{:.0f}".format(float(runNum)), 'Run_End' : "{:.0f}".format(float(runNum)), 'noedtm' : 0.0, 'edtmLow' : "{:.0f}".format(float(c_T_coin_pEDTM_tdcTimeRaw[0])), 

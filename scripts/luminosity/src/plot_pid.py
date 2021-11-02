@@ -3,13 +3,12 @@
 # Description: This is where the variables for the yield calculations are formulated.
 # Variables calculated: tot_events, h_int_goodscin_evts, p_int_goodscin_evts, SHMSTRIG_cut, HMSTRIG_cut, HMS_track, HMS_track_uncern, SHMS_track, SHMS_track_uncern, accp_edtm
 # ================================================================
-# Time-stamp: "2021-10-20" heinricn
+# Time-stamp: "2021-11-02 01:30:22 trottar"
 # ================================================================
 #
-# Author:  Richard L. Trotta III <trotta@cua.edu>, Nathan Heinrich <heinricn@uregina.ca>
+# Author:  Richard L. Trotta III <trotta@cua.edu>
 #
-# This is a version of the lumiyeild.py code, but adapted to work for fADC deadtime studies.
-# Richard wrote the origonal code, this version was adapted by Nathan 
+# Copyright (c) trottar
 #
 import uproot as up
 import numpy as np
@@ -46,9 +45,6 @@ import scaler
 
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 
-# Output for luminosity table
-out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/fADC_data.csv" % REPLAYPATH
-
 # Construct the name of the rootfile based upon the info we provided
 OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/PionLT" % REPLAYPATH        # Output folder location
 rootName = "%s/UTIL_PION/ROOTfiles/Analysis/Lumi/%s_%s_%s.root" % (REPLAYPATH,ROOTPrefix,runNum,MaxEvent)     # Input file location and variables taking
@@ -83,11 +79,6 @@ psValue = [-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
 # Search root file for prescale values and tracking efficiency, then save as variables
 for line in f:
     data = line.split(':')
-    track_data = line.split(':')
-    if ('SW_SHMS_Electron_Singles_TRACK_EFF' in track_data[0]):
-        SHMS_track_info = track_data[1].split("+-")
-    if ('SW_HMS_Electron_Singles_TRACK_EFF' in track_data[0]):
-        HMS_track_info = track_data[1].split("+-")
     for i, obj in enumerate(psList) :
         if (psList[i] in data[0]) : 
             if (i == 0) :  
@@ -108,10 +99,6 @@ ps3=int(ps3_tmp)
 ps4=int(ps4_tmp)
 ps5=int(ps5_tmp)
 ps6=int(ps6_tmp)
-SHMS_track_eff = float(SHMS_track_info[0])
-SHMS_track_uncern = float(SHMS_track_info[1])
-HMS_track_eff = float(HMS_track_info[0])
-HMS_track_uncern = float(HMS_track_info[1])
 
 # Convert the prescale input values to their actual DAQ values
 for i,index in enumerate(psActual):
@@ -168,16 +155,6 @@ else:
     SHMS_PS = PS_used[0][1]
     HMS_PS = PS_used[1][1]
 
-
-'''
-SCALER TREE, TSP
-'''
-
-s_tree = up.open(rootName)["TSP"]
-s_branch = klt.pyBranch(s_tree)
-
-P_BCM4A_scalerCharge = s_tree.array("P.BCM4A.scalerCharge")
-
 '''
 ANALYSIS TREE, T
 '''
@@ -214,6 +191,7 @@ if PS_names[1] is "PS3" or PS_names[1] is "PS4":
     H_dc_2v2_nhit = tree.array("H.dc.2v2.nhit")
     
     H_bcm_bcm4a_AvgCurrent = tree.array("H.bcm.bcm4a.AvgCurrent")
+    H_cal_etottracknorm = tree.array("H.cal.etottracknorm")
 
 if PS_names[0] is "PS1" or PS_names[0] is "PS2":
     #W = tree.array("P.kin.primary.W")
@@ -244,6 +222,8 @@ if PS_names[0] is "PS1" or PS_names[0] is "PS2":
     P_dc_2v1_nhit = tree.array("P.dc.2v1.nhit")
     P_dc_2x2_nhit = tree.array("P.dc.2x2.nhit")
     P_dc_2v2_nhit = tree.array("P.dc.2v2.nhit")
+
+    P_cal_etottracknorm = tree.array("P.cal.etottracknorm")
 
 if PS_names[0] is "PS1":
     T_coin_pTRIG_SHMS_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG1_ROC1_tdcTimeRaw")
@@ -290,14 +270,18 @@ T_coin_hFADC_TREF_ROC1_adcPulseTimeRaw = tree.array("T.coin.hFADC_TREF_ROC1_adcP
 T_coin_pEDTM_tdcTimeRaw = tree.array("T.coin.pEDTM_tdcTimeRaw")
 EvtType = tree.array("fEvtHdr.fEvtType")
 
-#list of all cuts that are used
-cuts = ["h_cal", "h_cer", "p_cal", "p_hgcer", "p_aero", "p_ecut_lumi_eff", "p_picut_lumi_eff", "p_kcut_lumi_eff", "p_pcut_lumi_eff", "p_hadcut_lumi_eff", "h_ecut_lumi_eff", "h_picut_lumi_eff", "h_hadcut_lumi_eff", "c_noedtm", "c_edtm", "c_ptrigHMS", "c_ptrigSHMS", "c_ptrigCOIN", "c_curr"]     
-fout = REPLAYPATH+'/UTIL_PION/DB/CUTS/run_type/fADCdeadtime.cuts'
+fout = REPLAYPATH+'/UTIL_PION/DB/CUTS/run_type/lumi.cuts'
+
+cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ngcer_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_curr",]
+# Check if COIN trigger is used
+if len(PS_used) > 2:
+ cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ngcer_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_ptrigCOIN","c_curr",]
 
 # read in cuts file and make dictionary
 c = klt.pyPlot(REPLAYPATH)
 readDict = c.read_dict(cuts,fout,runNum)
 
+cutVals = []
 def make_cutDict(cut,inputDict=None):
     '''
     This method calls several methods in kaonlt package. It is required to create properly formated
@@ -310,9 +294,13 @@ def make_cutDict(cut,inputDict=None):
     global c
 
     c = klt.pyPlot(REPLAYPATH,readDict)
-    x = c.w_dict(cut)
+    x = list(filter(None,c.w_dict(cut)))
     print("\n%s" % cut)
     print(x, "\n")
+
+    #######################################################################################
+    # Make list of cut strings
+    cutVals.append(x)
 
     # Threshold current
     if cut == "c_curr":
@@ -321,6 +309,7 @@ def make_cutDict(cut,inputDict=None):
         thres_curr = float(x[0].split(":")[1].split("<")[1].split(")")[0].strip())
         # e.g. Grabbing set current for run (ie 55) from something like this [' {"H_bcm_bcm4a_AvgCurrent" : (abs(H_bcm_bcm4a_AvgCurrent-55) < 2.5)}']
         report_current = float(x[0].split(":")[1].split("<")[0].split(")")[0].split("-")[1].strip())
+    #######################################################################################
     
     if inputDict == None:
         inputDict = {}
@@ -330,11 +319,7 @@ def make_cutDict(cut,inputDict=None):
             inputDict.update({key : {}})
 
     for i,val in enumerate(x):
-        tmp = x[i]
-        if tmp == "":
-            continue
-        else:
-            inputDict[cut].update(eval(tmp))
+        inputDict[cut].update(eval(x[i]))
         
     return inputDict
 
@@ -351,183 +336,133 @@ def pid_cuts():
     Plots of pid cuts that will be applied to the event selection
     '''
 
+    ###########################
+    ######## 1D plots  ########
+    ###########################
+
     f = plt.figure(figsize=(11.69,8.27))
+    f.suptitle("Run %s" % runNum)
+
     ax = f.add_subplot(231)
-    ax.hist(H_cal_etotnorm,bins=c.setbin(H_cal_etotnorm,200),label='no cut',histtype='step',
-            alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(H_cal_etotnorm,"h_cal"),
-             bins=c.setbin(c.add_cut(H_cal_etotnorm,"h_cal"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+    ax.hist(H_cal_etotnorm,bins=c.setbin(H_cal_etotnorm,200,0,2.0),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+    ax.hist(c.add_cut(H_cal_etotnorm,"h_cal_nt"),bins=c.setbin(H_cal_etotnorm,200,0,2.0),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
     plt.yscale('log')
     plt.xlabel('H_cal_etotnorm')
     plt.ylabel('Count')
 
     ax = f.add_subplot(232)
-    ax.hist(H_cer_npeSum,bins=c.setbin(H_cer_npeSum,200),label='no cut',histtype='step', alpha=0.5,
-            stacked=True, fill=True)
-    ax.hist(c.add_cut(H_cer_npeSum,"h_cer"),
-            bins=c.setbin(c.add_cut(H_cer_npeSum,"h_cer"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+    ax.hist(H_cer_npeSum,bins=c.setbin(H_cer_npeSum,200,0,60),label='no cut',histtype='step', alpha=0.5,stacked=True, fill=True)
+    ax.hist(c.add_cut(H_cer_npeSum,"h_cer_nt"),bins=c.setbin(H_cer_npeSum,200,0,60),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
     plt.yscale('log')
     plt.xlabel('H_cer_npeSum')
     plt.ylabel('Count')
 
     ax = f.add_subplot(233)
-    ax.hist(P_cal_etotnorm,bins=c.setbin(P_cal_etotnorm,200),label='no cut',histtype='step',
-            alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(P_cal_etotnorm,"p_cal"),
-             bins=c.setbin(c.add_cut(P_cal_etotnorm,"p_cal"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+    ax.hist(P_cal_etotnorm,bins=c.setbin(P_cal_etotnorm,200,0,4),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+    ax.hist(c.add_cut(P_cal_etotnorm,"p_cal_nt"),bins=c.setbin(P_cal_etotnorm,200,0,4),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
     plt.yscale('log')
     plt.xlabel('P_cal_etotnorm')
     plt.ylabel('Count')
 
     ax = f.add_subplot(234)
-    ax.hist(P_hgcer_npeSum,bins=c.setbin(P_hgcer_npeSum,200),label='no cut',histtype='step',
-            alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(P_hgcer_npeSum,"p_hgcer"),
-             bins=c.setbin(c.add_cut(P_hgcer_npeSum,"p_hgcer"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+    ax.hist(P_hgcer_npeSum,bins=c.setbin(P_hgcer_npeSum,200,0,200),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+    ax.hist(c.add_cut(P_hgcer_npeSum,"p_hgcer_nt"),bins=c.setbin(P_hgcer_npeSum,200,0,200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
     plt.yscale('log')
     plt.xlabel('P_hgcer_npeSum')
     plt.ylabel('Count')
 
     ax = f.add_subplot(235)
-    ax.hist(P_aero_npeSum,bins=c.setbin(P_aero_npeSum,200),label='no cut',histtype='step',
-            alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(P_aero_npeSum,"p_aero"),
-             bins=c.setbin(c.add_cut(P_aero_npeSum,"p_aero"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+    ax.hist(P_aero_npeSum,bins=c.setbin(P_aero_npeSum,200,0,400),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+    ax.hist(c.add_cut(P_aero_npeSum,"p_aero_nt"),bins=c.setbin(P_aero_npeSum,200,0,400),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
     plt.yscale('log')
     plt.xlabel('P_aero_npeSum')
-    plt.ylabel('Count')    
+    plt.ylabel('Count')   
+
+    ax = f.add_subplot(236)
+    ax.hist(P_ngcer_npeSum,bins=c.setbin(P_ngcer_npeSum,200,0,250),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+    ax.hist(c.add_cut(P_ngcer_npeSum,"p_ngcer_nt"), bins=c.setbin(P_ngcer_npeSum,200,0,250),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+    plt.yscale('log')
+    plt.xlabel('P_ngcer_npeSum')
+    plt.ylabel('Count')
+
+    plt.legend(loc="upper right")
+
+    plt.tight_layout(rect=[0,0.03,1,0.95])   
+    #plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/pid/pid_%s.png' % (REPLAYPATH,runNum))
+
+    ###########################
+    ######## 2D plots  ########
+    ###########################
     
-def analysis():
-    '''
-    Calculate variables for table
-    '''
+    f = plt.figure(figsize=(19.20,8.00))
+    f.suptitle("Run %s" % runNum)
 
-    # Applies edtm window cuts to edtm to get accepted edtm events
-    EDTM = c.add_cut(T_coin_pEDTM_tdcTimeRaw,"c_edtm")
+    ax = f.add_subplot(241)
+    ax.hist2d(H_cal_etotnorm,H_cer_npeSum,bins=[c.setbin(H_cal_etotnorm,400,0,2.0),c.setbin(H_cer_npeSum,400,0,30)],cmin=1,label='no cut',alpha=0.5)
+    ax.hist2d(c.add_cut(H_cal_etotnorm,"h_ecut_lumi_nt"), c.add_cut(H_cer_npeSum,"h_ecut_lumi_nt"), bins=[c.setbin(H_cal_etotnorm,400,0,2.0),c.setbin(H_cer_npeSum,400,0,30)],cmin=1,label='cut', alpha=0.5)
+    plt.xlabel('H_cal_etotnorm')
+    plt.ylabel('H_cer_npeSum')
+
+    ax = f.add_subplot(242)
+    ax.hist2d(P_cal_etotnorm,P_hgcer_npeSum,bins=[c.setbin(P_cal_etotnorm,400,0,4),c.setbin(P_hgcer_npeSum,400,0,80)],cmin=1,label='no cut',alpha=0.5)
+    ax.hist2d(c.add_cut(P_cal_etotnorm,"p_ecut_lumi_nt"),c.add_cut(P_hgcer_npeSum,"p_ecut_lumi_nt"),bins=[c.setbin(P_cal_etotnorm,400,0,4),c.setbin(P_hgcer_npeSum,400,0,80)],cmin=1,label='cut', alpha=0.5)
+    plt.xlabel('P_cal_etotnorm')
+    plt.ylabel('P_hgcer_npeSum')
+
+    ax = f.add_subplot(243)
+    ax.hist2d(P_cal_etotnorm,P_aero_npeSum,bins=[c.setbin(P_cal_etotnorm,400,0,4),c.setbin(P_aero_npeSum,400,0,100)],cmin=1,label='no cut',alpha=0.5)
+    ax.hist2d(c.add_cut(P_cal_etotnorm,"p_ecut_lumi_nt"),c.add_cut(P_aero_npeSum,"p_ecut_lumi_nt"),bins=[c.setbin(P_cal_etotnorm,400,0,4),c.setbin(P_aero_npeSum,400,0,100)],cmin=1,label='cut', alpha=0.5)
+    plt.xlabel('P_cal_etotnorm')
+    plt.ylabel('P_aero_npeSum')
+
+    ax = f.add_subplot(244)
+    ax.hist2d(P_cal_etotnorm,P_ngcer_npeSum,bins=[c.setbin(P_cal_etotnorm,400,0,4),c.setbin(P_ngcer_npeSum,400,0,80)],cmin=1,label='no cut',alpha=0.5)
+    ax.hist2d(c.add_cut(P_cal_etotnorm,"p_ecut_lumi_nt"),c.add_cut(P_ngcer_npeSum,"p_ecut_lumi_nt"),bins=[c.setbin(P_cal_etotnorm,400,0,4),c.setbin(P_ngcer_npeSum,400,0,80)],cmin=1,label='cut', alpha=0.5)
+    plt.xlabel('P_cal_etotnorm')
+    plt.ylabel('P_ngcer_npeSum')
+
+    ax = f.add_subplot(245)
+    ax.hist2d(P_aero_npeSum,P_hgcer_npeSum,bins=[c.setbin(P_aero_npeSum,400,0,100),c.setbin(P_hgcer_npeSum,400,0,80)],cmin=1,label='no cut',alpha=0.5)
+    ax.hist2d(c.add_cut(P_aero_npeSum,"p_ecut_lumi_nt"),c.add_cut(P_hgcer_npeSum,"p_ecut_lumi_nt"),bins=[c.setbin(P_aero_npeSum,400,0,100),c.setbin(P_hgcer_npeSum,400,0,80)],cmin=1,label='cut', alpha=0.5)
+    plt.xlabel('P_aero_npeSum')
+    plt.ylabel('P_hgcer_npeSum')
+
+    ax = f.add_subplot(246)
+    ax.hist2d(P_ngcer_npeSum,P_hgcer_npeSum,bins=[c.setbin(P_ngcer_npeSum,400,0,80),c.setbin(P_hgcer_npeSum,400,0,80)],cmin=1,label='no cut',alpha=0.5)
+    ax.hist2d(c.add_cut(P_ngcer_npeSum,"p_ecut_lumi_nt"),c.add_cut(P_hgcer_npeSum,"p_ecut_lumi_nt"),bins=[c.setbin(P_ngcer_npeSum,400,0,80),c.setbin(P_hgcer_npeSum,400,0,80)],cmin=1,label='cut', alpha=0.5)
+    plt.xlabel('P_ngcer_npeSum')
+    plt.ylabel('P_hgcer_npeSum')
+
+    ax = f.add_subplot(247)
+    ax.hist2d(P_aero_npeSum,P_ngcer_npeSum,bins=[c.setbin(P_aero_npeSum,400,0,100),c.setbin(P_ngcer_npeSum,400,0,80)],cmin=1,label='no cut',alpha=0.5)
+    ax.hist2d(c.add_cut(P_aero_npeSum,"p_ecut_lumi_nt"),c.add_cut(P_ngcer_npeSum,"p_ecut_lumi_nt"),bins=[c.setbin(P_aero_npeSum,400,0,100),c.setbin(P_ngcer_npeSum,400,0,80)],cmin=1,label='cut', alpha=0.5)
+    plt.xlabel('P_aero_npeSum')
+    plt.ylabel('P_ngcer_npeSum')
+
+    ax = f.add_subplot(248)
+    plt.axis('off')
+    i=0
+    plt.text(-0.15,1.00,"HMS cuts...",fontsize=8)
+    for cut,val in zip(cuts,cutVals):
+        if cut == "h_ecut_lumi_nt":
+            for v in val:
+                plt.text(-0.15,0.95-i/10," {}".format(v),fontsize=8)
+                i+=1
+    plt.text(-0.15,0.95-((i)/10+0.05),"SHMS cuts...",fontsize=8)
+    for cut,val in zip(cuts,cutVals):
+        if cut == "p_ecut_lumi_nt":
+            for v in val:
+                plt.text(-0.15,0.95-(i+1)/10," {}".format(v),fontsize=8)
+                i+=1
+
+    plt.tight_layout(rect=[0,0.03,1,0.95])   
+    #plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/pid/pid2D_%s.png' % (REPLAYPATH,runNum))
+
     
-    # Applies trigger window cuts to trigger to get accepted trigger events
-    SHMSTRIG = [x
-                for x in c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_ptrigSHMS")
-                if x != 0.0]
-    # Applies trigger window cuts to trigger to get accepted trigger events
-    HMSTRIG  = [x
-                for x in c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_ptrigHMS")
-                if x !=0.0]
-    # Check if COIN trigger is used
-    if len(PS_used) > 2:
-        # Applies trigger window cuts to trigger to get accepted trigger events
-        COINTRIG  = [x
-                     for x in c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTime,"c_ptrigCOIN")
-                     if x !=0.0]
-    
-    # Cuts event type with current cut, probably pointless?
-    EventType = c.add_cut(EvtType,"c_curr")
-
-    # Applies trigger window cuts to trigger to get accepted trigger events
-    SHMSTRIG_cut = [trig1
-                    for (trig1,evt) in zip(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_ptrigSHMS"),EvtType)
-                    if evt == 1]
-    # Applies trigger window cuts to trigger to get accepted trigger events
-    HMSTRIG_cut = [ x
-                    for (x, evt) in zip(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_ptrigHMS"), EvtType)
-                    if evt == 2]
-    # Check if COIN trigger is used
-    if len(PS_used) > 2:
-        # Applies trigger window cuts to trigger to get accepted trigger events
-        COINTRIG_cut = [ x
-                         for (x, evt) in zip(c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTime,"c_ptrigCOIN"), EvtType)
-                         if (evt == 1 or evt == 2)]
-
-    # Applies PID cuts, once integrated this will give the events (no track)
-    h_W = c.add_cut(W,"h_ecut_lumi_eff") 
-    p_W = c.add_cut(W,"p_hadcut_lumi_eff")
-
-    # Applies PID cuts, once integrated this will give the events (track)
-    h_hadcuts_goodscinhit = c.add_cut(H_hod_goodscinhit,"h_ecut_lumi_eff")
-    p_pcuts_goodscinhit = c.add_cut(P_hod_goodscinhit,"p_hadcut_lumi_eff")
-    
-    # Creates a dictionary for the calculated luminosity values 
-    track_info = {
-        
-        "tot_events" : len(EventType),
-        "h_int_W_evts" : scipy.integrate.simps(h_W),
-        "p_int_W_evts" : scipy.integrate.simps(p_W),
-        "h_int_goodscin_evts" : scipy.integrate.simps(h_hadcuts_goodscinhit),
-        "p_int_goodscin_evts" : scipy.integrate.simps(p_pcuts_goodscinhit),
-        "SHMSTRIG_cut" : len(SHMSTRIG_cut),
-        "HMSTRIG_cut" : len(HMSTRIG_cut),
-        "HMS_track" : HMS_track_eff,
-        "HMS_track_uncern" : HMS_track_uncern,
-        "SHMS_track" : SHMS_track_eff,
-        "SHMS_track_uncern" : SHMS_track_uncern,
-        "accp_edtm" : (len(EDTM)),
-            
-    }
-    # Check if COIN trigger is used
-    if len(PS_used) > 2:
-        # Creates a dictionary for the calculated luminosity values 
-        track_info = {
-        
-            "tot_events" : len(EventType),
-            "h_int_W_evts" : scipy.integrate.simps(h_W),
-            "p_int_W_evts" : scipy.integrate.simps(p_W),
-            "h_int_goodscin_evts" : scipy.integrate.simps(h_hadcuts_goodscinhit),
-            "p_int_goodscin_evts" : scipy.integrate.simps(p_pcuts_goodscinhit),
-            "SHMSTRIG_cut" : len(SHMSTRIG_cut),
-            "HMSTRIG_cut" : len(HMSTRIG_cut),
-            "COINTRIG_cut" : len(COINTRIG_cut),
-            "HMS_track" : HMS_track_eff,
-            "HMS_track_uncern" : HMS_track_uncern,
-            "SHMS_track" : SHMS_track_eff,
-            "SHMS_track_uncern" : SHMS_track_uncern,
-            "accp_edtm" : (len(EDTM)),
-            
-        }
-
-    print("\nTerminate","Selection rules have been applied, plotting results")
-    print("Total number of events: %.0f" % (track_info["tot_events"]))
-    print("Number of EDTM  Events: %.0f" % (track_info["accp_edtm"]))
-    print("Number of HMSTRIG Events: %.0f" % (HMS_PS*track_info["HMSTRIG_cut"]))
-    print("Number of SHMSTRIG Events: %.0f" % (SHMS_PS*track_info["SHMSTRIG_cut"]))
-
-    print("\nNumber of HMS good events: %.0f +/- %.0f " % ((HMS_PS*track_info["h_int_goodscin_evts"]), math.sqrt(HMS_PS*track_info["h_int_goodscin_evts"])))
-    print("Calculated HMS tracking efficiency: %f +/- %f\n" % ((track_info["HMS_track"]), (track_info["HMS_track_uncern"])))
-
-    print("Number of SHMS good events: %.0f +/- %.0f " % ((SHMS_PS*track_info["h_int_goodscin_evts"]), math.sqrt(SHMS_PS*track_info["h_int_goodscin_evts"])))
-    print("Calculated SHMS tracking efficiency: %f +/- %f\n" % ((track_info["SHMS_track"]), (track_info["SHMS_track_uncern"])))
-
-    print("============================================================================\n\n")
-          
-    return track_info
-
 def main():
 
-    #pid_cuts()
-    #plt.show()
-
-    # lumi_data = {**scalers , **track_info} # only python 3.5+
-
-    # Import dictionaries
-    scalers = scaler.scaler(PS_names, HMS_PS, SHMS_PS, thres_curr, report_current, REPLAYPATH, runNum, MaxEvent, s_tree, s_branch) 
-    track_info = analysis()
-
-    # Merge and sort the two dictionaries of calculations
-    data = {}
-    for d in (scalers, track_info): 
-        data.update(d)
-    lumi_data = {i : data[i] for i in sorted(data.keys())}
-
-    # Convert merged dictionary to a pandas dataframe then sort it
-    table  = pd.DataFrame([lumi_data], columns=lumi_data.keys())
-    table = table.reindex(sorted(table.columns), axis=1)
-    
-    file_exists = os.path.isfile(out_f)
-
-    # Updates csv file with luminosity calculated values for later analysis (see plot_yield.py)
-    if file_exists:
-        table.to_csv(out_f, index = False, header=False, mode='a',)
-    else:
-        table.to_csv(out_f, index = False, header=True, mode='a',)
+    pid_cuts()
+    plt.show()
 
 if __name__ == '__main__':
     main()
