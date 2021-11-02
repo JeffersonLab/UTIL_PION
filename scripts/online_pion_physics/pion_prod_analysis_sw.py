@@ -188,24 +188,28 @@ yExit = np.array([yfp+ypfp*D_Exit for (yfp, ypfp) in zip(P_dc_yfp, P_dc_ypfp)])
 
 # Unindex Calo Hits
 
-
 ##############################################################################################################################################
+# SJDK 01/11/21 - New method of adding cuts implemented
 
 # Defining path for cut file
 r = klt.pyRoot()
 fout = '%s/UTIL_PION/DB/CUTS/run_type/coin_prod.cuts' % REPLAYPATH
 
+# defining Cuts
+cuts = ["coin_epi_cut_all_noRF","coin_epi_cut_all_RF","coin_epi_cut_prompt_RF","coin_epi_cut_rand_RF",] # SJDK 01/11/21 - New list of cuts
+
 # read in cuts file and make dictionary
 c = klt.pyPlot(REPLAYPATH)
-readDict = c.read_dict(fout,runNum)
-
-# This method calls several methods in kaonlt package. It is required to create properly formated
-# dictionaries. The evaluation must be in the analysis script because the analysis variables (i.e. the
-# leaves of interest) are not defined in the kaonlt package. This makes the system more flexible
-# overall, but a bit more cumbersome in the analysis script. Perhaps one day a better solution will be
-# implimented.
+readDict = c.read_dict(cuts,fout,runNum)
 
 def make_cutDict(cut,inputDict=None):
+    '''
+    This method calls several methods in kaonlt package. It is required to create properly formated
+    dictionaries. The evaluation must be in the analysis script because the analysis variables (i.e. the
+    leaves of interest) are not defined in the kaonlt package. This makes the system more flexible
+    overall, but a bit more cumbersome in the analysis script. Perhaps one day a better solution will be
+    implimented.
+    '''
 
     global c
 
@@ -216,7 +220,7 @@ def make_cutDict(cut,inputDict=None):
     
     if inputDict == None:
         inputDict = {}
-        
+
     for key,val in readDict.items():
         if key == cut:
             inputDict.update({key : {}})
@@ -230,13 +234,21 @@ def make_cutDict(cut,inputDict=None):
         
     return inputDict
 
+
+for i,c in enumerate(cuts):
+    if i == 0:
+        cutDict = make_cutDict("%s" % c )
+    else:
+        cutDict = make_cutDict("%s" % c,cutDict)
+
 #################################################################################################################################################################
 
+# SJDK 01/11/21 - Old method of adding cuts, commented out
 # defining Cuts
-cutDict = make_cutDict("coin_epi_cut_all_noRF")
-cutDict = make_cutDict("coin_epi_cut_all_RF", cutDict)
-cutDict = make_cutDict("coin_epi_cut_prompt_RF", cutDict)
-cutDict = make_cutDict("coin_epi_cut_rand_RF", cutDict)
+#cutDict = make_cutDict("coin_epi_cut_all_noRF")
+#cutDict = make_cutDict("coin_epi_cut_all_RF", cutDict)
+#cutDict = make_cutDict("coin_epi_cut_prompt_RF", cutDict)
+#cutDict = make_cutDict("coin_epi_cut_rand_RF", cutDict)
 
 c = klt.pyPlot(REPLAYPATH,cutDict)
 

@@ -159,17 +159,23 @@ MandelT = e_tree.array("P.kin.secondary.MandelT")                #
 r = klt.pyRoot()
 fout = '%s/UTIL_PION/DB/CUTS/run_type/coin_prod.cuts' % REPLAYPATH
 
+#################################################################################################################################################################
+
+# defining Cuts
+cuts = ["coin_epi_cut_all_noRF","coin_epi_cut_all_RF", "coin_epi_cut_prompt_RF", "coin_epi_cut_rand_RF"]
+
 # read in cuts file and make dictionary
 c = klt.pyPlot(REPLAYPATH)
-readDict = c.read_dict(fout,runNum)
-
-# This method calls several methods in kaonlt package. It is required to create properly formated
-# dictionaries. The evaluation must be in the analysis script because the analysis variables (i.e. the
-# leaves of interest) are not defined in the kaonlt package. This makes the system more flexible
-# overall, but a bit more cumbersome in the analysis script. Perhaps one day a better solution will be
-# implimented.
+readDict = c.read_dict(cuts,fout,runNum)
 
 def make_cutDict(cut,inputDict=None):
+    '''
+    This method calls several methods in kaonlt package. It is required to create properly formated
+    dictionaries. The evaluation must be in the analysis script because the analysis variables (i.e. the
+    leaves of interest) are not defined in the kaonlt package. This makes the system more flexible
+    overall, but a bit more cumbersome in the analysis script. Perhaps one day a better solution will be
+    implimented.
+    '''
 
     global c
 
@@ -194,13 +200,11 @@ def make_cutDict(cut,inputDict=None):
         
     return inputDict
 
-#################################################################################################################################################################
-
-# defining Cuts
-cutDict = make_cutDict("coin_epi_cut_all_noRF")
-cutDict = make_cutDict("coin_epi_cut_all_RF", cutDict)
-cutDict = make_cutDict("coin_epi_cut_prompt_RF", cutDict)
-cutDict = make_cutDict("coin_epi_cut_rand_RF", cutDict)
+for i,c in enumerate(cuts):
+    if i == 0:
+        cutDict = make_cutDict("%s" % c )
+    else:
+        cutDict = make_cutDict("%s" % c,cutDict)
 
 c = klt.pyPlot(REPLAYPATH,cutDict)
 

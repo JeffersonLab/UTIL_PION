@@ -3,7 +3,7 @@
 #
 # Description: Script for plotting trigger windows
 # ================================================================
-# Time-stamp: "2021-10-15 03:21:49 trottar"
+# Time-stamp: "2021-10-31 07:57:02 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -16,6 +16,8 @@ import numpy as np
 import pandas as pd
 import scipy
 import scipy.integrate as integrate
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import sys, math, os, subprocess
 
@@ -160,6 +162,8 @@ tree = up.open(rootName)["T"]
 branch = klt.pyBranch(tree)
 
 H_bcm_bcm4a_AvgCurrent = tree.array("H.bcm.bcm4a.AvgCurrent")
+P_cal_etottracknorm = tree.array("P.cal.etottracknorm")
+H_cal_etottracknorm = tree.array("H.cal.etottracknorm")
 
 if PS_names[0] is "PS1":
     T_coin_pTRIG_SHMS_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG1_ROC1_tdcTimeRaw")
@@ -204,9 +208,14 @@ T_coin_pEDTM_tdcTime = tree.array("T.coin.pEDTM_tdcTime")
 
 fout = REPLAYPATH+'/UTIL_PION/DB/CUTS/run_type/lumi.cuts'
 
+cuts = ["c_nozero_edtm","c_noedtm","c_edtm","c_nozero_ptrigHMS","c_ptrigHMS","c_nozero_ptrigSHMS","c_ptrigSHMS","c_curr"]
+# Check if COIN trigger is used
+if len(PS_used) > 2:
+    cuts = ["c_nozero_edtm","c_noedtm","c_edtm","c_nozero_ptrigHMS","c_ptrigHMS","c_nozero_ptrigSHMS","c_ptrigSHMS","c_nozero_ptrigCOIN","c_ptrigCOIN","c_curr"]
+
 # read in cuts file and make dictionary
 c = klt.pyPlot(REPLAYPATH)
-readDict = c.read_dict(fout,runNum)
+readDict = c.read_dict(cuts,fout,runNum)
 
 def make_cutDict(cut,inputDict=None):
     '''
@@ -246,15 +255,12 @@ def make_cutDict(cut,inputDict=None):
         
     return inputDict
 
-cutDict = make_cutDict("c_nozero")
-cutDict = make_cutDict("c_noedtm",cutDict)
-cutDict = make_cutDict("c_edtm",cutDict)
-cutDict = make_cutDict("c_ptrigHMS",cutDict)
-cutDict = make_cutDict("c_ptrigSHMS",cutDict)
-# Check if COIN trigger is used
-if len(PS_used) > 2:
-    cutDict = make_cutDict("c_ptrigCOIN",cutDict)
-cutDict = make_cutDict("c_curr",cutDict)
+for i,c in enumerate(cuts):
+    if i == 0:
+        cutDict = make_cutDict("%s" % c )
+    else:
+        cutDict = make_cutDict("%s" % c,cutDict)
+
 c = klt.pyPlot(REPLAYPATH,cutDict)
 
 def trig_Plots():
@@ -268,15 +274,15 @@ def trig_Plots():
     if len(PS_used) > 2:
 
         ax = f.add_subplot(241)
-        ax.hist(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTimeRaw,"c_nozero"),bins=200,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTimeRaw,"c_ptrigHMS"),bins=200,label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTimeRaw,"c_nozero_ptrigHMS"),bins=c.setbin(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTimeRaw,"c_nozero_ptrigHMS"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTimeRaw,"c_ptrigHMS"),bins=c.setbin(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTimeRaw,"c_nozero_ptrigHMS"),200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('T_coin_pTRIG_HMS_ROC1_tdcTimeRaw')
         plt.ylabel('Count')
         
         ax = f.add_subplot(242)
-        ax.hist(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw,"c_nozero"),bins=200,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw,"c_ptrigSHMS"),bins=200,label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw,"c_nozero_ptrigSHMS"),bins=c.setbin(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw,"c_nozero_ptrigSHMS"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw,"c_ptrigSHMS"),bins=c.setbin(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw,"c_nozero_ptrigSHMS"),200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw')
         plt.ylabel('Count')
@@ -284,43 +290,43 @@ def trig_Plots():
         plt.title("Run %s" % runNum)
 
         ax = f.add_subplot(243)
-        ax.hist(c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTimeRaw,"c_nozero"),bins=200,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTimeRaw,"c_ptrigCOIN"),bins=200,label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTimeRaw,"c_nozero_ptrigCOIN"),bins=c.setbin(c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTimeRaw,"c_nozero_ptrigCOIN"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTimeRaw,"c_ptrigCOIN"),bins=c.setbin(c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTimeRaw,"c_nozero_ptrigCOIN"),200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('T_coin_pTRIG_COIN_ROC1_tdcTimeRaw')
         plt.ylabel('Count')
 
         ax = f.add_subplot(244)
-        ax.hist(c.add_cut(T_coin_pEDTM_tdcTimeRaw,"c_nozero"),bins=200,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(T_coin_pEDTM_tdcTimeRaw,"c_edtm"),bins=200,label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pEDTM_tdcTimeRaw,"c_nozero_edtm"),bins=c.setbin(c.add_cut(T_coin_pEDTM_tdcTimeRaw,"c_nozero_edtm"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pEDTM_tdcTimeRaw,"c_edtm"),bins=c.setbin(c.add_cut(T_coin_pEDTM_tdcTimeRaw,"c_nozero_edtm"),200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('T_coin_pEDTM_tdcTimeRaw')
         plt.ylabel('Count')
         
         ax = f.add_subplot(245)
-        ax.hist(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_nozero"),bins=200,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_ptrigHMS"),bins=200,label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_nozero_ptrigHMS"),bins=c.setbin(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_nozero_ptrigHMS"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_ptrigHMS"),bins=c.setbin(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_nozero_ptrigHMS"),200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('T_coin_pTRIG_HMS_ROC1_tdcTime')
         plt.ylabel('Count')
 
         ax = f.add_subplot(246)
-        ax.hist(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_nozero"),bins=200,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_ptrigSHMS"),bins=200,label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_nozero_ptrigSHMS"),bins=c.setbin(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_nozero_ptrigSHMS"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_ptrigSHMS"),bins=c.setbin(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_nozero_ptrigSHMS"),200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('T_coin_pTRIG_SHMS_ROC2_tdcTime')
         plt.ylabel('Count')
 
         ax = f.add_subplot(247)
-        ax.hist(c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTimeRaw,"c_nozero"),bins=200,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTimeRaw,"c_ptrigCOIN"),bins=200,label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTime,"c_nozero_ptrigCOIN"),bins=c.setbin(c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTime,"c_nozero_ptrigCOIN"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTime,"c_ptrigCOIN"),bins=c.setbin(c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTime,"c_nozero_ptrigCOIN"),200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
-        plt.xlabel('T_coin_pTRIG_COIN_ROC1_tdcTimeRaw')
+        plt.xlabel('T_coin_pTRIG_COIN_ROC1_tdcTime')
         plt.ylabel('Count')
 
         ax = f.add_subplot(248)
-        ax.hist(c.add_cut(T_coin_pEDTM_tdcTime,"c_nozero"),bins=200,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(T_coin_pEDTM_tdcTime,"c_edtm"),bins=200,label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pEDTM_tdcTime,"c_edtm"),bins=c.setbin(c.add_cut(T_coin_pEDTM_tdcTime,"c_nozero"),200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pEDTM_tdcTime,"c_nozero"),bins=c.setbin(c.add_cut(T_coin_pEDTM_tdcTime,"c_nozero"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('T_coin_pEDTM_tdcTime')
         plt.ylabel('Count')
@@ -328,15 +334,15 @@ def trig_Plots():
     else:
 
         ax = f.add_subplot(231)
-        ax.hist(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTimeRaw,"c_nozero"),bins=200,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTimeRaw,"c_ptrigHMS"),bins=200,label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTimeRaw,"c_nozero_ptrigHMS"),bins=c.setbin(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTimeRaw,"c_nozero_ptrigHMS"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTimeRaw,"c_ptrigHMS"),bins=c.setbin(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTimeRaw,"c_nozero_ptrigHMS"),200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('T_coin_pTRIG_HMS_ROC1_tdcTimeRaw')
         plt.ylabel('Count')
-        
+
         ax = f.add_subplot(232)
-        ax.hist(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw,"c_nozero"),bins=200,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw,"c_ptrigSHMS"),bins=200,label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw,"c_nozero_ptrigSHMS"),bins=c.setbin(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw,"c_nozero_ptrigSHMS"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw,"c_ptrigSHMS"),bins=c.setbin(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw,"c_nozero_ptrigSHMS"),200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw')
         plt.ylabel('Count')
@@ -344,32 +350,34 @@ def trig_Plots():
         plt.title("Run %s" % runNum)
 
         ax = f.add_subplot(233)
-        ax.hist(c.add_cut(T_coin_pEDTM_tdcTimeRaw,"c_nozero"),bins=200,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(T_coin_pEDTM_tdcTimeRaw,"c_edtm"),bins=200,label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pEDTM_tdcTimeRaw,"c_nozero_edtm"),bins=c.setbin(c.add_cut(T_coin_pEDTM_tdcTimeRaw,"c_nozero_edtm"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pEDTM_tdcTimeRaw,"c_edtm"),bins=c.setbin(c.add_cut(T_coin_pEDTM_tdcTimeRaw,"c_nozero_edtm"),200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('T_coin_pEDTM_tdcTimeRaw')
         plt.ylabel('Count')
         
         ax = f.add_subplot(234)
-        ax.hist(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_nozero"),bins=200,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_ptrigHMS"),bins=200,label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_nozero_ptrigHMS"),bins=c.setbin(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_nozero_ptrigHMS"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_ptrigHMS"),bins=c.setbin(c.add_cut(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_nozero_ptrigHMS"),200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('T_coin_pTRIG_HMS_ROC1_tdcTime')
         plt.ylabel('Count')
 
         ax = f.add_subplot(235)
-        ax.hist(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_nozero"),bins=200,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_ptrigSHMS"),bins=200,label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_nozero_ptrigSHMS"),bins=c.setbin(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_nozero_ptrigSHMS"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_ptrigSHMS"),bins=c.setbin(c.add_cut(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_nozero_ptrigSHMS"),200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('T_coin_pTRIG_SHMS_ROC2_tdcTime')
         plt.ylabel('Count')
 
         ax = f.add_subplot(236)
-        ax.hist(c.add_cut(T_coin_pEDTM_tdcTime,"c_nozero"),bins=200,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(T_coin_pEDTM_tdcTime,"c_edtm"),bins=200,label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pEDTM_tdcTime,"c_nozero_edtm"),bins=c.setbin(c.add_cut(T_coin_pEDTM_tdcTime,"c_nozero_edtm"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pEDTM_tdcTime,"c_edtm"),bins=c.setbin(c.add_cut(T_coin_pEDTM_tdcTime,"c_nozero_edtm"),200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('T_coin_pEDTM_tdcTime')
         plt.ylabel('Count')
+
+        plt.legend(loc="upper right")
         
     plt.tight_layout()      
     plt.savefig('%s/UTIL_PION/scripts/trig_windows/OUTPUTS/trig_%s_%s.png' % (REPLAYPATH,ROOTPrefix,runNum))     # Input file location and variables taking)
@@ -382,8 +390,8 @@ def currentPlots():
     f = plt.figure(figsize=(11.69,8.27))
 
     ax = f.add_subplot(111)
-    ax.hist(H_bcm_bcm4a_AvgCurrent,bins=100,label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(H_bcm_bcm4a_AvgCurrent,"c_curr"),bins=100,label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+    ax.hist(c.add_cut(H_bcm_bcm4a_AvgCurrent,"c_curr"),bins=c.setbin(H_bcm_bcm4a_AvgCurrent,10),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+    ax.hist(H_bcm_bcm4a_AvgCurrent,bins=c.setbin(H_bcm_bcm4a_AvgCurrent,10),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
     plt.yscale('log')
     plt.xlabel('H_bcm_bcm4a_AvgCurrent')
     plt.ylabel('Count')

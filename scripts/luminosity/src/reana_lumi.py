@@ -2,7 +2,7 @@
 #
 # Description: Script is used to reanalyze all lumi data or to organize lumi data values into subdirectories
 # ================================================================
-# Time-stamp: "2021-10-15 07:49:35 trottar"
+# Time-stamp: "2021-11-01 01:29:30 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -20,20 +20,20 @@ parser.add_argument("-reana","--reanalyze", help="Reanalyze lumi data",action="s
 args = parser.parse_args() 
 
 # Flag to chose which runs to plot (mainly for debugging, keep as "all")
-l_flag = "run"
+l_flag = ""
 
 if l_flag == "all":
     # All lumi runs
     lumi_list = [12126,12128,12129,12130,12131,12132,12133,12135,12137,12140,12141,12142,12143,12144,12145,12147,12148,12150,
                  12151,12152,12153,12154,12156,12157,12158,12159,12160,12161,12162,12163,12164,12166,12167,12170,12171,12172,
-                 12173,12174,12175,12178,12179,12181,12184,12185,12186,12187,12189,12190,12191,12192,12193,12194,12195,112196,12197,12198,12199]
+                 12173,12174,12175,12178,12179,12181,12184,12185,12186,12187,12189,12190,12191,12192,12193,12194,12195,12196,12197,12198,12199]
 elif l_flag == "1":
     # One run (change as needed)
     lumi_list = [12126]
 else:
     # Any number of runs
     #lumi_list = [12126,12128,12129,12130,12131,12132,12133,12135,12137,12140,12141,12142]
-    lumi_list = [12141,12142]
+    lumi_list = [12126,12144]
 
 # If reanalyze argument is called then all lumi data will be processed again
 if args.reanalyze:
