@@ -64,6 +64,31 @@ if [ ! -f "$REPLAYPATH/UTIL_PION/ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMB
 EOF
     mv bcmcurrent_$RUNNUMBER.param $REPLAYPATH/PARAM/HMS/BCM/CALIB/bcmcurrent_$RUNNUMBER.param
     cd $REPLAYPATH
+
+    echo ""                                                                                                                                                                           
+    echo ""                                                                                                                                                                                   
+    echo ""                                                                                                                                            
+    echo "-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|"                           
+    echo ""                                                   
+    echo "     _      "
+    echo "   _| |     "
+    echo " _| | |     "
+    echo "| | | |     "
+    echo "| | | | __  "
+    echo "| | | |/  \ "
+    echo "|       /\ \\"
+    echo "|      /  \/ Good soup!"
+    echo "|      \  /\\"
+    echo "|       \/ /"
+    echo " \        / "
+    echo "  |     /   "
+    echo "  |    |    "                          
+    echo ""          
+    echo "-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|"                                               
+    echo ""                                                                                                                                                
+    echo ""                                                                                    
+    echo ""                         
+
 else echo "Scaler replayfile already found for this run in $REPLAYPATH/ROOTfiles/Scalers - Skipping scaler replay step"
 fi
 

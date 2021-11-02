@@ -61,10 +61,36 @@ if [ ! -f "$REPLAYPATH/UTIL_PION/ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMB
 EOF
     mv bcmcurrent_$RUNNUMBER.param $REPLAYPATH/PARAM/HMS/BCM/CALIB/bcmcurrent_$RUNNUMBER.param
     cd $REPLAYPATH
+
+    echo ""                                                                                                                                                                           
+    echo ""                                                                                                                                                                                   
+    echo ""                                                                                                                                            
+    echo "-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|"                           
+    echo ""                                                   
+    echo "     _      "
+    echo "   _| |     "
+    echo " _| | |     "
+    echo "| | | |     "
+    echo "| | | | __  "
+    echo "| | | |/  \ "
+    echo "|       /\ \\"
+    echo "|      /  \/ Good soup!"
+    echo "|      \  /\\"
+    echo "|       \/ /"
+    echo " \        / "
+    echo "  |     /   "
+    echo "  |    |    "                          
+    echo ""          
+    echo "-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|"                                               
+    echo ""                                                                                                                                                
+    echo ""                                                                                    
+    echo ""                         
+
 else echo "Scaler replayfile already found for this run in $REPLAYPATH/ROOTfiles/Scalers - Skipping scaler replay step"
 fi
 
 sleep 3
+
 # SJDK 31/08/21 - Replays for luminosity analysis should output to Analysis/Lumi, for now this is probably fine
 if [ ! -f "$REPLAYPATH/UTIL_PION/ROOTfiles/Analysis/Lumi/Pion_replay_luminosity_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
     if [[ "${HOSTNAME}" != *"ifarm"* ]]; then
