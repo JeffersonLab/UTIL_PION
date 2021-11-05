@@ -221,14 +221,14 @@ P_MMpi_pions_cut_randm = ROOT.TH1D("P_MMpi_pions_cut_randm", "Missing Mass; MM_{
 P_MMpi_pions_cut_randm_scaled = ROOT.TH1D("P_MMpi_pions_cut_randm_scaled", "Missing Mass; MM_{#pi}; Counts", 200, 0.5, 1.8)
 P_MMpi_pions_cut_randm_sub = ROOT.TH1D("P_MMpi_pions_cut_randm_sub", "Missing Mass Rndm Sub; MM_{#pi}; Counts", 200, 0.5, 1.8)
 # SJDK - 26/10/21 - Changed the plot title to be more accurate
-phiq_plot = ROOT.TH1D("Phiq", "#phi Dist for Prompt Events (Incl MM Cut); #phi; counts", 12, -3.14, 3.14) # 2021/10/25 NH - added these at garths request
-t_plot = ROOT.TH1D("-t", "-t Dist for Prompt Events (Incl MM Cut); -t; counts", 48, 0, 2.4) 
+phiq_plot = ROOT.TH1D("Phiq", "#phi Dist for Prompt Events (Incl MM Cut); #phi; Counts", 12, -3.14, 3.14) # 2021/10/25 NH - added these at garths request
+t_plot = ROOT.TH1D("-t", "-t Dist for Prompt Events (Incl MM Cut); -t; Counts", 48, 0, 2.4) 
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
-    Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; counts", 200, 6, 10) 
-    W_pions_cut = ROOT.TH1D("W_pions_cut", "W Dist for Prompt Events (Incl MM Cut); W; counts", 200, 2.3, 3.3)
+    Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; Counts", 200, 6, 10) 
+    W_pions_cut = ROOT.TH1D("W_pions_cut", "W Dist for Prompt Events (Incl MM Cut); W; Counts", 200, 2.3, 3.3)
 elif (FilenameOverride != False): # Special case, run with specifc file name, construct histo with ranges based upon filename
-    Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; counts", 200, Q2min, Q2max) 
-    W_pions_cut = ROOT.TH1D("W_pions_cut", "W Dist for Prompt Events (Incl MM Cut); W; counts", 200, Wmin, Wmax)  
+    Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; Counts", 200, Q2min, Q2max) 
+    W_pions_cut = ROOT.TH1D("W_pions_cut", "W Dist for Prompt Events (Incl MM Cut); W; Counts", 200, Wmin, Wmax)  
 
 ##############################################################################################################################################
 
@@ -509,6 +509,7 @@ c1_pions_kin.Print(Pion_Analysis_Distributions + '(')
 c1_pion_kin_pg2 = TCanvas("c1_pions_kin_pg2", "Pion Kinematic Distributions part 2", 100, 0, 1000, 900)
 c1_pion_kin_pg2.Divide(2,2)
 c1_pion_kin_pg2.cd(1)
+phiq_plot.SetMinimum(0) # SJDK 02/11/21 - Added to change the autoscaling of the plot
 phiq_plot.Draw("Hist")
 c1_pion_kin_pg2.cd(2)
 t_plot.Draw("Hist")
@@ -868,6 +869,13 @@ Aero_proj_yx_pions_uncut.Draw("COLZ")
 c1_pions_proj.cd(6)
 Aero_proj_yx_pions_cut.Draw("COLZ")
 c1_pions_proj.Print(Pion_Analysis_Distributions + ')')
+
+# SJDK - 02/11/21 - Just some stuff I've added in a Steve Wood's request, I'll delete this once I'm done!
+#c_PlotsForSteve = TCanvas("c_PlotsForSteve", "Phiq Plot", 100, 0, 2560, 1440)
+#phiq_plot.SetMinimum(0) # SJDK 02/11/21 - Added to change the autoscaling of the plot
+#phiq_plot.Draw("Hist")
+#c_PlotsForSteve.Print("%s/Q2_8p5_Phiq_Plot.pdf" % (OUTPATH))
+#c_PlotsForSteve.Print("%s/Q2_8p5_Phiq_Plot.png" % (OUTPATH))
 
 #############################################################################################################################################
 
