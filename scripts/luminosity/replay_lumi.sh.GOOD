@@ -39,15 +39,19 @@ ANATYPE=`echo ${PATHFILE_INFO} | cut -d ','  -f11`
 USER=`echo ${PATHFILE_INFO} | cut -d ','  -f12`
 HOST=`echo ${PATHFILE_INFO} | cut -d ','  -f13`
 
-source /site/12gev_phys/softenv.sh 2.3
-source /apps/root/6.18.04/setroot_CUE.bash
+if [[ "${HOSTNAME}" != *"ifarm"* ]]; then
+    source /site/12gev_phys/softenv.sh 2.3
+    source /apps/root/6.18.04/setroot_CUE.bash
+fi
 
 cd "${HCANAPATH}"
 source "${HCANAPATH}/setup.sh"
-cd "${REPLAYPATH}"
-source "${REPLAYPATH}/setup.sh"
+cd "$REPLAYPATH"
+source "$REPLAYPATH/setup.sh"
 
 ###################################################################################################################################################
+# RLT 09/24/21...Changed from 150k to full analysis. There may be issues with the currents/EDTM because the cuts may only be applying trip cuts to the first 150k events.
+# Section for luminosity replay script
 if [ ! -f "$UTILPATH/ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
     eval "$REPLAYPATH/hcana -l -q -b \"SCRIPTS/COIN/SCALERS/replay_coin_scalers.C($RUNNUMBER,${MAXEVENTS})\""
     cd "$REPLAYPATH/CALIBRATION/bcm_current_map"
@@ -63,6 +67,7 @@ fi
 
 sleep 3
 
+# SJDK 31/08/21 - Replays for luminosity analysis should output to Analysis/Lumi, for now this is probably fine
 if [ ! -f "$UTILPATH/ROOTfiles/Analysis/Lumi/${ANATYPE}_replay_luminosity_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
     if [[ "${HOSTNAME}" != *"ifarm"* ]]; then
 	if [[ "${HOSTNAME}" == *"cdaq"* ]]; then
@@ -77,6 +82,9 @@ else echo "Replayfile already found for this run in $UTILPATH/ROOTfiles/Analysis
 fi
 
 sleep 3
+
+source /site/12gev_phys/softenv.sh 2.3
+source /apps/root/6.18.04/setroot_CUE.bash
 
 # Sets trigger windows
 echo

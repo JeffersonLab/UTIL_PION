@@ -3,7 +3,7 @@
 #
 # Description: Script to plot all runs to check how trigger windows look
 # ================================================================
-# Time-stamp: "2021-10-30 00:48:30 trottar"
+# Time-stamp: "2021-11-03 05:06:19 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -11,6 +11,11 @@
 # Copyright (c) trottar
 #
 import os
+
+################################################################################################################################################
+'''
+Determine which runs to reanalyze
+'''
 
 # Flag to chose which runs to plot (mainly for debugging, keep as "all")
 l_flag = "all"
@@ -26,6 +31,11 @@ elif l_flag == "1":
 else:
     # Any number of runs
     lumi_list = [12126,12128,12129,12130,12131,12132,12133,12135,12137,12140,12141,12142]
+
+################################################################################################################################################
+'''
+Reanalyze data
+'''
 
 # Reads in each run number and runs the bash plotting script
 for l in lumi_list:

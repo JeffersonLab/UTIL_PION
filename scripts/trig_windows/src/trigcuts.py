@@ -3,7 +3,7 @@
 #
 # Description: Script to dynamically set new trigger windows and update the param file with these values
 # ================================================================
-# Time-stamp: "2021-10-31 07:52:54 trottar"
+# Time-stamp: "2021-11-03 07:27:31 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -19,57 +19,57 @@ import scipy.integrate as integrate
 import matplotlib.pyplot as plt
 import sys, math, os, subprocess
 
+################################################################################################################################################
+'''
+User Inputs
+'''
+
 RunType = sys.argv[1]
 ROOTPrefix = sys.argv[2]
 runNum = sys.argv[3]
 MaxEvent=sys.argv[4]
 
-# Add this to all files for more dynamic pathing
-USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
-HOST = subprocess.getstatusoutput("hostname")
-
-# Set path depending upon hostname. Change or add more as needed  
-if ("farm" in HOST[1]):
-    REPLAYPATH="/group/c-pionlt/online_analysis/hallc_replay_lt"
-elif ("lark" in HOST[1]):
-    REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
-elif ("cdaq" in HOST[1]):
-    REPLAYPATH = "/home/cdaq/hallc-online/hallc_replay_lt"
-elif ("trottar" in HOST[1]):
-    REPLAYPATH = "/home/trottar/Analysis/hallc_replay_lt"
+################################################################################################################################################
+'''
+ltsep package import and pathing definitions
+'''
 
 # Import package for cuts
-sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
-import kaonlt as klt
+import ltsep as lt 
 
-print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
+# Add this to all files for more dynamic pathing
+USER =  lt.SetPath(os.path.realpath(__file__)).getPath("USER") # Grab user info for file finding
+HOST = lt.SetPath(os.path.realpath(__file__)).getPath("HOST")
+REPLAYPATH = lt.SetPath(os.path.realpath(__file__)).getPath("REPLAYPATH")
+UTILPATH = lt.SetPath(os.path.realpath(__file__)).getPath("UTILPATH")
+ANATYPE=lt.SetPath(os.path.realpath(__file__)).getPath("ANATYPE")
 
-out_f = "%s/UTIL_PION/scripts/trig_windows/OUTPUTS/trig_data.csv" % REPLAYPATH
+################################################################################################################################################
+
+print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, REPLAYPATH))
+
+out_f = UTILPATH+"/scripts/trig_windows/OUTPUTS/trig_data.csv"
+
+################################################################################################################################################
+'''
+Check that root/output paths and files exist for use
+'''
 
 # Construct the name of the rootfile based upon the info we provided
-OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/PionLT" % REPLAYPATH        # Output folder location
-rootName = "%s/UTIL_PION/ROOTfiles/Analysis/%s/%s_%s_%s.root" % (REPLAYPATH,RunType,ROOTPrefix,runNum,MaxEvent)     # Input file location and variables taking
+OUTPATH = UTILPATH+"/OUTPUT/Analysis/%sLT" % ANATYPE        # Output folder location
+rootName = UTILPATH+"/ROOTfiles/Analysis/Lumi/%s_%s_%s.root" % (ROOTPrefix,runNum,MaxEvent)     # Input file location and variables taking
 print ("Attempting to process %s" %(rootName))
-if os.path.exists(OUTPATH):
-    if os.path.islink(OUTPATH):
-        pass
-    elif os.path.isdir(OUTPATH):
-        pass
-    else:
-        print ("%s exists but is not a directory or sym link, check your directory/link and try again" % (OUTPATH))
-        sys.exit(2)
-else:
-    print("Output path not found, please make a sym link or directory called OUTPUT in UTIL_PION to store output")
-    sys.exit(3)
-if os.path.isfile(rootName):
-    print ("%s exists, processing" % (rootName))
-else:
-    print ("%s not found - do you have the correct sym link/folder set up?" % (rootName))
-    sys.exit(4)
+lt.SetPath(os.path.realpath(__file__)).checkDir(OUTPATH)
+lt.SetPath(os.path.realpath(__file__)).checkFile(rootName)
 print("Output path checks out, outputting to %s" % (OUTPATH))
 
+################################################################################################################################################
+'''
+Grab prescale values and tracking efficiencies from report file
+'''
+
 # Open report file to grab prescale values
-report = "%s/UTIL_PION/REPORT_OUTPUT/Analysis/%s/%s_%s_%s.report" % (REPLAYPATH,RunType,ROOTPrefix,runNum,MaxEvent)
+report = UTILPATH+"/REPORT_OUTPUT/Analysis/%s/%s_%s_%s.report" % (RunType,ROOTPrefix,runNum,MaxEvent)
 f = open(report)
 psList = ['SW_Ps1_factor','SW_Ps2_factor','SW_Ps3_factor','SW_Ps4_factor','SW_Ps5_factor','SW_Ps6_factor']
    
@@ -136,6 +136,11 @@ for i,index in enumerate(psActual):
             PS6 = psActual[i]            
 f.close()
 
+################################################################################################################################################
+'''
+Define prescale variables
+'''
+
 print("\nPre-scale values...\nPS1:{0}, PS2:{1}, PS3:{2}, PS4:{3}, PS5:{4}, PS6:{5}\n".format(PS1,PS2,PS3,PS4,PS5,PS6))
 
 # Save only the used prescale triggers to the PS_used list
@@ -156,12 +161,13 @@ else:
     SHMS_PS = PS_used[0][1]
     HMS_PS = PS_used[1][1]
 
+################################################################################################################################################
+
 '''
 ANALYSIS TREE, T
 '''
 
 tree = up.open(rootName)["T"]
-branch = klt.pyBranch(tree)
 
 H_bcm_bcm4a_AvgCurrent = tree.array("H.bcm.bcm4a.AvgCurrent")
 
@@ -206,18 +212,19 @@ if len(PS_used) > 2:
 T_coin_pEDTM_tdcTimeRaw = tree.array("T.coin.pEDTM_tdcTimeRaw")
 T_coin_pEDTM_tdcTime = tree.array("T.coin.pEDTM_tdcTime")
 
-fout = REPLAYPATH+'/UTIL_PION/DB/CUTS/run_type/lumi.cuts'
+################################################################################################################################################
+'''
+Define and set up cuts
+'''
+
+fout = UTILPATH+'/DB/CUTS/run_type/lumi.cuts'
 
 cuts = ["c_nozero_edtm","c_nozero_ptrigHMS","c_nozero_ptrigSHMS"]
 # Check if COIN trigger is used
 if len(PS_used) > 2:
     cuts = ["c_nozero_edtm","c_nozero_ptrigHMS","c_nozero_ptrigSHMS","c_nozero_ptrigCOIN"]
 
-# read in cuts file and make dictionary
-c = klt.pyPlot(REPLAYPATH)
-readDict = c.read_dict(cuts,fout,runNum)
-
-def make_cutDict(cut,inputDict=None):
+def make_cutDict(cuts,fout,runNum,CURRENT_ENV):
     '''
     This method calls several methods in kaonlt package. It is required to create properly formated
     dictionaries. The evaluation must be in the analysis script because the analysis variables (i.e. the
@@ -226,44 +233,35 @@ def make_cutDict(cut,inputDict=None):
     implimented.
     '''
 
-    global c
+    # read in cuts file and make dictionary
+    importDict = lt.SetCuts(CURRENT_ENV).importDict(cuts,fout,runNum)
+    for i,cut in enumerate(cuts):
+        x = lt.SetCuts(CURRENT_ENV,importDict).booleanDict(cut)
+        print("\n%s" % cut)
+        print(x, "\n")
+        if i == 0:
+            inputDict = {}
+        cutDict = lt.SetCuts(CURRENT_ENV,importDict).readDict(cut,inputDict)
+        for j,val in enumerate(x):
+            cutDict = lt.SetCuts(CURRENT_ENV,importDict).evalDict(cut,eval(x[j]),cutDict)
+    return lt.SetCuts(CURRENT_ENV,cutDict)
 
-    c = klt.pyPlot(REPLAYPATH,readDict)
-    x = c.w_dict(cut)
-    print("\n%s" % cut)
-    print(x, "\n")
-    
-    if inputDict == None:
-        inputDict = {}
-        
-    for key,val in readDict.items():
-        if key == cut:
-            inputDict.update({key : {}})
+c = make_cutDict(cuts,fout,runNum,os.path.realpath(__file__))
 
-    for i,val in enumerate(x):
-        tmp = x[i]
-        if tmp == "":
-            continue
-        else:
-            inputDict[cut].update(eval(tmp))
-        
-    return inputDict
-
-for i,c in enumerate(cuts):
-    if i == 0:
-        cutDict = make_cutDict("%s" % c )
-    else:
-        cutDict = make_cutDict("%s" % c,cutDict)
-
-c = klt.pyPlot(REPLAYPATH,cutDict)
+################################################################################################################################################
+'''
+Grabs the misc param file so it can be updated with trigger windows
+'''
 
 # Read in the Misc_Parameters.csv cut parameter file which has the trigger window information
-inp_f = REPLAYPATH+'/UTIL_PION/DB/PARAM/Misc_Parameters.csv'
+inp_f = UTILPATH+'/DB/PARAM/Misc_Parameters.csv'
 try:
     trig_data = pd.read_csv(inp_f)
 except IOError:
     print("Error: %s does not appear to exist." % inp_f)
 print(trig_data.keys())
+
+################################################################################################################################################
 
 def setWindows(runNum):
     '''
@@ -313,9 +311,11 @@ def setWindows(runNum):
 
     return new_row
 
+################################################################################################################################################
+
 def reconParam(runNum):
     '''
-    Reconstruct /UTIL_PION/DB/PARAM/Misc_Parameters.csv with new window values
+    Reconstruct /DB/PARAM/Misc_Parameters.csv with new window values
     '''
     # Get new windows and set up row to be added to Misc_Parameters.csv
     new_row = setWindows(runNum)
@@ -344,6 +344,8 @@ def reconParam(runNum):
 
     print("\n\nNew version of Misc_Parameters.csv...\n",trig_data)
     return trig_data      
+
+################################################################################################################################################
 
 def main():
 

@@ -350,6 +350,16 @@ class pyPlot(pyDict):
                 f.close()
             return gencut
 
+        def flatten(minus_list):
+            flat_list = []
+            for e in minus_list:
+                if type(e) is list:
+                    for i in e:
+                        flat_list.append(i)
+                else:
+                    flat_list.append(e)
+            return flat_list
+
         for ic in inp_cuts:
             if (self.DEBUG):
                 print("\nInput ", ic)
@@ -370,6 +380,7 @@ class pyPlot(pyDict):
                         if (self.DEBUG):
                             print("Type ", typName)
                             print("Cuts ", pluscut)
+                        minuscut = [None]*len(pluscut)
                         # Loop over run type cuts being split by +
                         for i,evt in enumerate(pluscut):
                             # Split any cuts to be removed
@@ -379,9 +390,8 @@ class pyPlot(pyDict):
                                 # iteration over run type cuts
                                 pluscut[i] = cutminus[0].strip()
                                 # Ignore first element, since it will always be an added cut
-                                minuscut = cutminus[1:]
-                            else:
-                                minuscut = []
+                                minuscut[i] = cutminus[1:]
+                        minuscut = flatten([x for x in minuscut if x is not None])
                         if (self.DEBUG):
                             print("+ ", pluscut)
                             print("- ", minuscut)

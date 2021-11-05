@@ -3,7 +3,7 @@
 # Description: Grabs lumi data from corresponding csv depending on run setting. Then plots the yields and creates a comprehensive table.
 # Variables calculated: current, rate_HMS, rate_SHMS, sent_edtm_PS, uncern_HMS_evts_scaler, uncern_SHMS_evts_scaler, uncern_HMS_evts_notrack, uncern_SHMS_evts_notrack, uncern_HMS_evts_track, uncern_SHMS_evts_track
 # ================================================================
-# Time-stamp: "2021-10-30 05:42:15 trottar"
+# Time-stamp: "2021-11-04 02:01:18 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -16,64 +16,29 @@ import matplotlib.pyplot as plt
 from csv import DictReader
 import sys, os, subprocess
 
-# Add this to all files for more dynamic pathing
-USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
-HOST = subprocess.getstatusoutput("hostname")
+################################################################################################################################################
+'''
+ltsep package import and pathing definitions
+'''
 
-if ("farm" in HOST[1]):
-    REPLAYPATH="/group/c-pionlt/online_analysis/hallc_replay_lt"
-elif ("lark" in HOST[1]):
-    REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
-elif ("cdaq" in HOST[1]):
-    REPLAYPATH = "/home/cdaq/hallc-online/hallc_replay_lt"
-elif ("trottar" in HOST[1]):
-    REPLAYPATH = "/home/trottar/Analysis/hallc_replay_lt"
+# Import package for cuts
+import ltsep as lt 
+
+# Add this to all files for more dynamic pathing
+USER =  lt.SetPath(os.path.realpath(__file__)).getPath("USER") # Grab user info for file finding
+HOST = lt.SetPath(os.path.realpath(__file__)).getPath("HOST")
+REPLAYPATH = lt.SetPath(os.path.realpath(__file__)).getPath("REPLAYPATH")
+SCRIPTPATH = lt.SetPath(os.path.realpath(__file__)).getPath("SCRIPTPATH")
+
+################################################################################################################################################
 
 # Depending on input, the corresponding data setting csv data will be grabbed
 inp_name = sys.argv[1]
-if "1" in inp_name:
-    if "LH2" in inp_name.upper():
-        target = "LH2"
-        inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_1/LH2/lumi_data_l1_lh2.csv" % str(REPLAYPATH)
-        out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_1/LH2/yield_data_l1_lh2.csv" % str(REPLAYPATH)
-        print("\nGrabbing input...\n\n%s" % str(inp_f))
-    if "LD2" in inp_name.upper():
-        target = "LD2"
-        inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_1/LD2/lumi_data_l1_ld2.csv" % str(REPLAYPATH)
-        out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_1/LD2/yield_data_l1_ld2.csv" % str(REPLAYPATH)
-        print("\nGrabbing input...\n\n%s" % str(inp_f))
-    if "C" in inp_name.upper():
-        target = "carbon"
-        inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_1/Carbon0p5/lumi_data_l1_c0p5.csv" % str(REPLAYPATH)
-        out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_1/Carbon0p5/yield_data_l1_c0p5.csv" % str(REPLAYPATH)
-        print("\nGrabbing input...\n\n%s" % str(inp_f))
-elif "2" in inp_name:
-    if "LH2" in inp_name.upper():
-        target = "LH2"
-        inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_2/LH2/lumi_data_l2_lh2.csv" % str(REPLAYPATH)
-        out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_2/LH2/yield_data_l2_lh2.csv" % str(REPLAYPATH)
-        print("\nGrabbing input...\n\n%s" % str(inp_f))
-    if "LD2" in inp_name.upper():
-        target = "LD2"
-        inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_2/LD2/lumi_data_l2_ld2.csv" % str(REPLAYPATH)
-        out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_2/LD2/yield_data_l2_ld2.csv" % str(REPLAYPATH)
-        print("\nGrabbing input...\n\n%s" % str(inp_f))
-    if "C" in inp_name.upper():
-        target = "carbon"
-        inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_2/Carbon0p5/lumi_data_l2_c0p5.csv" % str(REPLAYPATH)
-        out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_2/Carbon0p5/yield_data_l2_c0p5.csv" % str(REPLAYPATH)
-        print("\nGrabbing input...\n\n%s" % str(inp_f))
-elif inp_name == None:
+if "fADC" in inp_name:
     target = "LH2"
-    inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/fADC_data.csv" % str(REPLAYPATH)
-    out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/fADCyield_data.csv" % str(REPLAYPATH)
+    inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/fADC_pt1_data.csv" % str(REPLAYPATH)
+    out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/fADCyield_pt1_data.csv" % str(REPLAYPATH)
     print("\nError: Invalid input...\nGrabbing default input...\n\n%s" % str(inp_f))
-else:
-    target = "LH2"
-    inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/fADC_data.csv" % str(REPLAYPATH)
-    out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/fADCyield_data.csv" % str(REPLAYPATH)
-    print("\nGrabbing default input...\n\n%s" % str(inp_f))
-
 
 print("\nRunning as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 

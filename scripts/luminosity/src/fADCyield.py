@@ -3,7 +3,7 @@
 # Description: This is where the variables for the yield calculations are formulated.
 # Variables calculated: tot_events, h_int_goodscin_evts, p_int_goodscin_evts, SHMSTRIG_cut, HMSTRIG_cut, HMS_track, HMS_track_uncern, SHMS_track, SHMS_track_uncern, accp_edtm
 # ================================================================
-# Time-stamp: "2021-10-20" heinricn
+# Time-stamp: "2021-11-04 02:47:33 trottar" heinricn
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>, Nathan Heinrich <heinricn@uregina.ca>
@@ -23,53 +23,47 @@ ROOTPrefix = sys.argv[1]
 runNum = sys.argv[2]
 MaxEvent=sys.argv[3]
 
-# Add this to all files for more dynamic pathing
-USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
-HOST = subprocess.getstatusoutput("hostname")
-
-# Set path depending upon hostname. Change or add more as needed  
-if ("farm" in HOST[1]):
-    REPLAYPATH="/group/c-pionlt/online_analysis/hallc_replay_lt"
-elif ("lark" in HOST[1]):
-    REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
-elif ("cdaq" in HOST[1]):
-    REPLAYPATH = "/home/cdaq/hallc-online/hallc_replay_lt"
-elif ("trottar" in HOST[1]):
-    REPLAYPATH = "/home/trottar/Analysis/hallc_replay_lt"
+################################################################################################################################################
+'''
+ltsep package import and pathing definitions
+'''
 
 # Import package for cuts
-sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
-import kaonlt as klt
+import ltsep as lt 
+
+# Add this to all files for more dynamic pathing
+USER =  lt.SetPath(os.path.realpath(__file__)).getPath("USER") # Grab user info for file finding
+HOST = lt.SetPath(os.path.realpath(__file__)).getPath("HOST")
+REPLAYPATH = lt.SetPath(os.path.realpath(__file__)).getPath("REPLAYPATH")
+UTILPATH = lt.SetPath(os.path.realpath(__file__)).getPath("UTILPATH")
+ANATYPE=lt.SetPath(os.path.realpath(__file__)).getPath("ANATYPE")
+
+################################################################################################################################################
 
 # Import scaler table
 import scaler
 
-print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
+################################################################################################################################################
+
+print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, REPLAYPATH))
 
 # Output for luminosity table
-out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/fADC_data.csv" % REPLAYPATH
+out_f = UTILPATH+"/scripts/luminosity/OUTPUTS/lumi_data.csv"
+
+################################################################################################################################################
+'''
+Check that root/output paths and files exist for use
+'''
 
 # Construct the name of the rootfile based upon the info we provided
-OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/PionLT" % REPLAYPATH        # Output folder location
-rootName = "%s/UTIL_PION/ROOTfiles/Analysis/Lumi/%s_%s_%s.root" % (REPLAYPATH,ROOTPrefix,runNum,MaxEvent)     # Input file location and variables taking
+OUTPATH = UTILPATH+"/OUTPUT/Analysis/%sLT" % ANATYPE        # Output folder location
+rootName = UTILPATH+"/ROOTfiles/Analysis/Lumi/%s_%s_%s.root" % (ROOTPrefix,runNum,MaxEvent)     # Input file location and variables taking
 print ("Attempting to process %s" %(rootName))
-if os.path.exists(OUTPATH):
-    if os.path.islink(OUTPATH):
-        pass
-    elif os.path.isdir(OUTPATH):
-        pass
-    else:
-        print ("%s exists but is not a directory or sym link, check your directory/link and try again" % (OUTPATH))
-        sys.exit(2)
-else:
-    print("Output path not found, please make a sym link or directory called OUTPUT in UTIL_PION to store output")
-    sys.exit(3)
-if os.path.isfile(rootName):
-    print ("%s exists, processing" % (rootName))
-else:
-    print ("%s not found - do you have the correct sym link/folder set up?" % (rootName))
-    sys.exit(4)
+lt.SetPath(os.path.realpath(__file__)).checkDir(OUTPATH)
+lt.SetPath(os.path.realpath(__file__)).checkFile(rootName)
 print("Output path checks out, outputting to %s" % (OUTPATH))
+
+################################################################################################################################################
 
 # Open report file to grab prescale values and tracking efficiency
 report = "%s/UTIL_PION/REPORT_OUTPUT/Analysis/Lumi/%s_%s_%s.report" % (REPLAYPATH,ROOTPrefix,runNum,MaxEvent)
@@ -174,7 +168,6 @@ SCALER TREE, TSP
 '''
 
 s_tree = up.open(rootName)["TSP"]
-s_branch = klt.pyBranch(s_tree)
 
 P_BCM4A_scalerCharge = s_tree.array("P.BCM4A.scalerCharge")
 
@@ -183,7 +176,6 @@ ANALYSIS TREE, T
 '''
 
 tree = up.open(rootName)["T"]
-branch = klt.pyBranch(tree)
 
 if PS_names[1] is "PS3" or PS_names[1] is "PS4":
     W = tree.array("H.kin.primary.W")
@@ -294,11 +286,7 @@ EvtType = tree.array("fEvtHdr.fEvtType")
 cuts = ["h_cal", "h_cer", "p_cal", "p_hgcer", "p_aero", "p_ecut_lumi_eff", "p_picut_lumi_eff", "p_kcut_lumi_eff", "p_pcut_lumi_eff", "p_hadcut_lumi_eff", "h_ecut_lumi_eff", "h_picut_lumi_eff", "h_hadcut_lumi_eff", "c_noedtm", "c_edtm", "c_ptrigHMS", "c_ptrigSHMS", "c_ptrigCOIN", "c_curr"]     
 fout = REPLAYPATH+'/UTIL_PION/DB/CUTS/run_type/fADCdeadtime.cuts'
 
-# read in cuts file and make dictionary
-c = klt.pyPlot(REPLAYPATH)
-readDict = c.read_dict(cuts,fout,runNum)
-
-def make_cutDict(cut,inputDict=None):
+def make_cutDict(cuts,fout,runNum,CURRENT_ENV):
     '''
     This method calls several methods in kaonlt package. It is required to create properly formated
     dictionaries. The evaluation must be in the analysis script because the analysis variables (i.e. the
@@ -307,44 +295,29 @@ def make_cutDict(cut,inputDict=None):
     implimented.
     '''
 
-    global c
+    # read in cuts file and make dictionary
+    importDict = lt.SetCuts(CURRENT_ENV).importDict(cuts,fout,runNum)
+    for i,cut in enumerate(cuts):
+        x = lt.SetCuts(CURRENT_ENV,importDict).booleanDict(cut)
+        #######################################################################################
+        # Threshold current
+        if cut == "c_curr":
+            global thres_curr, report_current
+            # e.g. Grabbing threshold current (ie 2.5) from something like this [' {"H_bcm_bcm4a_AvgCurrent" : (abs(H_bcm_bcm4a_AvgCurrent-55) < 2.5)}']
+            thres_curr = float(x[0].split(":")[1].split("<")[1].split(")")[0].strip())
+            # e.g. Grabbing set current for run (ie 55) from something like this [' {"H_bcm_bcm4a_AvgCurrent" : (abs(H_bcm_bcm4a_AvgCurrent-55) < 2.5)}']
+            report_current = float(x[0].split(":")[1].split("<")[0].split(")")[0].split("-")[1].strip())
+        #######################################################################################
+        print("\n%s" % cut)
+        print(x, "\n")
+        if i == 0:
+            inputDict = {}
+        cutDict = lt.SetCuts(CURRENT_ENV,importDict).readDict(cut,inputDict)
+        for j,val in enumerate(x):
+            cutDict = lt.SetCuts(CURRENT_ENV,importDict).evalDict(cut,eval(x[j]),cutDict)
+    return lt.SetCuts(CURRENT_ENV,cutDict)
 
-    c = klt.pyPlot(REPLAYPATH,readDict)
-    x = c.w_dict(cut)
-    print("\n%s" % cut)
-    print(x, "\n")
-
-    # Threshold current
-    if cut == "c_curr":
-        global thres_curr, report_current
-        # e.g. Grabbing threshold current (ie 2.5) from something like this [' {"H_bcm_bcm4a_AvgCurrent" : (abs(H_bcm_bcm4a_AvgCurrent-55) < 2.5)}']
-        thres_curr = float(x[0].split(":")[1].split("<")[1].split(")")[0].strip())
-        # e.g. Grabbing set current for run (ie 55) from something like this [' {"H_bcm_bcm4a_AvgCurrent" : (abs(H_bcm_bcm4a_AvgCurrent-55) < 2.5)}']
-        report_current = float(x[0].split(":")[1].split("<")[0].split(")")[0].split("-")[1].strip())
-    
-    if inputDict == None:
-        inputDict = {}
-        
-    for key,val in readDict.items():
-        if key == cut:
-            inputDict.update({key : {}})
-
-    for i,val in enumerate(x):
-        tmp = x[i]
-        if tmp == "":
-            continue
-        else:
-            inputDict[cut].update(eval(tmp))
-        
-    return inputDict
-
-for i,c in enumerate(cuts):
-    if i == 0:
-        cutDict = make_cutDict("%s" % c )
-    else:
-        cutDict = make_cutDict("%s" % c,cutDict)
-
-c = klt.pyPlot(REPLAYPATH,cutDict)
+c = make_cutDict(cuts,fout,runNum,os.path.realpath(__file__))
 
 def pid_cuts():
     '''
@@ -508,7 +481,7 @@ def main():
     # lumi_data = {**scalers , **track_info} # only python 3.5+
 
     # Import dictionaries
-    scalers = scaler.scaler(PS_names, HMS_PS, SHMS_PS, thres_curr, report_current, REPLAYPATH, runNum, MaxEvent, s_tree, s_branch) 
+    scalers = scaler.scaler(PS_names, HMS_PS, SHMS_PS, thres_curr, report_current, runNum, MaxEvent, s_tree) 
     track_info = analysis()
 
     # Merge and sort the two dictionaries of calculations

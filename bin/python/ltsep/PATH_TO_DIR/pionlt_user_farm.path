@@ -1,0 +1,11 @@
+HCANAPATH=/u/group/c-pionlt/hcana
+REPLAYPATH=/u/group/c-pionlt/USERS/${USER}/hallc_replay_lt
+UTILPATH=/u/group/c-pionlt/USERS/${USER}/hallc_replay_lt/UTIL_PION
+PACKAGEPATH=/u/home/${USER}/.local/lib/python3.4/site-packages/ltsep
+OUTPATH=/u/group/c-pionlt/USERS/${USER}/hallc_replay_lt/UTIL_PION/OUTPUT/Analysis
+ROOTPATH=/u/group/c-pionlt/USERS/${USER}/hallc_replay_lt/UTIL_PION/ROOTfiles/Analysis
+REPORTPATH=/u/group/c-pionlt/USERS/${USER}/hallc_replay_lt/UTIL_PION/REPORT_OUTPUT/Analysis
+CUTPATH=/u/group/c-pionlt/USERS/${USER}/hallc_replay_lt/UTIL_PION/DB/CUTS
+PARAMPATH=/u/group/c-pionlt/USERS/${USER}/hallc_replay_lt/UTIL_PION/DB/PARAM
+SCRIPTPATH=/u/group/c-pionlt/USERS/${USER}/hallc_replay_lt/UTIL_PION/scripts
+ANATYPE=Pion
