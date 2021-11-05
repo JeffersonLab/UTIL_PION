@@ -284,6 +284,8 @@ elif (FilenameOverride != False): # Special case, run with specifc file name, co
     Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W Dist for Prompt Events (Incl MM Cut); Q2; W", 200, Q2min, Q2max, 200, Wmin, Wmax)
 # SJDK - 26/10/21 - Changed the plot title to be more accurate
 phiqvst_pions_cut = ROOT.TH2D("phiqvst_pions_cut","#phi vs -t Dist for Prompt Events (Incl MM Cut); #phi ;-t", 12, -3.14, 3.14, 48, 0.0, 2.4) #2021 08 12 - NH doubled binning range and # bins
+# SJDK 03/11/21 - New phi_q vs theta_q plot that Steve Wood wanted
+phiqvsthq_pions_cut = ROOT.TH2D("phiqvsthq_pions_cut","#phi_{q} vs #theta_{q}; #phi_{q}; #theta_{q}", 12, -3.14, 3.14, 20, 0, 0.1)
 
 P_HGC_xy_npe_pions_uncut = ROOT.TH3D("P_HGC_xy_npe_pions_uncut", "SHMS HGC NPE as fn of yAtCer vs SHMS HGC xAtCer (no cuts); HGC_yAtCer(cm); HGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
 P_Aero_xy_npe_pions_uncut = ROOT.TH3D("P_Aero_xy_npe_pions_uncut", "SHMS Aerogel NPE as fn of yAtCer vs xAtCer (no cuts); Aero_yAtCer(cm); Aero_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
@@ -402,6 +404,7 @@ for event in Cut_Pion_Events_Prompt_MM_tree:
     epsilon_pions_cut.Fill(event.epsilon)
     Q2vsW_pions_cut.Fill(event.Q2, event.W)
     phiqvst_pions_cut.Fill(event.ph_q, -event.MandelT)
+    phiqvsthq_pions_cut.Fill(event.ph_q, event.th_q)
 
 print("Histograms filled")
 
@@ -871,11 +874,47 @@ Aero_proj_yx_pions_cut.Draw("COLZ")
 c1_pions_proj.Print(Pion_Analysis_Distributions + ')')
 
 # SJDK - 02/11/21 - Just some stuff I've added in a Steve Wood's request, I'll delete this once I'm done!
-#c_PlotsForSteve = TCanvas("c_PlotsForSteve", "Phiq Plot", 100, 0, 2560, 1440)
-#phiq_plot.SetMinimum(0) # SJDK 02/11/21 - Added to change the autoscaling of the plot
-#phiq_plot.Draw("Hist")
-#c_PlotsForSteve.Print("%s/Q2_8p5_Phiq_Plot.pdf" % (OUTPATH))
-#c_PlotsForSteve.Print("%s/Q2_8p5_Phiq_Plot.png" % (OUTPATH))
+c_PlotsForSteve = TCanvas("c_PlotsForSteve", "Phiq Plot", 100, 0, 2560, 1440)
+phiq_plot.SetMinimum(0) # SJDK 02/11/21 - Added to change the autoscaling of the plot
+phiq_plot.Draw("Hist")
+c_PlotsForSteve.Print("%s/Q2_8p5_Phiq_Plot.pdf" % (OUTPATH))
+c_PlotsForSteve.Print("%s/Q2_8p5_Phiq_Plot.png" % (OUTPATH))
+c_PlotsForSteve2 = TCanvas("c_PlotsForSteve2", "Phiq vs Thetaq Plot", 100, 0, 2560, 1440)
+phiqvsthq_pions_cut.SetStats(0)
+phiqvsthq_pions_cut.Draw("COLZ")
+c_PlotsForSteve2.Print("%s/Q2_8p5_Phiq_Thetaq_Plot.pdf" % (OUTPATH))
+c_PlotsForSteve2.Print("%s/Q2_8p5_Phiq_Thetaq_Plot.png" % (OUTPATH))
+c_PlotsForSteve3 = TCanvas("c_PlotsForSteve3", "Phiq vs Thetaq Plot", 100, 0, 2560, 1440)
+phiqvsthq_pions_cut.SetStats(0)
+phiqvsthq_pions_cut.GetYaxis().SetRangeUser(0,0.1)
+phiqvsthq_pions_cut.Draw("SURF2 POL")
+# Section for polar plotting
+gStyle.SetPalette(55)
+gPad.SetTheta(90)
+gPad.SetPhi(180)
+thetavsphi_title_pions = TPaveText(0.0277092,0.89779,0.096428,0.991854,"NDC")
+thetavsphi_title_pions.AddText("#theta_{q} vs #phi_{q}")
+thetavsphi_title_pions.Draw()
+ptphizero_pions.Draw()
+phihalfpi_pions.Draw()
+ptphihalfpi_pions.Draw()
+phipi_pions.Draw()
+ptphipi_pions.Draw()
+phithreepi_pions.Draw()
+ptphithreepi_pions.Draw()
+Arc_pions_2 = TArc()
+for k in range(0, 5):
+    Arc_pions_2.SetFillStyle(0)
+    Arc_pions_2.SetLineWidth(2)
+    Arc_pions_2.DrawArc(0,0,0.95*(k+1)/(10),0.,360.,"same")
+tradius_pions_2 = TGaxis(0,0,0.575,0,0,0.1,5,"-+N") # NH 2021 08 12 - added "N" option which forces there to be 5 divisions, meaning we should be able to change the range of this plot without having to fiddle with the drawing of the arcs!
+tradius_pions_2.SetLineColor(2)
+tradius_pions_2.SetLabelColor(2)
+tradius_pions_2.Draw()
+phizero_pions.Draw()
+
+c_PlotsForSteve3.Print("%s/Q2_8p5_Phiq_Thetaq_Plot_Polar.pdf" % (OUTPATH))
+c_PlotsForSteve3.Print("%s/Q2_8p5_Phiq_Thetaq_Plot_Polar.png" % (OUTPATH))
 
 #############################################################################################################################################
 

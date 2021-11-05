@@ -1,19 +1,26 @@
 #!/bin/bash
 
-# Set path depending upon hostname. Change or add more as needed  
-if [[ "${HOSTNAME}" = *"farm"* ]]; then  
-    REPLAYPATH="/group/c-pionlt/USERS/${USER}/hallc_replay_lt"
-elif [[ "${HOSTNAME}" = *"qcd"* ]]; then
-    REPLAYPATH="/group/c-pionlt/USERS/${USER}/hallc_replay_lt"
-elif [[ "${HOSTNAME}" = *"cdaq"* ]]; then
-    REPLAYPATH="/home/cdaq/hallc-online/hallc_replay_lt"
-elif [[ "${HOSTNAME}" = *"phys.uregina.ca"* ]]; then
-    REPLAYPATH="/home/${USER}/work/JLab/hallc_replay_lt"
-elif [[ "${HOSTNAME}" = *"trottar"* ]]; then
-    REPLAYPATH="/home/trottar/Analysis/hallc_replay_lt"
+# Runs script in the ltsep python package that grabs current path enviroment
+if [[ ${HOSTNAME} = *"cdaq"* ]]; then
+    PATHFILE_INFO=`python3 /home/cdaq/pionLT-2021/hallc_replay_lt/UTIL_PION/bin/python/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
+elif [[ "${HOSTNAME}" = *"farm"* ]]; then
+    PATHFILE_INFO=`python3 /u/home/${USER}/.local/lib/python3.4/site-packages/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
 fi
 
-UTILPATH="${REPLAYPATH}/UTIL_PIONLT"
+# Split the string we get to individual variables, easier for printing and use later
+HCANAPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f1` # Cut the string on , delimitter, select field (f) 1, set variable to output of command
+REPLAYPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f2`
+UTILPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f3`
+PACKAGEPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f4`
+OUTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f5`
+ROOTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f6`
+REPORTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f7`
+CUTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f8`
+PARAMPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f9`
+SCRIPTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f10`
+ANATYPE=`echo ${PATHFILE_INFO} | cut -d ','  -f11`
+USER=`echo ${PATHFILE_INFO} | cut -d ','  -f12`
+HOST=`echo ${PATHFILE_INFO} | cut -d ','  -f13`
 
 # Flags for plotting yield or reanalyzing all data
 while getopts 'hrpy' flag; do
@@ -39,11 +46,6 @@ cd src/
 if [[ $r_flag = "true" ]]; then
     echo
     echo "Reanalyzing all luminosity data..."
-    LUMIFILE="${UTILPATH}/scripts/luminosity/OUTPUTS/lumi_data.csv"
-    if [[ -f "${LUMIFILE}" ]]; then
-	echo "Removing ${LUMIFILE}"
-	#rm -rf $LUMIFILE
-    fi
     python3 reana_lumi.py --reana
 else
     python3 reana_lumi.py
@@ -69,6 +71,6 @@ if [[ $p_flag = "true" ]]; then
     else
 	echo
 	echo "Plotting yield data for ${PLOTINFO}..."
-	python3 plot_pid.py Pion_replay_luminosity ${PLOTINFO} -1
+	python3 plot_pid.py ${ANATYPE}_replay_luminosity ${PLOTINFO} -1
     fi
 fi

@@ -3,7 +3,7 @@
 # Description: Grabs lumi data from corresponding csv depending on run setting. Then plots the yields and creates a comprehensive table.
 # Variables calculated: current, rate_HMS, rate_SHMS, sent_edtm_PS, uncern_HMS_evts_scaler, uncern_SHMS_evts_scaler, uncern_HMS_evts_notrack, uncern_SHMS_evts_notrack, uncern_HMS_evts_track, uncern_SHMS_evts_track
 # ================================================================
-# Time-stamp: "2021-11-02 00:58:27 trottar"
+# Time-stamp: "2021-11-03 05:32:02 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -16,63 +16,69 @@ import matplotlib.pyplot as plt
 from csv import DictReader
 import sys, os, subprocess
 
-# Add this to all files for more dynamic pathing
-USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
-HOST = subprocess.getstatusoutput("hostname")
+################################################################################################################################################
+'''
+ltsep package import and pathing definitions
+'''
 
-if ("farm" in HOST[1]):
-    REPLAYPATH="/group/c-pionlt/online_analysis/hallc_replay_lt"
-elif ("lark" in HOST[1]):
-    REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
-elif ("cdaq" in HOST[1]):
-    REPLAYPATH = "/home/cdaq/hallc-online/hallc_replay_lt"
-elif ("trottar" in HOST[1]):
-    REPLAYPATH = "/home/trottar/Analysis/hallc_replay_lt"
+# Import package for cuts
+import ltsep as lt 
+
+# Add this to all files for more dynamic pathing
+USER =  lt.SetPath(os.path.realpath(__file__)).getPath("USER") # Grab user info for file finding
+HOST = lt.SetPath(os.path.realpath(__file__)).getPath("HOST")
+REPLAYPATH = lt.SetPath(os.path.realpath(__file__)).getPath("REPLAYPATH")
+SCRIPTPATH = lt.SetPath(os.path.realpath(__file__)).getPath("SCRIPTPATH")
+
+################################################################################################################################################
+'''
+Grab proper lumi data file
+'''
 
 # Depending on input, the corresponding data setting csv data will be grabbed
 inp_name = sys.argv[1]
 if "1" in inp_name:
     if "LH2" in inp_name.upper():
         target = "LH2"
-        inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_1/LH2/lumi_data_l1_lh2.csv" % str(REPLAYPATH)
-        out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_1/LH2/yield_data_l1_lh2.csv" % str(REPLAYPATH)
+        inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_1/LH2/lumi_data_l1_lh2.csv"
+        out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_1/LH2/yield_data_l1_lh2.csv"
         print("\nGrabbing input...\n\n%s" % str(inp_f))
     if "LD2" in inp_name.upper():
         target = "LD2"
-        inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_1/LD2/lumi_data_l1_ld2.csv" % str(REPLAYPATH)
-        out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_1/LD2/yield_data_l1_ld2.csv" % str(REPLAYPATH)
+        inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_1/LD2/lumi_data_l1_ld2.csv"
+        out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_1/LD2/yield_data_l1_ld2.csv"
         print("\nGrabbing input...\n\n%s" % str(inp_f))
     if "C" in inp_name.upper():
         target = "carbon"
-        inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_1/Carbon0p5/lumi_data_l1_c0p5.csv" % str(REPLAYPATH)
-        out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_1/Carbon0p5/yield_data_l1_c0p5.csv" % str(REPLAYPATH)
+        inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_1/Carbon0p5/lumi_data_l1_c0p5.csv"
+        out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_1/Carbon0p5/yield_data_l1_c0p5.csv"
         print("\nGrabbing input...\n\n%s" % str(inp_f))
 elif "2" in inp_name:
     if "LH2" in inp_name.upper():
         target = "LH2"
-        inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_2/LH2/lumi_data_l2_lh2.csv" % str(REPLAYPATH)
-        out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_2/LH2/yield_data_l2_lh2.csv" % str(REPLAYPATH)
+        inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_2/LH2/lumi_data_l2_lh2.csv"
+        out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_2/LH2/yield_data_l2_lh2.csv"
         print("\nGrabbing input...\n\n%s" % str(inp_f))
     if "LD2" in inp_name.upper():
         target = "LD2"
-        inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_2/LD2/lumi_data_l2_ld2.csv" % str(REPLAYPATH)
-        out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_2/LD2/yield_data_l2_ld2.csv" % str(REPLAYPATH)
+        inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_2/LD2/lumi_data_l2_ld2.csv"
+        out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_2/LD2/yield_data_l2_ld2.csv"
         print("\nGrabbing input...\n\n%s" % str(inp_f))
     if "C" in inp_name.upper():
         target = "carbon"
-        inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_2/Carbon0p5/lumi_data_l2_c0p5.csv" % str(REPLAYPATH)
-        out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/Lumi_2/Carbon0p5/yield_data_l2_c0p5.csv" % str(REPLAYPATH)
+        inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_2/Carbon0p5/lumi_data_l2_c0p5.csv"
+        out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_2/Carbon0p5/yield_data_l2_c0p5.csv"
         print("\nGrabbing input...\n\n%s" % str(inp_f))
 elif inp_name == None:
-    inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/lumi_data.csv" % str(REPLAYPATH)
-    out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/yield_data.csv" % str(REPLAYPATH)
+    inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/lumi_data.csv"
+    out_f = SCRIPTPATH+"/luminosity/OUTPUTS/yield_data.csv"
     print("\nError: Invalid input...\nGrabbing default input...\n\n%s" % str(inp_f))
 else:
-    inp_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/lumi_data.csv" % str(REPLAYPATH)
-    out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/yield_data.csv" % str(REPLAYPATH)
+    inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/lumi_data.csv"
+    out_f = SCRIPTPATH+"/luminosity/OUTPUTS/yield_data.csv"
     print("\nGrabbing default input...\n\n%s" % str(inp_f))
 
-print("\nRunning as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
+print("\nRunning as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, REPLAYPATH))
 
 # Converts csv data to dataframe
 try:
@@ -80,6 +86,8 @@ try:
 except IOError:
     print("Error: %s does not appear to exist." % inp_f)
 print(lumi_data.keys())
+
+################################################################################################################################################
 
 def removeRun(runNum):
     '''
@@ -91,9 +99,17 @@ def removeRun(runNum):
 
 # Remove runs, removeRun(runNumber)
 
+################################################################################################################################################
+
 # Convert to dict for proper formatting when eventually merging dictionaries
 lumi_data = dict(lumi_data)
 print(lumi_data.keys())
+
+################################################################################################################################################
+'''
+Define prescale variables
+'''
+
 
 # Define prescale variables
 if "PS1" in lumi_data.keys():
@@ -114,6 +130,8 @@ try:
 except NameError:
     COIN_PS = None
 
+################################################################################################################################################
+
 # Define number of runs to analyze
 numRuns = len(lumi_data["run number"])
 
@@ -124,6 +142,8 @@ def makeList(lumi_input):
     new_lst = [lumi_data[lumi_input][i] for i,evts in enumerate(lumi_data["run number"])]
     new_lst = np.asarray(pd.Series(new_lst).fillna(0)) # changes NaN to zeros and convert to numpy
     return new_lst
+
+################################################################################################################################################
 
 def calc_yield():
     '''
@@ -195,14 +215,14 @@ def calc_yield():
 
     # Calculate yield values
 
-    yield_HMS_scaler = (yield_dict["HMS_scaler_accp"])/(makeList("charge")*makeList("CPULT_scaler")*makeList("HMS_eLT"))
+    yield_HMS_scaler = (yield_dict["HMS_scaler_accp"])/(makeList("charge"))
     yield_HMS_notrack = (makeList("h_int_etotnorm_evts")*makeList("PS4"))/(makeList("charge"))#*yield_dict["TLT"])
     yield_HMS_track = (makeList("h_int_goodscin_evts")*makeList("PS4"))/(makeList("charge")*yield_dict["TLT"]*makeList("HMS_track"))
     yield_dict.update({"yield_HMS_scaler" : yield_HMS_scaler})
     yield_dict.update({"yield_HMS_notrack" : yield_HMS_notrack})
     yield_dict.update({"yield_HMS_track" : yield_HMS_track})
 
-    yield_SHMS_scaler = (yield_dict["SHMS_scaler_accp"])/(makeList("charge")*makeList("CPULT_scaler")*makeList("SHMS_eLT"))
+    yield_SHMS_scaler = (yield_dict["SHMS_scaler_accp"])/(makeList("charge"))
     yield_SHMS_notrack = (makeList("p_int_etotnorm_evts")*makeList("PS2"))/(makeList("charge"))#*yield_dict["TLT"])
     yield_SHMS_track = (makeList("p_int_goodscin_evts")*makeList("PS2"))/(makeList("charge")*yield_dict["TLT"]*makeList("SHMS_track"))
     yield_dict.update({"yield_SHMS_scaler" : yield_SHMS_scaler})
@@ -269,6 +289,8 @@ def mergeDicts():
     table = table.reindex(sorted(table.columns), axis=1)
 
     return table
+
+################################################################################################################################################
 
 def plot_yield():
     '''
@@ -385,12 +407,22 @@ def plot_yield():
         plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
 
     plt.tight_layout()
-    if target == 'LD2' :
-        plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/%s_yield_%s.png' % (REPLAYPATH,"ld2","relYieldPlot"))
-    elif target == 'LH2' :
-        plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/%s_yield_%s.png' % (REPLAYPATH,"lh2","relYieldPlot"))
-    else :
-        plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/%s_yield_%s.png' % (REPLAYPATH,"c","relYieldPlot"))
+    if "1" in inp_name:            
+        if target == 'LD2' :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi1_%s_yield_%s.png' % ("ld2","relYieldPlot"))
+        elif target == 'LH2' :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi1_%s_yield_%s.png' % ("lh2","relYieldPlot"))
+        else :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi1_%s_yield_%s.png' % ("c","relYieldPlot"))
+    
+    if "2" in inp_name:            
+        if target == 'LD2' :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi2_%s_yield_%s.png' % ("ld2","relYieldPlot"))
+        elif target == 'LH2' :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi2_%s_yield_%s.png' % ("lh2","relYieldPlot"))
+        else :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi2_%s_yield_%s.png' % ("c","relYieldPlot"))
+            
 
     #########################################################################################################################################################
 
@@ -484,13 +516,22 @@ def plot_yield():
 
     plt.tight_layout()      
 
-    if target == 'LD2' :
-        plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/%s_yield_%s.png' % (REPLAYPATH,"ld2","edtmPlot"))
-    elif target == 'LH2' :
-        plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/%s_yield_%s.png' % (REPLAYPATH,"lh2","edtmPlot"))
-    else :
-        plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/%s_yield_%s.png' % (REPLAYPATH,"c","edtmPlot"))
-
+    if "1" in inp_name:            
+        if target == 'LD2' :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi1_%s_yield_%s.png' % ("ld2","edtmPlot"))
+        elif target == 'LH2' :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi1_%s_yield_%s.png' % ("lh2","edtmPlot"))
+        else :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi1_%s_yield_%s.png' % ("c","edtmPlot"))
+    
+    if "2" in inp_name:            
+        if target == 'LD2' :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi2_%s_yield_%s.png' % ("ld2","edtmPlot"))
+        elif target == 'LH2' :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi2_%s_yield_%s.png' % ("lh2","edtmPlot"))
+        else :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi2_%s_yield_%s.png' % ("c","edtmPlot"))
+            
     #########################################################################################################################################################
 
     logPlot = plt.figure(figsize=(12,8))
@@ -512,12 +553,15 @@ def plot_yield():
     else :
         plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
 
-    #HMS rate vs Current
+    #HMS plot no track
     plt.subplot(2,4,2)    
     plt.grid(zorder=1)
     #plt.xlim(0,100)
-    plt.scatter(yield_data["current"],yield_data["rate_HMS"]/1000,color='blue',zorder=4)
-    plt.ylabel('HMS Rate [kHz]', fontsize=16)
+    #plt.ylim(0.9,1.1)
+    plt.plot([0,100], [1,1], 'r-',zorder=2)
+    plt.errorbar(yield_data["current"],yield_data["yieldRel_HMS_notrack"],yerr=yield_data["uncern_HMS_evts_notrack"],color='black',linestyle='None',zorder=3)
+    plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_notrack"],color='blue',zorder=4)
+    plt.ylabel('Rel. Yield no track', fontsize=16)
     plt.xlabel('Current [uA]', fontsize =12)
     if target == 'LD2' :
         plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
@@ -585,12 +629,15 @@ def plot_yield():
     else :
         plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
 
-    #SHMS rate vs Current
+    #SHMS plot no track
     plt.subplot(2,4,6)    
     plt.grid(zorder=1)
     #plt.xlim(0,100)
-    plt.scatter(yield_data["current"],yield_data["rate_SHMS"]/1000,color='blue',zorder=4)
-    plt.ylabel('SHMS Rate [kHz]', fontsize=16)
+    #plt.ylim(0.9,1.1)
+    plt.plot([0,100], [1,1], 'r-',zorder=2)
+    plt.errorbar(yield_data["current"],yield_data["yieldRel_SHMS_notrack"],yerr=yield_data["uncern_SHMS_evts_notrack"],color='black',linestyle='None',zorder=3)
+    plt.scatter(yield_data["current"],yield_data["yieldRel_SHMS_notrack"],color='blue',zorder=4)
+    plt.ylabel('Rel. Yield no track', fontsize=16)
     plt.xlabel('Current [uA]', fontsize =12)
     if target == 'LD2' :
         plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
@@ -613,19 +660,31 @@ def plot_yield():
     else :
         plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
 
-    plt.tight_layout()            
-    if target == 'LD2' :
-        plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/%s_yield_%s.png' % (REPLAYPATH,"ld2","logPlot"))
-    elif target == 'LH2' :
-        plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/%s_yield_%s.png' % (REPLAYPATH,"lh2","logPlot"))
-    else :
-        plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/%s_yield_%s.png' % (REPLAYPATH,"c","logPlot"))
-        
+    plt.tight_layout()
+
+    if "1" in inp_name:            
+        if target == 'LD2' :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi1_%s_yield_%s.png' % ("ld2","logPlot"))
+        elif target == 'LH2' :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi1_%s_yield_%s.png' % ("lh2","logPlot"))
+        else :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi1_%s_yield_%s.png' % ("c","logPlot"))
+    
+    if "2" in inp_name:            
+        if target == 'LD2' :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi2_%s_yield_%s.png' % ("ld2","logPlot"))
+        elif target == 'LH2' :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi2_%s_yield_%s.png' % ("lh2","logPlot"))
+        else :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi2_%s_yield_%s.png' % ("c","logPlot"))
+            
     plt.show()
 
     print("\nYield info...\n",yield_data[["run number","yieldRel_HMS_scaler","yieldRel_SHMS_scaler","yieldRel_HMS_notrack","yieldRel_SHMS_notrack","yieldRel_HMS_track","yieldRel_SHMS_track"]])
 
     return yield_data
+
+################################################################################################################################################
 
 def debug():
     '''
@@ -648,6 +707,8 @@ def debug():
     print("SHMS yield\n",data["yield_SHMS_notrack"])
     ###
     print("=======================\n\n")
+
+################################################################################################################################################
 
 def main():
 

@@ -3,7 +3,7 @@
 # Description: This is where the variables for the yield calculations are formulated.
 # Variables calculated: tot_events, h_int_goodscin_evts, p_int_goodscin_evts, SHMSTRIG_cut, HMSTRIG_cut, HMS_track, HMS_track_uncern, SHMS_track, SHMS_track_uncern, accp_edtm
 # ================================================================
-# Time-stamp: "2021-11-01 04:42:16 trottar"
+# Time-stamp: "2021-11-05 05:28:15 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -20,60 +20,65 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import sys, math, os, subprocess
 
+################################################################################################################################################
+'''
+User Inputs
+'''
+
 ROOTPrefix = sys.argv[1]
 runNum = sys.argv[2]
 MaxEvent=sys.argv[3]
 
-# Add this to all files for more dynamic pathing
-USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
-HOST = subprocess.getstatusoutput("hostname")
-
-# Set path depending upon hostname. Change or add more as needed  
-if ("farm" in HOST[1]):
-    REPLAYPATH="/group/c-pionlt/online_analysis/hallc_replay_lt"
-elif ("lark" in HOST[1]):
-    REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
-elif ("cdaq" in HOST[1]):
-    REPLAYPATH = "/home/cdaq/hallc-online/hallc_replay_lt"
-elif ("trottar" in HOST[1]):
-    REPLAYPATH = "/home/trottar/Analysis/hallc_replay_lt"
+################################################################################################################################################
+'''
+ltsep package import and pathing definitions
+'''
 
 # Import package for cuts
-sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
-import kaonlt as klt
+import ltsep as lt 
+
+# Add this to all files for more dynamic pathing
+USER =  lt.SetPath(os.path.realpath(__file__)).getPath("USER") # Grab user info for file finding
+HOST = lt.SetPath(os.path.realpath(__file__)).getPath("HOST")
+REPLAYPATH = lt.SetPath(os.path.realpath(__file__)).getPath("REPLAYPATH")
+UTILPATH = lt.SetPath(os.path.realpath(__file__)).getPath("UTILPATH")
+ANATYPE=lt.SetPath(os.path.realpath(__file__)).getPath("ANATYPE")
+
+################################################################################################################################################
+'''
+Import scaler script for use in luminosity analysis
+'''
 
 # Import scaler table
 import scaler
 
-print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
+################################################################################################################################################
+
+print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, REPLAYPATH))
 
 # Output for luminosity table
-out_f = "%s/UTIL_PION/scripts/luminosity/OUTPUTS/lumi_data.csv" % REPLAYPATH
+out_f = UTILPATH+"/scripts/luminosity/OUTPUTS/lumi_data.csv"
+
+################################################################################################################################################
+'''
+Check that root/output paths and files exist for use
+'''
 
 # Construct the name of the rootfile based upon the info we provided
-OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/PionLT" % REPLAYPATH        # Output folder location
-rootName = "%s/UTIL_PION/ROOTfiles/Analysis/Lumi/%s_%s_%s.root" % (REPLAYPATH,ROOTPrefix,runNum,MaxEvent)     # Input file location and variables taking
+OUTPATH = UTILPATH+"/OUTPUT/Analysis/%sLT" % ANATYPE        # Output folder location
+rootName = UTILPATH+"/ROOTfiles/Analysis/Lumi/%s_%s_%s.root" % (ROOTPrefix,runNum,MaxEvent)     # Input file location and variables taking
 print ("Attempting to process %s" %(rootName))
-if os.path.exists(OUTPATH):
-    if os.path.islink(OUTPATH):
-        pass
-    elif os.path.isdir(OUTPATH):
-        pass
-    else:
-        print ("%s exists but is not a directory or sym link, check your directory/link and try again" % (OUTPATH))
-        sys.exit(2)
-else:
-    print("Output path not found, please make a sym link or directory called OUTPUT in UTIL_PION to store output")
-    sys.exit(3)
-if os.path.isfile(rootName):
-    print ("%s exists, processing" % (rootName))
-else:
-    print ("%s not found - do you have the correct sym link/folder set up?" % (rootName))
-    sys.exit(4)
+lt.SetPath(os.path.realpath(__file__)).checkDir(OUTPATH)
+lt.SetPath(os.path.realpath(__file__)).checkFile(rootName)
 print("Output path checks out, outputting to %s" % (OUTPATH))
 
+################################################################################################################################################
+'''
+Grab prescale values and tracking efficiencies from report file
+'''
+
 # Open report file to grab prescale values and tracking efficiency
-report = "%s/UTIL_PION/REPORT_OUTPUT/Analysis/Lumi/%s_%s_%s.report" % (REPLAYPATH,ROOTPrefix,runNum,MaxEvent)
+report = UTILPATH+"/REPORT_OUTPUT/Analysis/Lumi/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
 f = open(report)
 psList = ['SW_Ps1_factor','SW_Ps2_factor','SW_Ps3_factor','SW_Ps4_factor','SW_Ps5_factor','SW_Ps6_factor']
     
@@ -149,6 +154,11 @@ for i,index in enumerate(psActual):
             PS6 = psActual[i]            
 f.close()
 
+################################################################################################################################################
+'''
+Define prescale variables
+'''
+
 print("\nPre-scale values...\nPS1:{0}, PS2:{1}, PS3:{2}, PS4:{3}, PS5:{4}, PS6:{5}\n".format(PS1,PS2,PS3,PS4,PS5,PS6))
 
 # Save only the used prescale triggers to the PS_used list
@@ -169,22 +179,21 @@ else:
     SHMS_PS = PS_used[0][1]
     HMS_PS = PS_used[1][1]
 
-
+################################################################################################################################################
 '''
 SCALER TREE, TSP
 '''
 
 s_tree = up.open(rootName)["TSP"]
-s_branch = klt.pyBranch(s_tree)
 
 P_BCM4A_scalerCharge = s_tree.array("P.BCM4A.scalerCharge")
 
+################################################################################################################################################
 '''
 ANALYSIS TREE, T
 '''
 
 tree = up.open(rootName)["T"]
-branch = klt.pyBranch(tree)
 
 if PS_names[1] is "PS3" or PS_names[1] is "PS4":
     W = tree.array("H.kin.primary.W")
@@ -232,7 +241,8 @@ if PS_names[0] is "PS1" or PS_names[0] is "PS2":
     P_hod_betanotrack = tree.array("P.hod.betanotrack")
     P_hod_goodstarttime = tree.array("P.hod.goodstarttime")
     P_dc_ntrack = tree.array("P.dc.ntrack")
-    P_ngcer_npeSum = tree.array("P.ngcer.npeSum")
+    if ANATYPE == "Pion":
+        P_ngcer_npeSum = tree.array("P.ngcer.npeSum")
     
     P_dc_1x1_nhit = tree.array("P.dc.1x1.nhit")
     P_dc_1u2_nhit = tree.array("P.dc.1u2.nhit")
@@ -294,19 +304,26 @@ T_coin_hFADC_TREF_ROC1_adcPulseTimeRaw = tree.array("T.coin.hFADC_TREF_ROC1_adcP
 T_coin_pEDTM_tdcTimeRaw = tree.array("T.coin.pEDTM_tdcTimeRaw")
 EvtType = tree.array("fEvtHdr.fEvtType")
 
-fout = REPLAYPATH+'/UTIL_PION/DB/CUTS/run_type/lumi.cuts'
+################################################################################################################################################
+'''
+Define and set up cuts
+'''
 
-cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ngcer_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_curr",]
-# Check if COIN trigger is used
-if len(PS_used) > 2:
- cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ngcer_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_ptrigCOIN","c_curr",]
+fout = UTILPATH+'/DB/CUTS/run_type/lumi.cuts'
 
-# read in cuts file and make dictionary
-c = klt.pyPlot(REPLAYPATH)
-readDict = c.read_dict(cuts,fout,runNum)
+if ANATYPE == "Pion":
+    cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ngcer_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_curr",]
+    # Check if COIN trigger is used
+    if len(PS_used) > 2:
+        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ngcer_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_ptrigCOIN","c_curr",]
+else:
+    cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_curr",]
+    # Check if COIN trigger is used
+    if len(PS_used) > 2:
+        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_ptrigCOIN","c_curr",]
 
 cutVals = []
-def make_cutDict(cut,inputDict=None):
+def make_cutDict(cuts,fout,runNum,CURRENT_ENV):
     '''
     This method calls several methods in kaonlt package. It is required to create properly formated
     dictionaries. The evaluation must be in the analysis script because the analysis variables (i.e. the
@@ -315,49 +332,34 @@ def make_cutDict(cut,inputDict=None):
     implimented.
     '''
 
-    global c
+    # read in cuts file and make dictionary
+    importDict = lt.SetCuts(CURRENT_ENV).importDict(cuts,fout,runNum)
+    for i,cut in enumerate(cuts):
+        x = lt.SetCuts(CURRENT_ENV,importDict).booleanDict(cut)
+        #######################################################################################
+        # Make list of cut strings
+        cutVals.append(x)
 
-    c = klt.pyPlot(REPLAYPATH,readDict)
-    x = c.w_dict(cut)
-    print("\n%s" % cut)
-    print(x, "\n")
+        # Threshold current
+        if cut == "c_curr":
+            global thres_curr, report_current
+            # e.g. Grabbing threshold current (ie 2.5) from something like this [' {"H_bcm_bcm4a_AvgCurrent" : (abs(H_bcm_bcm4a_AvgCurrent-55) < 2.5)}']
+            thres_curr = float(x[0].split(":")[1].split("<")[1].split(")")[0].strip())
+            # e.g. Grabbing set current for run (ie 55) from something like this [' {"H_bcm_bcm4a_AvgCurrent" : (abs(H_bcm_bcm4a_AvgCurrent-55) < 2.5)}']
+            report_current = float(x[0].split(":")[1].split("<")[0].split(")")[0].split("-")[1].strip())
+        #######################################################################################
+        print("\n%s" % cut)
+        print(x, "\n")
+        if i == 0:
+            inputDict = {}
+        cutDict = lt.SetCuts(CURRENT_ENV,importDict).readDict(cut,inputDict)
+        for j,val in enumerate(x):
+            cutDict = lt.SetCuts(CURRENT_ENV,importDict).evalDict(cut,eval(x[j]),cutDict)
+    return lt.SetCuts(CURRENT_ENV,cutDict)
 
-    #######################################################################################
-    # Make list of cut strings
-    cutVals.append(x)
+c = make_cutDict(cuts,fout,runNum,os.path.realpath(__file__))
 
-    # Threshold current
-    if cut == "c_curr":
-        global thres_curr, report_current
-        # e.g. Grabbing threshold current (ie 2.5) from something like this [' {"H_bcm_bcm4a_AvgCurrent" : (abs(H_bcm_bcm4a_AvgCurrent-55) < 2.5)}']
-        thres_curr = float(x[0].split(":")[1].split("<")[1].split(")")[0].strip())
-        # e.g. Grabbing set current for run (ie 55) from something like this [' {"H_bcm_bcm4a_AvgCurrent" : (abs(H_bcm_bcm4a_AvgCurrent-55) < 2.5)}']
-        report_current = float(x[0].split(":")[1].split("<")[0].split(")")[0].split("-")[1].strip())
-    #######################################################################################
-    
-    if inputDict == None:
-        inputDict = {}
-        
-    for key,val in readDict.items():
-        if key == cut:
-            inputDict.update({key : {}})
-
-    for i,val in enumerate(x):
-        tmp = x[i]
-        if tmp == "":
-            continue
-        else:
-            inputDict[cut].update(eval(tmp))
-        
-    return inputDict
-
-for i,c in enumerate(cuts):
-    if i == 0:
-        cutDict = make_cutDict("%s" % c )
-    else:
-        cutDict = make_cutDict("%s" % c,cutDict)
-
-c = klt.pyPlot(REPLAYPATH,cutDict)
+################################################################################################################################################
 
 def pid_cuts():
     '''
@@ -406,17 +408,18 @@ def pid_cuts():
     plt.xlabel('P_aero_npeSum')
     plt.ylabel('Count')   
 
-    ax = f.add_subplot(236)
-    ax.hist(P_ngcer_npeSum,bins=c.setbin(P_ngcer_npeSum,200,0,250),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(P_ngcer_npeSum,"p_ngcer_nt"), bins=c.setbin(P_ngcer_npeSum,200,0,250),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('P_ngcer_npeSum')
-    plt.ylabel('Count')
+    if ANATYPE == "Pion":
+        ax = f.add_subplot(236)
+        ax.hist(P_ngcer_npeSum,bins=c.setbin(P_ngcer_npeSum,200,0,250),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(P_ngcer_npeSum,"p_ngcer_nt"), bins=c.setbin(P_ngcer_npeSum,200,0,250),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        plt.yscale('log')
+        plt.xlabel('P_ngcer_npeSum')
+        plt.ylabel('Count')
 
     plt.legend(loc="upper right")
 
     plt.tight_layout(rect=[0,0.03,1,0.95])   
-    plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/pid/pid_%s.png' % (REPLAYPATH,runNum))
+    plt.savefig(UTILPATH+'/scripts/luminosity/OUTPUTS/plots/pid/pid_%s.png' % (runNum))
 
     ###########################
     ######## 2D plots  ########
@@ -443,11 +446,12 @@ def pid_cuts():
     plt.xlabel('P_cal_etotnorm')
     plt.ylabel('P_aero_npeSum')
 
-    ax = f.add_subplot(244)
-    ax.hist2d(P_cal_etotnorm,P_ngcer_npeSum,bins=[c.setbin(P_cal_etotnorm,400,0,4),c.setbin(P_ngcer_npeSum,400,0,80)],cmin=1,label='no cut',alpha=0.5)
-    ax.hist2d(c.add_cut(P_cal_etotnorm,"p_ecut_lumi_nt"),c.add_cut(P_ngcer_npeSum,"p_ecut_lumi_nt"),bins=[c.setbin(P_cal_etotnorm,400,0,4),c.setbin(P_ngcer_npeSum,400,0,80)],cmin=1,label='cut', alpha=0.5)
-    plt.xlabel('P_cal_etotnorm')
-    plt.ylabel('P_ngcer_npeSum')
+    if ANATYPE == "Pion":
+        ax = f.add_subplot(244)
+        ax.hist2d(P_cal_etotnorm,P_ngcer_npeSum,bins=[c.setbin(P_cal_etotnorm,400,0,4),c.setbin(P_ngcer_npeSum,400,0,80)],cmin=1,label='no cut',alpha=0.5)
+        ax.hist2d(c.add_cut(P_cal_etotnorm,"p_ecut_lumi_nt"),c.add_cut(P_ngcer_npeSum,"p_ecut_lumi_nt"),bins=[c.setbin(P_cal_etotnorm,400,0,4),c.setbin(P_ngcer_npeSum,400,0,80)],cmin=1,label='cut', alpha=0.5)
+        plt.xlabel('P_cal_etotnorm')
+        plt.ylabel('P_ngcer_npeSum')
 
     ax = f.add_subplot(245)
     ax.hist2d(P_aero_npeSum,P_hgcer_npeSum,bins=[c.setbin(P_aero_npeSum,400,0,100),c.setbin(P_hgcer_npeSum,400,0,80)],cmin=1,label='no cut',alpha=0.5)
@@ -455,17 +459,18 @@ def pid_cuts():
     plt.xlabel('P_aero_npeSum')
     plt.ylabel('P_hgcer_npeSum')
 
-    ax = f.add_subplot(246)
-    ax.hist2d(P_ngcer_npeSum,P_hgcer_npeSum,bins=[c.setbin(P_ngcer_npeSum,400,0,80),c.setbin(P_hgcer_npeSum,400,0,80)],cmin=1,label='no cut',alpha=0.5)
-    ax.hist2d(c.add_cut(P_ngcer_npeSum,"p_ecut_lumi_nt"),c.add_cut(P_hgcer_npeSum,"p_ecut_lumi_nt"),bins=[c.setbin(P_ngcer_npeSum,400,0,80),c.setbin(P_hgcer_npeSum,400,0,80)],cmin=1,label='cut', alpha=0.5)
-    plt.xlabel('P_ngcer_npeSum')
-    plt.ylabel('P_hgcer_npeSum')
+    if ANATYPE == "Pion":
+        ax = f.add_subplot(246)
+        ax.hist2d(P_ngcer_npeSum,P_hgcer_npeSum,bins=[c.setbin(P_ngcer_npeSum,400,0,80),c.setbin(P_hgcer_npeSum,400,0,80)],cmin=1,label='no cut',alpha=0.5)
+        ax.hist2d(c.add_cut(P_ngcer_npeSum,"p_ecut_lumi_nt"),c.add_cut(P_hgcer_npeSum,"p_ecut_lumi_nt"),bins=[c.setbin(P_ngcer_npeSum,400,0,80),c.setbin(P_hgcer_npeSum,400,0,80)],cmin=1,label='cut', alpha=0.5)
+        plt.xlabel('P_ngcer_npeSum')
+        plt.ylabel('P_hgcer_npeSum')
 
-    ax = f.add_subplot(247)
-    ax.hist2d(P_aero_npeSum,P_ngcer_npeSum,bins=[c.setbin(P_aero_npeSum,400,0,100),c.setbin(P_ngcer_npeSum,400,0,80)],cmin=1,label='no cut',alpha=0.5)
-    ax.hist2d(c.add_cut(P_aero_npeSum,"p_ecut_lumi_nt"),c.add_cut(P_ngcer_npeSum,"p_ecut_lumi_nt"),bins=[c.setbin(P_aero_npeSum,400,0,100),c.setbin(P_ngcer_npeSum,400,0,80)],cmin=1,label='cut', alpha=0.5)
-    plt.xlabel('P_aero_npeSum')
-    plt.ylabel('P_ngcer_npeSum')
+        ax = f.add_subplot(247)
+        ax.hist2d(P_aero_npeSum,P_ngcer_npeSum,bins=[c.setbin(P_aero_npeSum,400,0,100),c.setbin(P_ngcer_npeSum,400,0,80)],cmin=1,label='no cut',alpha=0.5)
+        ax.hist2d(c.add_cut(P_aero_npeSum,"p_ecut_lumi_nt"),c.add_cut(P_ngcer_npeSum,"p_ecut_lumi_nt"),bins=[c.setbin(P_aero_npeSum,400,0,100),c.setbin(P_ngcer_npeSum,400,0,80)],cmin=1,label='cut', alpha=0.5)
+        plt.xlabel('P_aero_npeSum')
+        plt.ylabel('P_ngcer_npeSum')
 
     ax = f.add_subplot(248)
     plt.axis('off')
@@ -484,8 +489,9 @@ def pid_cuts():
                 i+=1
 
     plt.tight_layout(rect=[0,0.03,1,0.95])   
-    plt.savefig('%s/UTIL_PION/scripts/luminosity/OUTPUTS/plots/pid/pid2D_%s.png' % (REPLAYPATH,runNum))
+    plt.savefig(UTILPATH+'/scripts/luminosity/OUTPUTS/plots/pid/pid2D_%s.png' % (runNum))
 
+################################################################################################################################################
     
 def analysis():
     '''
@@ -590,6 +596,8 @@ def analysis():
           
     return track_info
 
+################################################################################################################################################
+
 def main():
 
     pid_cuts()
@@ -598,7 +606,7 @@ def main():
     # lumi_data = {**scalers , **track_info} # only python 3.5+
 
     # Import dictionaries
-    scalers = scaler.scaler(PS_names, HMS_PS, SHMS_PS, thres_curr, report_current, REPLAYPATH, runNum, MaxEvent, s_tree, s_branch) 
+    scalers = scaler.scaler(PS_names, HMS_PS, SHMS_PS, thres_curr, report_current, runNum, MaxEvent, s_tree) 
     track_info = analysis()
 
     # Merge and sort the two dictionaries of calculations
@@ -619,6 +627,7 @@ def main():
             out_data = pd.read_csv(out_f)
         except IOError:
             print("Error: %s does not appear to exist." % out_f)
+        # Checks if run number is alread in csv and replaces it if it is there
         run_index = out_data.index[out_data["run number"] == int(runNum)].tolist()
         out_data.drop(run_index, inplace=True)
         out_data = out_data.append(table,ignore_index=True)
