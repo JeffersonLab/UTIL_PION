@@ -147,6 +147,13 @@ if spec == "SHMS":
     P_ngcer_xAtCer = e_tree.array("P.ngcer.xAtCer")                  #
     P_ngcer_yAtCer = e_tree.array("P.ngcer.yAtCer")                  #
     P_RF_Dist = e_tree.array("RFTime.SHMS_RFtimeDist")               #
+    emiss = e_tree.array("P.kin.secondary.emiss")                   
+    pmiss = e_tree.array("P.kin.secondary.pmiss")                   
+    MMpi = e_tree.array("P.kin.secondary.MMpi")                      
+    W = e_tree.array("H.kin.primary.W")                              
+    pmiss_x = e_tree.array("P.kin.secondary.pmiss_x")                
+    pmiss_y = e_tree.array("P.kin.secondary.pmiss_y")                
+    pmiss_z = e_tree.array("P.kin.secondary.pmiss_z")                
 
 
 ##############################################################################################################################################
@@ -241,9 +248,9 @@ def sing():
     if spec == "SHMS":
         # Define the array of arrays containing the relevant HMS and SHMS info                              
         
-        NoCut_SING = [P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, P_RF_Dist]
+        NoCut_SING = [pmiss_z, pmiss_y, pmiss_x, W, MMpi, pmiss, emiss, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, P_RF_Dist]
         
-        Uncut_SING = [(P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, P_RF_Dist) for (P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, P_RF_Dist) in zip(*NoCut_SING)]
+        Uncut_SING = [(pmiss_z, pmiss_y, pmiss_x, W, MMpi, pmiss, emiss, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, P_RF_Dist) for (pmiss_z, pmiss_y, pmiss_x, W, MMpi, pmiss, emiss, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, P_RF_Dist) in zip(*NoCut_SING)]
         
         # Create array of arrays of pions after cuts, all events
         
@@ -253,7 +260,7 @@ def sing():
         for arr in Cut_SING_tmp:
             Cut_SING_all_tmp.append(c.add_cut(arr, "sing_ee_cut_ngcer_all_noRF"))
             
-        Cut_SING_all = [(P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, P_RF_Dist) for (P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, P_RF_Dist) in zip(*Cut_SING_all_tmp)]
+        Cut_SING_all = [(pmiss_z, pmiss_y, pmiss_x, W, MMpi, pmiss, emiss, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, P_RF_Dist) for (pmiss_z, pmiss_y, pmiss_x, W, MMpi, pmiss, emiss, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, P_RF_Dist) in zip(*Cut_SING_all_tmp)]
         
         SING = {
             "Uncut_Events" : Uncut_SING,
@@ -274,7 +281,7 @@ def main():
     if spec == "HMS":
         SING_Data_Header = ["H_gtr_beta","H_gtr_xp","H_gtr_yp","H_gtr_dp", "H_gtr_p","H_hod_goodscinhit","H_hod_goodstarttime","H_cal_etotnorm","H_cal_etottracknorm","H_cer_npeSum","H_RF_Dist"]
     if spec == "SHMS":
-        SING_Data_Header = ["P_gtr_beta","P_gtr_xp","P_gtr_yp","P_gtr_p","P_gtr_dp","P_hod_goodscinhit","P_hod_goodstarttime","P_cal_etotnorm","P_cal_etottracknorm","P_aero_npeSum","P_aero_xAtAero","P_aero_yAtAero","P_hgcer_npeSum","P_hgcer_xAtCer","P_hgcer_yAtCer", "P_ngcer_npeSum", "P_ngcer_xAtCer", "P_ngcer_yAtCer","P_RF_Dist"]
+        SING_Data_Header = ["pmiss_z","pmiss_y","pmiss_x", "W","MMpi","pmiss","emiss","P_gtr_beta","P_gtr_xp","P_gtr_yp","P_gtr_p","P_gtr_dp","P_hod_goodscinhit","P_hod_goodstarttime","P_cal_etotnorm","P_cal_etottracknorm","P_aero_npeSum","P_aero_xAtAero","P_aero_yAtAero","P_hgcer_npeSum","P_hgcer_xAtCer","P_hgcer_yAtCer", "P_ngcer_npeSum", "P_ngcer_xAtCer", "P_ngcer_yAtCer","P_RF_Dist"]
         
     # Need to create a dict for all the branches we grab                                                
     data = {}

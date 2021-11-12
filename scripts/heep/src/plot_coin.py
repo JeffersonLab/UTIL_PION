@@ -84,13 +84,13 @@ OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/HeeP" % REPLAYPATH        # Output folde
 sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
 import kaonlt as klt # Import kaonlt module, need the path setting line above prior to importing this                                                                                                         
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
-Proton_Analysis_Distributions = "%s/%s_%s_sw_heep_Proton_Analysis_Distributions_vk.pdf" % (OUTPATH, runNum, MaxEvent)
+Proton_Analysis_Distributions = "%s/%s_%s_sw_heep_Proton_Analysis_Distributions.pdf" % (OUTPATH, runNum, MaxEvent)
 
 #################################################################################################################################################
 
 # Construct the name of the rootfile based upon the info we provided
-#rootName = "%s/UTIL_PION/OUTPUT/Analysis/HeeP/%s_%s_%s.root" % (REPLAYPATH, runNum, MaxEvent, ROOTSuffix)     # Input file location and variables taking
-rootName = "%s/UTIL_PION/OUTPUT/Analysis/HeeP/Heep_coin_add2.root" % (REPLAYPATH) 
+rootName = "%s/UTIL_PION/OUTPUT/Analysis/HeeP/%s_%s_%s.root" % (REPLAYPATH, runNum, MaxEvent, ROOTSuffix)     # Input file location and variables taking
+#rootName = "%s/UTIL_PION/OUTPUT/Analysis/HeeP/Heep_coin_add2.root" % (REPLAYPATH) 
 print ("Attempting to process %s" %(rootName))
 if os.path.exists(OUTPATH):
     if os.path.islink(OUTPATH):
