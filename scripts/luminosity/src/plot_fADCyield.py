@@ -105,7 +105,7 @@ def calc_yield():
         "rate_HMS" : makeList("HMSTRIG_scaler")/makeList("time"),
         "rate_SHMS" : makeList("SHMSTRIG_scaler")/makeList("time"),
 
-        "sent_edtm_PS" : makeList("sent_edtm")/HMS_PS,
+        "sent_edtm_PS" : makeList("sent_edtm"),
 
         "uncern_HMS_evts_scaler" : np.sqrt(makeList("HMSTRIG_scaler"))/makeList("HMSTRIG_scaler"),
 
@@ -130,7 +130,7 @@ def calc_yield():
             "rate_SHMS" : makeList("SHMSTRIG_scaler")/makeList("time"),
             "rate_COIN" : makeList("COINTRIG_scaler")/makeList("time"),
             
-            "sent_edtm_PS" : makeList("sent_edtm")/HMS_PS,
+            "sent_edtm_PS" : makeList("sent_edtm"),
             
             "uncern_HMS_evts_scaler" : np.sqrt(makeList("HMSTRIG_scaler"))/makeList("HMSTRIG_scaler"),
     
@@ -163,14 +163,14 @@ def calc_yield():
 
     # Calculate yield values
 
-    yield_HMS_scaler = (yield_dict["HMS_scaler_accp"])/(makeList("charge")*makeList("CPULT_scaler")*makeList("HMS_eLT"))
+    yield_HMS_scaler = (yield_dict["HMS_scaler_accp"])/(makeList("charge")) #*makeList("CPULT_scaler")*makeList("HMS_eLT")) don't apply any efficency to scalars
     yield_HMS_notrack = (makeList("h_int_W_evts")*makeList("PS4"))/(makeList("charge")*yield_dict["TLT"])
     yield_HMS_track = (makeList("h_int_goodscin_evts")*makeList("PS4"))/(makeList("charge")*yield_dict["TLT"]*makeList("HMS_track"))
     yield_dict.update({"yield_HMS_scaler" : yield_HMS_scaler})
     yield_dict.update({"yield_HMS_notrack" : yield_HMS_notrack})
     yield_dict.update({"yield_HMS_track" : yield_HMS_track})
 
-    yield_SHMS_scaler = (yield_dict["SHMS_scaler_accp"])/(makeList("charge")*makeList("CPULT_scaler")*makeList("SHMS_eLT"))
+    yield_SHMS_scaler = (yield_dict["SHMS_scaler_accp"])/(makeList("charge")) #*makeList("CPULT_scaler")*makeList("SHMS_eLT"))
     yield_SHMS_notrack = (makeList("p_int_W_evts")*makeList("PS1"))/(makeList("charge")*yield_dict["TLT"])
     yield_SHMS_track = (makeList("p_int_goodscin_evts")*makeList("PS1"))/(makeList("charge")*yield_dict["TLT"]*makeList("SHMS_track"))
     yield_dict.update({"yield_SHMS_scaler" : yield_SHMS_scaler})

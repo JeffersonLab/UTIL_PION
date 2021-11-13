@@ -48,7 +48,7 @@ import scaler
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, REPLAYPATH))
 
 # Output for luminosity table
-out_f = UTILPATH+"/scripts/luminosity/OUTPUTS/lumi_data.csv"
+out_f = UTILPATH+"/scripts/luminosity/OUTPUTS/fADC_data.csv"
 
 ################################################################################################################################################
 '''
@@ -280,10 +280,11 @@ T_coin_hFADC_TREF_ROC1_adcPed = tree.array("T.coin.hFADC_TREF_ROC1_adcPed")
 T_coin_pFADC_TREF_ROC2_adcPulseTimeRaw = tree.array("T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw")
 T_coin_hFADC_TREF_ROC1_adcPulseTimeRaw = tree.array("T.coin.hFADC_TREF_ROC1_adcPulseTimeRaw")
 T_coin_pEDTM_tdcTimeRaw = tree.array("T.coin.pEDTM_tdcTimeRaw")
+CTime_ePiCoinTime_ROC1 = tree.array("CTime.ePiCoinTime_ROC1")
 EvtType = tree.array("fEvtHdr.fEvtType")
 
 #list of all cuts that are used
-cuts = ["h_cal", "h_cer", "p_cal", "p_hgcer", "p_aero", "p_ecut_lumi_eff", "p_picut_lumi_eff", "p_kcut_lumi_eff", "p_pcut_lumi_eff", "p_hadcut_lumi_eff", "h_ecut_lumi_eff", "h_picut_lumi_eff", "h_hadcut_lumi_eff", "c_noedtm", "c_edtm", "c_ptrigHMS", "c_ptrigSHMS", "c_ptrigCOIN", "c_curr"]     
+cuts = ["h_cal", "h_cer", "p_cal", "p_hgcer", "p_aero", "p_ecut_lumi_eff", "p_picut_lumi_eff", "p_kcut_lumi_eff", "p_pcut_lumi_eff", "p_hadcut_lumi_eff", "h_ecut_lumi_eff", "h_picut_lumi_eff", "h_hadcut_lumi_eff", "c_noedtm", "c_edtm", "c_ptrigHMS", "c_ptrigSHMS", "c_ptrigCOIN", "c_curr", "coin_time_only", "coin_pid"]     
 fout = REPLAYPATH+'/UTIL_PION/DB/CUTS/run_type/fADCdeadtime.cuts'
 
 def make_cutDict(cuts,fout,runNum,CURRENT_ENV):
@@ -410,6 +411,7 @@ def analysis():
         COINTRIG_cut = [ x
                          for (x, evt) in zip(c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTime,"c_ptrigCOIN"), EvtType)
                          if (evt == 1 or evt == 2)]
+        COIN_W = c.add_cut(W, "coin_pid")
 
     # Applies PID cuts, once integrated this will give the events (no track)
     h_W = c.add_cut(W,"h_ecut_lumi_eff") 
@@ -444,6 +446,7 @@ def analysis():
             "tot_events" : len(EventType),
             "h_int_W_evts" : scipy.integrate.simps(h_W),
             "p_int_W_evts" : scipy.integrate.simps(p_W),
+            #"coin_int_W_events" : scipy.integrate.simps(COIN_W),
             "h_int_goodscin_evts" : scipy.integrate.simps(h_hadcuts_goodscinhit),
             "p_int_goodscin_evts" : scipy.integrate.simps(p_pcuts_goodscinhit),
             "SHMSTRIG_cut" : len(SHMSTRIG_cut),
@@ -466,9 +469,10 @@ def analysis():
     print("\nNumber of HMS good events: %.0f +/- %.0f " % ((HMS_PS*track_info["h_int_goodscin_evts"]), math.sqrt(HMS_PS*track_info["h_int_goodscin_evts"])))
     print("Calculated HMS tracking efficiency: %f +/- %f\n" % ((track_info["HMS_track"]), (track_info["HMS_track_uncern"])))
 
-    print("Number of SHMS good events: %.0f +/- %.0f " % ((SHMS_PS*track_info["h_int_goodscin_evts"]), math.sqrt(SHMS_PS*track_info["h_int_goodscin_evts"])))
+    print("Number of SHMS good events: %.0f +/- %.0f " % ((SHMS_PS*track_info["p_int_goodscin_evts"]), math.sqrt(SHMS_PS*track_info["p_int_goodscin_evts"])))
     print("Calculated SHMS tracking efficiency: %f +/- %f\n" % ((track_info["SHMS_track"]), (track_info["SHMS_track_uncern"])))
 
+    #print("Number of COIN good events: %.0f +/- %.0f" % ((track_info["coin_int_W_events"]), math.sqrt(track_info["coin_int_W_events"])))
     print("============================================================================\n\n")
           
     return track_info
