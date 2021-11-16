@@ -17,7 +17,11 @@ h_picut_lumi_eff = current.bcm4a+accept.delta+pid.h_picut-pid.h_picut.H_gtr_beta
 h_hadcut_lumi_eff = current.bcm4a+accept.delta+pid.h_hadcut-pid.h_hadcut.H_gtr_beta
 # pid cut
 h_cal = current.bcm4a+accept.delta+pid.h_ecut-pid.h_ecut.H_gtr_beta-pid.h_ecut.H_cer_npeSum
+h_cal_nt = current.bcm4a+pid.h_ecut_nt-pid.h_ecut_nt.H_cer_npeSum
 h_cer = current.bcm4a+accept.delta+pid.h_ecut-pid.h_ecut.H_gtr_beta-pid.h_ecut.H_cal_etotnorm
+h_cer_nt = current.bcm4a+pid.h_ecut_nt-pid.h_ecut_nt.H_cal_etotnorm
+#not-track cut
+h_ecut_lumi_nt = current.bcm4a+pid.h_ecut_nt
 ###################
 # SHMS track cuts #
 ###################
@@ -43,9 +47,24 @@ p_pcut_lumi_eff = current.bcm4a+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta
 p_hadcut_lumi_eff = current.bcm4a+accept.delta+pid.p_hadcut-pid.p_hadcut.P_gtr_beta
 ###################
 # pid cut
-p_cal = current.bcm4a+accept.delta+pid.p_picut-pid.p_picut.P_gtr_beta-pid.p_picut.P_hgcer_npeSum-pid.p_picut.P_aero_npeSum
-p_hgcer = current.bcm4a+accept.delta+pid.p_picut-pid.p_picut.P_gtr_beta-pid.p_picut.P_cal_etotnorm-pid.p_picut.P_aero_npeSum
-p_aero = current.bcm4a+accept.delta+pid.p_picut-pid.p_picut.P_gtr_beta-pid.p_picut.P_cal_etotnorm-pid.p_picut.P_hgcer_npeSum
+p_cal = current.bcm4a+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_hgcer_npeSum-pid.p_pcut.P_aero_npeSum-pid.p_pcut.P_ngcer_npeSum
+p_hgcer = current.bcm4a+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_cal_etotnorm-pid.p_pcut.P_aero_npeSum-pid.p_pcut.P_ngcer_npeSum
+p_ngcer = current.bcm4a+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_cal_etotnorm-pid.p_pcut.P_aero_npeSum-pid.p_pcut.P_hgcer_npeSum
+p_aero = current.bcm4a+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_cal_etotnorm-pid.p_pcut.P_hgcer_npeSum-pid.p_pcut.P_ngcer_npeSum
+p_cal_nt = current.bcm4a+pid.p_picut-pid.p_picut_nt.P_hgcer_npeSum-pid.p_picut.P_aero_npeSum-pid.p_picut.P_ngcer_npeSum
+p_hgcer_nt = current.bcm4a+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_cal_etotnorm-pid.p_pcut.P_aero_npeSum-pid.p_pcut.P_ngcer_npeSum
+p_ngcer_nt = current.bcm4a+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_cal_etotnorm-pid.p_pcut.P_aero_npeSum-pid.p_pcut.P_hgcer_npeSum
+p_aero_nt = current.bcm4a+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_cal_etotnorm-pid.p_pcut.P_hgcer_npeSum-pid.p_pcut.P_ngcer_npeSum
+# no-track cut
+p_picut_lumi_nt = current.bcm4a+pid.p_picut-pid.p_picut.P_gtr_beta 
+
+#############
+# Coin Cuts #
+#############
+coin_time_only = current.bcm4a+coin_time.Coin_Pion_Prompt
+coin_pid_notrack = current.bcm4a+coin_time.Coin_Pion_Prompt+pid.p_picut-pid.p_picut.P_gtr_beta+pid.h_ecut-pid.h_ecut.H_gtr_beta
+coin_pid_track = current.bcm4a+accept.delta+coin_time.Coin_Pion_Prompt+pid.p_picut-pid.p_picut.P_gtr_beta+pid.h_ecut-pid.h_ecut.H_gtr_beta
+
 # EDTM
 c_noedtm = current.bcm4a+misc.c_noedtm
 c_edtm = current.bcm4a+misc.c_edtm
@@ -55,3 +74,6 @@ c_ptrigCOIN = current.bcm4a+misc.c_ptrigCOIN
 # Current only (note: there is a threshold cut in the scalers that is seprate from this!)
 c_curr = current.bcm4a
 c_nozero = current.bcm4a+misc.c_nozero
+c_nozero_ptrigHMS = current.bcm4a+misc.c_nozero_ptrigHMS
+c_nozero_ptrigSHMS = current.bcm4a+misc.c_nozero_ptrigSHMS
+c_nozero_ptrigCOIN = current.bcm4a+misc.c_nozero_ptrigCOIN

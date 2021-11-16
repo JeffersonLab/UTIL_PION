@@ -259,17 +259,19 @@ def scaler(PS_names, HMS_PS, SHMS_PS, thres_curr, report_current, runNum, MaxEve
     }
     # Check if COIN trigger is used
     if len(PS_names) > 2:
+        COIN_PS = 1
         # Creates a dictionary for the calculated luminosity values 
         scalers = {
             "run number" : runNum,
             "%s" % PS_names[0]: SHMS_PS,
             "%s" % PS_names[1]: HMS_PS,
+            "%s" % PS_names[2]: COIN_PS,
             "time": time_sum[2],
             "charge": charge_sum[2],
             "SHMSTRIG_scaler": trig_sum[shms_ps_ix],
             "HMSTRIG_scaler": trig_sum[hms_ps_ix],
             "COINTRIG_scaler": trig_sum[coin_ps_ix],
-            "CPULT_scaler": 1-acctrig_sum/((trig_sum[shms_ps_ix]) + (trig_sum[hms_ps_ix])),
+            "CPULT_scaler": 1-acctrig_sum/((trig_sum[shms_ps_ix]) + (trig_sum[hms_ps_ix]) + (trig_sum[coin_ps_ix])),
             "CPULT_scaler_uncern": (acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS)))*np.sqrt((1/(trig_sum[shms_ps_ix]/SHMS_PS))+(1/(trig_sum[hms_ps_ix]/HMS_PS))+(1/acctrig_sum)),
             "HMS_eLT": 1 - ((6/5)*(PRE_sum[1]-PRE_sum[2])/(PRE_sum[1])),
             "HMS_eLT_uncern": (PRE_sum[1]-PRE_sum[2])/(PRE_sum[1])*np.sqrt((np.sqrt(PRE_sum[1]) + np.sqrt(PRE_sum[2]))/(PRE_sum[1] - PRE_sum[2]) + (np.sqrt(PRE_sum[1])/PRE_sum[1])),
