@@ -117,13 +117,13 @@ def calc_yield():
             
         "uncern_SHMS_evts_notrack" : np.sqrt(makeList("p_int_etotnorm_evts"))/makeList("p_int_etotnorm_evts"),
 
-        "uncern_COIN_evts_notrack" : np.sqrt(makeList("coin_int_etotnorm_evts"))/makeList("coin_int_etotnorm_evts"),
+        "uncern_COIN_evts_notrack" : (np.sqrt(makeList("coin_int_etotnorm_evts"))+ np.sqrt(makeList("coin_int_etotnorm_evts_rand")/6))/makeList("coin_int_etotnorm_evts"),
             
         "uncern_HMS_evts_track" : np.sqrt(makeList("h_int_etottracknorm_evts"))/makeList("h_int_etottracknorm_evts"),
 
         "uncern_SHMS_evts_track" : np.sqrt(makeList("p_int_etottracknorm_evts"))/makeList("p_int_etottracknorm_evts"),
 
-        "uncern_COIN_evts_track" : np.sqrt(makeList("coin_int_etottracknorm_evts"))/makeList("coin_int_etottracknorm_evts"),
+        "uncern_COIN_evts_track" : (np.sqrt(makeList("coin_int_etottracknorm_evts"))+ np.sqrt(makeList("coin_int_etottracknorm_evts_rand")/6))/makeList("coin_int_etottracknorm_evts"),
     }
 
     # Total livetime calculation
@@ -155,8 +155,12 @@ def calc_yield():
     yield_dict.update({"yield_SHMS_track" : yield_SHMS_track})
 
     yield_COIN_scaler = (yield_dict["COIN_scaler_accp"])/(makeList("charge"))
-    yield_COIN_notrack = (makeList("coin_int_etotnorm_evts"))/(makeList("charge")*yield_dict["TLT"])
-    yield_COIN_track = (makeList("coin_int_etottracknorm_evts"))/(makeList("charge")*yield_dict["TLT"]*makeList("HMS_track")*makeList("SHMS_track"))
+    COIN_notrack_Promt = (makeList("coin_int_etotnorm_evts"))
+    COIN_notrack_Rand = (makeList("coin_int_etotnorm_evts_rand"))
+    yield_COIN_notrack = (COIN_notrack_Promt - (COIN_notrack_Rand / 6))/(makeList("charge")*yield_dict["TLT"]*makeList("HMS_track")*makeList("SHMS_track"))
+    COIN_track_Promt = (makeList("coin_int_etottracknorm_evts"))
+    COIN_track_Rand = (makeList("coin_int_etottracknorm_evts_rand"))
+    yield_COIN_track = (COIN_track_Promt - (COIN_track_Rand / 6))/(makeList("charge")*yield_dict["TLT"]*makeList("HMS_track")*makeList("SHMS_track"))
     yield_dict.update({"yield_COIN_scaler": yield_COIN_scaler})
     yield_dict.update({"yield_COIN_notrack": yield_COIN_notrack})
     yield_dict.update({"yield_COIN_track": yield_COIN_track}) 

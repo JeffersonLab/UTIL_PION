@@ -16,6 +16,8 @@ import numpy as np
 import pandas as pd
 import scipy
 import scipy.integrate as integrate
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import sys, math, os, subprocess
 
@@ -286,7 +288,7 @@ P_cal_etottracknorm = tree.array("P.cal.etottracknorm")
 EvtType = tree.array("fEvtHdr.fEvtType")
 
 #list of all cuts that are used
-cuts = ["h_cal", "h_cer", "h_cal_nt", "h_cer_nt", "p_cal", "p_hgcer", "p_aero", "p_cal_nt", "p_hgcer_nt", "p_aero_nt", "p_ngcer_nt", "p_picut_lumi_eff", "p_picut_lumi_nt", "p_pcut_lumi_eff", "p_hadcut_lumi_eff", "h_ecut_lumi_eff", "h_ecut_lumi_nt", "h_picut_lumi_eff", "h_hadcut_lumi_eff", "c_noedtm", "c_edtm", "c_ptrigHMS", "c_ptrigSHMS", "c_ptrigCOIN", "c_curr", "coin_time_only", "coin_pid_notrack", "coin_pid_track"]     
+cuts = ["h_cal", "h_cer", "h_cal_nt", "h_cer_nt", "p_cal", "p_hgcer", "p_aero", "p_cal_nt", "p_hgcer_nt", "p_aero_nt", "p_ngcer_nt", "p_picut_lumi_eff", "p_picut_lumi_nt", "p_pcut_lumi_eff", "p_hadcut_lumi_eff", "h_ecut_lumi_eff", "h_ecut_lumi_nt", "h_picut_lumi_eff", "h_hadcut_lumi_eff", "c_noedtm", "c_edtm", "c_ptrigHMS", "c_ptrigSHMS", "c_ptrigCOIN", "coin_pid_only", "c_curr", "coin_time_only", "coin_pid_notrack", "coin_pid_notrack_rand", "coin_pid_track", "coin_pid_track_rand"]     
 fout = REPLAYPATH+'/UTIL_PION/DB/CUTS/run_type/fADCdeadtime.cuts'
 
 def make_cutDict(cuts,fout,runNum,CURRENT_ENV):
@@ -330,57 +332,68 @@ def pid_cuts():
     #### 1D plots ####
 
     f = plt.figure(figsize=(11.69,8.27))
-    ax = f.add_subplot(231)
+    ax = f.add_subplot(331)
     ax.hist(H_cal_etotnorm,bins=c.setbin(H_cal_etotnorm,200),label='no cut',histtype='step',
             alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(H_cal_etotnorm,"h_cal"),
-             bins=c.setbin(c.add_cut(H_cal_etotnorm,"h_cal"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+    ax.hist(c.add_cut(H_cal_etotnorm,"h_cal"), bins=c.setbin(c.add_cut(H_cal_etotnorm,"h_cal"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
     plt.yscale('log')
     plt.xlabel('H_cal_etotnorm')
     plt.ylabel('Count')
 
-    ax = f.add_subplot(232)
+    ax = f.add_subplot(332)
     ax.hist(H_cer_npeSum,bins=c.setbin(H_cer_npeSum,200),label='no cut',histtype='step', alpha=0.5,
             stacked=True, fill=True)
-    ax.hist(c.add_cut(H_cer_npeSum,"h_cer"),
-            bins=c.setbin(c.add_cut(H_cer_npeSum,"h_cer"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+    ax.hist(c.add_cut(H_cer_npeSum,"h_cer"), bins=c.setbin(c.add_cut(H_cer_npeSum,"h_cer"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
     plt.yscale('log')
     plt.xlabel('H_cer_npeSum')
     plt.ylabel('Count')
 
-    ax = f.add_subplot(233)
+    ax = f.add_subplot(333)
     ax.hist(P_cal_etotnorm,bins=c.setbin(P_cal_etotnorm,200),label='no cut',histtype='step',
             alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(P_cal_etotnorm,"p_cal"),
-             bins=c.setbin(c.add_cut(P_cal_etotnorm,"p_cal"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+    ax.hist(c.add_cut(P_cal_etotnorm,"p_cal"), bins=c.setbin(c.add_cut(P_cal_etotnorm,"p_cal"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
     plt.yscale('log')
     plt.xlabel('P_cal_etotnorm')
     plt.ylabel('Count')
 
-    ax = f.add_subplot(234)
-    ax.hist(P_hgcer_npeSum,bins=c.setbin(P_hgcer_npeSum,200),label='no cut',histtype='step',
-            alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(P_hgcer_npeSum,"p_hgcer"),
-             bins=c.setbin(c.add_cut(P_hgcer_npeSum,"p_hgcer"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+    ax = f.add_subplot(334)
+    ax.hist(P_hgcer_npeSum,bins=c.setbin(P_hgcer_npeSum,200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+    ax.hist(c.add_cut(P_hgcer_npeSum,"p_hgcer"), bins=c.setbin(c.add_cut(P_hgcer_npeSum,"p_hgcer"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
     plt.yscale('log')
     plt.xlabel('P_hgcer_npeSum')
     plt.ylabel('Count')
 
-    ax = f.add_subplot(235)
+    ax = f.add_subplot(335)
     ax.hist(P_aero_npeSum,bins=c.setbin(P_aero_npeSum,200),label='no cut',histtype='step',
             alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(P_aero_npeSum,"p_aero"),
-             bins=c.setbin(c.add_cut(P_aero_npeSum,"p_aero"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+    ax.hist(c.add_cut(P_aero_npeSum,"p_aero"), bins=c.setbin(c.add_cut(P_aero_npeSum,"p_aero"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
     plt.yscale('log')
     plt.xlabel('P_aero_npeSum')
     plt.ylabel('Count')    
     
-    ax = f.add_subplot(236)
+    ax = f.add_subplot(336)
     ax.hist(P_ngcer_npeSum,bins=c.setbin(P_ngcer_npeSum,200,0,250),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
     ax.hist(c.add_cut(P_ngcer_npeSum,"p_ngcer_nt"), bins=c.setbin(P_ngcer_npeSum,200,0,250),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
     plt.yscale('log')
     plt.xlabel('P_ngcer_npeSum')
     plt.ylabel('Count')
+
+#    bins=c.setbin(c.add_cut(CTime_ePiCoinTime_ROC1,"coin_pid_notrack"),50, -2.5, 2.5)
+#    print(bins)
+#    ax = f.add_subplot(337)
+#    ax.hist(CTime_ePiCoinTime_ROC1,bins=c.setbin(c.add_cut(CTime_ePiCoinTime_ROC1,"coin_pid_notrack"),50,-2.5,2.5),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+#    ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"coin_pid_notrack"), bins=c.setbin(c.add_cut(CTime_ePiCoinTime_ROC1,"coin_pid_notrack"),200), label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+#    plt.yscale('log')
+#    plt.xlabel('Coin Time Prompt Peak')
+#    plt.ylabel('Count')
+
+#    ax = f.add_subplot(338)
+#    ax.hist(CTime_ePiCoinTime_ROC1, bins=c.setbin(c.add_cut(CTime_ePiCoinTime_ROC1,"coin_pid_notrack"),200),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+#    ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"coin_pid_notrack_rand"), bins=c.setbin(c.add_cut(CTime_ePiCoinTime_ROC1,"coin_pid_notrack"),200), label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+#    plt.yscale('log')
+#    plt.xlabel('Coin Time Randoms')
+#    plt.ylabel('Count')
+
 
     ### 2D plots ###
 
@@ -489,10 +502,14 @@ def analysis():
                          for (x, evt) in zip(c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTime,"c_ptrigCOIN"), EvtType)
                          if (evt == 1 or evt == 2)]
     coin_etotnorm = c.add_cut(H_cal_etotnorm, "coin_pid_notrack")
+    coin_etotnorm_rand = c.add_cut(H_cal_etotnorm, "coin_pid_notrack_rand")
     coin_etottracknorm = c.add_cut(H_cal_etottracknorm, "coin_pid_track")
+    coin_etottracknorm_rand = c.add_cut(H_cal_etottracknorm, "coin_pid_track_rand")
+
+    COIN_pid_noCT = c.add_cut(H_cal_etotnorm, "coin_pid_only")
 
     # Applies PID cuts, once integrated this will give the events (no track)
-    h_etotnorm = c.add_cut(H_cal_etotnorm,"h_ecut_lumi_eff") 
+    h_etotnorm = c.add_cut(H_cal_etotnorm,"h_ecut_lumi_nt") 
     p_etotnorm = c.add_cut(P_cal_etotnorm,"p_picut_lumi_nt")
     #h_etotnorm = c.add_cut(H_cal_etotnorm,"h_ecut_lumi_eff")
 
@@ -500,6 +517,9 @@ def analysis():
     h_ecuts_etottracknorm = c.add_cut(H_cal_etottracknorm,"h_ecut_lumi_eff")
     p_pcuts_etottracknorm = c.add_cut(P_cal_etottracknorm,"p_picut_lumi_eff")
     
+    HMS_Track_Eff = scipy.integrate.simps(c.add_cut(H_cal_etotnorm,"h_etrack_lumi_after"))/scipy.integrate.simps(c.add_cut(H_cal_etotnorm,"h_etrack_lumi_before"))
+    SHMS_Track_Eff = scipy.integrate.simps(c.add_cut(P_cal_etotnorm,"p_pitrack_lumi_after"))/scipy.integrate.simps(c.add_cut(P_cal_etotnorm,"p_pitrack_lumi_before"))
+
     # Creates a dictionary for the calculated luminosity values 
     track_info = {
         
@@ -527,6 +547,9 @@ def analysis():
             "p_int_etotnorm_evts" : scipy.integrate.simps(p_etotnorm),
             "coin_int_etotnorm_evts" : scipy.integrate.simps(coin_etotnorm),
             "coin_int_etottracknorm_evts" : scipy.integrate.simps(coin_etottracknorm),
+            "coin_int_etotnorm_evts_rand" : scipy.integrate.simps(coin_etotnorm_rand),
+            "coin_int_etottracknorm_evts_rand" : scipy.integrate.simps(coin_etottracknorm_rand),
+            "coin_int_noct" : scipy.integrate.simps(COIN_pid_noCT),
             "h_int_etottracknorm_evts" : scipy.integrate.simps(h_ecuts_etottracknorm),
             "p_int_etottracknorm_evts" : scipy.integrate.simps(p_pcuts_etottracknorm),
             "SHMSTRIG_cut" : len(SHMSTRIG_cut),
@@ -547,15 +570,23 @@ def analysis():
     print("Number of SHMSTRIG Events: %.0f" % (SHMS_PS*track_info["SHMSTRIG_cut"]))
 
     print("\nNumber of HMS good events: %.0f +/- %.0f " % ((HMS_PS*track_info["h_int_etottracknorm_evts"]), math.sqrt(HMS_PS*track_info["h_int_etottracknorm_evts"])))
-    print("Calculated HMS tracking efficiency: %f +/- %f\n" % ((track_info["HMS_track"]), (track_info["HMS_track_uncern"])))
+    print("ReportFile HMS tracking efficiency: %f +/- %f\n" % ((track_info["HMS_track"]), (track_info["HMS_track_uncern"])))
 
     print("Number of SHMS good events: %.0f +/- %.0f " % ((SHMS_PS*track_info["p_int_etottracknorm_evts"]), math.sqrt(SHMS_PS*track_info["p_int_etottracknorm_evts"])))
-    print("Calculated SHMS tracking efficiency: %f +/- %f\n" % ((track_info["SHMS_track"]), (track_info["SHMS_track_uncern"])))
+    print("ReportFile SHMS tracking efficiency: %f +/- %f\n" % ((track_info["SHMS_track"]), (track_info["SHMS_track_uncern"])))
+    
+    print("Calculated HMS Tracking efficiency:  %f +/- ?" % (HMS_Track_Eff))
+    print("Calculated SHMS Tracking efficiency:  %f +/- ?" % (SHMS_Track_Eff))
 
     print("Number of HMS good untrack events: %.0f +/- %.0f" % ((track_info["h_int_etotnorm_evts"]), math.sqrt(track_info["h_int_etotnorm_evts"])))
     print("Number of SHMS good untrack events: %.0f +/- %.0f" % ((track_info["p_int_etotnorm_evts"]), math.sqrt(track_info["p_int_etotnorm_evts"])))
+    print("Number of COIN good no Coin time cuts events: %.0f +/- %.0f" % ((track_info["coin_int_noct"]), math.sqrt(track_info["coin_in_noct"])))
     print("Number of COIN good untrack events: %.0f +/- %.0f" % ((track_info["coin_int_etotnorm_evts"]), math.sqrt(track_info["coin_int_etotnorm_evts"])))
     print("Number of COIN good track events: %.0f +/- %.0f" % ((track_info["coin_int_etottracknorm_evts"]), math.sqrt(track_info["coin_int_etottracknorm_evts"])))
+    print("Number of COIN rand untrack events: %.0f" % (track_info["coin_int_etotnorm_evts_rand"]))
+    print("Number of COIN rand track events: %.0f" % (track_info["coin_int_etottracknorm_evts_rand"]))
+
+    
 
     print("============================================================================\n\n")
           
@@ -584,11 +615,26 @@ def main():
     
     file_exists = os.path.isfile(out_f)
 
-    # Updates csv file with luminosity calculated values for later analysis (see plot_yield.py)
+   # Updates csv file with luminosity calculated values for later analysis (see plot_yield.py)                                                                                                                                               
     if file_exists:
-        table.to_csv(out_f, index = False, header=False, mode='a',)
+        try:
+            out_data = pd.read_csv(out_f)
+        except IOError:
+            print("Error: %s does not appear to exist." % out_f)
+        # Checks if run number is alread in csv and replaces it if it is there
+        run_index = out_data.index[out_data["run number"] == int(runNum)].tolist()
+        out_data.drop(run_index, inplace=True)
+        out_data = out_data.append(table,ignore_index=True)
+        print("Output luminosity values\n",out_data)
+        out_data.to_csv(out_f, index = False, header=True, mode='w+',)
     else:
         table.to_csv(out_f, index = False, header=True, mode='a',)
+
+#    # Updates csv file with luminosity calculated values for later analysis (see plot_yield.py)
+#    if file_exists:
+#        table.to_csv(out_f, index = False, header=False, mode='a',)
+#    else:
+#        table.to_csv(out_f, index = False, header=True, mode='a',)
 
 if __name__ == '__main__':
     main()

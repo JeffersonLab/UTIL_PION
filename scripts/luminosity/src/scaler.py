@@ -250,6 +250,8 @@ def scaler(PS_names, HMS_PS, SHMS_PS, thres_curr, report_current, runNum, MaxEve
         "HMSTRIG_scaler": trig_sum[hms_ps_ix],
         "CPULT_scaler": 1-acctrig_sum/((trig_sum[shms_ps_ix]) + (trig_sum[hms_ps_ix])),
         "CPULT_scaler_uncern": (acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS)))*np.sqrt((1/(trig_sum[shms_ps_ix]/SHMS_PS))+(1/(trig_sum[hms_ps_ix]/HMS_PS))+(1/acctrig_sum)),
+        #"CPULT_scaler_uncern": (1/((trig_sum[shms_ps_ix]) + (trig_sum[hms_ps_ix])))*np.sqrt(acctrig_sum+EDTM_sum*2+((trig_sum[shms_ps_ix]) + (trig_sum[hms_ps_ix]))(acctrig_sum/((trig_sum[shms_ps_ix]) + (trig_sum[hms_ps_ix])))**2),
+        #"CPULT_scaler_uncern": np.sqrt(((trig_sum[shms_ps_ix]) + (trig_sum[hms_ps_ix]))*.95*.05),
         "HMS_eLT": 1 - ((6/5)*(PRE_sum[1]-PRE_sum[2])/(PRE_sum[1])),
         "HMS_eLT_uncern": (PRE_sum[1]-PRE_sum[2])/(PRE_sum[1])*np.sqrt((np.sqrt(PRE_sum[1]) + np.sqrt(PRE_sum[2]))/(PRE_sum[1] - PRE_sum[2]) + (np.sqrt(PRE_sum[1])/PRE_sum[1])),
         "SHMS_eLT": 1 - ((6/5)*(SHMS_PRE_sum[1]-SHMS_PRE_sum[2])/(SHMS_PRE_sum[1])),
