@@ -288,8 +288,11 @@ P_cal_etottracknorm = tree.array("P.cal.etottracknorm")
 EvtType = tree.array("fEvtHdr.fEvtType")
 
 #list of all cuts that are used
-cuts = ["h_cal", "h_cer", "h_cal_nt", "h_cer_nt", "p_cal", "p_hgcer", "p_aero", "p_cal_nt", "p_hgcer_nt", "p_aero_nt", "p_ngcer_nt", "p_picut_lumi_eff", "p_picut_lumi_nt", "p_pcut_lumi_eff", "p_hadcut_lumi_eff", "h_ecut_lumi_eff", "h_ecut_lumi_nt", "h_picut_lumi_eff", "h_hadcut_lumi_eff", "c_noedtm", "c_edtm", "c_ptrigHMS", "c_ptrigSHMS", "c_ptrigCOIN", "coin_pid_only", "c_curr", "coin_time_only", "coin_pid_notrack", "coin_pid_notrack_rand", "coin_pid_track", "coin_pid_track_rand"]     
+cuts = ["h_cal", "h_cer", "h_cal_nt", "h_cer_nt", "p_cal", "p_hgcer", "p_aero", "p_cal_nt", "p_hgcer_nt", "p_aero_nt", "p_ngcer_nt", "p_picut_lumi_eff", "p_picut_lumi_nt",  "h_ecut_lumi_eff", "h_ecut_lumi_nt",  "c_noedtm", "c_edtm", "c_ptrigHMS", "c_ptrigSHMS", "c_ptrigCOIN", "coin_pid_only", "c_curr", "coin_pid_notrack", "coin_pid_notrack_rand", "coin_pid_track", "coin_pid_track_rand"]     
 fout = REPLAYPATH+'/UTIL_PION/DB/CUTS/run_type/fADCdeadtime.cuts'
+
+#"p_pitrack_lumi_before", "p_pitrack_lumi_after",
+#"h_etrack_lumi_before", "h_etrack_lumi_after",
 
 def make_cutDict(cuts,fout,runNum,CURRENT_ENV):
     '''
@@ -517,8 +520,8 @@ def analysis():
     h_ecuts_etottracknorm = c.add_cut(H_cal_etottracknorm,"h_ecut_lumi_eff")
     p_pcuts_etottracknorm = c.add_cut(P_cal_etottracknorm,"p_picut_lumi_eff")
     
-    HMS_Track_Eff = scipy.integrate.simps(c.add_cut(H_cal_etotnorm,"h_etrack_lumi_after"))/scipy.integrate.simps(c.add_cut(H_cal_etotnorm,"h_etrack_lumi_before"))
-    SHMS_Track_Eff = scipy.integrate.simps(c.add_cut(P_cal_etotnorm,"p_pitrack_lumi_after"))/scipy.integrate.simps(c.add_cut(P_cal_etotnorm,"p_pitrack_lumi_before"))
+    #HMS_Track_Eff = scipy.integrate.simps(c.add_cut(H_cal_etotnorm,"h_etrack_lumi_after"))/scipy.integrate.simps(c.add_cut(H_cal_etotnorm,"h_etrack_lumi_before"))
+    #SHMS_Track_Eff = scipy.integrate.simps(c.add_cut(P_cal_etotnorm,"p_pitrack_lumi_after"))/scipy.integrate.simps(c.add_cut(P_cal_etotnorm,"p_pitrack_lumi_before"))
 
     # Creates a dictionary for the calculated luminosity values 
     track_info = {
@@ -549,6 +552,7 @@ def analysis():
             "coin_int_etottracknorm_evts" : scipy.integrate.simps(coin_etottracknorm),
             "coin_int_etotnorm_evts_rand" : scipy.integrate.simps(coin_etotnorm_rand),
             "coin_int_etottracknorm_evts_rand" : scipy.integrate.simps(coin_etottracknorm_rand),
+            "coin_int_noct_notrack" : scipy.integrate.simps(COIN_pid_noCT),
             "coin_int_noct" : scipy.integrate.simps(COIN_pid_noCT),
             "h_int_etottracknorm_evts" : scipy.integrate.simps(h_ecuts_etottracknorm),
             "p_int_etottracknorm_evts" : scipy.integrate.simps(p_pcuts_etottracknorm),
@@ -575,12 +579,12 @@ def analysis():
     print("Number of SHMS good events: %.0f +/- %.0f " % ((SHMS_PS*track_info["p_int_etottracknorm_evts"]), math.sqrt(SHMS_PS*track_info["p_int_etottracknorm_evts"])))
     print("ReportFile SHMS tracking efficiency: %f +/- %f\n" % ((track_info["SHMS_track"]), (track_info["SHMS_track_uncern"])))
     
-    print("Calculated HMS Tracking efficiency:  %f +/- ?" % (HMS_Track_Eff))
-    print("Calculated SHMS Tracking efficiency:  %f +/- ?" % (SHMS_Track_Eff))
+#    print("Calculated HMS Tracking efficiency:  %f +/- ?" % (HMS_Track_Eff))
+#    print("Calculated SHMS Tracking efficiency:  %f +/- ?" % (SHMS_Track_Eff))
 
     print("Number of HMS good untrack events: %.0f +/- %.0f" % ((track_info["h_int_etotnorm_evts"]), math.sqrt(track_info["h_int_etotnorm_evts"])))
     print("Number of SHMS good untrack events: %.0f +/- %.0f" % ((track_info["p_int_etotnorm_evts"]), math.sqrt(track_info["p_int_etotnorm_evts"])))
-    print("Number of COIN good no Coin time cuts events: %.0f +/- %.0f" % ((track_info["coin_int_noct"]), math.sqrt(track_info["coin_in_noct"])))
+    print("Number of COIN good no Coin time cuts events: %.0f +/- %.0f" % ((track_info["coin_int_noct"]), math.sqrt(track_info["coin_int_noct"])))
     print("Number of COIN good untrack events: %.0f +/- %.0f" % ((track_info["coin_int_etotnorm_evts"]), math.sqrt(track_info["coin_int_etotnorm_evts"])))
     print("Number of COIN good track events: %.0f +/- %.0f" % ((track_info["coin_int_etottracknorm_evts"]), math.sqrt(track_info["coin_int_etottracknorm_evts"])))
     print("Number of COIN rand untrack events: %.0f" % (track_info["coin_int_etotnorm_evts_rand"]))
