@@ -21,6 +21,7 @@ h_cal_nt = current.bcm4a+pid.h_ecut_nt-pid.h_ecut_nt.H_cer_npeSum
 h_cer = current.bcm4a+accept.delta+pid.h_ecut-pid.h_ecut.H_gtr_beta-pid.h_ecut.H_cal_etotnorm
 h_cer_nt = current.bcm4a+pid.h_ecut_nt-pid.h_ecut_nt.H_cal_etotnorm
 #not-track cut
+h_ecut_lumi = current.bcm4a+accept.delta+pid.h_ecut-pid.h_ecut.H_gtr_beta+misc.c_HMS_noCOIN
 h_ecut_lumi_nt = current.bcm4a+pid.h_ecut_nt+misc.c_HMS_noCOIN
 ###################
 # SHMS track cuts #
@@ -56,14 +57,15 @@ p_hgcer_nt = current.bcm4a+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_cal_eto
 p_ngcer_nt = current.bcm4a+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_cal_etotnorm-pid.p_pcut.P_aero_npeSum-pid.p_pcut.P_hgcer_npeSum
 p_aero_nt = current.bcm4a+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_cal_etotnorm-pid.p_pcut.P_hgcer_npeSum-pid.p_pcut.P_ngcer_npeSum
 # no-track cut
+p_picut_lumi = current.bcm4a+accept.delta+pid.p_picut-pid.p_picut.P_gtr_beta+misc.c_SHMS_noCOIN
 p_picut_lumi_nt = current.bcm4a+pid.p_picut-pid.p_picut.P_gtr_beta+misc.c_SHMS_noCOIN 
 
 #############
 # Coin Cuts #
 #############
 coin_pid_only = current.bcm4a+pid.p_picut-pid.p_picut.P_gtr_beta+pid.h_ecut-pid.h_ecut.H_gtr_beta+misc.c_nozero_ptrigCOIN
-coin_pid_notrack = current.bcm4a+coin_time.Coin_Pion_Prompt+pid.p_picut-pid.p_picut.P_gtr_beta+pid.h_ecut-pid.h_ecut.H_gtr_beta
-coin_pid_notrack_rand = current.bcm4a+coin_time.Coin_Pion_Rand+pid.p_picut-pid.p_picut.P_gtr_beta+pid.h_ecut-pid.h_ecut.H_gtr_beta
+coin_pid_notrack = current.bcm4a+coin_time.Coin_Raw_Prompt+pid.p_picut-pid.p_picut.P_gtr_beta+pid.h_ecut-pid.h_ecut.H_gtr_beta
+coin_pid_notrack_rand = current.bcm4a+coin_time.Coin_Raw_Rand+pid.p_picut-pid.p_picut.P_gtr_beta+pid.h_ecut-pid.h_ecut.H_gtr_beta
 coin_pid_track = current.bcm4a+accept.delta+coin_time.Coin_Pion_Prompt+pid.p_picut-pid.p_picut.P_gtr_beta+pid.h_ecut-pid.h_ecut.H_gtr_beta
 coin_pid_track_rand = current.bcm4a+accept.delta+coin_time.Coin_Pion_Rand+pid.p_picut-pid.p_picut.P_gtr_beta+pid.h_ecut-pid.h_ecut.H_gtr_beta
 

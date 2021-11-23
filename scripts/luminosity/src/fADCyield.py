@@ -282,17 +282,15 @@ T_coin_hFADC_TREF_ROC1_adcPed = tree.array("T.coin.hFADC_TREF_ROC1_adcPed")
 T_coin_pFADC_TREF_ROC2_adcPulseTimeRaw = tree.array("T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw")
 T_coin_hFADC_TREF_ROC1_adcPulseTimeRaw = tree.array("T.coin.hFADC_TREF_ROC1_adcPulseTimeRaw")
 T_coin_pEDTM_tdcTimeRaw = tree.array("T.coin.pEDTM_tdcTimeRaw")
+CTime_CoinTime_RAW_ROC1 = tree.array("CTime.CoinTime_RAW_ROC1")
 CTime_ePiCoinTime_ROC1 = tree.array("CTime.ePiCoinTime_ROC1")
 H_cal_etottracknorm = tree.array("H.cal.etottracknorm")
 P_cal_etottracknorm = tree.array("P.cal.etottracknorm")
 EvtType = tree.array("fEvtHdr.fEvtType")
 
 #list of all cuts that are used
-cuts = ["h_cal", "h_cer", "h_cal_nt", "h_cer_nt", "p_cal", "p_hgcer", "p_aero", "p_cal_nt", "p_hgcer_nt", "p_aero_nt", "p_ngcer_nt", "p_picut_lumi_eff", "p_picut_lumi_nt",  "h_ecut_lumi_eff", "h_ecut_lumi_nt",  "c_noedtm", "c_edtm", "c_ptrigHMS", "c_ptrigSHMS", "c_ptrigCOIN", "coin_pid_only", "c_curr", "coin_pid_notrack", "coin_pid_notrack_rand", "coin_pid_track", "coin_pid_track_rand"]     
+cuts = ["h_etrack_lumi_before", "h_etrack_lumi_after", "p_pitrack_lumi_before", "p_pitrack_lumi_after", "h_cal", "h_cer", "h_cal_nt", "h_cer_nt", "p_cal", "p_hgcer", "p_aero", "p_cal_nt", "p_hgcer_nt", "p_aero_nt", "p_ngcer_nt", "p_picut_lumi_eff", "p_picut_lumi_nt", "p_picut_lumi", "h_ecut_lumi_eff", "h_ecut_lumi", "h_ecut_lumi_nt",  "c_noedtm", "c_edtm", "c_ptrigHMS", "c_ptrigSHMS", "c_ptrigCOIN", "coin_pid_only", "c_curr", "coin_pid_notrack", "coin_pid_notrack_rand", "coin_pid_track", "coin_pid_track_rand"]     
 fout = REPLAYPATH+'/UTIL_PION/DB/CUTS/run_type/fADCdeadtime.cuts'
-
-#"p_pitrack_lumi_before", "p_pitrack_lumi_after",
-#"h_etrack_lumi_before", "h_etrack_lumi_after",
 
 def make_cutDict(cuts,fout,runNum,CURRENT_ENV):
     '''
@@ -304,7 +302,7 @@ def make_cutDict(cuts,fout,runNum,CURRENT_ENV):
     '''
 
     # read in cuts file and make dictionary
-    importDict = lt.SetCuts(CURRENT_ENV).importDict(cuts,fout,runNum)
+    importDict = lt.SetCuts(CURRENT_ENV).importDict(cuts,fout,runNum, False)
     for i,cut in enumerate(cuts):
         x = lt.SetCuts(CURRENT_ENV,importDict).booleanDict(cut)
         #######################################################################################
@@ -381,14 +379,13 @@ def pid_cuts():
     plt.xlabel('P_ngcer_npeSum')
     plt.ylabel('Count')
 
-#    bins=c.setbin(c.add_cut(CTime_ePiCoinTime_ROC1,"coin_pid_notrack"),50, -2.5, 2.5)
-#    print(bins)
-#    ax = f.add_subplot(337)
-#    ax.hist(CTime_ePiCoinTime_ROC1,bins=c.setbin(c.add_cut(CTime_ePiCoinTime_ROC1,"coin_pid_notrack"),50,-2.5,2.5),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-#    ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"coin_pid_notrack"), bins=c.setbin(c.add_cut(CTime_ePiCoinTime_ROC1,"coin_pid_notrack"),200), label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-#    plt.yscale('log')
-#    plt.xlabel('Coin Time Prompt Peak')
-#    plt.ylabel('Count')
+    
+    ax = f.add_subplot(337)
+    ax.hist(CTime_CoinTime_RAW_ROC1,bins=c.setbin(CTime_CoinTime_RAW_ROC1,200, -100, 100),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+    ax.hist(c.add_cut(CTime_CoinTime_RAW_ROC1,"coin_pid_notrack"),bins=c.setbin(CTime_CoinTime_RAW_ROC1,200, -100, 100),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+    plt.yscale('log')
+    plt.xlabel('Coin Time Prompt Peak')
+    plt.ylabel('Count')
 
 #    ax = f.add_subplot(338)
 #    ax.hist(CTime_ePiCoinTime_ROC1, bins=c.setbin(c.add_cut(CTime_ePiCoinTime_ROC1,"coin_pid_notrack"),200),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
@@ -396,6 +393,9 @@ def pid_cuts():
 #    plt.yscale('log')
 #    plt.xlabel('Coin Time Randoms')
 #    plt.ylabel('Count')
+
+    plt.tight_layout(rect=[0,0.03,1,0.95])
+    plt.savefig(UTILPATH+'/scripts/luminosity/OUTPUTS/plots/pid/pid_%s.png' % (runNum))
 
 
     ### 2D plots ###
@@ -517,11 +517,18 @@ def analysis():
     #h_etotnorm = c.add_cut(H_cal_etotnorm,"h_ecut_lumi_eff")
 
     # Applies PID cuts, once integrated this will give the events (track)
-    h_ecuts_etottracknorm = c.add_cut(H_cal_etottracknorm,"h_ecut_lumi_eff")
-    p_pcuts_etottracknorm = c.add_cut(P_cal_etottracknorm,"p_picut_lumi_eff")
+    h_ecuts_etottracknorm = c.add_cut(H_cal_etottracknorm,"h_ecut_lumi")
+    p_pcuts_etottracknorm = c.add_cut(P_cal_etottracknorm,"p_picut_lumi")
     
-    #HMS_Track_Eff = scipy.integrate.simps(c.add_cut(H_cal_etotnorm,"h_etrack_lumi_after"))/scipy.integrate.simps(c.add_cut(H_cal_etotnorm,"h_etrack_lumi_before"))
-    #SHMS_Track_Eff = scipy.integrate.simps(c.add_cut(P_cal_etotnorm,"p_pitrack_lumi_after"))/scipy.integrate.simps(c.add_cut(P_cal_etotnorm,"p_pitrack_lumi_before"))
+    HMS_track_before = scipy.integrate.simps(c.add_cut(H_cal_etotnorm,"h_etrack_lumi_before"))
+    HMS_track_after  = scipy.integrate.simps(c.add_cut(H_cal_etotnorm,"h_etrack_lumi_after"))
+    HMS_Track_Eff = HMS_track_after/HMS_track_before
+    HMS_Track_Uncer = math.sqrt(HMS_track_before - HMS_track_after)/HMS_track_before
+    
+    SHMS_track_before = scipy.integrate.simps(c.add_cut(P_cal_etotnorm,"p_pitrack_lumi_before"))
+    SHMS_track_after  = scipy.integrate.simps(c.add_cut(P_cal_etotnorm,"p_pitrack_lumi_after"))
+    SHMS_Track_Eff = SHMS_track_after/SHMS_track_before
+    SHMS_Track_Uncer = math.sqrt(SHMS_track_before - SHMS_track_after)/SHMS_track_before
 
     # Creates a dictionary for the calculated luminosity values 
     track_info = {
@@ -559,10 +566,10 @@ def analysis():
             "SHMSTRIG_cut" : len(SHMSTRIG_cut),
             "HMSTRIG_cut" : len(HMSTRIG_cut),
             "COINTRIG_cut" : len(COINTRIG_cut),
-            "HMS_track" : HMS_track_eff,
-            "HMS_track_uncern" : HMS_track_uncern,
-            "SHMS_track" : SHMS_track_eff,
-            "SHMS_track_uncern" : SHMS_track_uncern,
+            "HMS_track" : HMS_Track_Eff,
+            "HMS_track_uncern" : HMS_Track_Uncer,
+            "SHMS_track" : SHMS_Track_Eff,
+            "SHMS_track_uncern" : SHMS_Track_Uncer,
             "accp_edtm" : (len(EDTM)),
             
         }
@@ -574,13 +581,12 @@ def analysis():
     print("Number of SHMSTRIG Events: %.0f" % (SHMS_PS*track_info["SHMSTRIG_cut"]))
 
     print("\nNumber of HMS good events: %.0f +/- %.0f " % ((HMS_PS*track_info["h_int_etottracknorm_evts"]), math.sqrt(HMS_PS*track_info["h_int_etottracknorm_evts"])))
-    print("ReportFile HMS tracking efficiency: %f +/- %f\n" % ((track_info["HMS_track"]), (track_info["HMS_track_uncern"])))
+    print("Calculated HMS Tracking efficiency: %f +/- %f" % ((track_info["HMS_track"]), (track_info["HMS_track_uncern"])))
+    print("ReportFile HMS tracking efficiency: %f +/- %f\n" % ((HMS_track_eff),(HMS_track_uncern)))
 
     print("Number of SHMS good events: %.0f +/- %.0f " % ((SHMS_PS*track_info["p_int_etottracknorm_evts"]), math.sqrt(SHMS_PS*track_info["p_int_etottracknorm_evts"])))
-    print("ReportFile SHMS tracking efficiency: %f +/- %f\n" % ((track_info["SHMS_track"]), (track_info["SHMS_track_uncern"])))
-    
-#    print("Calculated HMS Tracking efficiency:  %f +/- ?" % (HMS_Track_Eff))
-#    print("Calculated SHMS Tracking efficiency:  %f +/- ?" % (SHMS_Track_Eff))
+    print("Calculated SHMS Tracking efficiency: %f +/- %f" % ((track_info["SHMS_track"]), (track_info["SHMS_track_uncern"])))
+    print("ReportFile SHMS tracking efficiency: %f +/- %f\n" % ((SHMS_track_eff),(SHMS_track_uncern)))
 
     print("Number of HMS good untrack events: %.0f +/- %.0f" % ((track_info["h_int_etotnorm_evts"]), math.sqrt(track_info["h_int_etotnorm_evts"])))
     print("Number of SHMS good untrack events: %.0f +/- %.0f" % ((track_info["p_int_etotnorm_evts"]), math.sqrt(track_info["p_int_etotnorm_evts"])))

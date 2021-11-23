@@ -124,6 +124,14 @@ def calc_yield():
         "uncern_SHMS_evts_track" : np.sqrt(makeList("p_int_etottracknorm_evts"))/makeList("p_int_etottracknorm_evts"),
 
         "uncern_COIN_evts_track" : (np.sqrt(makeList("coin_int_etottracknorm_evts"))+ np.sqrt(makeList("coin_int_etottracknorm_evts_rand")/6))/makeList("coin_int_etottracknorm_evts"),
+
+        "HMS_track"  : makeList("HMS_track"),
+        
+        "SHMS_track" : makeList("SHMS_track"),
+
+        "HMS_track_uncern"  : makeList("HMS_track_uncern"),
+        
+        "SHMS_track_uncern" : makeList("SHMS_track_uncern")
     }
 
     # Total livetime calculation
@@ -413,7 +421,7 @@ def plot_yield():
     edtmPlot = plt.figure(figsize=(12,8))
 
     #Ratio accp/total scaler vs current
-    plt.subplot(2,3,1)    
+    plt.subplot(2,4,1)    
     plt.grid(zorder=1)
     #plt.xlim(0,100)
     plt.scatter(yield_data["current"],(yield_data["HMS_scaler_accp"]+yield_data["SHMS_scaler_accp"])/(yield_data["HMSTRIG_scaler"]+yield_data["SHMSTRIG_scaler"]),color='blue',zorder=4)
@@ -427,7 +435,7 @@ def plot_yield():
         plt.title('Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
 
     #Scaler EDTM rate vs current
-    plt.subplot(2,3,2)    
+    plt.subplot(2,4,2)    
     plt.grid(zorder=1)
     #plt.xlim(0,100)
     plt.scatter(yield_data["current"],yield_data["sent_edtm"]/yield_data["time"],color='blue',zorder=4)
@@ -442,7 +450,7 @@ def plot_yield():
         plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
 
     #EDTM vs HMS Rate
-    plt.subplot(2,3,3)    
+    plt.subplot(2,4,3)    
     plt.grid(zorder=1)
     #plt.xlim(0,100)
     plt.scatter(yield_data["rate_HMS"]/1000,yield_data["accp_edtm"]/(yield_data["time"]*1000),color='blue',zorder=4)
@@ -456,7 +464,7 @@ def plot_yield():
         plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
 
     #TLT vs Current
-    plt.subplot(2,3,4)    
+    plt.subplot(2,4,4)    
     plt.grid(zorder=1)
     #plt.xlim(0,100)
     plt.scatter(yield_data["current"],yield_data["TLT"],color='blue',zorder=4)
@@ -470,7 +478,7 @@ def plot_yield():
         plt.title('Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
 
     #Time vs current
-    plt.subplot(2,3,5)    
+    plt.subplot(2,4,5)    
     plt.grid(zorder=1)
     #plt.xlim(0,100)
     plt.scatter(yield_data["current"],yield_data["time"]/60,color='blue',zorder=4)
@@ -485,12 +493,42 @@ def plot_yield():
 
 
     #EDTM vs SHMS Rate
-    plt.subplot(2,3,6)    
+    plt.subplot(2,4,6)    
     plt.grid(zorder=1)
     #plt.xlim(0,100)
     plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["accp_edtm"]/(yield_data["time"]*1000),color='blue',zorder=4)
     plt.ylabel('EDTM Rate [kHz]', fontsize=16)
     plt.xlabel('SHMS Rate [kHz]', fontsize =16)
+    if target == 'LD2' :
+        plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+    elif target == 'LH2' :
+        plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+    else :
+        plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+
+    #HMS track vs current
+    plt.subplot(2,4,7)    
+    plt.grid(zorder=1)
+    #plt.xlim(0,100)
+    plt.errorbar(yield_data["current"],yield_data["HMS_track"],yerr=yield_data["HMS_track_uncern"],color='black',linestyle='None',zorder=3)    
+    plt.scatter(yield_data["current"],yield_data["HMS_track"],color='blue',zorder=4)
+    plt.ylabel('HMS Tracking Effiency', fontsize=16)
+    plt.xlabel('Current [uA]', fontsize =16)
+    if target == 'LD2' :
+        plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+    elif target == 'LH2' :
+        plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+    else :
+        plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+
+    #SHMS track vs current
+    plt.subplot(2,4,8)    
+    plt.grid(zorder=1)
+    #plt.xlim(0,100)
+    plt.errorbar(yield_data["current"],yield_data["SHMS_track"],yerr=yield_data["SHMS_track_uncern"],color='black',linestyle='None',zorder=3)    
+    plt.scatter(yield_data["current"],yield_data["SHMS_track"],color='blue',zorder=4)
+    plt.ylabel('SHMS Tracking Effiency', fontsize=16)
+    plt.xlabel('Current [uA]', fontsize =16)
     if target == 'LD2' :
         plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
     elif target == 'LH2' :
