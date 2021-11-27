@@ -206,17 +206,17 @@ SHMS Aero Pion Eff		      :   {SHMSAeroDidpi.npassed/(SHMSAeroShouldpi.npassed+0
 **  NGC **
 **********
 
-This is only useful for negatove polarity run and calculates electron efficiency
+This is only useful for negatove polarity run
 
-PNGCdidelxpos	    		    :   {SHMSNGCDidelxpos.npassed}
-PNGCshouldelxpos		    :	{SHMSNGCShouldelxpos.npassed}
+PNGCdidel	    		    :   {SHMSNGCDidel.npassed}
+PNGCshouldel			    :	{SHMSNGCShouldel.npassed}
 
-SHMS NGC Elec Eff (Positive X)		      :   {SHMSNGCDidelxpos.npassed/(SHMSNGCShouldelxpos.npassed+0.0001):%8.4f} +- {(sqrt(SHMSNGCShouldelxpos.npassed-SHMSNGCDidelxpos.npassed)/(SHMSNGCShouldelxpos.npassed+.0001)):%8.4f}
+SHMS NGC Elec Eff		          :   {SHMSNGCDidel.npassed/(SHMSNGCShouldel.npassed+0.0001):%8.4f} +- {(sqrt(SHMSNGCShouldel.npassed-SHMSNGCDidel.npassed)/(SHMSNGCShouldel.npassed+.0001)):%8.4f}
 
-PNGCdidelxneg	    		    :   {SHMSNGCDidelxneg.npassed}
-PNGCshouldelxneg		    :	{SHMSNGCShouldelxneg.npassed}
+PNGCdidpi	    		    :   {SHMSNGCDidpi.npassed}
+PNGCshouldpi			    :	{SHMSNGCShouldpi.npassed}
 
-SHMS NGC Elec Eff (Negative X)		      :   {SHMSNGCDidelxneg.npassed/(SHMSNGCShouldelxneg.npassed+0.0001):%8.4f} +- {(sqrt(SHMSNGCShouldelxneg.npassed-SHMSNGCDidelxneg.npassed)/(SHMSNGCShouldelxneg.npassed+.0001)):%8.4f}
+SHMS NGC Pion Eff		          :   {SHMSNGCDidpi.npassed/(SHMSNGCShouldpi.npassed+0.0001):%8.4f} +- {(sqrt(SHMSNGCShouldpi.npassed-SHMSNGCDidpi.npassed)/(SHMSNGCShouldpi.npassed+.0001)):%8.4f}
 
 =:=:=:=:=:=:=:=:=:=:=:=:=
 =      HMS Cerenkov     =

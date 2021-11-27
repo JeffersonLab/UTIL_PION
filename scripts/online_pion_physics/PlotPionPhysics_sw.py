@@ -25,10 +25,13 @@ sys.path.insert(0, 'python/')
 ##################################################################################################################################################
 
 # Defining some variables here
-minbin = 0.92 # minimum bin for selecting neutrons events in missing mass distribution
-maxbin = 0.98 # maximum bin for selecting neutrons events in missing mass distribution
+#minbin = 0.90 # minimum bin for selecting neutrons events in missing mass distribution
+#maxbin = 0.98 # maximum bin for selecting neutrons events in missing mass distribution
+# SJDK - 25/11/21 - Doubled the range of the MM selection for the LD2 runs at Q2 = 6.0. I expanded this asymmetrically, I raised the upper limit by 0.06 and the lower limit by 0.02
+minbin = 0.88 # minimum bin for selecting neutrons events in missing mass distribution
+maxbin = 1.04 # maximum bin for selecting neutrons events in missing mass distribution
 minrangeuser = 0 # min range for -t vs phi plot
-maxrangeuser = 1.8 #  max range for -t vs phi plot
+maxrangeuser = 1.5 #  max range for -t vs phi plot     : 2021/11/11 JM updated t bounds - 20/11/2021 - SJDK, adjusted from 1.5 to 0.9 for Q2 = 6.0 middle epsilon setting # NH 2021 11 25 - changed range to 1.5
 
 ##################################################################################################################################################
 
@@ -193,7 +196,9 @@ P_aero_npe_pions_uncut = ROOT.TH1D("P_aero_npe_pions_uncut", "SHMS aero npeSum; 
 P_ngcer_npe_pions_uncut = ROOT.TH1D("P_ngcer_npe_pions_uncut", "SHMS NGC npeSum; SHMS_ngcer_npeSum; Counts", 200, 0, 50)
 P_MMpi_pions_uncut = ROOT.TH1D("P_MMpi_pions_uncut", "MIssing Mass (no cuts); MM_{#pi}; Counts", 200, 0.5, 1.8)
 P_RFTime_pions_uncut = ROOT.TH1D("P_RFTime_pions_uncut", "SHMS RFTime; SHMS_RFTime; Counts", 200, 0, 4)
-ePiCoinTime_pions_uncut = ROOT.TH1D("ePiCoinTime_pions_uncut", "Electron-Pion CTime (no cuts); e #pi Coin_Time; Counts", 200, -50, 50)
+#ePiCoinTime_pions_uncut = ROOT.TH1D("ePiCoinTime_pions_uncut", "Electron-Pion CTime (no cuts); e #pi Coin_Time; Counts", 200, -50, 50)
+# SJDK 26/11/21 - Narrowed the range for 2ns running, bin size still the same
+ePiCoinTime_pions_uncut = ROOT.TH1D("ePiCoinTime_pions_uncut", "Electron-Pion CTime (no cuts); e #pi Coin_Time; Counts", 100, -25, 25)
 
 H_xp_pions_cut = ROOT.TH1D("H_xp_pions_cut", "HMS x'; HMS_gtr_xp; Counts", 200, -0.2, 0.2)
 H_yp_pions_cut = ROOT.TH1D("H_yp_pions_cut", "HMS y'; HMS_gtr_yp; Counts", 200, -0.2, 0.2)
@@ -209,23 +214,27 @@ P_aero_npe_pions_cut = ROOT.TH1D("P_aero_npe_pions_cut", "SHMS aero npeSum; SHMS
 P_ngcer_npe_pions_cut = ROOT.TH1D("P_ngcer_npe_pions_cut", "SHMS NGC npeSum; SHMS_ngcer_npeSum; Counts", 200, 0, 50)
 P_MMpi_pions_cut = ROOT.TH1D("P_MMpi_pions_cut", "Missing Mass (with cuts); MM_{#pi}; Counts", 200, 0.5, 1.8)
 P_RFTime_pions_cut = ROOT.TH1D("P_RFTime_pions_cut", "SHMS RFTime; SHMS_RFTime; Counts", 200, 0, 4)
-ePiCoinTime_pions_cut = ROOT.TH1D("ePiCoinTime_pions_cut", "Electron-Pion CTime (with cuts); e #pi Coin_Time; Counts", 200, -50, 50)
+#ePiCoinTime_pions_cut = ROOT.TH1D("ePiCoinTime_pions_cut", "Electron-Pion CTime (with cuts); e #pi Coin_Time; Counts", 200, -50, 50)
+# SJDK 26/11/21 - Narrowed the range for 2ns running, bin size still the same
+ePiCoinTime_pions_cut = ROOT.TH1D("ePiCoinTime_pions_cut", "Electron-Pion CTime (with cuts); e #pi Coin_Time; Counts", 100, -25, 25)
 epsilon_pions_cut = ROOT.TH1D("epsilon_pions_cut", "Epsilon Dist for Prompt Events (Incl MM Cut); epsilon; Counts", 200, 0, 1.0)
 
 ePiCoinTime_pions_cut_prompt = ROOT.TH1D("ePiCoinTime_pions_cut_prompt", "Electron-Pion CTime; e #pi Coin_Time; Counts", 8, -2, 2)
 P_MMpi_pions_cut_prompt = ROOT.TH1D("P_MMpi_pions_cut_prompt", "Missing Mass; MM_{#pi}; Counts", 200, 0.5, 1.8)
 
-ePiCoinTime_pions_cut_randm = ROOT.TH1D("ePiCoinTime_pions_cut_randm", "Electron-Pion CTime; e #pi Coin_Time; Counts", 160, -40, 40)
+#ePiCoinTime_pions_cut_randm = ROOT.TH1D("ePiCoinTime_pions_cut_randm", "Electron-Pion CTime; e #pi Coin_Time; Counts", 160, -40, 40)
+# SJDK 26/11/21 - Narrowed the range for 2ns running, bin size still the same
+ePiCoinTime_pions_cut_randm = ROOT.TH1D("ePiCoinTime_pions_cut_randm", "Electron-Pion CTime; e #pi Coin_Time; Counts", 80, -20, 20)
 P_MMpi_pions_cut_randm = ROOT.TH1D("P_MMpi_pions_cut_randm", "Missing Mass; MM_{#pi}; Counts", 200, 0.5, 1.8)
 
 P_MMpi_pions_cut_randm_scaled = ROOT.TH1D("P_MMpi_pions_cut_randm_scaled", "Missing Mass; MM_{#pi}; Counts", 200, 0.5, 1.8)
 P_MMpi_pions_cut_randm_sub = ROOT.TH1D("P_MMpi_pions_cut_randm_sub", "Missing Mass Rndm Sub; MM_{#pi}; Counts", 200, 0.5, 1.8)
 # SJDK - 26/10/21 - Changed the plot title to be more accurate
 phiq_plot = ROOT.TH1D("Phiq", "#phi Dist for Prompt Events (Incl MM Cut); #phi; Counts", 12, -3.14, 3.14) # 2021/10/25 NH - added these at garths request
-t_plot = ROOT.TH1D("-t", "-t Dist for Prompt Events (Incl MM Cut); -t; Counts", 48, 0, 2.4) 
+t_plot = ROOT.TH1D("-t", "-t Dist for Prompt Events (Incl MM Cut); -t; Counts", 48, 0, 1.5) # 2021/11/11 JM changed t range
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
-    Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; Counts", 200, 6, 10) 
-    W_pions_cut = ROOT.TH1D("W_pions_cut", "W Dist for Prompt Events (Incl MM Cut); W; Counts", 200, 2.3, 3.3)
+    Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; Counts", 200, 3, 8) # 2021/11/25 JM - Adjusting Hist bounds for the 8.0 Physics settings 
+    W_pions_cut = ROOT.TH1D("W_pions_cut", "W Dist for Prompt Events (Incl MM Cut); W; Counts", 200, 2., 3.)
 elif (FilenameOverride != False): # Special case, run with specifc file name, construct histo with ranges based upon filename
     Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; Counts", 200, Q2min, Q2max) 
     W_pions_cut = ROOT.TH1D("W_pions_cut", "W Dist for Prompt Events (Incl MM Cut); W; Counts", 200, Wmin, Wmax)  
@@ -234,8 +243,11 @@ elif (FilenameOverride != False): # Special case, run with specifc file name, co
 
 # 2D Histograms for pions
 P_hgcer_vs_aero_npe_pions_uncut = ROOT.TH2D("P_hgcer_vs_aero_npe_pions_uncut", "SHMS HGC npeSum vs SHMS Aero npeSum (no cut); SHMS_hgcer_npeSum; SHMS_aero_npeSum", 100, 0, 50, 100, 0, 50)
-ePiCoinTime_vs_MMpi_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_MMpi_pions_uncut","Electron-Pion CTime vs Missing Mass (no cut); e #pi Coin_Time; MM_{#pi}", 200, -40, 40, 200, 0, 2)
-ePiCoinTime_vs_beta_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_beta_pions_uncut", "Electron-Pion CTime vs SHMS #beta (no cut); e #pi Coin_Time; SHMS_#beta", 200, -40, 40, 200, 0, 2)
+#ePiCoinTime_vs_MMpi_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_MMpi_pions_uncut","Electron-Pion CTime vs Missing Mass (no cut); e #pi Coin_Time; MM_{#pi}", 160, -40, 40, 200, 0, 2)
+#ePiCoinTime_vs_beta_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_beta_pions_uncut", "Electron-Pion CTime vs SHMS #beta (no cut); e #pi Coin_Time; SHMS_#beta", 160, -40, 40, 200, 0, 2)
+# SJDK 26/11/21 - Narrowed the range for 2ns running, bin size still the same
+ePiCoinTime_vs_MMpi_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_MMpi_pions_uncut","Electron-Pion CTime vs Missing Mass (no cut); e #pi Coin_Time; MM_{#pi}", 100, -25, 25, 200, 0, 2)
+ePiCoinTime_vs_beta_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_beta_pions_uncut", "Electron-Pion CTime vs SHMS #beta (no cut); e #pi Coin_Time; SHMS_#beta", 100, -25, 25, 200, 0, 2)
 P_RFTime_vs_MMpi_pions_uncut = ROOT.TH2D("P_RFTime_vs_MMpi_pions_uncut", "SHMS RFTime vs Missing Mass (no cuts); SHMS_RFTime_Dist; MM_{#pi}", 100, 0, 4, 100, 0, 2)
 P_cal_etottracknorm_vs_ngcer_npe_pions_uncut = ROOT.TH2D("P_cal_etottracknorm_vs_ngcer_npe_pions_uncut", "SHMS cal etottracknorm vs SHMS NGC xAtCer (no cut); SHMS_cal_etottracknorm; SHMS_ngcer_xAtCer", 100, -10, 10, 100, -10, 10)
 P_cal_fly_numGoodAdcHits_col_row_uncut = ROOT.TH2D("P_cal_fly_numGoodAdcHits_col_row_uncut","SHMS Shower  Occupancy ; Col Number ;  Row Number",14,0,14,16,0,16)
@@ -279,11 +291,12 @@ P_cal_xy_pions_cut = ROOT.TH2D("P_cal_xy_pions_cut", "SHMS Calorimeter yCalo vs 
 P_DPexit_xy_pions_cut = ROOT.TH2D("P_DPexit_xy_pions_cut", "SHMS Dipole Exit  yExit vs xExit (with cuts); yExit(cm); xExit(cm)", 200, -50.0, 50.0, 200, -50.0, 50.0)
 # SJDK - 26/10/21 - Changed the plot title to be more accurate
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
-    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W Dist for Prompt Events (Incl MM Cut); Q2; W", 200, 6, 10, 200, 2.3, 3.3)
+    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W Dist for Prompt Events (Incl MM Cut); Q2; W", 200, 3, 8, 200, 2., 3.) # 2021/11/25 JM Adjusted Q2 bounds
 elif (FilenameOverride != False): # Special case, run with specifc file name, construct histo with ranges based upon filename
     Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W Dist for Prompt Events (Incl MM Cut); Q2; W", 200, Q2min, Q2max, 200, Wmin, Wmax)
 # SJDK - 26/10/21 - Changed the plot title to be more accurate
-phiqvst_pions_cut = ROOT.TH2D("phiqvst_pions_cut","#phi vs -t Dist for Prompt Events (Incl MM Cut); #phi ;-t", 12, -3.14, 3.14, 48, 0.0, 2.4) #2021 08 12 - NH doubled binning range and # bins
+# NH 2021 11 25 - I changed max value back to 1.5, do not change this or the t marks on the t-phi plots will be wrong!!! Instead ONLY change the range with the constanst on line 31!!
+phiqvst_pions_cut = ROOT.TH2D("phiqvst_pions_cut","#phi vs -t Dist for Prompt Events (Incl MM Cut); #phi ;-t", 12, -3.14, 3.14, 48, 0.0, 1.5) #2021 08 12 - NH doubled binning range and # bins : 2021/11/11 JM changed t range - 20/11/21 SJDK - Changed max value from 1.5 to 0.9 
 # SJDK 03/11/21 - New phi_q vs theta_q plot that Steve Wood wanted
 phiqvsthq_pions_cut = ROOT.TH2D("phiqvsthq_pions_cut","#phi_{q} vs #theta_{q}; #phi_{q}; #theta_{q}", 12, -3.14, 3.14, 20, 0, 0.1)
 
