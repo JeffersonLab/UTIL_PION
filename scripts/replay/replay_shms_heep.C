@@ -172,10 +172,10 @@ void replay_shms_heep (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   //=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=
 
   // Add Physics Module to calculate primary (scattered electrons) beam kinematics
-  THcPrimaryKine* hkin_primary = new THcPrimaryKine("H.kin.primary", "HMS Single Arm Kinematics", "H", "H.rb");
-  gHaPhysics->Add(hkin_primary);
+  THcPrimaryKine* pkin_primary = new THcPrimaryKine("P.kin.primary", "SHMS Single Arm Kinematics", "P", "P.rb");
+  gHaPhysics->Add(pkin_primary);
   // Add Physics Module to calculate secondary (scattered hadrons) beam kinematics
-  THcSecondaryKine* pkin_secondary = new THcSecondaryKine("P.kin.secondary", "SHMS Single Arm Kinematics", "P", "H.kin.primary");
+  THcSecondaryKine* pkin_secondary = new THcSecondaryKine("P.kin.secondary", "SHMS Single Arm Kinematics", "P", "P.kin.primary");
   gHaPhysics->Add(pkin_secondary);
   
   //=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=

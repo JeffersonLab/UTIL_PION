@@ -103,7 +103,7 @@ pcut_acceptance		  P.gtr.th > -0.06 && P.gtr.th < 0.06 && P.gtr.ph > -0.04 && P.
 
 SHMScoindcindipole	P.dc.InsideDipoleExit == 1
 
-SHMSGEN		shmsScinGood && shmshodstarttime && SHMScoindcindipole && pcut_acceptance
+SHMSGEN		shmshodstarttime && SHMScoindcindipole && pcut_acceptance
 SHMSCalpi	P.cal.etottracknorm < 0.7              
 SHMSMMpicut     P.kin.secondary.MMpi > 0.901 && P.kin.secondary.MMpi < 1.054
 SHMSAEROpi      P.aero.npeSum  > 1.5
@@ -126,11 +126,11 @@ SHMSAeroDidpi            SHMSAeroShouldpi && P.aero.npeSum > 1.0
 
 SHMSCalel	P.cal.etottracknorm > 0.7
 
-SHMSNGCShouldelxpos         SHMSGEN && SHMSCalel && SHMSHGCpi && P.ngcer.xAtCer > 0
-SHMSNGCDidelxpos	    SHMSNGCShouldelxpos && P.ngcer.npeSum > 0.5
+SHMSNGCShouldel         	    SHMSGEN && SHMSCalel && SHMSHGCpi && SHMSAEROpi
+SHMSNGCDidel			    SHMSNGCShouldel && P.ngcer.npeSum > 0.5
 
-SHMSNGCShouldelxneg         SHMSGEN && SHMSCalel && SHMSHGCpi && P.ngcer.xAtCer < 0
-SHMSNGCDidelxneg	    SHMSNGCShouldelxneg && P.ngcer.npeSum > 0.5
+SHMSNGCShouldpi         	    SHMSGEN && SHMSCalpi && SHMSHGCpi && SHMSAEROpi
+SHMSNGCDidpi			    SHMSNGCShouldpi && P.ngcer.npeSum < 5.0
 
 ##################
 ###   HMS HGC  ###
@@ -142,7 +142,7 @@ hcut_acceptance           H.gtr.th > -0.08 && H.gtr.th < 0.08 && H.gtr.ph > -0.0
 
 HMScoindcindipole	H.dc.InsideDipoleExit == 1
 
-HMSGEN		   HMSScinGood && HMShodstarttime && HMScoindcindipole && hcut_acceptance
+HMSGEN		   HMShodstarttime && HMScoindcindipole && hcut_acceptance
 HMSCalelec         H.cal.etottracknorm > 0.7 &&  H.cal.etottracknorm < 1.6
 
 HMSHGCShouldelec         HMSGEN && HMSCalelec 

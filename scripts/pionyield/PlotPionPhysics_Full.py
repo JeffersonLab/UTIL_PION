@@ -90,9 +90,9 @@ if (FilenameOverride == False):
     Kaon_Analysis_Distributions = "%s/%s_%s_Full_Kaon_Analysis_Distributions_RF_PID(HGC-AERO-NGC).pdf" % (OUTPATH, runNum, MaxEvent)
     Proton_Analysis_Distributions = "%s/%s_%s_Full_Proton_Analysis_Distributions_RF_PID(HGC-AERO-NGC).pdf" % (OUTPATH, runNum, MaxEvent)
 elif (FilenameOverride != False): # If filename override set, format the file name based upon the override file name
-    Pion_Analysis_Distributions = "%s/%s_Full_Pion_Analysis_Distributions.pdf" %(OUTPATH, (FilenameOverride.split("_Analysed_Data.root",1)[0]))
-    Kaon_Analysis_Distributions = "%s/%s_Full_Kaon_Analysis_Distributions.pdf" %(OUTPATH, (FilenameOverride.split("_Analysed_Data.root",1)[0]))
-    Proton_Analysis_Distributions = "%s/%s_Full_Proton_Analysis_Distributions.pdf" %(OUTPATH, (FilenameOverride.split("_Analysed_Data.root",1)[0]))
+    Pion_Analysis_Distributions = "%s/%s_Full_Pion_Analysis_Distributions_RF_PID.pdf" %(OUTPATH, (FilenameOverride.split("_Analysed_Data.root",1)[0]))
+    Kaon_Analysis_Distributions = "%s/%s_Full_Kaon_Analysis_Distributions_RF_PID.pdf" %(OUTPATH, (FilenameOverride.split("_Analysed_Data.root",1)[0]))
+    Proton_Analysis_Distributions = "%s/%s_Full_Proton_Analysis_Distributions_RF_PID.pdf" %(OUTPATH, (FilenameOverride.split("_Analysed_Data.root",1)[0]))
 
 if (FilenameOverride != False):
     # Split string on W value, replace p with . and strip the leading Q before converting to a float

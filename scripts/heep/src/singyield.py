@@ -150,7 +150,7 @@ if spec == "SHMS":
     emiss = e_tree.array("P.kin.secondary.emiss")                   
     pmiss = e_tree.array("P.kin.secondary.pmiss")                   
     MMpi = e_tree.array("P.kin.secondary.MMpi")                      
-    W = e_tree.array("H.kin.primary.W")                              
+    W = e_tree.array("P.kin.primary.W")                              
     pmiss_x = e_tree.array("P.kin.secondary.pmiss_x")                
     pmiss_y = e_tree.array("P.kin.secondary.pmiss_y")                
     pmiss_z = e_tree.array("P.kin.secondary.pmiss_z")                

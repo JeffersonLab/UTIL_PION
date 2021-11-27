@@ -165,6 +165,11 @@ if spec == "SHMS":
     P_ngcer_xAtCer_uncut = ROOT.TH1D("P_ngcer_xAtCer_uncut", "SHMS NGC xAtCer; SHMS_ngcer_xAtCer; Counts", 200, -70, 50)
     P_ngcer_yAtCer_uncut = ROOT.TH1D("P_ngcer_yAtCer_uncut", "SHMS NGC yAtCer; SHMS_ngcer_yAtCer; Counts", 200, -50, 50)
     P_RFTime_Dist_uncut = ROOT.TH1D("P_RFTime_Dist_uncut", "SHMS RFTime; SHMS_RFTime; Counts", 200, 0, 4)
+    P_pmiss_Dist_uncut = ROOT.TH1D("P_pmiss_Dist_uncut", "SHMS pmiss; pmiss; Counts", 200, -0.8, 10)                                             
+    P_emiss_Dist_uncut = ROOT.TH1D("P_emiss_Dist_uncut", "SHMS emiss; emiss; Counts", 200, -0.8, 10)                                                 
+    P_W_Dist_uncut = ROOT.TH1D("P_W_Dist_uncut", " W; W; Counts", 200, -0.8, 10)                                                 
+    P_mm_Dist_uncut = ROOT.TH1D("P_mm_Dist_uncut", " MM; MM; Counts", 200, -0.8, 10) 
+     
     
     P_gtr_beta_cut_all = ROOT.TH1D("P_gtr_beta_cut_all", "SHMS #beta; SHMS_gtr_#beta; Counts", 200, 0.8, 1.2)
     P_gtr_xp_cut_all = ROOT.TH1D("P_gtr_xp_cut_all", "SHMS x'; SHMS_gtr_xp; Counts", 200, -0.2, 0.2)
@@ -185,6 +190,10 @@ if spec == "SHMS":
     P_ngcer_xAtCer_cut_all = ROOT.TH1D("P_ngcer_xAtCer_cut_all", "SHMS NGC xAtCer; SHMS_ngcer_xAtCer; Counts", 200, -40, 30)
     P_ngcer_yAtCer_cut_all = ROOT.TH1D("P_ngcer_yAtCer_cut_all", "SHMS NGC yAtCer; SHMS_ngcer_yAtCer; Counts", 200, -30, 30)
     P_RFTime_Dist_cut_all = ROOT.TH1D("P_RFTime_Dist_cut_all", "SHMS RFTime; SHMS_RFTime; Counts", 200, 0, 4)
+    P_pmiss_Dist_cut_all = ROOT.TH1D("P_pmiss_Dist_cut_all", "SHMS pmiss; pmiss; Counts", 200, -0.8, 10)                                             
+    P_emiss_Dist_cut_all = ROOT.TH1D("P_emiss_Dist_cut_all", "SHMS emiss; emiss; Counts", 200, -0.8, 10)                                             
+    P_W_Dist_cut_all = ROOT.TH1D("P_W_Dist_cut_all", " W; W; Counts", 200, -0.8, 10)                                                                 
+    P_mm_Dist_cut_all = ROOT.TH1D("P_mm_Dist_cut_all", " MM; MM; Counts", 200, -0.8, 10)                                                             
 
 ###################################################################################################################################################
 
@@ -255,7 +264,7 @@ for event in Uncut_Events_tree:
         P_ngcer_yAtCer_vs_ngcer_xAtCer_uncut.Fill(event.P_ngcer_yAtCer, event.P_ngcer_xAtCer)
         P_ngcer_npeSum_vs_hgcer_npeSum_uncut.Fill(event.P_ngcer_npeSum, event.P_hgcer_npeSum)
         P_ngcer_npeSum_vs_aero_npeSum_uncut.Fill(event.P_ngcer_npeSum, event.P_aero_npeSum)
-        
+      
 
 for event in Cut_Events_All_tree:
     if spec == "HMS":
