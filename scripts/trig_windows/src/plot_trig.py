@@ -323,8 +323,8 @@ def trig_Plots():
         plt.ylabel('Count')
 
         ax = f.add_subplot(248)
-        ax.hist(c.add_cut(T_coin_pEDTM_tdcTime,"c_edtm"),bins=c.setbin(c.add_cut(T_coin_pEDTM_tdcTime,"c_nozero"),200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(T_coin_pEDTM_tdcTime,"c_nozero"),bins=c.setbin(c.add_cut(T_coin_pEDTM_tdcTime,"c_nozero"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pEDTM_tdcTime,"c_edtm"),bins=c.setbin(c.add_cut(T_coin_pEDTM_tdcTime,"c_nozero_edtm"),200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(T_coin_pEDTM_tdcTime,"c_nozero_edtm"),bins=c.setbin(c.add_cut(T_coin_pEDTM_tdcTime,"c_nozero_edtm"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('T_coin_pEDTM_tdcTime')
         plt.ylabel('Count')
@@ -403,6 +403,6 @@ def main():
 
     trig_Plots()
     currentPlots()
-    #plt.show()
+    plt.show()
 
 if __name__ == '__main__': main()

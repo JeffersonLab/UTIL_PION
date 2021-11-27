@@ -1,4 +1,4 @@
-void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
+void replay_luminosity_scalertest (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -25,7 +25,7 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   pathList.push_back("./raw.volatile");
 
   //const char* RunFileNamePattern = "raw/coin_all_%05d.dat";
-  const char* ROOTFileNamePattern = "UTIL_PION/ROOTfiles/Analysis/Lumi/Pion_replay_luminosity_%d_%d.root";
+  const char* ROOTFileNamePattern = "UTIL_PION/ROOTfiles/Analysis/Lumi/Pion_replay_luminosity_scalertest_%d_%d.root";
   
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
@@ -97,6 +97,7 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Add event handler for scaler events
   THcScalerEvtHandler* pscaler = new THcScalerEvtHandler("P", "Hall C scaler event type 1");
   pscaler->AddEvtType(1);
+  pscaler->AddEvtType(2);
   pscaler->AddEvtType(4);
   pscaler->AddEvtType(5);
   pscaler->AddEvtType(6);
@@ -156,6 +157,7 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
 
   // Add event handler for scaler events
   THcScalerEvtHandler *hscaler = new THcScalerEvtHandler("H", "Hall C scaler event type 4");  
+  hscaler->AddEvtType(1);
   hscaler->AddEvtType(2);
   hscaler->AddEvtType(4);
   hscaler->AddEvtType(5);
@@ -264,5 +266,5 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Start the actual analysis.
   analyzer->Process(run);
   // Create report file from template	       
-  analyzer->PrintReport("UTIL_PION/config/TEMPLATES/Online_Lumi.template", Form("UTIL_PION/REPORT_OUTPUT/Analysis/Lumi/Pion_replay_luminosity_%d_%d.report", RunNumber, MaxEvent)); // optional}
+  analyzer->PrintReport("UTIL_PION/config/TEMPLATES/Online_Lumi.template", Form("UTIL_PION/REPORT_OUTPUT/Analysis/Lumi/Pion_replay_luminosity_scalertest%d_%d.report", RunNumber, MaxEvent)); // optional}
 }

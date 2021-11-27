@@ -194,7 +194,9 @@ def scaler(PS_names, HMS_PS, SHMS_PS, thres_curr, report_current, runNum, MaxEve
                 EDTM_sum += EDTM_current
                 # Accquired trigger sum calculation using iterative level 1 accepted values.
                 # Iterate over current value then subtracting previous so that there is no double counting. Subtracted values are uncut.
-                acctrig_sum += ((acctrig_value[i] - EDTM_current) - previous_acctrig)
+                # Changing acctrig to not subtract EDTM to get CPULT for all events
+                # acctrig_sum += ((acctrig_value[i] - EDTM_current) - previous_acctrig)
+                acctrig_sum += ((acctrig_value[i]) - previous_acctrig)
                 for itrig in range(0, NTRIG):
                     # Trigger scaler iteration.
                     # Iterate over current value then subtracting previous so that there is no double counting. Subtracted values are uncut.
@@ -209,7 +211,9 @@ def scaler(PS_names, HMS_PS, SHMS_PS, thres_curr, report_current, runNum, MaxEve
                     rate_sum[iRATE] += (rate_value[iRATE][i] - previous_rate[iRATE])
                 for iRATE in range(0, SHMSNRATE):
                     SHMS_rate_sum[iRATE] += (SHMS_rate_value[iRATE][i] - SHMS_previous_rate[iRATE])
-            previous_acctrig = (acctrig_value[i] - EDTM_current)
+            # Changing acctrig to not subtract EDTM to get CPULT for all events
+            # previous_acctrig = (acctrig_value[i] - EDTM_current)
+            previous_acctrig = (acctrig_value[i])
             previous_EDTM = EDTM_value[i]
             for itrig in range(0, NTRIG):
                 previous_trig[itrig] = trig_value[itrig][i]
@@ -248,7 +252,7 @@ def scaler(PS_names, HMS_PS, SHMS_PS, thres_curr, report_current, runNum, MaxEve
         "charge": charge_sum[2],
         "SHMSTRIG_scaler": trig_sum[shms_ps_ix],
         "HMSTRIG_scaler": trig_sum[hms_ps_ix],
-        "CPULT_scaler": 1-acctrig_sum/((trig_sum[shms_ps_ix]) + (trig_sum[hms_ps_ix])),
+        "CPULT_scaler": acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS)),
         "CPULT_scaler_uncern": (acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS)))*np.sqrt((1/(trig_sum[shms_ps_ix]/SHMS_PS))+(1/(trig_sum[hms_ps_ix]/HMS_PS))+(1/acctrig_sum)),
         #"CPULT_scaler_uncern": (1/((trig_sum[shms_ps_ix]) + (trig_sum[hms_ps_ix])))*np.sqrt(acctrig_sum+EDTM_sum*2+((trig_sum[shms_ps_ix]) + (trig_sum[hms_ps_ix]))(acctrig_sum/((trig_sum[shms_ps_ix]) + (trig_sum[hms_ps_ix])))**2),
         #"CPULT_scaler_uncern": np.sqrt(((trig_sum[shms_ps_ix]) + (trig_sum[hms_ps_ix]))*.95*.05),
@@ -273,7 +277,7 @@ def scaler(PS_names, HMS_PS, SHMS_PS, thres_curr, report_current, runNum, MaxEve
             "SHMSTRIG_scaler": trig_sum[shms_ps_ix],
             "HMSTRIG_scaler": trig_sum[hms_ps_ix],
             "COINTRIG_scaler": trig_sum[coin_ps_ix],
-            "CPULT_scaler": 1-acctrig_sum/((trig_sum[shms_ps_ix]) + (trig_sum[hms_ps_ix]) + (trig_sum[coin_ps_ix])),
+            "CPULT_scaler": acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS) + (trig_sum[coin_ps_ix])),
             "CPULT_scaler_uncern": (acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS)))*np.sqrt((1/(trig_sum[shms_ps_ix]/SHMS_PS))+(1/(trig_sum[hms_ps_ix]/HMS_PS))+(1/acctrig_sum)),
             "HMS_eLT": 1 - ((6/5)*(PRE_sum[1]-PRE_sum[2])/(PRE_sum[1])),
             "HMS_eLT_uncern": (PRE_sum[1]-PRE_sum[2])/(PRE_sum[1])*np.sqrt((np.sqrt(PRE_sum[1]) + np.sqrt(PRE_sum[2]))/(PRE_sum[1] - PRE_sum[2]) + (np.sqrt(PRE_sum[1])/PRE_sum[1])),

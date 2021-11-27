@@ -115,6 +115,10 @@ H_cal_etotnorm = e_tree.array("H.cal.etotnorm")                  #
 H_cal_etottracknorm = e_tree.array("H.cal.etottracknorm")        #
 H_cer_npeSum = e_tree.array("H.cer.npeSum")                      #
 
+H_dc_InsideDipoleExit = e_tree.array("H.dc.InsideDipoleExit")    #
+P_dc_InsideDipoleExit = e_tree.array("P.dc.InsideDipoleExit")    #
+
+
 # SHMS info
 P_hod_goodscinhit = e_tree.array("P.hod.goodscinhit")            #
 P_hod_goodstarttime = e_tree.array("P.hod.goodstarttime")        #
@@ -130,6 +134,16 @@ P_dc_yfp = e_tree.array("P.dc.y_fp")                            # yp is x focal 
 P_dc_ypfp = e_tree.array("P.dc.yp_fp")                          # ypfp is y' focal plane, the vertical angle
 P_cal_etotnorm = e_tree.array("P.cal.etotnorm")                  #
 P_cal_etottracknorm = e_tree.array("P.cal.etottracknorm")        #
+P_cal_fly_earray = e_tree.array("P.cal.fly.earray")              #
+P_cal_pr_eplane = e_tree.array("P.cal.pr.eplane")                #
+# SJDK 13/10/21 - This seems to generate something of type "jagged.array", I suspect it is an indexed array and we can't access it in the same way we access other variables
+P_cal_fly_numGoodAdcHits = e_tree.array("P.cal.fly.numGoodAdcHits")# Indexed hits into calorimeter blocks 
+# JM 16/10/21 - SJDK's proposed stop-gap for calo hits per block. Summing over total ADC hits per event
+# This means we lose calo block position info, but it works in our script right now, so it is at least something
+Cal_Adc_Hits = np.empty(len(P_cal_fly_numGoodAdcHits))
+for i in range(len(P_cal_fly_numGoodAdcHits)):
+    for j in range(224):
+        Cal_Adc_Hits[i] += P_cal_fly_numGoodAdcHits[i][j]        # Sum of total ADC hits per event
 P_aero_npeSum = e_tree.array("P.aero.npeSum")                    #
 P_aero_xAtAero = e_tree.array("P.aero.xAtAero")                  #
 P_aero_yAtAero = e_tree.array("P.aero.yAtAero")                  #
@@ -160,6 +174,19 @@ RFFreqDiff = e_tree.array("MOFC1DELTA")                         #
 pEDTM = e_tree.array("T.coin.pEDTM_tdcTime")                    #
 # Relevant branches now stored as NP arrays
 
+# Define distances from focal plane (cm)
+D_Calo = 292.64
+D_Exit = -307.0
+
+# Calculate X and Y Positions along tracks from focal plane
+
+xCalo = np.array([xfp+xpfp*D_Calo for (xfp, xpfp) in zip(P_dc_xfp, P_dc_xpfp)])
+yCalo = np.array([yfp+ypfp*D_Calo for (yfp, ypfp) in zip(P_dc_yfp, P_dc_ypfp)])
+xExit = np.array([xfp+xpfp*D_Exit for (xfp, xpfp) in zip(P_dc_xfp, P_dc_xpfp)])
+yExit = np.array([yfp+ypfp*D_Exit for (yfp, ypfp) in zip(P_dc_yfp, P_dc_ypfp)])
+
+# Unindex Calo Hits
+
 ##############################################################################################################################################
 
 # Defining path for cut file
@@ -167,7 +194,7 @@ r = klt.pyRoot()
 fout = '%s/UTIL_PION/DB/CUTS/run_type/coin_prod_testpid.cuts' % REPLAYPATH
 
 # defining Cuts
-cuts = ["coin_epi_cut_all_RF","coin_epi_cut_prompt_RF","coin_epi_cut_rand_RF","coin_ek_cut_all_RF","coin_ek_cut_prompt_RF","coin_ek_cut_rand_RF","coin_ep_cut_all_RF","coin_ep_cut_prompt_RF","coin_ep_cut_rand_RF",]
+cuts = ["coin_epi_cut_all","coin_epi_cut_prompt","coin_epi_cut_rand","coin_ek_cut_all","coin_ek_cut_prompt","coin_ek_cut_rand","coin_ep_cut_all","coin_ep_cut_prompt","coin_ep_cut_rand",]
 
 # read in cuts file and make dictionary
 c = klt.pyPlot(REPLAYPATH)
@@ -241,9 +268,9 @@ def coin_pions():
     Cut_COIN_Pions_rand_tmp = []
 
     for arr in Cut_COIN_Pions_tmp:
-        Cut_COIN_Pions_all_tmp.append(c.add_cut(arr, "coin_epi_cut_all_RF"))
-        Cut_COIN_Pions_prompt_tmp.append(c.add_cut(arr, "coin_epi_cut_prompt_RF"))
-        Cut_COIN_Pions_rand_tmp.append(c.add_cut(arr, "coin_epi_cut_rand_RF"))
+        Cut_COIN_Pions_all_tmp.append(c.add_cut(arr, "coin_epi_cut_all"))
+        Cut_COIN_Pions_prompt_tmp.append(c.add_cut(arr, "coin_epi_cut_prompt"))
+        Cut_COIN_Pions_rand_tmp.append(c.add_cut(arr, "coin_epi_cut_rand"))
 
     Cut_COIN_Pions_all = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_dc_xfp, H_dc_xpfp, H_dc_yfp, H_dc_ypfp, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_ePiCoinTime_ROC1, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_dc_xfp, P_dc_xpfp, P_dc_yfp, P_dc_ypfp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, MMpi, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelT) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_dc_xfp, H_dc_xpfp, H_dc_yfp, H_dc_ypfp, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_ePiCoinTime_ROC1, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_dc_xfp, P_dc_xpfp, P_dc_yfp, P_dc_ypfp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, MMpi, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelT) in zip(*Cut_COIN_Pions_all_tmp)
 	]
@@ -280,9 +307,9 @@ def coin_kaons():
     Cut_COIN_Kaons_rand_tmp = []
 
     for arr in Cut_COIN_Kaons_tmp:
-        Cut_COIN_Kaons_all_tmp.append(c.add_cut(arr, "coin_ek_cut_all_RF"))
-        Cut_COIN_Kaons_prompt_tmp.append(c.add_cut(arr, "coin_ek_cut_prompt_RF"))
-        Cut_COIN_Kaons_rand_tmp.append(c.add_cut(arr, "coin_ek_cut_rand_RF"))
+        Cut_COIN_Kaons_all_tmp.append(c.add_cut(arr, "coin_ek_cut_all"))
+        Cut_COIN_Kaons_prompt_tmp.append(c.add_cut(arr, "coin_ek_cut_prompt"))
+        Cut_COIN_Kaons_rand_tmp.append(c.add_cut(arr, "coin_ek_cut_rand"))
 
     Cut_COIN_Kaons_all = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_dc_xfp, H_dc_xpfp, H_dc_yfp, H_dc_ypfp, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_eKCoinTime_ROC1, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_dc_xfp, P_dc_xpfp, P_dc_yfp, P_dc_ypfp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, MMK, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelT) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_dc_xfp, H_dc_xpfp, H_dc_yfp, H_dc_ypfp, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_eKCoinTime_ROC1, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_dc_xfp, P_dc_xpfp, P_dc_yfp, P_dc_ypfp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, MMK, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelT) in zip(*Cut_COIN_Kaons_all_tmp)
 #	if MMK >= 1.10
@@ -323,9 +350,9 @@ def coin_protons():
     Cut_COIN_Protons_rand_tmp = []
 
     for arr in Cut_COIN_Protons_tmp:
-        Cut_COIN_Protons_all_tmp.append(c.add_cut(arr, "coin_ep_cut_all_RF"))
-        Cut_COIN_Protons_prompt_tmp.append(c.add_cut(arr, "coin_ep_cut_prompt_RF"))
-        Cut_COIN_Protons_rand_tmp.append(c.add_cut(arr, "coin_ep_cut_rand_RF"))
+        Cut_COIN_Protons_all_tmp.append(c.add_cut(arr, "coin_ep_cut_all"))
+        Cut_COIN_Protons_prompt_tmp.append(c.add_cut(arr, "coin_ep_cut_prompt"))
+        Cut_COIN_Protons_rand_tmp.append(c.add_cut(arr, "coin_ep_cut_rand"))
 
     Cut_COIN_Protons_all = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_dc_xfp, H_dc_xpfp, H_dc_yfp, H_dc_ypfp, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_dc_xfp, P_dc_xpfp, P_dc_yfp, P_dc_ypfp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, MMp, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelU) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_dc_xfp, H_dc_xpfp, H_dc_yfp, H_dc_ypfp, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, CTime_epCoinTime_ROC1, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_dc_xfp, P_dc_xpfp, P_dc_yfp, P_dc_ypfp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, MMp, H_RF_Dist, P_RF_Dist, Q2, W, epsilon, ph_q, MandelU) in zip(*Cut_COIN_Protons_all_tmp)
         ]

@@ -2,7 +2,7 @@
 #
 # Description: Plots the PID cuts
 # ================================================================
-# Time-stamp: "2021-11-05 01:47:42 trottar"
+# Time-stamp: "2021-11-08 15:11:25 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -35,7 +35,7 @@ ltsep package import and pathing definitions
 import ltsep as lt 
 
 lt.Help.info(lt.SetPath)
-lt.Help.info(lt.SetCuts)
+lt.Help.info(lt.SetCuts.importDict)
 lt.Help.path_setup()
 lt.Help.cut_setup()
 lt.Help.searchPathFile(os.path.realpath(__file__))
@@ -295,15 +295,15 @@ Define and set up cuts
 fout = UTILPATH+'/DB/CUTS/run_type/lumi.cuts'
 
 if ANATYPE == "Pion":
-    cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ngcer_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_curr",]
+    cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ngcer_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_curr"]
     # Check if COIN trigger is used
     if len(PS_used) > 2:
-        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ngcer_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_ptrigCOIN","c_curr",]
+        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ngcer_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_ptrigCOIN","c_curr"]
 else:
-    cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_curr",]
+    cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_curr"]
     # Check if COIN trigger is used
     if len(PS_used) > 2:
-        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_ptrigCOIN","c_curr",]
+        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_ptrigCOIN","c_curr"]
 
 cutVals = []
 def make_cutDict(cuts,fout,runNum,CURRENT_ENV):
@@ -331,13 +331,14 @@ def make_cutDict(cuts,fout,runNum,CURRENT_ENV):
             # e.g. Grabbing set current for run (ie 55) from something like this [' {"H_bcm_bcm4a_AvgCurrent" : (abs(H_bcm_bcm4a_AvgCurrent-55) < 2.5)}']
             report_current = float(x[0].split(":")[1].split("<")[0].split(")")[0].split("-")[1].strip())
         #######################################################################################
-        print("\n%s" % cut)
-        print(x, "\n")
+        #print("\n%s" % cut)
+        #print(x, "\n")
         if i == 0:
             inputDict = {}
         cutDict = lt.SetCuts(CURRENT_ENV,importDict).readDict(cut,inputDict)
         for j,val in enumerate(x):
             cutDict = lt.SetCuts(CURRENT_ENV,importDict).evalDict(cut,eval(x[j]),cutDict)
+        lt.Misc.progressBar(i, len(cuts)-1)
     return lt.SetCuts(CURRENT_ENV,cutDict)
 
 c = make_cutDict(cuts,fout,runNum,os.path.realpath(__file__))
@@ -479,7 +480,7 @@ def pid_cuts():
 def main():
 
     pid_cuts()
-    plt.show()
+    #plt.show()
 
 if __name__ == '__main__':
     main()

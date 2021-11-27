@@ -3,7 +3,7 @@
 #
 # Description: Just calls help functions for various methods to help users
 # ================================================================
-# Time-stamp: "2021-11-05 07:55:28 trottar"
+# Time-stamp: "2021-11-18 05:18:48 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -129,17 +129,17 @@ class Help():
 
         cuts = ["runTypeCut1","runTypeCut2",<etc>,...]
 
-        def make_cutDict(cuts,fout,runNum,CURRENT_ENV):
-            ''
+        def make_cutDict(cuts,fout,runNum,CURRENT_ENV,DEBUG=False):
+            \'''
             This method calls several methods in kaonlt package. It is required to create properly formated
             dictionaries. The evaluation must be in the analysis script because the analysis variables (i.e. the
             leaves of interest) are not defined in the kaonlt package. This makes the system more flexible
             overall, but a bit more cumbersome in the analysis script. Perhaps one day a better solution will be
             implimented.
-            ''
+            \'''
 
             # read in cuts file and make dictionary
-            importDict = lt.SetCuts(CURRENT_ENV).importDict(cuts,fout,runNum)
+            importDict = lt.SetCuts(CURRENT_ENV).importDict(cuts,fout,runNum,DEBUG=DEBUG)
             for i,cut in enumerate(cuts):
                 x = lt.SetCuts(CURRENT_ENV,importDict).booleanDict(cut)
                 print("\\n%s" % cut)

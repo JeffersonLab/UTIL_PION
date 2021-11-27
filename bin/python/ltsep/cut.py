@@ -4,7 +4,7 @@
 # Description: This package will perform many tasks required for l-t separation physics analysis 
 # Analysis script required format for applying cuts.
 # ================================================================
-# Time-stamp: "2021-11-05 08:02:25 trottar"
+# Time-stamp: "2021-11-18 05:22:30 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -43,17 +43,17 @@ class SetCuts():
 
     cuts = ["runTypeCut1","runTypeCut2",<etc>,...]
 
-    def make_cutDict(cuts,fout,runNum,CURRENT_ENV):
-        ''
+    def make_cutDict(cuts,fout,runNum,CURRENT_ENV,DEBUG=False):
+        \'''
         This method calls several methods in kaonlt package. It is required to create properly formated
         dictionaries. The evaluation must be in the analysis script because the analysis variables (i.e. the
         leaves of interest) are not defined in the kaonlt package. This makes the system more flexible
-SetCuts        overall, but a bit more cumbersome in the analysis script. Perhaps one day a better solution will be
+        overall, but a bit more cumbersome in the analysis script. Perhaps one day a better solution will be
         implimented.
-        ''
+        \'''
 
         # read in cuts file and make dictionary
-        importDict = lt.SetCuts(CURRENT_ENV).importDict(cuts,fout,runNum)
+        importDict = lt.SetCuts(CURRENT_ENV).importDict(cuts,fout,runNum,DEBUG=DEBUG)
         for i,cut in enumerate(cuts):
             x = lt.SetCuts(CURRENT_ENV,importDict).booleanDict(cut)
             print("\\n%s" % cut)
@@ -159,45 +159,6 @@ SetCuts        overall, but a bit more cumbersome in the analysis script. Perhap
         '''
 
         return arr[(arr > low) & (arr < high)]
-
-    def cut_RF(self,runNum,MaxEvent):
-        '''
-        cut_RF(self,runNum,MaxEvent)
-                    |      |
-                    |      --> MaxEvent: Max number of events
-                    --> runNum: Run number
-
-        ----------------------------------------------------------------------------------------------
-        Cut on RF timing...depreciated????
-        '''
-        TimingCutFile = self.UTILPATH+'/DB/PARAM/Timing_Parameters.csv'
-        # rootName = "/lustre19/expphy/volatile/hallc/c-kaonlt/sjdkay/ROOTfiles/Proton_Analysis/Pass3/Proton_coin_replay_production_%s_%s.root" % (self.REPLAYPATH, runNum, MaxEvent)
-        rootName = self.UTILPATH+"/ROOTfiles/coin_replay_Full_Lumi_%s_%s.root" % (runNum,MaxEvent)
-        e_tree = up.open(rootName)["T"]
-        TimingCutf = open(TimingCutFile)
-        PromptPeak = [0, 0, 0]
-        linenum = 0 # Count line number we're on
-        TempPar = -1 # To check later
-        for line in TimingCutf: # Read all lines in the cut file
-            linenum += 1 # Add one to line number at start of loop
-            if(linenum > 1): # Skip first line
-                line = line.partition('#')[0] # Treat anything after a # as a comment and ignore it
-                line = line.rstrip()
-                array = line.split(",") # Convert line into an array, anything after a comma is a new entry
-                if(int(runNum) in range (int(array[0]), int(array[1])+1)): # Check if run number for file is within any of the ranges specified in the cut file
-                    TempPar += 2 # If run number is in range, set to non -1 value
-                    BunchSpacing = float(array[2]) # Bunch spacing in ns
-                    RF_Offset = float(array[9]) # Offset for RF timing cut
-        TimingCutf.close() # After scanning all lines in file, close file
-        if(TempPar == -1): # If value is still -1, run number provided didn't match any ranges specified so exit
-            print("!!!!! ERROR !!!!!\n Run number specified does not fall within a set of runs for which cuts are defined in %s\n!!!!! ERROR !!!!!" % TimingCutFile)
-            sys.exit(3)
-        elif(TempPar > 1):
-            print("!!! WARNING!!! Run number was found within the range of two (or more) line entries of %s !!! WARNING !!!" % TimingCutFile)
-            print("The last matching entry will be treated as the input, you should ensure this is what you want")
-        P_RF_tdcTime = e_tree.array("T.coin.pRF_tdcTime")
-        P_hod_fpHitsTime = e_tree.array("P.hod.fpHitsTime")
-        RF_CutDist = np.array([ ((RFTime-StartTime + RF_Offset)%(BunchSpacing)) for (RFTime, StartTime) in zip(P_RF_tdcTime, P_hod_fpHitsTime)]) # In python x % y is taking the modulo y of x
 
     def readDict(self,cut,inputDict=None):
         '''
@@ -506,17 +467,17 @@ SetCuts        overall, but a bit more cumbersome in the analysis script. Perhap
             
         for cut in cuts:
             # Find which cut is being called
-            if "accept" in cut:
+            if "accept." in cut:
                 grabCutData("accept",cut)
-            elif "track" in cut:
+            elif "track." in cut:
                 grabCutData("track",cut)
-            elif "CT" in cut:
+            elif "CT." in cut:
                 grabCutData("CT",cut)
-            elif "pid" in cut:
+            elif "pid." in cut:
                 grabCutData("pid",cut)
-            elif "misc" in cut:
+            elif "misc." in cut:
                 grabCutData("misc",cut)          
-            elif "current" in cut:
+            elif "current." in cut:
                 grabCutData("current",cut)
             elif has_numbers(cut):
                 grabCutData("num",cut)

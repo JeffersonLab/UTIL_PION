@@ -381,18 +381,18 @@ def pid_cuts():
 
     
     ax = f.add_subplot(337)
-    ax.hist(CTime_CoinTime_RAW_ROC1,bins=c.setbin(CTime_CoinTime_RAW_ROC1,200, -100, 100),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(CTime_CoinTime_RAW_ROC1,"coin_pid_notrack"),bins=c.setbin(CTime_CoinTime_RAW_ROC1,200, -100, 100),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('Coin Time Prompt Peak')
+    ax.hist(CTime_CoinTime_RAW_ROC1,bins=c.setbin(CTime_CoinTime_RAW_ROC1,240, 35, 95),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+    ax.hist(c.add_cut(CTime_CoinTime_RAW_ROC1,"coin_pid_notrack"),bins=c.setbin(CTime_CoinTime_RAW_ROC1,240, 35, 95),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+#    plt.yscale('log')
+    plt.xlabel('NoTrack Coin Time Prompt Peak')
     plt.ylabel('Count')
 
-#    ax = f.add_subplot(338)
-#    ax.hist(CTime_ePiCoinTime_ROC1, bins=c.setbin(c.add_cut(CTime_ePiCoinTime_ROC1,"coin_pid_notrack"),200),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-#    ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"coin_pid_notrack_rand"), bins=c.setbin(c.add_cut(CTime_ePiCoinTime_ROC1,"coin_pid_notrack"),200), label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+    ax = f.add_subplot(338)
+    ax.hist(CTime_CoinTime_RAW_ROC1,bins=c.setbin(CTime_CoinTime_RAW_ROC1,240, 35, 95),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+    ax.hist(c.add_cut(CTime_CoinTime_RAW_ROC1,"coin_pid_notrack_rand"),bins=c.setbin(CTime_CoinTime_RAW_ROC1,240, 35, 95),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
 #    plt.yscale('log')
-#    plt.xlabel('Coin Time Randoms')
-#    plt.ylabel('Count')
+    plt.xlabel('NoTrack Coin Time Randoms')
+    plt.ylabel('Count')
 
     plt.tight_layout(rect=[0,0.03,1,0.95])
     plt.savefig(UTILPATH+'/scripts/luminosity/OUTPUTS/plots/pid/pid_%s.png' % (runNum))

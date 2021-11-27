@@ -3,7 +3,7 @@
 # Description: Grabs lumi data from corresponding csv depending on run setting. Then plots the yields and creates a comprehensive table.
 # Variables calculated: current, rate_HMS, rate_SHMS, sent_edtm_PS, uncern_HMS_evts_scaler, uncern_SHMS_evts_scaler, uncern_HMS_evts_notrack, uncern_SHMS_evts_notrack, uncern_HMS_evts_track, uncern_SHMS_evts_track
 # ================================================================
-# Time-stamp: "2021-11-03 05:32:02 trottar"
+# Time-stamp: "2021-11-18 04:33:42 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -203,6 +203,9 @@ def calc_yield():
     # Total livetime calculation
     TLT = makeList("accp_edtm")/yield_dict["sent_edtm_PS"]
     yield_dict.update({"TLT" : TLT})
+    #uncer_TLT = np.sqrt(makeList("accp_edtm")/yield_dict["sent_edtm_PS"]**2+makeList("accp_edtm")**2/yield_dict["sent_edtm_PS"]**4)
+    #uncer_TLT = np.sqrt(yield_dict["sent_edtm_PS"]*.95*.05)
+    #yield_dict.update({"uncern_TLT" : uncern_TLT})
 
     # Accepted scalers 
     HMS_scaler_accp = makeList("HMSTRIG_scaler")-yield_dict["sent_edtm_PS"]
@@ -695,7 +698,7 @@ def debug():
     print("DEBUG data")
     print("=======================")
     ### Debug prints
-    print(data[["run number","PS2","PS4","sent_edtm","TLT","CPULT_scaler","current","time"]])
+    print(data[["run number","PS2","PS4","sent_edtm","TLT","CPULT_scaler","current","time","HMS_track","SHMS_track"]])
    # print("EDTM scaler rate: ", data["sent_edtm"]/data["time"])
    # print("Accepted EDTM rate: ", data["accp_edtm"]/data["time"])
    # print("Run numbers: ", data["run number"].sort_values())

@@ -3,7 +3,7 @@
 # Description: This is where the variables for the yield calculations are formulated.
 # Variables calculated: tot_events, h_int_goodscin_evts, p_int_goodscin_evts, SHMSTRIG_cut, HMSTRIG_cut, HMS_track, HMS_track_uncern, SHMS_track, SHMS_track_uncern, accp_edtm
 # ================================================================
-# Time-stamp: "2021-11-05 05:28:15 trottar"
+# Time-stamp: "2021-11-18 05:15:31 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -114,9 +114,9 @@ ps3=int(ps3_tmp)
 ps4=int(ps4_tmp)
 ps5=int(ps5_tmp)
 ps6=int(ps6_tmp)
-SHMS_track_eff = float(SHMS_track_info[0])
+#SHMS_track_eff = float(SHMS_track_info[0]) # Depreciated, define below 
 SHMS_track_uncern = float(SHMS_track_info[1])
-HMS_track_eff = float(HMS_track_info[0])
+#HMS_track_eff = float(HMS_track_info[0]) # Depreciated, define below 
 HMS_track_uncern = float(HMS_track_info[1])
 
 # Convert the prescale input values to their actual DAQ values
@@ -312,18 +312,18 @@ Define and set up cuts
 fout = UTILPATH+'/DB/CUTS/run_type/lumi.cuts'
 
 if ANATYPE == "Pion":
-    cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ngcer_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_curr",]
+    cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ngcer_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_curr","h_etrack_lumi_before","h_etrack_lumi_after","p_etrack_lumi_before","p_etrack_lumi_after"]
     # Check if COIN trigger is used
     if len(PS_used) > 2:
-        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ngcer_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_ptrigCOIN","c_curr",]
+        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ngcer_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_ptrigCOIN","c_curr","h_etrack_lumi_before","h_etrack_lumi_after","p_etrack_lumi_before","p_etrack_lumi_after"]
 else:
-    cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_curr",]
+    cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_curr","h_etrack_lumi_before","h_etrack_lumi_after","p_etrack_lumi_before","p_etrack_lumi_after"]
     # Check if COIN trigger is used
     if len(PS_used) > 2:
-        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_ptrigCOIN","c_curr",]
+        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_ptrigCOIN","c_curr","h_etrack_lumi_before","h_etrack_lumi_after","p_etrack_lumi_before","p_etrack_lumi_after"]
 
 cutVals = []
-def make_cutDict(cuts,fout,runNum,CURRENT_ENV):
+def make_cutDict(cuts,fout,runNum,CURRENT_ENV,DEBUG=False):
     '''
     This method calls several methods in kaonlt package. It is required to create properly formated
     dictionaries. The evaluation must be in the analysis script because the analysis variables (i.e. the
@@ -333,7 +333,7 @@ def make_cutDict(cuts,fout,runNum,CURRENT_ENV):
     '''
 
     # read in cuts file and make dictionary
-    importDict = lt.SetCuts(CURRENT_ENV).importDict(cuts,fout,runNum)
+    importDict = lt.SetCuts(CURRENT_ENV).importDict(cuts,fout,runNum,DEBUG=DEBUG)
     for i,cut in enumerate(cuts):
         x = lt.SetCuts(CURRENT_ENV,importDict).booleanDict(cut)
         #######################################################################################
@@ -357,7 +357,7 @@ def make_cutDict(cuts,fout,runNum,CURRENT_ENV):
             cutDict = lt.SetCuts(CURRENT_ENV,importDict).evalDict(cut,eval(x[j]),cutDict)
     return lt.SetCuts(CURRENT_ENV,cutDict)
 
-c = make_cutDict(cuts,fout,runNum,os.path.realpath(__file__))
+c = make_cutDict(cuts,fout,runNum,os.path.realpath(__file__),True)
 
 ################################################################################################################################################
 
@@ -533,6 +533,14 @@ def analysis():
         COINTRIG_cut = [ x
                          for (x, evt) in zip(c.add_cut(T_coin_pTRIG_COIN_ROC1_tdcTime,"c_ptrigCOIN"), EvtType)
                          if (evt == 1 or evt == 2)]
+
+    h_et_should = len(c.add_cut(H_cal_etotnorm,"h_etrack_lumi_before"))
+    h_et_did = len(c.add_cut(H_cal_etotnorm,"h_etrack_lumi_after"))
+    HMS_track_eff = h_et_did/h_et_should
+
+    p_et_should = len(c.add_cut(P_cal_etotnorm,"p_etrack_lumi_before"))
+    p_et_did = len(c.add_cut(P_cal_etotnorm,"p_etrack_lumi_after"))
+    SHMS_track_eff = p_et_did/p_et_should
 
     # Applies PID cuts, once integrated this will give the events (no track)
     h_etotnorm = c.add_cut(H_cal_etotnorm,"h_ecut_lumi_nt") 
