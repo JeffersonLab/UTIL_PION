@@ -59,10 +59,10 @@ p_ngcer_nt = current.bcm4a+pid.p_ecut_nt-pid.p_ecut_nt.P_cal_etotnorm-pid.p_ecut
 p_aero_nt = current.bcm4a+pid.p_ecut_nt-pid.p_ecut_nt.P_cal_etotnorm-pid.p_ecut_nt.P_hgcer_npeSum-pid.p_ecut_nt.P_ngcer_npeSum
 # EDTM
 c_noedtm = current.bcm4a+misc.c_noedtm
-c_edtm = current.bcm4a+misc.c_edtm
-c_ptrigHMS = current.bcm4a+misc.c_ptrigHMS
-c_ptrigSHMS = current.bcm4a+misc.c_ptrigSHMS
-c_ptrigCOIN = current.bcm4a+misc.c_ptrigCOIN
+c_edtm = current.bcm4a+misc.c_edtm+misc.c_edtmT
+c_ptrigHMS = current.bcm4a+misc.c_ptrigHMS+misc.c_ptrigHMST
+c_ptrigSHMS = current.bcm4a+misc.c_ptrigSHMS+misc.c_ptrigSHMST
+c_ptrigCOIN = current.bcm4a+misc.c_ptrigCOIN+misc.c_ptrigCOINT
 # Current only (note: there is a threshold cut in the scalers that is seprate from this!)
 c_curr = current.bcm4a
 c_nozero_edtm = current.bcm4a+misc.c_nozero_edtm
