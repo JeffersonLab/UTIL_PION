@@ -2,7 +2,6 @@
 
 # 15/01/21 - Stephen Kay, University of Regina
 # 21/06/21 - Edited By - Muhammad Junaid, University of Regina, Canada
-# 28/11/21 - Version 2 - Utilises new ltsep package by Richard Trotta
 
 # Python version of the pion analysis script. Now utilises uproot to select event of each type and writes them to a root file
 # Intention is to apply PID/selection cutting here and plot in a separate script
@@ -13,9 +12,6 @@
 # 13/10/21 - Added in SHMS Calorimeter Block hits (Jacob Murphy)
 # 15/10/21 - Added in eplane and earray values to analysis. Will need to replay again to include new branches to get for analysis
 # 26/10/21 - Added in new tree for analysis rootfile that is prompt with MM cuts
-# 09/11/21 - SJDK - v2 uses the changes to the python package Richard made, it is now "ltsep" and NOT "kaonlt", these changes are intended
-# to make the package more transferable.
-
 ###################################################################################################################################################
 
 # Import relevant packages
@@ -30,6 +26,8 @@ import scipy.integrate as integrate
 import matplotlib.pyplot as plt
 import sys, math, os, subprocess
 
+sys.path.insert(0, 'python/')
+
 ##################################################################################################################################################
 
 # Check the number of arguments provided to the script
@@ -37,35 +35,59 @@ if len(sys.argv)-1!=3:
     print("!!!!! ERROR !!!!!\n Expected 3 arguments\n Usage is with - ROOTfilePrefix RunNumber MaxEvents \n!!!!! ERROR !!!!!")
     sys.exit(1)
 
-################################################################################################################################################
-'''
-ltsep package import and pathing definitions
-'''
-
-# Import package for cuts
-import ltsep as lt 
-
-# Add this to all files for more dynamic pathing
-USER =  lt.SetPath(os.path.realpath(__file__)).getPath("USER") # Grab user info for file finding
-HOST = lt.SetPath(os.path.realpath(__file__)).getPath("HOST")
-REPLAYPATH = lt.SetPath(os.path.realpath(__file__)).getPath("REPLAYPATH")
-UTILPATH = lt.SetPath(os.path.realpath(__file__)).getPath("UTILPATH")
-ANATYPE = lt.SetPath(os.path.realpath(__file__)).getPath("ANATYPE")
-
-################################################################################################################################################
+##################################################################################################################################################
 
 # Input params - run number and max number of events
 ROOTPrefix = sys.argv[1]
 runNum = sys.argv[2]
 MaxEvent = sys.argv[3]
 
-OUTPATH=UTILPATH+"/OUTPUT/Analysis/PionLT"
-rootName =UTILPATH+"/ROOTfiles/Analysis/PionLT/%s_%s_%s.root" % (ROOTPrefix, runNum, MaxEvent) # Input replay file path
+USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
+HOST = subprocess.getstatusoutput("hostname")
+if ("farm" in HOST[1]):
+    REPLAYPATH = "/group/c-pionlt/online_analysis/hallc_replay_lt"
+elif ("qcd" in HOST[1]):
+    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
+elif ("phys.uregina" in HOST[1]):
+    REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
+elif("skynet" in HOST[1]):
+    REPLAYPATH = "/home/%s/Work/JLab/hallc_replay_lt" % USER[1]
+elif("cdaq" in HOST[1]):
+    REPLAYPATH = "/home/cdaq/hallc-online/hallc_replay_lt"
 
-print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, REPLAYPATH))
+################################################################################################################################################
+
+# Add more path setting as needed in a similar manner
+OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/PionLT" % REPLAYPATH        # Output folder location
+CUTPATH = "%s/UTIL_PION/DB/CUTS" % REPLAYPATH
+sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
+
+import kaonlt as klt # Import kaonlt module, need the path setting line above prior to importing this
+
+print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
+
+#################################################################################################################################################
+
+# Construct the name of the rootfile based upon the info we provided
+rootName = "%s/UTIL_PION/ROOTfiles/Analysis/PionLT/%s_%s_%s.root" % (REPLAYPATH, ROOTPrefix, runNum, MaxEvent)     # Input file location and variables taking
+#rootName = "/volatile/hallc/c-pionlt/junaid/ROOTfiles/Analysis/PionLT/Pion_coin_replay_production_8076_-1.root" # Hard coded path to a recent file for testing
 print ("Attempting to process %s" %(rootName))
-lt.SetPath(os.path.realpath(__file__)).checkDir(OUTPATH)
-lt.SetPath(os.path.realpath(__file__)).checkFile(rootName)
+if os.path.exists(OUTPATH):
+    if os.path.islink(OUTPATH):
+        pass
+    elif os.path.isdir(OUTPATH):
+        pass
+    else:
+        print ("%s exists but is not a directory or sym link, check your directory/link and try again" % (OUTPATH))
+        sys.exit(2)
+else:
+    print("Output path not found, please make a sym link or directory called OUTPUT in UTIL_PION to store output")
+    sys.exit(3)
+if os.path.isfile(rootName):
+    print ("%s exists, processing" % (rootName))
+else:
+    print ("%s not found - do you have the correct sym link/folder set up?" % (rootName))
+    sys.exit(4)
 print("Output path checks out, outputting to %s" % (OUTPATH))
 
 ###############################################################################################################################################
@@ -168,18 +190,20 @@ yExit = np.array([yfp+ypfp*D_Exit for (yfp, ypfp) in zip(P_dc_yfp, P_dc_ypfp)])
 # Unindex Calo Hits
 
 ##############################################################################################################################################
-# SJDK 09/11/21 - New method of adding cuts implemented using ltsep package
+# SJDK 01/11/21 - New method of adding cuts implemented
 
 # Defining path for cut file
-fout = UTILPATH+"/DB/CUTS/run_type/coin_prod.cuts"
+r = klt.pyRoot()
+fout = '%s/UTIL_PION/DB/CUTS/run_type/coin_prod.cuts' % REPLAYPATH
 
 # defining Cuts
 cuts = ["coin_epi_cut_all_noRF","coin_epi_cut_all_RF","coin_epi_cut_prompt_RF","coin_epi_cut_rand_RF",] # SJDK 01/11/21 - New list of cuts
 
 # read in cuts file and make dictionary
-cutVals =[]
+c = klt.pyPlot(REPLAYPATH)
+readDict = c.read_dict(cuts,fout,runNum)
 
-def make_cutDict(cuts,fout,runNum,CURRENT_ENV):
+def make_cutDict(cut,inputDict=None):
     '''
     This method calls several methods in kaonlt package. It is required to create properly formated
     dictionaries. The evaluation must be in the analysis script because the analysis variables (i.e. the
@@ -188,23 +212,46 @@ def make_cutDict(cuts,fout,runNum,CURRENT_ENV):
     implimented.
     '''
 
-    # read in cuts file and make dictionary
-    importDict = lt.SetCuts(CURRENT_ENV).importDict(cuts,fout,runNum)
-    for i,cut in enumerate(cuts):
-        x = lt.SetCuts(CURRENT_ENV,importDict).booleanDict(cut)
-        #######################################################################################
-        # Make list of cut strings
-        cutVals.append(x)
-        print("\n%s" % cut)
-        print(x, "\n")
-        if i == 0:
-            inputDict = {}
-        cutDict = lt.SetCuts(CURRENT_ENV,importDict).readDict(cut,inputDict)
-        for j,val in enumerate(x):
-            cutDict = lt.SetCuts(CURRENT_ENV,importDict).evalDict(cut,eval(x[j]),cutDict)
-    return lt.SetCuts(CURRENT_ENV,cutDict)
+    global c
 
-c = make_cutDict(cuts,fout,runNum,os.path.realpath(__file__))
+    c = klt.pyPlot(REPLAYPATH,readDict)
+    x = c.w_dict(cut)
+    print("\n%s" % cut)
+    print(x, "\n")
+    
+    if inputDict == None:
+        inputDict = {}
+
+    for key,val in readDict.items():
+        if key == cut:
+            inputDict.update({key : {}})
+
+    for i,val in enumerate(x):
+        tmp = x[i]
+        if tmp == "":
+            continue
+        else:
+            inputDict[cut].update(eval(tmp))
+        
+    return inputDict
+
+
+for i,c in enumerate(cuts):
+    if i == 0:
+        cutDict = make_cutDict("%s" % c )
+    else:
+        cutDict = make_cutDict("%s" % c,cutDict)
+
+#################################################################################################################################################################
+
+# SJDK 01/11/21 - Old method of adding cuts, commented out
+# defining Cuts
+#cutDict = make_cutDict("coin_epi_cut_all_noRF")
+#cutDict = make_cutDict("coin_epi_cut_all_RF", cutDict)
+#cutDict = make_cutDict("coin_epi_cut_prompt_RF", cutDict)
+#cutDict = make_cutDict("coin_epi_cut_rand_RF", cutDict)
+
+c = klt.pyPlot(REPLAYPATH,cutDict)
 
 #################################################################################################################################################################
 

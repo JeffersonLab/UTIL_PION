@@ -1,6 +1,8 @@
 #! /bin/bash
 ###########################################################################################################################
 # Created - 20/July/21, Author - Muhammad Junaid (mjo147@uregina.ca), University of Regina, Canada (Copyright (c) junaid) #
+# 28/11/21 - Version 2 - Utilises new ltsep package by Richard Trotta
+
 ###########################################################################################################################
 # This version of script is for shift workers at JLAB
 # Executes the replay script and python analysis script and at the end python plotting script
@@ -46,7 +48,7 @@ HOST=`echo ${PATHFILE_INFO} | cut -d ','  -f13`
 
 # #################################################################################################################################################
 
-# Set path depending upon hostname. Change or add more as needed  
+# Source stuff depending upon hostname. Change or add more as needed  
 if [[ "${HOST}" = *"farm"* ]]; then
     if [[ "${HOST}" != *"ifarm"* ]]; then
 	source /site/12gev_phys/softenv.sh 2.3
@@ -60,13 +62,13 @@ elif [[ "${HOST}" = *"qcd"* ]]; then
     source "$REPLAYPATH/setup.sh" 
 fi
 
+cd $REPLAYPATH
+
 # ###################################################################################################################################################
 
 # Section for pion replay script
-# SJDK 09/09/21 - This section isn't running correctly at the moment and it slows down the replay a lot, I'm commenting this out for now, it needs fixing though, testing below
-# SJDK 09/09/21 - Setting this to only do 150k events, this is how we ran during KaonLT
-# SJDK 09/09/21 - It looks like the macros don't work with newer versions of root (R_LOAD_LIBRARIES doesn't seme to work as intended)
-if [ ! -f "$REPLAYPATH/UTIL_PION/ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMBER}_150000.root" ]; then
+# SJDK 28/11/21 - As Jacob Pointed out, this scaler bit isn't really "useful" as is, it doesn't harm anything and doesn't take too long though, so I'm keeping it in
+ if [ ! -f "$UTILPATH/ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMBER}_150000.root" ]; then
     eval "$REPLAYPATH/hcana -l -q \"SCRIPTS/COIN/SCALERS/replay_coin_scalers.C($RUNNUMBER,150000)\""
     cd "$REPLAYPATH/CALIBRATION/bcm_current_map"
     root -b -l<<EOF 
@@ -81,17 +83,17 @@ fi
 
 sleep 3
 
-if [ ! -f "$REPLAYPATH/UTIL_PION/ROOTfiles/Analysis/PionLT/Pion_coin_replay_production_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
+if [ ! -f "$UTILPATH/ROOTfiles/Analysis/PionLT/Pion_coin_replay_production_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
     if [[ "${HOST}" != *"ifarm"* ]]; then
 	if [[ "${HOST}" == *"cdaq"* ]]; then
-	    eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\"" | tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/Analysis/PionLT/Pion_output_coin_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
+	    eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\"" | tee $UTILPATH/REPORT_OUTPUT/Analysis/PionLT/Pion_output_coin_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
 	else	
 	    eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\"" 
 	fi
     elif [[ "${HOST}" == *"ifarm"* ]]; then
-	eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\"" | tee $REPLAYPATH/UTIL_PION/REPORT_OUTPUT/Analysis/PionLT/Pion_output_coin_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
+	eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\"" | tee $UTILPATH/REPORT_OUTPUT/Analysis/PionLT/Pion_output_coin_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
     fi
-else echo "Replayfile already found for this run in $REPLAYPATH/UTIL_PION/ROOTfiles/Analysis/PionLT/ - Skipping replay step"
+else echo "Replayfile already found for this run in $UTILPATH/ROOTfiles/Analysis/PionLT/ - Skipping replay step"
 fi
 
 sleep 3

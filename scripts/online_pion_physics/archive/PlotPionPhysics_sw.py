@@ -1,14 +1,14 @@
 #! /usr/bin/python
 ###########################################################################################################################
 # Created - 20/July/21, Author - Muhammad Junaid (mjo147@uregina.ca), University of Regina, Canada (Copyright (c) junaid) #
-# 28/11/21 - Version 2 - Utilises new ltsep package by Richard Trotta
-
 ###########################################################################################################################
 # Python version of the pion plotting script. Now utilises uproot to select event of each type and writes them to a root file.
 # Python should allow for easier reading of databases storing diferent variables.
 # This version of script is for shift workers at JLab
 # To run this script, execute: python3 scriptname runnumber
+
 # 05/October/21: Jacob Murphy added in another page of plots with focal plane variables vs beta.
+# 11/10/21 - SJDK - There's lots of commented out plots in here, if they aren't being used anymore, can they please just be deleted?
 # 16/10/21 - JM - Added in X/Y Calo with projections of ADC hits (SJDK Stop-Gap Measure)
 
 ###################################################################################################################################################
@@ -20,6 +20,7 @@ import array
 import re # Regexp package - for string manipulation
 from ROOT import TCanvas, TColor, TGaxis, TH1F, TH2F, TPad, TStyle, gStyle, gPad, TGaxis, TLine, TMath, TPaveText, TArc, TGraphPolar 
 from ROOT import kBlack, kBlue, kRed
+sys.path.insert(0, 'python/')
 
 ##################################################################################################################################################
 
@@ -44,21 +45,6 @@ if len(sys.argv)-1!=3:
         print ("!!!!! Running with secret 4th argument - FilenameOverride - Taking file name to process as stated EXACTLY in 4th arg !!!!!")
         FilenameOverride=sys.argv[4] # If 4 arguments provided, set the FilenameOverride value to be arg 4
 
-################################################################################################################################################
-'''
-ltsep package import and pathing definitions
-'''
-
-# Import package for cuts
-import ltsep as lt 
-
-# Add this to all files for more dynamic pathing
-USER =  lt.SetPath(os.path.realpath(__file__)).getPath("USER") # Grab user info for file finding
-HOST = lt.SetPath(os.path.realpath(__file__)).getPath("HOST")
-REPLAYPATH = lt.SetPath(os.path.realpath(__file__)).getPath("REPLAYPATH")
-UTILPATH = lt.SetPath(os.path.realpath(__file__)).getPath("UTILPATH")
-ANATYPE = lt.SetPath(os.path.realpath(__file__)).getPath("ANATYPE")
-
 ##################################################################################################################################################
 
 # Input params - run number and max number of events
@@ -67,17 +53,31 @@ ROOTSuffix = sys.argv[1]
 runNum = sys.argv[2]
 MaxEvent = sys.argv[3]
 
+USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
+HOST = subprocess.getstatusoutput("hostname")
+
+if ("farm" in HOST[1]):
+    REPLAYPATH = "/group/c-pionlt/online_analysis/hallc_replay_lt"
+elif ("qcd" in HOST[1]):
+    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
+elif ("cdaq" in HOST[1]):
+    REPLAYPATH = "/home/cdaq/hallc-online/hallc_replay_lt"
+elif ("phys.uregina" in HOST[1]):
+    REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
+elif("skynet" in HOST[1]):
+    REPLAYPATH = "/home/%s/Work/JLab/hallc_replay_lt" % USER[1]
+
 #################################################################################################################################################
 
-# Add more path setting as needed in a similar manner
-
-OUTPATH=UTILPATH+"/OUTPUT/Analysis/PionLT"
-
-print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, REPLAYPATH))
+# Add more path setting as needed in a similar manner                                                                                                                                                          
+OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/PionLT" % REPLAYPATH        # Output folder location                                                                                                     
+sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
+import kaonlt as klt # Import kaonlt module, need the path setting line above prior to importing this                                                                                                         
+print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 if (FilenameOverride == False):
-    Pion_Analysis_Distributions = OUTPATH+"/%s_%s_sw_Pion_Analysis_Distributions.pdf" % (runNum, MaxEvent)
+    Pion_Analysis_Distributions = "%s/%s_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, runNum, MaxEvent)
 elif (FilenameOverride != False): # If filename override set, format the file name based upon the override file name
-    Pion_Analysis_Distributions = OUTPATH+"/%s_Pion_Analysis_Distributions.pdf" %((FilenameOverride.split("_Analysed_Data.root",1)[0]))
+    Pion_Analysis_Distributions = "%s/%s_Pion_Analysis_Distributions.pdf" %(OUTPATH, (FilenameOverride.split("_Analysed_Data.root",1)[0]))
 
 if (FilenameOverride != False):
     # Split string on W value, replace p with . and strip the leading Q before converting to a float
@@ -93,21 +93,35 @@ if (FilenameOverride != False):
 
 # Construct the name of the rootfile based upon the info we provided
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
-    rootName = OUTPATH+"/%s_%s_%s.root" % (runNum, MaxEvent, ROOTSuffix)     # Input file location and variables taking
+    rootName = "%s/UTIL_PION/OUTPUT/Analysis/PionLT/%s_%s_%s.root" % (REPLAYPATH, runNum, MaxEvent, ROOTSuffix)     # Input file location and variables taking
 elif (FilenameOverride != False): # Special condition, with 4th arg, use 4th arg as file name
-    rootName = OUTPATH+"/%s" % (FilenameOverride)
-
+    rootName = "%s/UTIL_PION/OUTPUT/Analysis/PionLT/%s" % (REPLAYPATH, FilenameOverride)
 print ("Attempting to process %s" %(rootName))
-lt.SetPath(os.path.realpath(__file__)).checkDir(OUTPATH)
-lt.SetPath(os.path.realpath(__file__)).checkFile(rootName)
+if os.path.exists(OUTPATH):
+    if os.path.islink(OUTPATH):
+        pass
+    elif os.path.isdir(OUTPATH):
+        pass
+    else:
+        print ("%s exists but is not a directory or sym link, check your directory/link and try again" % (OUTPATH))
+        sys.exit(2)
+else:
+    print("Output path not found, please make a sym link or directory called OUTPUT in UTIL_PION to store output")
+    sys.exit(3)
+if os.path.isfile(rootName):
+    print ("%s exists, processing" % (rootName))
+else:
+    print ("%s not found - do you have the correct sym link/folder set up?" % (rootName))
+    sys.exit(4)
 print("Output path checks out, outputting to %s" % (OUTPATH))
 
 ###############################################################################################################################################
 ROOT.gROOT.SetBatch(ROOT.kTRUE) # Set ROOT to batch mode explicitly, does not splash anything to screen
 ###############################################################################################################################################
 
-# Section for grabing Prompt/Random selection parameters from PARAM filePARAMPATH = UTILPATH+"/DB/PARAM"
-PARAMPATH = UTILPATH+"/DB/PARAM"
+# Section for grabing Prompt/Random selection parameters from PARAM file
+PARAMPATH = "%s/UTIL_PION/DB/PARAM" % REPLAYPATH
+print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 TimingCutFile = "%s/Timing_Parameters.csv" % PARAMPATH # This should match the param file actually being used!
 
 TimingCutf = open(TimingCutFile)
