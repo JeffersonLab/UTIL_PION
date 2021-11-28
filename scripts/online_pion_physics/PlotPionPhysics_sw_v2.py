@@ -10,6 +10,8 @@
 # 05/October/21: Jacob Murphy added in another page of plots with focal plane variables vs beta.
 # 11/10/21 - SJDK - There's lots of commented out plots in here, if they aren't being used anymore, can they please just be deleted?
 # 16/10/21 - JM - Added in X/Y Calo with projections of ADC hits (SJDK Stop-Gap Measure)
+# 09/11/21 - SJDK - v2 uses the changes to the python package Richard made, it is now "ltsep" and NOT "kaonlt", these changes are intended
+# to make the package more transferable. Once v2 is stable, I will archive the original and make this "live"
 
 ###################################################################################################################################################
 
@@ -20,18 +22,14 @@ import array
 import re # Regexp package - for string manipulation
 from ROOT import TCanvas, TColor, TGaxis, TH1F, TH2F, TPad, TStyle, gStyle, gPad, TGaxis, TLine, TMath, TPaveText, TArc, TGraphPolar 
 from ROOT import kBlack, kBlue, kRed
-sys.path.insert(0, 'python/')
 
 ##################################################################################################################################################
 
 # Defining some variables here
-#minbin = 0.90 # minimum bin for selecting neutrons events in missing mass distribution
-#maxbin = 0.98 # maximum bin for selecting neutrons events in missing mass distribution
-# SJDK - 25/11/21 - Doubled the range of the MM selection for the LD2 runs at Q2 = 6.0. I expanded this asymmetrically, I raised the upper limit by 0.06 and the lower limit by 0.02
-minbin = 0.88 # minimum bin for selecting neutrons events in missing mass distribution
-maxbin = 1.04 # maximum bin for selecting neutrons events in missing mass distribution
+minbin = 0.92 # minimum bin for selecting neutrons events in missing mass distribution
+maxbin = 0.98 # maximum bin for selecting neutrons events in missing mass distribution
 minrangeuser = 0 # min range for -t vs phi plot
-maxrangeuser = 1.5 #  max range for -t vs phi plot     : 2021/11/11 JM updated t bounds - 20/11/2021 - SJDK, adjusted from 1.5 to 0.9 for Q2 = 6.0 middle epsilon setting # NH 2021 11 25 - changed range to 1.5
+maxrangeuser = 1.8 #  max range for -t vs phi plot
 
 ##################################################################################################################################################
 
@@ -45,6 +43,21 @@ if len(sys.argv)-1!=3:
         print ("!!!!! Running with secret 4th argument - FilenameOverride - Taking file name to process as stated EXACTLY in 4th arg !!!!!")
         FilenameOverride=sys.argv[4] # If 4 arguments provided, set the FilenameOverride value to be arg 4
 
+################################################################################################################################################
+'''
+ltsep package import and pathing definitions
+'''
+
+# Import package for cuts
+import ltsep as lt 
+
+# Add this to all files for more dynamic pathing
+USER =  lt.SetPath(os.path.realpath(__file__)).getPath("USER") # Grab user info for file finding
+HOST = lt.SetPath(os.path.realpath(__file__)).getPath("HOST")
+REPLAYPATH = lt.SetPath(os.path.realpath(__file__)).getPath("REPLAYPATH")
+UTILPATH = lt.SetPath(os.path.realpath(__file__)).getPath("UTILPATH")
+ANATYPE = lt.SetPath(os.path.realpath(__file__)).getPath("ANATYPE")
+
 ##################################################################################################################################################
 
 # Input params - run number and max number of events
@@ -53,31 +66,18 @@ ROOTSuffix = sys.argv[1]
 runNum = sys.argv[2]
 MaxEvent = sys.argv[3]
 
-USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
-HOST = subprocess.getstatusoutput("hostname")
-
-if ("farm" in HOST[1]):
-    REPLAYPATH = "/group/c-pionlt/online_analysis/hallc_replay_lt"
-elif ("qcd" in HOST[1]):
-    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
-elif ("cdaq" in HOST[1]):
-    REPLAYPATH = "/home/cdaq/hallc-online/hallc_replay_lt"
-elif ("phys.uregina" in HOST[1]):
-    REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
-elif("skynet" in HOST[1]):
-    REPLAYPATH = "/home/%s/Work/JLab/hallc_replay_lt" % USER[1]
-
 #################################################################################################################################################
 
-# Add more path setting as needed in a similar manner                                                                                                                                                          
-OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/PionLT" % REPLAYPATH        # Output folder location                                                                                                     
-sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
-import kaonlt as klt # Import kaonlt module, need the path setting line above prior to importing this                                                                                                         
-print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
+# Add more path setting as needed in a similar manner
+
+OUTPATH=UTILPATH+"/OUTPUT/Analysis/PionLT"
+
+
+print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, REPLAYPATH))
 if (FilenameOverride == False):
-    Pion_Analysis_Distributions = "%s/%s_%s_sw_Pion_Analysis_Distributions.pdf" % (OUTPATH, runNum, MaxEvent)
+    Pion_Analysis_Distributions = OUTPATH+"/%s_%s_sw_Pion_Analysis_Distributions.pdf" % (runNum, MaxEvent)
 elif (FilenameOverride != False): # If filename override set, format the file name based upon the override file name
-    Pion_Analysis_Distributions = "%s/%s_Pion_Analysis_Distributions.pdf" %(OUTPATH, (FilenameOverride.split("_Analysed_Data.root",1)[0]))
+    Pion_Analysis_Distributions = OUTPATH+"/%s_Pion_Analysis_Distributions.pdf" %((FilenameOverride.split("_Analysed_Data.root",1)[0]))
 
 if (FilenameOverride != False):
     # Split string on W value, replace p with . and strip the leading Q before converting to a float
@@ -93,26 +93,13 @@ if (FilenameOverride != False):
 
 # Construct the name of the rootfile based upon the info we provided
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
-    rootName = "%s/UTIL_PION/OUTPUT/Analysis/PionLT/%s_%s_%s.root" % (REPLAYPATH, runNum, MaxEvent, ROOTSuffix)     # Input file location and variables taking
+    rootName = OUTPATH+"/%s_%s_%s.root" % (runNum, MaxEvent, ROOTSuffix)     # Input file location and variables taking
 elif (FilenameOverride != False): # Special condition, with 4th arg, use 4th arg as file name
-    rootName = "%s/UTIL_PION/OUTPUT/Analysis/PionLT/%s" % (REPLAYPATH, FilenameOverride)
+    rootName = OUTPATH+"/%s" % (FilenameOverride)
+
 print ("Attempting to process %s" %(rootName))
-if os.path.exists(OUTPATH):
-    if os.path.islink(OUTPATH):
-        pass
-    elif os.path.isdir(OUTPATH):
-        pass
-    else:
-        print ("%s exists but is not a directory or sym link, check your directory/link and try again" % (OUTPATH))
-        sys.exit(2)
-else:
-    print("Output path not found, please make a sym link or directory called OUTPUT in UTIL_PION to store output")
-    sys.exit(3)
-if os.path.isfile(rootName):
-    print ("%s exists, processing" % (rootName))
-else:
-    print ("%s not found - do you have the correct sym link/folder set up?" % (rootName))
-    sys.exit(4)
+lt.SetPath(os.path.realpath(__file__)).checkDir(OUTPATH)
+lt.SetPath(os.path.realpath(__file__)).checkFile(rootName)
 print("Output path checks out, outputting to %s" % (OUTPATH))
 
 ###############################################################################################################################################
@@ -120,8 +107,7 @@ ROOT.gROOT.SetBatch(ROOT.kTRUE) # Set ROOT to batch mode explicitly, does not sp
 ###############################################################################################################################################
 
 # Section for grabing Prompt/Random selection parameters from PARAM file
-PARAMPATH = "%s/UTIL_PION/DB/PARAM" % REPLAYPATH
-print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
+PARAMPATH = UTILPATH+"/DB/PARAM"
 TimingCutFile = "%s/Timing_Parameters.csv" % PARAMPATH # This should match the param file actually being used!
 
 TimingCutf = open(TimingCutFile)
@@ -196,9 +182,7 @@ P_aero_npe_pions_uncut = ROOT.TH1D("P_aero_npe_pions_uncut", "SHMS aero npeSum; 
 P_ngcer_npe_pions_uncut = ROOT.TH1D("P_ngcer_npe_pions_uncut", "SHMS NGC npeSum; SHMS_ngcer_npeSum; Counts", 200, 0, 50)
 P_MMpi_pions_uncut = ROOT.TH1D("P_MMpi_pions_uncut", "MIssing Mass (no cuts); MM_{#pi}; Counts", 200, 0.5, 1.8)
 P_RFTime_pions_uncut = ROOT.TH1D("P_RFTime_pions_uncut", "SHMS RFTime; SHMS_RFTime; Counts", 200, 0, 4)
-#ePiCoinTime_pions_uncut = ROOT.TH1D("ePiCoinTime_pions_uncut", "Electron-Pion CTime (no cuts); e #pi Coin_Time; Counts", 200, -50, 50)
-# SJDK 26/11/21 - Narrowed the range for 2ns running, bin size still the same
-ePiCoinTime_pions_uncut = ROOT.TH1D("ePiCoinTime_pions_uncut", "Electron-Pion CTime (no cuts); e #pi Coin_Time; Counts", 100, -25, 25)
+ePiCoinTime_pions_uncut = ROOT.TH1D("ePiCoinTime_pions_uncut", "Electron-Pion CTime (no cuts); e #pi Coin_Time; Counts", 200, -50, 50)
 
 H_xp_pions_cut = ROOT.TH1D("H_xp_pions_cut", "HMS x'; HMS_gtr_xp; Counts", 200, -0.2, 0.2)
 H_yp_pions_cut = ROOT.TH1D("H_yp_pions_cut", "HMS y'; HMS_gtr_yp; Counts", 200, -0.2, 0.2)
@@ -214,27 +198,23 @@ P_aero_npe_pions_cut = ROOT.TH1D("P_aero_npe_pions_cut", "SHMS aero npeSum; SHMS
 P_ngcer_npe_pions_cut = ROOT.TH1D("P_ngcer_npe_pions_cut", "SHMS NGC npeSum; SHMS_ngcer_npeSum; Counts", 200, 0, 50)
 P_MMpi_pions_cut = ROOT.TH1D("P_MMpi_pions_cut", "Missing Mass (with cuts); MM_{#pi}; Counts", 200, 0.5, 1.8)
 P_RFTime_pions_cut = ROOT.TH1D("P_RFTime_pions_cut", "SHMS RFTime; SHMS_RFTime; Counts", 200, 0, 4)
-#ePiCoinTime_pions_cut = ROOT.TH1D("ePiCoinTime_pions_cut", "Electron-Pion CTime (with cuts); e #pi Coin_Time; Counts", 200, -50, 50)
-# SJDK 26/11/21 - Narrowed the range for 2ns running, bin size still the same
-ePiCoinTime_pions_cut = ROOT.TH1D("ePiCoinTime_pions_cut", "Electron-Pion CTime (with cuts); e #pi Coin_Time; Counts", 100, -25, 25)
+ePiCoinTime_pions_cut = ROOT.TH1D("ePiCoinTime_pions_cut", "Electron-Pion CTime (with cuts); e #pi Coin_Time; Counts", 200, -50, 50)
 epsilon_pions_cut = ROOT.TH1D("epsilon_pions_cut", "Epsilon Dist for Prompt Events (Incl MM Cut); epsilon; Counts", 200, 0, 1.0)
 
 ePiCoinTime_pions_cut_prompt = ROOT.TH1D("ePiCoinTime_pions_cut_prompt", "Electron-Pion CTime; e #pi Coin_Time; Counts", 8, -2, 2)
 P_MMpi_pions_cut_prompt = ROOT.TH1D("P_MMpi_pions_cut_prompt", "Missing Mass; MM_{#pi}; Counts", 200, 0.5, 1.8)
 
-#ePiCoinTime_pions_cut_randm = ROOT.TH1D("ePiCoinTime_pions_cut_randm", "Electron-Pion CTime; e #pi Coin_Time; Counts", 160, -40, 40)
-# SJDK 26/11/21 - Narrowed the range for 2ns running, bin size still the same
-ePiCoinTime_pions_cut_randm = ROOT.TH1D("ePiCoinTime_pions_cut_randm", "Electron-Pion CTime; e #pi Coin_Time; Counts", 80, -20, 20)
+ePiCoinTime_pions_cut_randm = ROOT.TH1D("ePiCoinTime_pions_cut_randm", "Electron-Pion CTime; e #pi Coin_Time; Counts", 160, -40, 40)
 P_MMpi_pions_cut_randm = ROOT.TH1D("P_MMpi_pions_cut_randm", "Missing Mass; MM_{#pi}; Counts", 200, 0.5, 1.8)
 
 P_MMpi_pions_cut_randm_scaled = ROOT.TH1D("P_MMpi_pions_cut_randm_scaled", "Missing Mass; MM_{#pi}; Counts", 200, 0.5, 1.8)
 P_MMpi_pions_cut_randm_sub = ROOT.TH1D("P_MMpi_pions_cut_randm_sub", "Missing Mass Rndm Sub; MM_{#pi}; Counts", 200, 0.5, 1.8)
 # SJDK - 26/10/21 - Changed the plot title to be more accurate
 phiq_plot = ROOT.TH1D("Phiq", "#phi Dist for Prompt Events (Incl MM Cut); #phi; Counts", 12, -3.14, 3.14) # 2021/10/25 NH - added these at garths request
-t_plot = ROOT.TH1D("-t", "-t Dist for Prompt Events (Incl MM Cut); -t; Counts", 48, 0, 1.5) # 2021/11/11 JM changed t range
+t_plot = ROOT.TH1D("-t", "-t Dist for Prompt Events (Incl MM Cut); -t; Counts", 48, 0, 2.4) 
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
-    Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; Counts", 200, 3, 8) # 2021/11/25 JM - Adjusting Hist bounds for the 8.0 Physics settings 
-    W_pions_cut = ROOT.TH1D("W_pions_cut", "W Dist for Prompt Events (Incl MM Cut); W; Counts", 200, 2., 3.)
+    Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; Counts", 200, 6, 10) 
+    W_pions_cut = ROOT.TH1D("W_pions_cut", "W Dist for Prompt Events (Incl MM Cut); W; Counts", 200, 2.3, 3.3)
 elif (FilenameOverride != False): # Special case, run with specifc file name, construct histo with ranges based upon filename
     Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; Counts", 200, Q2min, Q2max) 
     W_pions_cut = ROOT.TH1D("W_pions_cut", "W Dist for Prompt Events (Incl MM Cut); W; Counts", 200, Wmin, Wmax)  
@@ -243,11 +223,8 @@ elif (FilenameOverride != False): # Special case, run with specifc file name, co
 
 # 2D Histograms for pions
 P_hgcer_vs_aero_npe_pions_uncut = ROOT.TH2D("P_hgcer_vs_aero_npe_pions_uncut", "SHMS HGC npeSum vs SHMS Aero npeSum (no cut); SHMS_hgcer_npeSum; SHMS_aero_npeSum", 100, 0, 50, 100, 0, 50)
-#ePiCoinTime_vs_MMpi_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_MMpi_pions_uncut","Electron-Pion CTime vs Missing Mass (no cut); e #pi Coin_Time; MM_{#pi}", 160, -40, 40, 200, 0, 2)
-#ePiCoinTime_vs_beta_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_beta_pions_uncut", "Electron-Pion CTime vs SHMS #beta (no cut); e #pi Coin_Time; SHMS_#beta", 160, -40, 40, 200, 0, 2)
-# SJDK 26/11/21 - Narrowed the range for 2ns running, bin size still the same
-ePiCoinTime_vs_MMpi_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_MMpi_pions_uncut","Electron-Pion CTime vs Missing Mass (no cut); e #pi Coin_Time; MM_{#pi}", 100, -25, 25, 200, 0, 2)
-ePiCoinTime_vs_beta_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_beta_pions_uncut", "Electron-Pion CTime vs SHMS #beta (no cut); e #pi Coin_Time; SHMS_#beta", 100, -25, 25, 200, 0, 2)
+ePiCoinTime_vs_MMpi_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_MMpi_pions_uncut","Electron-Pion CTime vs Missing Mass (no cut); e #pi Coin_Time; MM_{#pi}", 200, -40, 40, 200, 0, 2)
+ePiCoinTime_vs_beta_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_beta_pions_uncut", "Electron-Pion CTime vs SHMS #beta (no cut); e #pi Coin_Time; SHMS_#beta", 200, -40, 40, 200, 0, 2)
 P_RFTime_vs_MMpi_pions_uncut = ROOT.TH2D("P_RFTime_vs_MMpi_pions_uncut", "SHMS RFTime vs Missing Mass (no cuts); SHMS_RFTime_Dist; MM_{#pi}", 100, 0, 4, 100, 0, 2)
 P_cal_etottracknorm_vs_ngcer_npe_pions_uncut = ROOT.TH2D("P_cal_etottracknorm_vs_ngcer_npe_pions_uncut", "SHMS cal etottracknorm vs SHMS NGC xAtCer (no cut); SHMS_cal_etottracknorm; SHMS_ngcer_xAtCer", 100, -10, 10, 100, -10, 10)
 P_cal_fly_numGoodAdcHits_col_row_uncut = ROOT.TH2D("P_cal_fly_numGoodAdcHits_col_row_uncut","SHMS Shower  Occupancy ; Col Number ;  Row Number",14,0,14,16,0,16)
@@ -291,12 +268,11 @@ P_cal_xy_pions_cut = ROOT.TH2D("P_cal_xy_pions_cut", "SHMS Calorimeter yCalo vs 
 P_DPexit_xy_pions_cut = ROOT.TH2D("P_DPexit_xy_pions_cut", "SHMS Dipole Exit  yExit vs xExit (with cuts); yExit(cm); xExit(cm)", 200, -50.0, 50.0, 200, -50.0, 50.0)
 # SJDK - 26/10/21 - Changed the plot title to be more accurate
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
-    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W Dist for Prompt Events (Incl MM Cut); Q2; W", 200, 3, 8, 200, 2., 3.) # 2021/11/25 JM Adjusted Q2 bounds
+    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W Dist for Prompt Events (Incl MM Cut); Q2; W", 200, 6, 10, 200, 2.3, 3.3)
 elif (FilenameOverride != False): # Special case, run with specifc file name, construct histo with ranges based upon filename
     Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W Dist for Prompt Events (Incl MM Cut); Q2; W", 200, Q2min, Q2max, 200, Wmin, Wmax)
 # SJDK - 26/10/21 - Changed the plot title to be more accurate
-# NH 2021 11 25 - I changed max value back to 1.5, do not change this or the t marks on the t-phi plots will be wrong!!! Instead ONLY change the range with the constanst on line 31!!
-phiqvst_pions_cut = ROOT.TH2D("phiqvst_pions_cut","#phi vs -t Dist for Prompt Events (Incl MM Cut); #phi ;-t", 12, -3.14, 3.14, 48, 0.0, 1.5) #2021 08 12 - NH doubled binning range and # bins : 2021/11/11 JM changed t range - 20/11/21 SJDK - Changed max value from 1.5 to 0.9 
+phiqvst_pions_cut = ROOT.TH2D("phiqvst_pions_cut","#phi vs -t Dist for Prompt Events (Incl MM Cut); #phi ;-t", 12, -3.14, 3.14, 48, 0.0, 2.4) #2021 08 12 - NH doubled binning range and # bins
 # SJDK 03/11/21 - New phi_q vs theta_q plot that Steve Wood wanted
 phiqvsthq_pions_cut = ROOT.TH2D("phiqvsthq_pions_cut","#phi_{q} vs #theta_{q}; #phi_{q}; #theta_{q}", 12, -3.14, 3.14, 20, 0, 0.1)
 

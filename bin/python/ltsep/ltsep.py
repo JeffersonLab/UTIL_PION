@@ -2,7 +2,7 @@
 #
 # Description:
 # ================================================================
-# Time-stamp: "2021-11-05 07:26:35 trottar"
+# Time-stamp: "2021-11-16 03:36:57 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -25,12 +25,12 @@ class Root():
     This class is for converting files into root files after the analysis steps
     '''
 
-    def csv2root(self,inputDict,rootName):
+    def csv2root(inputDict,rootName):
         '''
-        csv2root(self,inputDict,rootName)
-                      |         |
-                      |         --> rootName: Output root file name
-                      --> inputDict: Input dictionary with csv data to be converted to root
+        csv2root(inputDict,rootName)
+                 |         |
+                 |         --> rootName: Output root file name
+                 --> inputDict: Input dictionary with csv data to be converted to root
 
         ----------------------------------------------------------------------------------------------
         Converts csv file to root file. Save arrays,lists,etc. from csv to root file as histograms
@@ -90,13 +90,13 @@ class Misc():
     Class of miscellaneous methods
     '''
     
-    def progressBar(self,value, endvalue, bar_length=50):
+    def progressBar(value, endvalue, bar_length=50):
         '''
-        progressBar(self,value, endvalue, bar_length=50)
-                         |      |         |
-                         |      |         --> bar_length: Length of bar to output to terminal (default = 50)
-                         |      --> endvalue: End of loop value - 1
-                         --> value: Iteration value
+        progressBar(value, endvalue, bar_length=50)
+                    |      |         |
+                    |      |         --> bar_length: Length of bar to output to terminal (default = 50)
+                    |      --> endvalue: End of loop value - 1
+                    --> value: Iteration value
                         
         ----------------------------------------------------------------------------------------------
 
@@ -106,7 +106,11 @@ class Misc():
         percent = float(value) / endvalue
         arrow = '=' * int(round(percent * bar_length)-1) + '>'
         spaces = ' ' * (bar_length - len(arrow))
-        
-        sys.stdout.write(" \r[{0}] {1}%".format(arrow + spaces, int(round(percent * 100))))
+        if percent == 1:
+            endl = '\n'
+        else:
+            endl = ''
+
+        sys.stdout.write(" \r[{0}] {1}%\r{2}".format(arrow + spaces, round(percent * 100), endl))
         sys.stdout.flush()
 

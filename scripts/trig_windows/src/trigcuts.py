@@ -295,19 +295,36 @@ def setWindows(runNum):
         c_T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = getBinEdges(T_coin_pTRIG_COIN_ROC1_tdcTimeRaw,"c_nozero_ptrigCOIN",200)
     c_T_coin_pEDTM_tdcTimeRaw = getBinEdges(T_coin_pEDTM_tdcTimeRaw,"c_nozero_edtm",200)
 
+    # This will need to run twice as it will need (or at least I'd prefer) to have the time raw window cut on time.
+    # In theory just using time raw > 0 cut should suffice
+    # Get windows for {SPEC}_ROC1_tdcTime and pEDTM_tdcTime
+    c_T_coin_pTRIG_HMS_ROC1_tdcTime = [450,520]  # getBinEdges(T_coin_pTRIG_HMS_ROC1_tdcTime,"c_nozero_ptrigHMS",200)
+    c_T_coin_pTRIG_SHMS_ROC2_tdcTime = [425,455] # getBinEdges(T_coin_pTRIG_SHMS_ROC2_tdcTime,"c_nozero_ptrigSHMS",200)
+    # Check if COIN trigger is used
+    if len(PS_used) > 2:
+        c_T_coin_pTRIG_COIN_ROC1_tdcTime = [-10000,10000] # getBinEdges(T_coin_pTRIG_COIN_ROC1_tdcTime,"c_nozero_ptrigCOIN",200)
+    c_T_coin_pEDTM_tdcTime = [172, 184] # getBinEdges(T_coin_pEDTM_tdcTime,"c_nozero_edtm",200)
+
     # Create a dictionary that contains the information that will be uploaded to Misc_Parameters.csv for a particular run
     new_row = {'Run_Start' : "{:.0f}".format(float(runNum)), 'Run_End' : "{:.0f}".format(float(runNum)), 'noedtm' : 0.0, 'edtmLow' : "{:.0f}".format(float(c_T_coin_pEDTM_tdcTimeRaw[0])), 
-               'edtmHigh' : "{:.0f}".format(float(c_T_coin_pEDTM_tdcTimeRaw[1])), 'ptrigHMSLow' : "{:.0f}".format(float(c_T_coin_pTRIG_HMS_ROC1_tdcTimeRaw[0])), 
-               'ptrigHMSHigh' : "{:.0f}".format(float(c_T_coin_pTRIG_HMS_ROC1_tdcTimeRaw[1])), 'ptrigSHMSLow' : "{:.0f}".format(float(c_T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw[0])), 
-               'ptrigSHMSHigh' : "{:.0f}".format(float(c_T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw[1])), 'ptrigCOINLow' : 0.0, 'ptrigCOINHigh' : 10000.0, 'goodstarttime' : 1.0, 'goodscinhit' : 1.0}
+               'edtmHigh' : "{:.0f}".format(float(c_T_coin_pEDTM_tdcTimeRaw[1])), 'edtmTLow' : "{:.0f}".format(float(c_T_coin_pEDTM_tdcTime[0])), 
+               'edtmTHigh' : "{:.0f}".format(float(c_T_coin_pEDTM_tdcTime[1])), 'ptrigHMSLow' : "{:.0f}".format(float(c_T_coin_pTRIG_HMS_ROC1_tdcTimeRaw[0])), 
+               'ptrigHMSHigh' : "{:.0f}".format(float(c_T_coin_pTRIG_HMS_ROC1_tdcTimeRaw[1])),'ptrigHMSTLow' : "{:.0f}".format(float(c_T_coin_pTRIG_HMS_ROC1_tdcTime[0])), 
+               'ptrigHMSTHigh' : "{:.0f}".format(float(c_T_coin_pTRIG_HMS_ROC1_tdcTime[1])), 'ptrigSHMSLow' : "{:.0f}".format(float(c_T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw[0])), 
+               'ptrigSHMSHigh' : "{:.0f}".format(float(c_T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw[1])),'ptrigSHMSTLow' : "{:.0f}".format(float(c_T_coin_pTRIG_SHMS_ROC2_tdcTime[0])), 
+               'ptrigSHMSTHigh' : "{:.0f}".format(float(c_T_coin_pTRIG_SHMS_ROC2_tdcTime[1])), 'ptrigCOINLow' : 0.0, 'ptrigCOINHigh' : 10000.0,'ptrigCOINTLow' : -10000.0, 'ptrigCOINTHigh' : 10000.0, 'goodstarttime' : 1.0, 'goodscinhit' : 1.0}
     # Check if COIN trigger is used
     if len(PS_used) > 2:
         # Create a dictionary that contains the information that will be uploaded to Misc_Parameters.csv for a particular run
-        new_row = {'Run_Start' : "{:.0f}".format(float(runNum)), 'Run_End' : "{:.0f}".format(float(runNum)), 'noedtm' : 0.0, 'edtmLow' : "{:.0f}".format(float(c_T_coin_pEDTM_tdcTimeRaw[0])), 
-                   'edtmHigh' : "{:.0f}".format(float(c_T_coin_pEDTM_tdcTimeRaw[1])), 'ptrigHMSLow' : "{:.0f}".format(float(c_T_coin_pTRIG_HMS_ROC1_tdcTimeRaw[0])), 
-                   'ptrigHMSHigh' : "{:.0f}".format(float(c_T_coin_pTRIG_HMS_ROC1_tdcTimeRaw[1])), 'ptrigSHMSLow' : "{:.0f}".format(float(c_T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw[0])), 
-                   'ptrigSHMSHigh' : "{:.0f}".format(float(c_T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw[1])), 'ptrigCOINLow' : "{:.0f}".format(float(c_T_coin_pTRIG_COIN_ROC1_tdcTimeRaw[0])), 
-                   'ptrigCOINHigh' : "{:.0f}".format(float(c_T_coin_pTRIG_COIN_ROC1_tdcTimeRaw[1])), 'goodstarttime' : 1.0, 'goodscinhit' : 1.0}
+        new_row =  {'Run_Start' : "{:.0f}".format(float(runNum)), 'Run_End' : "{:.0f}".format(float(runNum)), 'noedtm' : 0.0, 'edtmLow' : "{:.0f}".format(float(c_T_coin_pEDTM_tdcTimeRaw[0])), 
+                    'edtmHigh' : "{:.0f}".format(float(c_T_coin_pEDTM_tdcTimeRaw[1])), 'edtmTLow' : "{:.0f}".format(float(c_T_coin_pEDTM_tdcTime[0])), 
+                    'edtmTHigh' : "{:.0f}".format(float(c_T_coin_pEDTM_tdcTime[1])), 'ptrigHMSLow' : "{:.0f}".format(float(c_T_coin_pTRIG_HMS_ROC1_tdcTimeRaw[0])), 
+                    'ptrigHMSHigh' : "{:.0f}".format(float(c_T_coin_pTRIG_HMS_ROC1_tdcTimeRaw[1])),'ptrigHMSTLow' : "{:.0f}".format(float(c_T_coin_pTRIG_HMS_ROC1_tdcTime[0])), 
+                    'ptrigHMSTHigh' : "{:.0f}".format(float(c_T_coin_pTRIG_HMS_ROC1_tdcTime[1])), 'ptrigSHMSLow' : "{:.0f}".format(float(c_T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw[0])), 
+                    'ptrigSHMSHigh' : "{:.0f}".format(float(c_T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw[1])),'ptrigSHMSTLow' : "{:.0f}".format(float(c_T_coin_pTRIG_SHMS_ROC2_tdcTime[0])), 
+                    'ptrigSHMSTHigh' : "{:.0f}".format(float(c_T_coin_pTRIG_SHMS_ROC2_tdcTime[1])),'ptrigCOINLow' : "{:.0f}".format(float(c_T_coin_pTRIG_COIN_ROC1_tdcTimeRaw[0])), 
+                    'ptrigCOINHigh' : "{:.0f}".format(float(c_T_coin_pTRIG_COIN_ROC1_tdcTimeRaw[1])),'ptrigCOINTLow' : "{:.0f}".format(float(c_T_coin_pTRIG_COIN_ROC1_tdcTime[0])), 
+                    'ptrigCOINTHigh' : "{:.0f}".format(float(c_T_coin_pTRIG_COIN_ROC1_tdcTime[1])), 'goodstarttime' : 1.0, 'goodscinhit' : 1.0}
 
     return new_row
 
@@ -332,8 +349,9 @@ def reconParam(runNum):
 
     # Setting an open window row that will be added to the end of Misc_Parameters.csv. This ensures that the script will run in the future without errors. 
     # This row will not overwrite the windows that are set above
-    open_row = {'Run_Start' : 0, 'Run_End' : 99999, 'noedtm' : 0.0, 'edtmLow' : 0.0, 'edtmHigh' : 10000.0, 'ptrigHMSLow' : 0.0, 'ptrigHMSHigh' : 10000.0, 
-               'ptrigSHMSLow' : 0.0, 'ptrigSHMSHigh' : 10000.0, 'ptrigCOINLow' : 0.0, 'ptrigCOINHigh' : 10000.0, 'goodstarttime' : 1.0, 'goodscinhit' : 1.0}
+    open_row = {'Run_Start' : 0, 'Run_End' : 99999, 'noedtm' : 0.0, 'edtmLow' : 0.0, 'edtmHigh' : 10000.0,'edtmTLow' : -10000.0, 'edtmTHigh' : 10000.0, 'ptrigHMSLow' : 0.0, 'ptrigHMSHigh' : 10000.0, 
+                'ptrigHMSTLow' : -10000.0, 'ptrigHMSTHigh' : 10000.0, 'ptrigSHMSLow' : 0.0, 'ptrigSHMSHigh' : 10000.0,'ptrigSHMSTLow' : -10000.0, 'ptrigSHMSTHigh' : 10000.0, 'ptrigCOINLow' : 0.0, 
+                'ptrigCOINHigh' : 10000.0, 'ptrigCOINTLow' : -10000.0, 'ptrigCOINTHigh' : 10000.0, 'goodstarttime' : 1.0, 'goodscinhit' : 1.0}
 
     # Add in newly formed rows to dataframe
     trig_data = trig_data.append(new_row,ignore_index=True)

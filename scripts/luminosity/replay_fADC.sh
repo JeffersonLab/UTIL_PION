@@ -89,6 +89,8 @@ echo
 echo "Running trigWindows.sh ${RUNNUMBER}..."
 cd ${REPLAYPATH}/UTIL_PION/scripts/trig_windows/
 source trigWindows.sh ${RUNNUMBER}
+cd ${UTILPATH}/scripts/trig_windows/
+source trigWindows.sh -p ${RUNNUMBER}
 
 # Analyzes lumi runs
 echo "Running lumiyield.py ${RUNNUMBER} ${MAXEVENTS}..."

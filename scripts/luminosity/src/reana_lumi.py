@@ -43,7 +43,7 @@ Determine which runs to reanalyze
 '''
 
 # Flag to chose which runs to plot (mainly for debugging, keep as "all")
-l_flag = "1"
+l_flag = "all"
 
 if l_flag == "all":
     # All lumi runs
