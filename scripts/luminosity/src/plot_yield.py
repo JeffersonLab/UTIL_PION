@@ -70,10 +70,12 @@ elif "2" in inp_name:
         out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_2/Carbon0p5/yield_data_l2_c0p5.csv"
         print("\nGrabbing input...\n\n%s" % str(inp_f))
 elif inp_name == None:
+    target = "carbon"
     inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/lumi_data.csv"
     out_f = SCRIPTPATH+"/luminosity/OUTPUTS/yield_data.csv"
     print("\nError: Invalid input...\nGrabbing default input...\n\n%s" % str(inp_f))
 else:
+    target = "carbon"
     inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/lumi_data.csv"
     out_f = SCRIPTPATH+"/luminosity/OUTPUTS/yield_data.csv"
     print("\nGrabbing default input...\n\n%s" % str(inp_f))

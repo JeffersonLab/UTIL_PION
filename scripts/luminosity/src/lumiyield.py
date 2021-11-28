@@ -302,6 +302,7 @@ T_coin_hFADC_TREF_ROC1_adcPed = tree.array("T.coin.hFADC_TREF_ROC1_adcPed")
 T_coin_pFADC_TREF_ROC2_adcPulseTimeRaw = tree.array("T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw")
 T_coin_hFADC_TREF_ROC1_adcPulseTimeRaw = tree.array("T.coin.hFADC_TREF_ROC1_adcPulseTimeRaw")
 T_coin_pEDTM_tdcTimeRaw = tree.array("T.coin.pEDTM_tdcTimeRaw")
+T_coin_pEDTM_tdcTime = tree.array("T.coin.pEDTM_tdcTime")
 EvtType = tree.array("fEvtHdr.fEvtType")
 
 ################################################################################################################################################
@@ -333,7 +334,7 @@ def make_cutDict(cuts,fout,runNum,CURRENT_ENV,DEBUG=False):
     '''
 
     # read in cuts file and make dictionary
-    importDict = lt.SetCuts(CURRENT_ENV).importDict(cuts,fout,runNum,DEBUG=DEBUG)
+    importDict = lt.SetCuts(CURRENT_ENV).importDict(cuts,fout,runNum,False)
     for i,cut in enumerate(cuts):
         x = lt.SetCuts(CURRENT_ENV,importDict).booleanDict(cut)
         #######################################################################################
