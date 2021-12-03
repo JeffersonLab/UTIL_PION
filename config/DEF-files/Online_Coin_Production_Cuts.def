@@ -60,6 +60,11 @@ shmsScinShouldh     shmsScinShould && P.cal.etotnorm < 0.7 &&  P.cal.etotnorm > 
 shmsScinDid         shmsScinShould && P.dc.ntrack > 0
 shmsScinDidh        shmsScinShouldh && P.dc.ntrack > 0
 
+# Tracking efficiency for pi- at negative polarity - Added by AU on 03/12/2021
+
+shmsScinShouldpi    shmsScinShouldh && P.ngcer.npeSum < 1.5
+shmsScinDidpi	    shmsScinShouldpi && P.dc.ntrack > 0
+
 ##################
 ####    HMS    ###
 ##################
