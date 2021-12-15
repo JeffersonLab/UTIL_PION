@@ -1,0 +1,42 @@
+##############
+# SHMS picut #
+##############
+sing_epi_cut_all_noRF = pid.p_picut+accept.delta-accept.delta.H_gtr_dp+accept.p_pfp-pid.p_picut.P_cal_etotnorm
+#
+sing_epi_cut_all_RF = pid.p_picut+accept.delta-accept.delta.H_gtr_dp+accept.p_pfp-pid.p_picut.P_cal_etotnorm+coin_time.SHMS_Pi_RF
+##############
+# SHMS kcut  #
+##############
+shms_ek_cut_all_noRF = pid.p_kcut+accept.delta-accept.delta.H_gtr_dp+accept.p_pfp-pid.p_kcut.P_cal_etotnorm
+#
+shms_ek_cut_all_RF = pid.p_kcut+accept.delta-accept.delta.H_gtr_dp+accept.p_pfp-pid.p_kcut.P_cal_etotnorm+coin_time.SHMS_K_RF
+##############
+# SHMS pcut  #
+##############
+sing_ep_cut_all_noRF = pid.p_pcut+accept.delta-accept.delta.H_gtr_dp+accept.p_pfp-pid.p_pcut.P_cal_etotnorm
+#
+sing_ep_cut_all_RF = pid.p_pcut+accept.delta-accept.delta.H_gtr_dp+accept.p_pfp-pid.p_pcut.P_cal_etotnorm+coin_time.SHMS_p_RF
+##############
+# SHMS picut_ngcer #
+##############
+sing_epi_cut_ngcer_all_noRF = pid.p_picut_ngcer+accept.delta-accept.delta.H_gtr_dp+accept.p_pfp-pid.p_picut_ngcer.P_cal_etotnorm
+#
+sing_epi_cut_ngcer_all_RF = pid.p_picut_ngcer+accept.delta-accept.delta.H_gtr_dp+accept.p_pfp-pid.p_picut_ngcer.P_cal_etotnorm+coin_time.SHMS_Pi_RF
+##############
+# SHMS kcut_ngcer  #
+##############
+shms_ek_cut_ngcer_all_noRF = pid.p_kcut_ngcer+accept.delta-accept.delta.H_gtr_dp+accept.p_pfp-pid.p_kcut_ngcer.P_cal_etotnorm
+#
+shms_ek_cut_ngcer_all_RF = pid.p_kcut_ngcer+accept.delta-accept.delta.H_gtr_dp+accept.p_pfp-pid.p_kcut_ngcer.P_cal_etotnorm+coin_time.SHMS_K_RF
+##############
+# SHMS pcut_ngcer  #
+##############
+sing_ep_cut_ngcer_all_noRF = pid.p_pcut_ngcer+accept.delta-accept.delta.H_gtr_dp+accept.p_pfp-pid.p_pcut_ngcer.P_cal_etotnorm
+#
+sing_ep_cut_ngcer_all_RF = pid.p_pcut_ngcer+accept.delta-accept.delta.H_gtr_dp+accept.p_pfp-pid.p_pcut_ngcer.P_cal_etotnorm+coin_time.SHMS_p_RF
+##############
+# SHMS ecut_ngcer  #
+##############
+sing_ee_cut_ngcer_all_noRF = pid.p_ecut_ngcer+accept.delta-accept.delta.H_gtr_dp+accept.p_pfp-pid.p_ecut_ngcer.P_cal_etotnorm
+#
+sing_ee_cut_ngcer_all_RF = pid.p_ecut_ngcer+accept.delta-accept.delta.H_gtr_dp+accept.p_pfp-pid.p_ecut_ngcer.P_cal_etotnorm+coin_time.SHMS_p_RF

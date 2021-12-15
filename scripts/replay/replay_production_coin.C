@@ -16,13 +16,13 @@ void replay_production_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   }
 
   // Create file name patterns.
-  const char* RunFileNamePattern = "coin_all_%05d.dat";
+  const char* RunFileNamePattern = "shms_all_%05d.dat";
   vector<TString> pathList;
   pathList.push_back(".");
   pathList.push_back("./raw");
   pathList.push_back("./raw/../raw.copiedtotape");
   pathList.push_back("./cache");
-  pathList.push_back("./raw_volatile");
+  pathList.push_back("./raw.volatile");
 
   //const char* RunFileNamePattern = "raw/coin_all_%05d.dat";
   const char* ROOTFileNamePattern = "UTIL_PION/ROOTfiles/Analysis/PionLT/Pion_coin_replay_production_%d_%d.root";
@@ -59,8 +59,8 @@ void replay_production_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   SHMS->AddEvtType(7);
   gHaApps->Add(SHMS);
   // Add Noble Gas Cherenkov to SHMS apparatus
-  //THcCherenkov* pngcer = new THcCherenkov("ngcer", "Noble Gas Cherenkov");
-  //SHMS->AddDetector(pngcer);
+  THcCherenkov* pngcer = new THcCherenkov("ngcer", "Noble Gas Cherenkov");
+  SHMS->AddDetector(pngcer);
   // Add drift chambers to SHMS apparatus
   THcDC* pdc = new THcDC("dc", "Drift Chambers");
   SHMS->AddDetector(pdc);
@@ -248,6 +248,7 @@ void replay_production_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
                               // 2 = counter is event number
 
   analyzer->SetEvent(event);
+  analyzer->SetMarkInterval(10000);
   // Set EPICS event type
   analyzer->SetEpicsEvtType(180);
   // Define crate map
@@ -256,12 +257,14 @@ void replay_production_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   analyzer->SetOutFile(ROOTFileName.Data());
   // Define DEF-file+
   analyzer->SetOdefFile("UTIL_PION/config/DEF-files/coin_production.def");
+  // SJDK - 09/09/21 - Who uncommented the line below and used this in the replay?!
+  //analyzer->SetOdefFile("UTIL_PION/config/DEF-files/Full_Replay_Pass2_Coin.def");
   // Define cuts file
-  analyzer->SetCutFile("UTIL_PION/config/DEF-files/coin_production_cuts.def");  // optional
+  analyzer->SetCutFile("UTIL_PION/config/DEF-files/Online_Coin_Production_Cuts.def");  // optional
   // File to record accounting information for cuts
   analyzer->SetSummaryFile(Form("UTIL_PION/config/REPORT_OUTPUT/summary_production_%d_%d.report", RunNumber, MaxEvent)); // optional
   // Start the actual analysis.
   analyzer->Process(run);
   // Create report file from template	       
-  analyzer->PrintReport("UTIL_PION/config/TEMPLATES/COIN/coin_production.template", Form("UTIL_PION/REPORT_OUTPUT/Analysis/PionLT/Pion_replay_coin_production_%d_%d.report", RunNumber, MaxEvent)); // optional}
+  analyzer->PrintReport("UTIL_PION/config/TEMPLATES/COIN/Online_Coin_Production.template", Form("UTIL_PION/REPORT_OUTPUT/Analysis/PionLT/Pion_replay_coin_production_%d_%d.report", RunNumber, MaxEvent)); // optional}
 }

@@ -9,12 +9,12 @@
 #################################################################################################################################################
 
 echo "Starting analysis of Pion events"
-echo "I take as arguments the run prefix, run number and max number of events!"
+echo "I take as arguments the run number and number of events!"
 # Input params - run number and max number of events
 RUNNUMBER=$1
 if [[ -z "$1" ]]; then
-    echo "I need a input RunList"
-    echo "Please provide a run list as input"
+    echo "I need an input run number"
+    echo "Please provide a run number as input"
 fi
 MAXEVENTS=$2
 if [[ -z "$2" ]]; then
@@ -26,7 +26,7 @@ fi
 
 # Set path depending upon hostname. Change or add more as needed  
 if [[ "${HOSTNAME}" = *"farm"* ]]; then  
-    REPLAYPATH="/group/c-pionlt/USERS/${USER}/hallc_replay_lt"
+    REPLAYPATH="/group/c-pionlt/online_analysis/hallc_replay_lt"
     if [[ "${HOSTNAME}" != *"ifarm"* ]]; then
 	source /site/12gev_phys/softenv.sh 2.3
 	source /apps/root/6.18.04/setroot_CUE.bash
@@ -84,7 +84,7 @@ sleep 3
 ################################################################################################################################                                                                                   
 # Section for pion analysis script
 if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
-    read -p "Pion production analyzed file already exits, you want to reprocess it? <Y/N> " option1
+    read -p "Pion production analysis file already exists, do you want to reprocess it? <Y/N> " option1
     if [[ $option1 == "y" || $option1 == "Y" || $option1 == "yes" || $option1 == "Yes" ]]; then
 	rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root"
 	echo "Reprocessing"
@@ -94,7 +94,6 @@ if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_D
     fi
 elif [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
 	python3 ${UTILPATH}/scripts/pionyield/pion_prod_analysis_Full.py Pion_coin_replay_production ${RUNNUMBER} ${MAXEVENTS}
-else echo "Analysed root file already found in ${UTILPATH}/OUTPUT/Analysis/PionLT/ - Skipped python analyzer script step"
 fi
 
 sleep 3
@@ -103,16 +102,18 @@ sleep 3
 
 # Section for pion physics ploting script
 if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
-    read -p "Pion physics output file already exits, you want to reprocess it? <Y/N> " option2
+    read -p "Pion physics plots already exits, do you want to reprocess them? <Y/N> " option2
     if [[ $option2 == "y" || $option2 == "Y" || $option2 == "yes" || $option2 == "Yes" ]]; then
 	rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root"
 	echo "Reprocessing"
-	python3 ${UTILPATH}/scripts/pionyield/PlotPionPhysics_Full.py ${RUNNUMBER} ${MAXEVENTS} Analysed_Data
+	python3 ${UTILPATH}/scripts/pionyield/PlotPionPhysics_Full.py Analysed_Data ${RUNNUMBER} ${MAXEVENTS}
     else
 	echo "Skipping python physics plotting script step"
     fi
 elif [ ! -f  "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
-	python3 ${UTILPATH}/scripts/pionyield/PlotPionPhysics_Full.py ${RUNNUMBER} ${MAXEVENTS} Analysed_Data
-else echo "Pion physics output root file already found in ${UTILPATH}/OUTPUT/Analysis/PionLT/ - Skipped python output script step"
+	python3 ${UTILPATH}/scripts/pionyield/PlotPionPhysics_Full.py Analysed_Data ${RUNNUMBER} ${MAXEVENTS}
 fi
+#evince "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Full_Pion_Analysis_Distributions.pdf" &
+#evince "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Full_Kaon_Analysis_Distributions.pdf" &
+#evince "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Full_Proton_Analysis_Distributions.pdf" &
 exit 0
