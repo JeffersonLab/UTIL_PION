@@ -69,8 +69,10 @@ coin_pid_notrack_rand = current.bcm4a+coin_time.Coin_Raw_Rand+pid.p_picut-pid.p_
 coin_pid_track = current.bcm4a+accept.delta+coin_time.Coin_Pion_Prompt+pid.p_picut-pid.p_picut.P_gtr_beta+pid.h_ecut-pid.h_ecut.H_gtr_beta+misc.c_noEDTM
 coin_pid_track_rand = current.bcm4a+accept.delta+coin_time.Coin_Pion_Rand+pid.p_picut-pid.p_picut.P_gtr_beta+pid.h_ecut-pid.h_ecut.H_gtr_beta+misc.c_noEDTM
 
-coin_HMS_pid = current.bcm4a+accept.delta+pid.h_ecut-pid.h_ecut.H_gtr_beta+misc.c_nozero_ptrigCOIN+misc.c_noEDTM
-coin_SHMS_pid = current.bcm4a+accept.delta+pid.p_picut-pid.p_picut.P_gtr_beta+misc.c_nozero_ptrigCOIN+misc.c_noEDTM
+coin_HMS_pid = current.bcm4a+pid.h_ecut-pid.h_ecut.H_gtr_beta+misc.c_nozero_ptrigCOIN+misc.c_noEDTM
+coin_HMS_pid_track = current.bcm4a+accept.delta+pid.h_ecut-pid.h_ecut.H_gtr_beta+misc.c_nozero_ptrigCOIN+misc.c_noEDTM
+coin_SHMS_pid = current.bcm4a+pid.p_picut-pid.p_picut.P_gtr_beta+misc.c_nozero_ptrigCOIN+misc.c_noEDTM
+coin_SHMS_pid_track = current.bcm4a+accept.delta+pid.p_picut-pid.p_picut.P_gtr_beta+misc.c_nozero_ptrigCOIN+misc.c_noEDTM
 
 # EDTM
 c_noedtm = current.bcm4a+misc.c_noedtm

@@ -3,7 +3,7 @@
 #
 # Description: 
 # ================================================================
-# Time-stamp: "2021-11-03 05:52:22 trottar"
+# Time-stamp: "2021-12-15 05:09:22 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -15,6 +15,8 @@ import ltsep as lt
 
 CURRENT_ENV = sys.argv[1]
 
+VOLATILEPATH=lt.SetPath(CURRENT_ENV).getPath("VOLATILEPATH")
+ANALYSISPATH=lt.SetPath(CURRENT_ENV).getPath("ANALYSISPATH")
 HCANAPATH=lt.SetPath(CURRENT_ENV).getPath("HCANAPATH")
 REPLAYPATH=lt.SetPath(CURRENT_ENV).getPath("REPLAYPATH")
 UTILPATH=lt.SetPath(CURRENT_ENV).getPath("UTILPATH")
@@ -29,5 +31,5 @@ ANATYPE=lt.SetPath(CURRENT_ENV).getPath("ANATYPE")
 USER=lt.SetPath(CURRENT_ENV).getPath("USER")
 HOST=lt.SetPath(CURRENT_ENV).getPath("HOST")
 
-BashPathEntry=("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s" % (HCANAPATH, REPLAYPATH, UTILPATH, PACKAGEPATH, OUTPATH, ROOTPATH, REPORTPATH, CUTPATH, PARAMPATH, SCRIPTPATH, ANATYPE, USER, HOST))
+BashPathEntry=("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s" % (VOLATILEPATH,ANALYSISPATH,HCANAPATH, REPLAYPATH, UTILPATH, PACKAGEPATH, OUTPATH, ROOTPATH, REPORTPATH, CUTPATH, PARAMPATH, SCRIPTPATH, ANATYPE, USER, HOST))
 print(BashPathEntry)

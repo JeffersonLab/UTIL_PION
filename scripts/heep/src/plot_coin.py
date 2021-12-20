@@ -3,7 +3,7 @@
 #
 # Description:
 # ================================================================
-# Time-stamp: "2021-08-31 01:32:51 trottar"
+# Time-stamp: "2021-12-15 07:07:28 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -34,7 +34,6 @@ import sys, math, os, subprocess
 import array
 from ROOT import TCanvas, TColor, TGaxis, TH1F, TH2F, TPad, TStyle, gStyle, gPad, TGaxis, TLine, TMath, TPaveText, TArc, TGraphPolar 
 from ROOT import kBlack, kBlue, kRed
-sys.path.insert(0, 'python/')
 
 ##################################################################################################################################################
 
@@ -57,66 +56,48 @@ ROOTSuffix = sys.argv[1]
 runNum = sys.argv[2]
 MaxEvent = sys.argv[3]
 
-USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
-HOST = subprocess.getstatusoutput("hostname")
+################################################################################################################################################
+'''
+ltsep package import and pathing definitions
+'''
 
-if ("farm" in HOST[1]):
-    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
-#    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
+# Import package for cuts
+import ltsep as lt 
 
-elif ("qcd" in HOST[1]):
-    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
-#    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
-
-elif ("phys.uregina" in HOST[1]):
-    REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
-
-elif ("cdaq" in HOST[1]):
-    REPLAYPATH = "/home/cdaq/hallc-online/hallc_replay_lt"
-
-elif("skynet" in HOST[1]):
-    REPLAYPATH = "/home/%s/Work/JLab/hallc_replay_lt" % USER[1]
+# Add this to all files for more dynamic pathing
+USER =  lt.SetPath(os.path.realpath(__file__)).getPath("USER") # Grab user info for file finding
+HOST = lt.SetPath(os.path.realpath(__file__)).getPath("HOST")
+REPLAYPATH = lt.SetPath(os.path.realpath(__file__)).getPath("REPLAYPATH")
+UTILPATH = lt.SetPath(os.path.realpath(__file__)).getPath("UTILPATH")
+ANATYPE=lt.SetPath(os.path.realpath(__file__)).getPath("ANATYPE")
 
 #################################################################################################################################################
 
 # Add more path setting as needed in a similar manner                                                                                                                                                          
-OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/HeeP" % REPLAYPATH        # Output folder location                                                                                                     
-sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
-import kaonlt as klt # Import kaonlt module, need the path setting line above prior to importing this                                                                                                         
-print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
+OUTPATH = "%s/OUTPUT/Analysis/HeeP" % UTILPATH        # Output folder location
+
+print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, REPLAYPATH))
 Proton_Analysis_Distributions = "%s/%s_%s_sw_heep_Proton_Analysis_Distributions.pdf" % (OUTPATH, runNum, MaxEvent)
 
 #################################################################################################################################################
+'''
+Check that root/output paths and files exist for use
+'''
 
 # Construct the name of the rootfile based upon the info we provided
-rootName = "%s/UTIL_PION/OUTPUT/Analysis/HeeP/%s_%s_%s.root" % (REPLAYPATH, runNum, MaxEvent, ROOTSuffix)     # Input file location and variables taking
-#rootName = "%s/UTIL_PION/OUTPUT/Analysis/HeeP/Heep_coin_add2.root" % (REPLAYPATH) 
+rootName = "%s/OUTPUT/Analysis/HeeP/%s_%s_%s.root" % (UTILPATH, runNum, MaxEvent, ROOTSuffix)     # Input file location and variables taking
 print ("Attempting to process %s" %(rootName))
-if os.path.exists(OUTPATH):
-    if os.path.islink(OUTPATH):
-        pass
-    elif os.path.isdir(OUTPATH):
-        pass
-    else:
-        print ("%s exists but is not a directory or sym link, check your directory/link and try again" % (OUTPATH))
-        sys.exit(2)
-else:
-    print("Output path not found, please make a sym link or directory called OUTPUT in UTIL_PION to store output")
-    sys.exit(3)
-print ("Attempting to process %s" %(rootName))
-if os.path.isfile(rootName):
-    print ("%s exists, attempting to process" % (rootName))
-else:
-    print ("%s not found - do you have the correct sym link/folder set up?" % (rootName))
-    sys.exit(4)
+lt.SetPath(os.path.realpath(__file__)).checkDir(OUTPATH)
+lt.SetPath(os.path.realpath(__file__)).checkFile(rootName)
 print("Output path checks out, outputting to %s" % (OUTPATH))
+
 
 ###############################################################################################################################################
 ROOT.gROOT.SetBatch(ROOT.kTRUE) # Set ROOT to batch mode explicitly, does not splash anything to screen
 ###############################################################################################################################################
 
 # Section for grabing Prompt/Random selection parameters from PARAM file
-PARAMPATH = "%s/UTIL_PION/DB/PARAM" % REPLAYPATH
+PARAMPATH = "%s/DB/PARAM" % UTILPATH
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 TimingCutFile = "%s/Timing_Parameters.csv" % PARAMPATH # This should match the param file actually being used!
 TimingCutf = open(TimingCutFile)

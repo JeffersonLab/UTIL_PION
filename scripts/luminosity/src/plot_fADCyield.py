@@ -149,15 +149,15 @@ def calc_yield():
     # Calculate yield values
 
     yield_HMS_scaler = (yield_dict["HMS_scaler_accp"])/(makeList("charge")) #*makeList("CPULT_scaler")*makeList("HMS_eLT")) don't apply any efficency to scalers
-    yield_HMS_notrack = ((makeList("h_int_etotnorm_evts")*makeList("PS4"))+makeList("coin_int_noct_notrack"))/(makeList("charge")*yield_dict["TLT"])
-    yield_HMS_track = ((makeList("h_int_etottracknorm_evts")*makeList("PS4"))+makeList("coin_int_noct"))/(makeList("charge")*yield_dict["TLT"]*makeList("HMS_track"))
+    yield_HMS_notrack = ((makeList("h_int_etotnorm_evts")*makeList("PS4")))/(makeList("charge")*yield_dict["TLT"]) #+makeList("coin_int_hms_notrack")
+    yield_HMS_track = ((makeList("h_int_etottracknorm_evts")*makeList("PS4")))/(makeList("charge")*yield_dict["TLT"]*makeList("HMS_track")) #+makeList("coin_int_hms")
     yield_dict.update({"yield_HMS_scaler" : yield_HMS_scaler})
     yield_dict.update({"yield_HMS_notrack" : yield_HMS_notrack})
     yield_dict.update({"yield_HMS_track" : yield_HMS_track})
 
     yield_SHMS_scaler = (yield_dict["SHMS_scaler_accp"])/(makeList("charge")) #*makeList("CPULT_scaler")*makeList("SHMS_eLT"))
-    yield_SHMS_notrack = (makeList("p_int_etotnorm_evts")*makeList("PS1") + makeList("coin_int_noct_notrack"))/(makeList("charge")*yield_dict["TLT"])
-    yield_SHMS_track = (makeList("h_int_etottracknorm_evts")*makeList("PS1") + makeList("coin_int_noct"))/(makeList("charge")*yield_dict["TLT"]*makeList("SHMS_track"))
+    yield_SHMS_notrack = (makeList("p_int_etotnorm_evts")*makeList("PS1") )/(makeList("charge")*yield_dict["TLT"]) #+ makeList("coin_int_shms_notrack")
+    yield_SHMS_track = (makeList("h_int_etottracknorm_evts")*makeList("PS1") )/(makeList("charge")*yield_dict["TLT"]*makeList("SHMS_track")) #+ makeList("coin_int_shms")
     yield_dict.update({"yield_SHMS_scaler" : yield_SHMS_scaler})
     yield_dict.update({"yield_SHMS_notrack" : yield_SHMS_notrack})
     yield_dict.update({"yield_SHMS_track" : yield_SHMS_track})

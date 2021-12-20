@@ -17,7 +17,6 @@ import scipy.integrate as integrate
 import matplotlib.pyplot as plt
 import sys, math, os, subprocess
 
-sys.path.insert(0, 'python/')
 # Check the number of arguments provided to the script
 if len(sys.argv)-1!=3:
     print("!!!!! ERROR !!!!!\n Expected 3 arguments\n Usage is with - ROOTfilePrefix RunNumber MaxEvents \n!!!!! ERROR !!!!!")
@@ -27,44 +26,37 @@ ROOTPrefix = sys.argv[1]
 runNum = sys.argv[2]
 MaxEvent = sys.argv[3]
 
-USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
-HOST = subprocess.getstatusoutput("hostname")
-if ("farm" in HOST[1]):
-    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
-elif ("qcd" in HOST[1]):
-    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
-elif ("phys.uregina" in HOST[1]):
-    REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
-elif ("skynet" in HOST[1]):
-    REPLAYPATH = "/home/%s/Work/JLab/hallc_replay_lt" % USER[1]
+################################################################################################################################################
+'''
+ltsep package import and pathing definitions
+'''
+
+# Import package for cuts
+import ltsep as lt 
+
+# Add this to all files for more dynamic pathing
+USER =  lt.SetPath(os.path.realpath(__file__)).getPath("USER") # Grab user info for file finding
+HOST = lt.SetPath(os.path.realpath(__file__)).getPath("HOST")
+REPLAYPATH = lt.SetPath(os.path.realpath(__file__)).getPath("REPLAYPATH")
+UTILPATH = lt.SetPath(os.path.realpath(__file__)).getPath("UTILPATH")
+ANATYPE=lt.SetPath(os.path.realpath(__file__)).getPath("ANATYPE")
 
 # Add more path setting as needed in a similar manner
-OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/General" % REPLAYPATH
-CUTPATH = "%s/UTIL_PION/DB/CUTS" % REPLAYPATH
-sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
-import kaonlt as klt # Import kaonlt module, need the path setting line above prior to importing this
+OUTPATH = "%s/OUTPUT/Analysis/General" % UTILPATH
+CUTPATH = "%s/DB/CUTS" % UTILPATH
 
-print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
+################################################################################################################################################
+'''
+Check that root/output paths and files exist for use
+'''
+
 # Construct the name of the rootfile based upon the info we provided
-rootName = "%s/UTIL_PION/ROOTfiles/Analysis/General/%s_%s_%s.root" % (REPLAYPATH, ROOTPrefix, runNum, MaxEvent)
+rootName = "%s/ROOTfiles/Analysis/General/%s_%s_%s.root" % (UTILPATH, ROOTPrefix, runNum, MaxEvent)
 print ("Attempting to process %s" %(rootName))
-if os.path.exists(OUTPATH):
-    if os.path.islink(OUTPATH):
-        pass
-    elif os.path.isdir(OUTPATH):
-        pass
-    else:
-        print ("%s exists but is not a directory or sym link, check your directory/link and try again" % (OUTPATH))
-        sys.exit(2)
-else:
-    print("Output path not found, please check the OUTPATH variable in the script and check it looks OK")
-    sys.exit(3)
-if os.path.isfile(rootName):
-    print ("%s exists, attempting to process" % (rootName))
-else:
-    print ("%s not found - do you have the correct sym link/folder set up?" % (rootName))
-    sys.exit(4)
+lt.SetPath(os.path.realpath(__file__)).checkDir(OUTPATH)
+lt.SetPath(os.path.realpath(__file__)).checkFile(rootName)
 print("Output path checks out, outputting to %s" % (OUTPATH))
+
 # Read stuff from the main event tree, here we're just going to get some quantities for the acceptance for the HMS/SHMS
 e_tree = up.open(rootName)["T"]
 # HMS info
@@ -79,46 +71,43 @@ P_gtr_yp = e_tree.array("P.gtr.ph") # ypfp -> Phi
 P_gtr_p = e_tree.array("P.gtr.p")
 P_gtr_dp = e_tree.array("P.gtr.dp")
 
-r = klt.pyRoot()
 # Specify the file which contains the cuts we want to use
-fout = '%s/UTIL_PION/DB/CUTS/run_type/demo.cuts' % REPLAYPATH
-# read in cuts file and make dictionary
-c = klt.pyPlot(REPLAYPATH,DEBUG=False) # Switch False to True to enable DEBUG mode
-readDict = c.read_dict(fout,runNum)
-# This method calls several methods in kaonlt package. It is required to create properly formated
-# dictionaries. The evaluation must be in the analysis script because the analysis variables (i.e. the
-# leaves of interest) are not defined in the kaonlt package. This makes the system more flexible
-# overall, but a bit more cumbersome in the analysis script. Perhaps one day a better solution will be
-# implimented.
-def make_cutDict(cut,inputDict=None):
-
-    global c
-
-    c = klt.pyPlot(REPLAYPATH,readDict)
-    x = c.w_dict(cut)
-    print("%s" % cut)
-    print("x ", x)
-    
-    if inputDict == None:
-        inputDict = {}
-        
-    for key,val in readDict.items():
-        if key == cut:
-            inputDict.update({key : {}})
-
-    for i,val in enumerate(x):
-        tmp = x[i]
-        if tmp == "":
-            continue
-        else:
-            inputDict[cut].update(eval(tmp))
-        
-    return inputDict
+fout = '%s/DB/CUTS/run_type/demo.cuts' % UTILPATH
 
 # Add the cuts that we want to use from our specified file to the cut dictionary, note, we're only adding two of our three defined cuts to our cut dict
-cutDict = make_cutDict("Demo2Cut1")
-cutDict = make_cutDict("Demo2Cut2", cutDict)
-c = klt.pyPlot(REPLAYPATH,cutDict)
+cuts  = ["Demo2Cut1","Demo2Cut2"]
+
+def make_cutDict(cuts,fout,runNum,CURRENT_ENV,DEBUG=False):
+    '''
+    This method calls several methods in kaonlt package. It is required to create properly formated
+    dictionaries. The evaluation must be in the analysis script because the analysis variables (i.e. the
+    leaves of interest) are not defined in the kaonlt package. This makes the system more flexible
+    overall, but a bit more cumbersome in the analysis script. Perhaps one day a better solution will be
+    implimented.
+    '''
+
+    # read in cuts file and make dictionary
+    importDict = lt.SetCuts(CURRENT_ENV).importDict(cuts,fout,runNum,False)
+    for i,cut in enumerate(cuts):
+        x = lt.SetCuts(CURRENT_ENV,importDict).booleanDict(cut)
+        print("\n%s" % cut)
+        print(x, "\n")
+        if i == 0:
+            inputDict = {}
+        cutDict = lt.SetCuts(CURRENT_ENV,importDict).readDict(cut,inputDict)
+        for j,val in enumerate(x):
+            cutDict = lt.SetCuts(CURRENT_ENV,importDict).evalDict(cut,eval(x[j]),cutDict)
+    return lt.SetCuts(CURRENT_ENV,cutDict)
+
+c = make_cutDict(cuts,fout,runNum,os.path.realpath(__file__))
+
+# Examples of the help class
+lt.Help.info(lt.SetPath) # Shows information on the class SetPath
+lt.Help.info(lt.SetCuts.importDict) # Shows information on the function importDict
+lt.Help.path_setup() # Instructions for setting up proper pathing 
+lt.Help.cut_setup() # Instructions for setting up proper cuts 
+# os.path.realpath(__file__) is your current directory
+lt.Help.searchPathFile(os.path.realpath(__file__)) # Shows your current pathing
 
 # Define a function to return a dictionary of the events we want
 # Arrays we generate in our dict should all be of the same length (in terms of # elements in the array) to keep things simple

@@ -16,7 +16,6 @@ import scipy.integrate as integrate
 import matplotlib.pyplot as plt
 import sys, math, os, subprocess
 
-sys.path.insert(0, 'python/')
 # Check the number of arguments provided to the script
 if len(sys.argv)-1!=3:
     print("!!!!! ERROR !!!!!\n Expected 3 arguments\n Usage is with - ROOTfilePrefix RunNumber MaxEvents \n!!!!! ERROR !!!!!")
@@ -26,44 +25,38 @@ ROOTPrefix = sys.argv[1]
 runNum = sys.argv[2]
 MaxEvent = sys.argv[3]
 
-USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
-HOST = subprocess.getstatusoutput("hostname")
-if ("farm" in HOST[1]):
-    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
-elif ("qcd" in HOST[1]):
-    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
-elif ("phys.uregina" in HOST[1]):
-    REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
-elif ("skynet" in HOST[1]):
-    REPLAYPATH = "/home/%s/Work/JLab/hallc_replay_lt" % USER[1]
+################################################################################################################################################
+'''
+ltsep package import and pathing definitions
+'''
+
+# Import package for cuts
+import ltsep as lt 
+
+# Add this to all files for more dynamic pathing
+USER =  lt.SetPath(os.path.realpath(__file__)).getPath("USER") # Grab user info for file finding
+HOST = lt.SetPath(os.path.realpath(__file__)).getPath("HOST")
+REPLAYPATH = lt.SetPath(os.path.realpath(__file__)).getPath("REPLAYPATH")
+UTILPATH = lt.SetPath(os.path.realpath(__file__)).getPath("UTILPATH")
+ANATYPE=lt.SetPath(os.path.realpath(__file__)).getPath("ANATYPE")
 
 # Add more path setting as needed in a similar manner
-OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/General" % REPLAYPATH
-CUTPATH = "%s/UTIL_PION/DB/CUTS" % REPLAYPATH
-sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
-import kaonlt as klt # Import kaonlt module, need the path setting line above prior to importing this
+OUTPATH = "%s/OUTPUT/Analysis/General" % UTILPATH
+CUTPATH = "%s/DB/CUTS" % UTILPATH
 
-print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
+################################################################################################################################################
+'''
+Check that root/output paths and files exist for use
+'''
+
 # Construct the name of the rootfile based upon the info we provided
-rootName = "%s/UTIL_PION/ROOTfiles/Analysis/General/%s_%s_%s.root" % (REPLAYPATH, ROOTPrefix, runNum, MaxEvent)
+rootName = UTILPATH+"/ROOTfiles/Analysis/Lumi/%s_%s_%s.root" % (ROOTPrefix,runNum,MaxEvent)     # Input file location and variables taking
 print ("Attempting to process %s" %(rootName))
-if os.path.exists(OUTPATH):
-    if os.path.islink(OUTPATH):
-        pass
-    elif os.path.isdir(OUTPATH):
-        pass
-    else:
-        print ("%s exists but is not a directory or sym link, check your directory/link and try again" % (OUTPATH))
-        sys.exit(2)
-else:
-    print("Output path not found, please check the OUTPATH variable in the script and check it looks OK")
-    sys.exit(3)
-if os.path.isfile(rootName):
-    print ("%s exists, attempting to process" % (rootName))
-else:
-    print ("%s not found - do you have the correct sym link/folder set up?" % (rootName))
-    sys.exit(4)
+lt.SetPath(os.path.realpath(__file__)).checkDir(OUTPATH)
+lt.SetPath(os.path.realpath(__file__)).checkFile(rootName)
 print("Output path checks out, outputting to %s" % (OUTPATH))
+
+
 # Read stuff from the main event tree, here we're just going to get some quantities for the acceptance for the HMS/SHMS
 e_tree = up.open(rootName)["T"]
 # HMS info

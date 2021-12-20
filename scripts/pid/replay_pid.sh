@@ -16,44 +16,62 @@ if [[ $2 -eq "" ]]; then
     MAXEVENTS=-1 
 fi
 
+
+# Runs script in the ltsep python package that grabs current path enviroment
+if [[ ${HOSTNAME} = *"cdaq"* ]]; then
+    PATHFILE_INFO=`python3 /home/cdaq/pionLT-2021/hallc_replay_lt/UTIL_PION/bin/python/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
+elif [[ "${HOSTNAME}" = *"farm"* ]]; then
+    PATHFILE_INFO=`python3 /u/home/${USER}/.local/lib/python3.4/site-packages/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
+fi
+
+# Split the string we get to individual variables, easier for printing and use later
+VOLATILEPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f1` # Cut the string on , delimitter, select field (f) 1, set variable to output of command
+ANALYSISPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f2`
+HCANAPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f3`
+REPLAYPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f4`
+UTILPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f5`
+PACKAGEPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f6`
+OUTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f7`
+ROOTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f8`
+REPORTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f9`
+CUTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f10`
+PARAMPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f11`
+SCRIPTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f12`
+ANATYPE=`echo ${PATHFILE_INFO} | cut -d ','  -f13`
+USER=`echo ${PATHFILE_INFO} | cut -d ','  -f14`
+HOST=`echo ${PATHFILE_INFO} | cut -d ','  -f15`
+
+
 # Set path depending upon hostname. Change or add more as needed  
 if [[ "${HOSTNAME}" = *"farm"* ]]; then  
-    REPLAYPATH="/group/c-pionlt/USERS/${USER}/hallc_replay_lt"
     if [[ "${HOSTNAME}" != *"ifarm"* ]]; then
 	source /site/12gev_phys/softenv.sh 2.3
     fi
-    cd "/group/c-pionlt/hcana/"
-    source "/group/c-pionlt/hcana/setup.sh"
+    cd "$HCANAPATH"
+    source "$HCANAPATH/hcana/setup.sh"
     cd "$REPLAYPATH"
     source "$REPLAYPATH/setup.sh"
 elif [[ "${HOSTNAME}" = *"qcd"* ]]; then
-    REPLAYPATH="/group/c-pionlt/USERS/${USER}/hallc_replay_lt"
     source /site/12gev_phys/softenv.sh 2.3
-    cd "/group/c-pionlt/hcana/"
-    source "/group/c-pionlt/hcana/setup.sh" 
+    cd "$HCANAPATH"
+    source "$HCANAPATH/hcana/setup.sh"
     cd "$REPLAYPATH"
     source "$REPLAYPATH/setup.sh" 
-elif [[ "${HOSTNAME}" = *"cdaq"* ]]; then
-    REPLAYPATH="/home/cdaq/hallc-online/hallc_replay_lt"
-elif [[ "${HOSTNAME}" = *"phys.uregina.ca"* ]]; then
-    REPLAYPATH="/home/${USER}/work/JLab/hallc_replay_lt"
-elif [[ "${HOSTNAME}" = *"trottar"* ]]; then
-    REPLAYPATH="/home/trottar/Analysis/hallc_replay_lt"
 fi
 
-cd ${REPLAYPATH}/
+cd ${REPLAYPATH}
 
 echo -e "\n\nStarting Replay Script\n\n"
-./hcana -q "${REPLAYPATH}/UTIL_PION/scripts/pid/src/replay/replay_pid_coin_offline.C($RUNNUMBER,$MAXEVENTS)"
+./hcana -q "${UTILPATH}/scripts/pid/src/replay/replay_pid_coin_offline.C($RUNNUMBER,$MAXEVENTS)"
 
 source /apps/root/6.18.04/setroot_CUE.bash
-cd ${REPLAYPATH}/UTIL_PION/scripts/pid/src/
+cd ${UTILPATH}/scripts/pid/src/
 python3 pid_eff.py ${RUNNUMBER} ${MAXEVENTS}
 
-#cd ${REPLAYPATH}/UTIL_PION/scripts/pid/OUTPUTS/
+#cd ${UTILPATH}/UTIL_PION/scripts/pid/OUTPUTS/
 #convert noID_hms_cer_${RUNNUMBER}.png PID_hms_cer_${RUNNUMBER}.png noID_hms_cal_${RUNNUMBER}.png PID_hms_cal_${RUNNUMBER}.png noID_shms_hgcer_${RUNNUMBER}.png PID_shms_hgcer_${RUNNUMBER}.png noID_shms_aero_${RUNNUMBER}.png PID_shms_aero_${RUNNUMBER}.png noID_shms_cal_${RUNNUMBER}.png PID_shms_cal_${RUNNUMBER}.png pid_plots_${RUNNUMBER}.pdf
 #rm -rf *.png
 
-cd ${REPLAYPATH}/UTIL_PION/scripts/pid/src/
+cd ${UTILPATH}/scripts/pid/src/
 python3 csv2root.py
 

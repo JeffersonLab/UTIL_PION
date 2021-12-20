@@ -155,14 +155,18 @@ def calc_yield():
     # Create dictionary for calculations that were not calculated in previous scripts.
     yield_dict = {
         "current" : makeList("charge")/makeList("time"),
-    
+        
         "rate_HMS" : makeList("HMSTRIG_scaler")/makeList("time"),
         "rate_SHMS" : makeList("SHMSTRIG_scaler")/makeList("time"),
-
-        "sent_edtm_PS" : makeList("sent_edtm")/HMS_PS,
-
+        
+        #"sent_edtm_PS" : makeList("sent_edtm")/HMS_PS,
+        #"PS_mod" : SHMS_PS%HMS_PS,
+        "sent_edtm_PS" : makeList("sent_edtm")/HMS_PS+makeList("sent_edtm")/SHMS_PS-makeList("sent_edtm")/(HMS_PS*SHMS_PS),
+        
+        "CPULT_phys" : (makeList("HMSTRIG_cut")*HMS_PS+makeList("SHMSTRIG_cut")*SHMS_PS)*makeList("CPULT_scaler"),
+        
         "uncern_HMS_evts_scaler" : np.sqrt(makeList("HMSTRIG_scaler"))/makeList("HMSTRIG_scaler"),
-
+        
         "uncern_SHMS_evts_scaler" : np.sqrt(makeList("SHMSTRIG_scaler"))/makeList("SHMSTRIG_scaler"),
 
         "uncern_HMS_evts_notrack" : np.sqrt(makeList("h_int_etotnorm_evts"))/makeList("h_int_etotnorm_evts"),
@@ -174,6 +178,7 @@ def calc_yield():
         "uncern_SHMS_evts_track" : np.sqrt(makeList("p_int_goodscin_evts"))/makeList("p_int_goodscin_evts"),
 
     }
+
     # Check if coin trigger was used
     if COIN_PS != None:
         # Create dictionary for calculations that were not calculated in previous scripts.
@@ -184,7 +189,9 @@ def calc_yield():
             "rate_SHMS" : makeList("SHMSTRIG_scaler")/makeList("time"),
             "rate_COIN" : makeList("COINTRIG_scaler")/makeList("time"),
             
-            "sent_edtm_PS" : makeList("sent_edtm")/HMS_PS,
+            #"sent_edtm_PS" : makeList("sent_edtm")/HMS_PS,
+            #"PS_mod" : SHMS_PS%HMS_PS,
+            "sent_edtm_PS" : makeList("sent_edtm")/HMS_PS+makeList("sent_edtm")/SHMS_PS+makeList("sent_edtm")/COIN_PS+makeList("sent_edtm")/(SHMS_PS*HMS_PS*COIN_PS)-makeList("sent_edtm")/(HMS_PS*SHMS_PS)-makeList("sent_edtm")/(COIN_PS*SHMS_PS)-makeList("sent_edtm")/(HMS_PS*COIN_PS),
             
             "uncern_HMS_evts_scaler" : np.sqrt(makeList("HMSTRIG_scaler"))/makeList("HMSTRIG_scaler"),
     
@@ -202,6 +209,13 @@ def calc_yield():
 
         }
 
+    #for i,psmod in enumerate(yield_dict["PS_mod"]):
+    #    if psmod > 0:
+    #        yield_dict["sent_edtm_PS"][i] = yield_dict["sent_edtm_PS_corr"][i]
+        #else:
+         #   sent_edtm_PS_final[i] = yield_dict["sent_edtm_PS"][i]            
+    #yield_dict.update({"sent_edtm_PS_final" : sent_edtm_PS_final})
+
     # Total livetime calculation
     TLT = makeList("accp_edtm")/yield_dict["sent_edtm_PS"]
     yield_dict.update({"TLT" : TLT})
@@ -209,13 +223,13 @@ def calc_yield():
     #uncer_TLT = np.sqrt(yield_dict["sent_edtm_PS"]*.95*.05)
     #yield_dict.update({"uncern_TLT" : uncern_TLT})
 
-    # Accepted scalers 
-    HMS_scaler_accp = makeList("HMSTRIG_scaler")-yield_dict["sent_edtm_PS"]
-    SHMS_scaler_accp = makeList("SHMSTRIG_scaler")-yield_dict["sent_edtm_PS"]
+    # Accepted scalers; removed EDTM subtraction. There are EDTM in here but it won't be this value.
+    HMS_scaler_accp = makeList("HMSTRIG_scaler") #-yield_dict["sent_edtm_PS"]
+    SHMS_scaler_accp = makeList("SHMSTRIG_scaler") #-yield_dict["sent_edtm_PS"]
     yield_dict.update({"HMS_scaler_accp" : HMS_scaler_accp})
     yield_dict.update({"SHMS_scaler_accp" : SHMS_scaler_accp})
     if COIN_PS != None:
-        COIN_scaler_accp = makeList("COINTRIG_scaler")-yield_dict["sent_edtm_PS"]
+        COIN_scaler_accp = makeList("COINTRIG_scaler") -yield_dict["sent_edtm_PS"] # This EDTM subtraction is fine because COIN are not PS and get EDTM first
         yield_dict.update({"COIN_scaler_accp" : COIN_scaler_accp})
 
     # Calculate yield values
@@ -234,8 +248,8 @@ def calc_yield():
     yield_dict.update({"yield_SHMS_notrack" : yield_SHMS_notrack})
     yield_dict.update({"yield_SHMS_track" : yield_SHMS_track})
 
-
     # Define relative yield relative to maximum current
+    # Why is this looped 3 times????
     for i,curr in enumerate(yield_dict["current"]):
         if curr == max(yield_dict["current"]):
             max_yield_HMS_scaler = yield_dict["yield_HMS_scaler"][i]
@@ -607,7 +621,7 @@ def plot_yield():
     plt.subplot(2,4,8)    
     plt.grid(zorder=1)
     #plt.xlim(0,100)
-    plt.scatter(yield_data["current"],yield_data["CPULT_scaler"],color='blue',zorder=4)
+    plt.scatter(yield_data["current"],yield_data["CPULT_phys"],color='blue',zorder=4)
     plt.ylabel('Scaler CPULT', fontsize=16)
     plt.xlabel('Current [uA]', fontsize =12)
     if target == 'LD2' :
@@ -700,7 +714,7 @@ def debug():
     print("DEBUG data")
     print("=======================")
     ### Debug prints
-    print(data[["run number","PS2","PS4","sent_edtm","TLT","CPULT_scaler","current","time","HMS_track","SHMS_track"]])
+    print(data[["run number","PS2","PS4","sent_edtm","sent_edtm_PS","accp_edtm","TLT","CPULT_phys","current","time","HMS_track","SHMS_track"]])
    # print("EDTM scaler rate: ", data["sent_edtm"]/data["time"])
    # print("Accepted EDTM rate: ", data["accp_edtm"]/data["time"])
    # print("Run numbers: ", data["run number"].sort_values())

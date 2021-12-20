@@ -1,3 +1,5 @@
+VOLATILEPATH=/volatile/hallc/c-pionlt/USERS/${USER}
+ANALYSISPATH=/u/group/c-pionlt/USERS/${USER}
 HCANAPATH=/u/group/c-pionlt/hcana
 REPLAYPATH=/u/group/c-pionlt/USERS/${USER}/hallc_replay_lt
 UTILPATH=/u/group/c-pionlt/USERS/${USER}/hallc_replay_lt/UTIL_PION

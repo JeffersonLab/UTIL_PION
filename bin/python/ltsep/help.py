@@ -3,7 +3,7 @@
 #
 # Description: Just calls help functions for various methods to help users
 # ================================================================
-# Time-stamp: "2021-11-18 05:18:48 trottar"
+# Time-stamp: "2021-12-15 05:04:57 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -69,6 +69,8 @@ class Help():
 
         # os.path.realpath(__file__) is your current directory path
         # This will grab the pathing for these variables based off the files in PATH_TO_DIR
+        VOLATILEPATH=lt.SetPath(os.path.realpath(__file__)).getPath("VOLATILEPATH")
+        ANALYSISPATH=lt.SetPath(os.path.realpath(__file__)).getPath("ANALYSISPATH")
         HCANAPATH=lt.SetPath(os.path.realpath(__file__)).getPath("HCANAPATH")
         REPLAYPATH=lt.SetPath(os.path.realpath(__file__)).getPath("REPLAYPATH")
         UTILPATH=lt.SetPath(os.path.realpath(__file__)).getPath("UTILPATH")

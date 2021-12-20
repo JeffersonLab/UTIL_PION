@@ -282,6 +282,9 @@ T_coin_hFADC_TREF_ROC1_adcPed = tree.array("T.coin.hFADC_TREF_ROC1_adcPed")
 T_coin_pFADC_TREF_ROC2_adcPulseTimeRaw = tree.array("T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw")
 T_coin_hFADC_TREF_ROC1_adcPulseTimeRaw = tree.array("T.coin.hFADC_TREF_ROC1_adcPulseTimeRaw")
 T_coin_pEDTM_tdcTimeRaw = tree.array("T.coin.pEDTM_tdcTimeRaw")
+T_coin_pEDTM_tdcTime = tree.array("T.coin.pEDTM_tdcTime")
+T_coin_hEDTM_tdcTimeRaw = tree.array("T.coin.hEDTM_tdcTimeRaw")
+T_coin_hEDTM_tdcTime = tree.array("T.coin.hEDTM_tdcTime")
 CTime_CoinTime_RAW_ROC1 = tree.array("CTime.CoinTime_RAW_ROC1")
 CTime_ePiCoinTime_ROC1 = tree.array("CTime.ePiCoinTime_ROC1")
 H_cal_etottracknorm = tree.array("H.cal.etottracknorm")
@@ -289,7 +292,7 @@ P_cal_etottracknorm = tree.array("P.cal.etottracknorm")
 EvtType = tree.array("fEvtHdr.fEvtType")
 
 #list of all cuts that are used
-cuts = ["h_etrack_lumi_before", "h_etrack_lumi_after", "p_pitrack_lumi_before", "p_pitrack_lumi_after", "h_cal", "h_cer", "h_cal_nt", "h_cer_nt", "p_cal", "p_hgcer", "p_aero", "p_cal_nt", "p_hgcer_nt", "p_aero_nt", "p_ngcer_nt", "p_picut_lumi_eff", "p_picut_lumi_nt", "p_picut_lumi", "h_ecut_lumi_eff", "h_ecut_lumi", "h_ecut_lumi_nt",  "c_noedtm", "c_edtm", "c_ptrigHMS", "c_ptrigSHMS", "c_ptrigCOIN", "coin_pid_only", "c_curr", "coin_pid_notrack", "coin_pid_notrack_rand", "coin_pid_track", "coin_pid_track_rand"]     
+cuts = ["h_etrack_lumi_before", "h_etrack_lumi_after", "p_pitrack_lumi_before", "p_pitrack_lumi_after", "h_cal", "h_cer", "h_cal_nt", "h_cer_nt", "p_cal", "p_hgcer", "p_aero", "p_cal_nt", "p_hgcer_nt", "p_aero_nt", "p_ngcer_nt", "p_picut_lumi_eff", "p_picut_lumi_nt", "p_picut_lumi", "h_ecut_lumi_eff", "h_ecut_lumi", "h_ecut_lumi_nt",  "c_noedtm", "c_edtm", "c_edtmT", "c_ptrigHMS", "c_ptrigSHMS", "c_ptrigCOIN", "coin_pid_only", "c_curr", "coin_pid_notrack", "coin_pid_notrack_rand", "coin_pid_track", "coin_pid_track_rand", "coin_HMS_pid", "coin_SHMS_pid", "coin_HMS_pid_track", "coin_SHMS_pid_track"]     
 fout = REPLAYPATH+'/UTIL_PION/DB/CUTS/run_type/fADCdeadtime.cuts'
 
 def make_cutDict(cuts,fout,runNum,CURRENT_ENV):
@@ -331,67 +334,49 @@ def pid_cuts():
     '''
 
     #### 1D plots ####
-
-    f = plt.figure(figsize=(11.69,8.27))
-    ax = f.add_subplot(331)
-    ax.hist(H_cal_etotnorm,bins=c.setbin(H_cal_etotnorm,200),label='no cut',histtype='step',
-            alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(H_cal_etotnorm,"h_cal"), bins=c.setbin(c.add_cut(H_cal_etotnorm,"h_cal"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('H_cal_etotnorm')
-    plt.ylabel('Count')
-
-    ax = f.add_subplot(332)
-    ax.hist(H_cer_npeSum,bins=c.setbin(H_cer_npeSum,200),label='no cut',histtype='step', alpha=0.5,
-            stacked=True, fill=True)
-    ax.hist(c.add_cut(H_cer_npeSum,"h_cer"), bins=c.setbin(c.add_cut(H_cer_npeSum,"h_cer"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('H_cer_npeSum')
-    plt.ylabel('Count')
-
-    ax = f.add_subplot(333)
-    ax.hist(P_cal_etotnorm,bins=c.setbin(P_cal_etotnorm,200),label='no cut',histtype='step',
-            alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(P_cal_etotnorm,"p_cal"), bins=c.setbin(c.add_cut(P_cal_etotnorm,"p_cal"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('P_cal_etotnorm')
-    plt.ylabel('Count')
-
-    ax = f.add_subplot(334)
-    ax.hist(P_hgcer_npeSum,bins=c.setbin(P_hgcer_npeSum,200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(P_hgcer_npeSum,"p_hgcer"), bins=c.setbin(c.add_cut(P_hgcer_npeSum,"p_hgcer"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('P_hgcer_npeSum')
-    plt.ylabel('Count')
-
-    ax = f.add_subplot(335)
-    ax.hist(P_aero_npeSum,bins=c.setbin(P_aero_npeSum,200),label='no cut',histtype='step',
-            alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(P_aero_npeSum,"p_aero"), bins=c.setbin(c.add_cut(P_aero_npeSum,"p_aero"),200),label='no cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('P_aero_npeSum')
-    plt.ylabel('Count')    
+    f = plt.figure(figsize=(19.20,8.00))
+    f.suptitle("Run %s" % runNum)
     
-    ax = f.add_subplot(336)
-    ax.hist(P_ngcer_npeSum,bins=c.setbin(P_ngcer_npeSum,200,0,250),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(P_ngcer_npeSum,"p_ngcer_nt"), bins=c.setbin(P_ngcer_npeSum,200,0,250),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('P_ngcer_npeSum')
-    plt.ylabel('Count')
-
-    
-    ax = f.add_subplot(337)
+    ax = f.add_subplot(321)
     ax.hist(CTime_CoinTime_RAW_ROC1,bins=c.setbin(CTime_CoinTime_RAW_ROC1,240, 35, 95),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
     ax.hist(c.add_cut(CTime_CoinTime_RAW_ROC1,"coin_pid_notrack"),bins=c.setbin(CTime_CoinTime_RAW_ROC1,240, 35, 95),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
 #    plt.yscale('log')
     plt.xlabel('NoTrack Coin Time Prompt Peak')
     plt.ylabel('Count')
 
-    ax = f.add_subplot(338)
+    ax = f.add_subplot(322)
     ax.hist(CTime_CoinTime_RAW_ROC1,bins=c.setbin(CTime_CoinTime_RAW_ROC1,240, 35, 95),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
     ax.hist(c.add_cut(CTime_CoinTime_RAW_ROC1,"coin_pid_notrack_rand"),bins=c.setbin(CTime_CoinTime_RAW_ROC1,240, 35, 95),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
 #    plt.yscale('log')
     plt.xlabel('NoTrack Coin Time Randoms')
+    plt.ylabel('Count')
+
+    ax = f.add_subplot(323)
+    ax.hist(T_coin_pEDTM_tdcTimeRaw,bins=c.setbin(T_coin_pEDTM_tdcTimeRaw,5000, 0, 5000),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+    ax.hist(c.add_cut(T_coin_pEDTM_tdcTimeRaw,"c_edtm"),bins=c.setbin(T_coin_pEDTM_tdcTimeRaw,5000, 0, 5000),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+    plt.yscale('log')
+    plt.xlabel('pEDTM_tdcTimeRaw')
+    plt.ylabel('Count')
+
+    ax = f.add_subplot(324)
+    ax.hist(c.add_cut(T_coin_pEDTM_tdcTime,"c_edtm"),bins=c.setbin(T_coin_pEDTM_tdcTime,5000, 0, 5000),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+    ax.hist(c.add_cut(T_coin_pEDTM_tdcTime,"c_edtmT"),bins=c.setbin(T_coin_pEDTM_tdcTime,5000, 0, 5000),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+    plt.yscale('log')
+    plt.xlabel('pEDTM_tdcTime')
+    plt.ylabel('Count')
+
+    ax = f.add_subplot(325)
+    ax.hist(T_coin_hEDTM_tdcTimeRaw,bins=c.setbin(T_coin_hEDTM_tdcTimeRaw,5000, 0, 5000),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+    ax.hist(c.add_cut(T_coin_hEDTM_tdcTimeRaw,"c_edtm"),bins=c.setbin(T_coin_hEDTM_tdcTimeRaw,5000, 0, 5000),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+    plt.yscale('log')
+    plt.xlabel('hEDTM_tdcTimeRaw')
+    plt.ylabel('Count')
+
+    ax = f.add_subplot(326)
+    ax.hist(c.add_cut(T_coin_hEDTM_tdcTime,"c_edtm"),bins=c.setbin(T_coin_hEDTM_tdcTime,5000, 0, 5000),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+    ax.hist(c.add_cut(T_coin_hEDTM_tdcTime,"c_edtmT"),bins=c.setbin(T_coin_hEDTM_tdcTime,5000, 0, 5000),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+    plt.yscale('log')
+    plt.xlabel('hEDTM_tdcTime')
     plt.ylabel('Count')
 
     plt.tight_layout(rect=[0,0.03,1,0.95])
@@ -509,7 +494,10 @@ def analysis():
     coin_etottracknorm = c.add_cut(H_cal_etottracknorm, "coin_pid_track")
     coin_etottracknorm_rand = c.add_cut(H_cal_etottracknorm, "coin_pid_track_rand")
 
-    COIN_pid_noCT = c.add_cut(H_cal_etotnorm, "coin_pid_only")
+    COIN_HMS_pid_notrack = c.add_cut(H_cal_etotnorm, "coin_HMS_pid")
+    COIN_HMS_pid_track = c.add_cut(H_cal_etotnorm, "coin_HMS_pid_track")
+    COIN_SHMS_pid_notrack = c.add_cut(H_cal_etotnorm, "coin_SHMS_pid")
+    COIN_SHMS_pid_track = c.add_cut(H_cal_etotnorm, "coin_SHMS_pid_track")
 
     # Applies PID cuts, once integrated this will give the events (no track)
     h_etotnorm = c.add_cut(H_cal_etotnorm,"h_ecut_lumi_nt") 
@@ -559,8 +547,10 @@ def analysis():
             "coin_int_etottracknorm_evts" : scipy.integrate.simps(coin_etottracknorm),
             "coin_int_etotnorm_evts_rand" : scipy.integrate.simps(coin_etotnorm_rand),
             "coin_int_etottracknorm_evts_rand" : scipy.integrate.simps(coin_etottracknorm_rand),
-            "coin_int_noct_notrack" : scipy.integrate.simps(COIN_pid_noCT),
-            "coin_int_noct" : scipy.integrate.simps(COIN_pid_noCT),
+            "coin_int_hms_notrack" : scipy.integrate.simps(COIN_HMS_pid_notrack),
+            "coin_int_hms" : scipy.integrate.simps(COIN_HMS_pid_track),
+            "coin_int_shms_notrack" : scipy.integrate.simps(COIN_SHMS_pid_notrack),
+            "coin_int_shms" : scipy.integrate.simps(COIN_SHMS_pid_track),
             "h_int_etottracknorm_evts" : scipy.integrate.simps(h_ecuts_etottracknorm),
             "p_int_etottracknorm_evts" : scipy.integrate.simps(p_pcuts_etottracknorm),
             "SHMSTRIG_cut" : len(SHMSTRIG_cut),
@@ -590,7 +580,8 @@ def analysis():
 
     print("Number of HMS good untrack events: %.0f +/- %.0f" % ((track_info["h_int_etotnorm_evts"]), math.sqrt(track_info["h_int_etotnorm_evts"])))
     print("Number of SHMS good untrack events: %.0f +/- %.0f" % ((track_info["p_int_etotnorm_evts"]), math.sqrt(track_info["p_int_etotnorm_evts"])))
-    print("Number of COIN good no Coin time cuts events: %.0f +/- %.0f" % ((track_info["coin_int_noct"]), math.sqrt(track_info["coin_int_noct"])))
+    print("Number of COIN good HMS cuts events: %.0f +/- %.0f" % ((track_info["coin_int_hms"]), math.sqrt(track_info["coin_int_hms"])))
+    print("Number of COIN good SHMS cuts events: %.0f +/- %.0f" % ((track_info["coin_int_shms"]), math.sqrt(track_info["coin_int_shms"])))
     print("Number of COIN good untrack events: %.0f +/- %.0f" % ((track_info["coin_int_etotnorm_evts"]), math.sqrt(track_info["coin_int_etotnorm_evts"])))
     print("Number of COIN good track events: %.0f +/- %.0f" % ((track_info["coin_int_etottracknorm_evts"]), math.sqrt(track_info["coin_int_etottracknorm_evts"])))
     print("Number of COIN rand untrack events: %.0f" % (track_info["coin_int_etotnorm_evts_rand"]))

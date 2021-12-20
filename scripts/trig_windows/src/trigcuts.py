@@ -288,12 +288,14 @@ def setWindows(runNum):
         return [minBin, maxBin]
 
     # Get windows for {SPEC}_ROC1_tdcTimeRaw and pEDTM_tdcTimeRaw
-    c_T_coin_pTRIG_HMS_ROC1_tdcTimeRaw = getBinEdges(T_coin_pTRIG_HMS_ROC1_tdcTimeRaw,"c_nozero_ptrigHMS",200)
-    c_T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw = getBinEdges(T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw,"c_nozero_ptrigSHMS",200)
+    c_T_coin_pTRIG_HMS_ROC1_tdcTimeRaw = [4760,5060] # getBinEdges(T_coin_pTRIG_HMS_ROC1_tdcTimeRaw,"c_nozero_ptrigHMS",200)
+    c_T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw = [5520,5820] # getBinEdges(T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw,"c_nozero_ptrigSHMS",200)
     # Check if COIN trigger is used
     if len(PS_used) > 2:
-        c_T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = getBinEdges(T_coin_pTRIG_COIN_ROC1_tdcTimeRaw,"c_nozero_ptrigCOIN",200)
-    c_T_coin_pEDTM_tdcTimeRaw = getBinEdges(T_coin_pEDTM_tdcTimeRaw,"c_nozero_edtm",200)
+        c_T_coin_pTRIG_HMS_ROC1_tdcTimeRaw = [4770,5070] # getBinEdges(T_coin_pTRIG_HMS_ROC1_tdcTimeRaw,"c_nozero_ptrigHMS",200)
+        c_T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw = [5520,5820] # getBinEdges(T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw,"c_nozero_ptrigSHMS",200)
+        c_T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = [4770,5070] # getBinEdges(T_coin_pTRIG_COIN_ROC1_tdcTimeRaw,"c_nozero_ptrigCOIN",200)
+    c_T_coin_pEDTM_tdcTimeRaw = [2590,3060] # getBinEdges(T_coin_pEDTM_tdcTimeRaw,"c_nozero_edtm",200)
 
     # This will need to run twice as it will need (or at least I'd prefer) to have the time raw window cut on time.
     # In theory just using time raw > 0 cut should suffice
@@ -303,7 +305,7 @@ def setWindows(runNum):
     # Check if COIN trigger is used
     if len(PS_used) > 2:
         c_T_coin_pTRIG_COIN_ROC1_tdcTime = [-10000,10000] # getBinEdges(T_coin_pTRIG_COIN_ROC1_tdcTime,"c_nozero_ptrigCOIN",200)
-    c_T_coin_pEDTM_tdcTime = [172, 184] # getBinEdges(T_coin_pEDTM_tdcTime,"c_nozero_edtm",200)
+    c_T_coin_pEDTM_tdcTime = [178, 180] # getBinEdges(T_coin_pEDTM_tdcTime,"c_nozero_edtm",200)
 
     # Create a dictionary that contains the information that will be uploaded to Misc_Parameters.csv for a particular run
     new_row = {'Run_Start' : "{:.0f}".format(float(runNum)), 'Run_End' : "{:.0f}".format(float(runNum)), 'noedtm' : 0.0, 'edtmLow' : "{:.0f}".format(float(c_T_coin_pEDTM_tdcTimeRaw[0])), 

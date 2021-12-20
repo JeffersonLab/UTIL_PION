@@ -5,40 +5,57 @@
 
 # Set up paths depending upon location
 
-# Set path depending upon hostname. Change or add more as needed  
-# Note, farm paths are only for testing
-if [[ "${HOSTNAME}" = *"farm"* ]]; then  
-    REPLAYPATH="/group/c-pionlt/USERS/${USER}/hallc_replay_lt"
-elif [[ "${HOSTNAME}" = *"qcd"* ]]; then
-    REPLAYPATH="/group/c-pionlt/USERS/${USER}/hallc_replay_lt"
-elif [[ "${HOSTNAME}" = *"cdaq"* ]]; then
-    REPLAYPATH="/home/cdaq/pionLT-2021/hallc_replay_lt"
+# Runs script in the ltsep python package that grabs current path enviroment
+if [[ ${HOSTNAME} = *"cdaq"* ]]; then
+    PATHFILE_INFO=`python3 /home/cdaq/pionLT-2021/hallc_replay_lt/UTIL_PION/bin/python/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
+elif [[ "${HOSTNAME}" = *"farm"* ]]; then
+    PATHFILE_INFO=`python3 /u/home/${USER}/.local/lib/python3.4/site-packages/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
 fi
+
+# Split the string we get to individual variables, easier for printing and use later
+VOLATILEPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f1` # Cut the string on , delimitter, select field (f) 1, set variable to output of command
+ANALYSISPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f2`
+HCANAPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f3`
+REPLAYPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f4`
+UTILPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f5`
+PACKAGEPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f6`
+OUTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f7`
+ROOTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f8`
+REPORTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f9`
+CUTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f10`
+PARAMPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f11`
+SCRIPTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f12`
+ANATYPE=`echo ${PATHFILE_INFO} | cut -d ','  -f13`
+USER=`echo ${PATHFILE_INFO} | cut -d ','  -f14`
+HOST=`echo ${PATHFILE_INFO} | cut -d ','  -f15`
 
 # Run number and run type should be read in by the "master" script, automating the target would be more difficult, master script prompts for this
 RUNNUMBER=$1
 RUNTYPE=$2
 TARGET=$3
-RUNLIST="${REPLAYPATH}/UTIL_PION/runlist_pionLT_2021.csv"
+if [[ ${ANATYPE} = *"Pion"* ]]; then
+    RUNLIST="${UTILPATH}/runlist_pionLT_2021.csv"
+if [[ ${ANATYPE} = *"Kaon"* ]]; then
+    RUNLIST="${UTILPATH}/runlist_kaonLT_2021.csv"
 # Need to fix paths rather than give relative paths, also need to check information is still in these files and that it can grab it correctly
 KINFILE="${REPLAYPATH}/DBASE/COIN/standard.kinematics"
 # Get report file based upon run type
 if [[ ${RUNTYPE} = *"Prod"* ]]; then
-    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/PionLT/Pion_replay_coin_production_${RUNNUMBER}_-1.report" # Finalised
+    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/${ANATYPE}LT/${ANATYPE}_replay_coin_production_${RUNNUMBER}_-1.report" # Finalised
 elif [[ ${RUNTYPE} = *"Lumi"* ]]; then
-    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/Lumi/Pion_replay_luminosity_${RUNNUMBER}_-1.report" 
+    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/Lumi/${ANATYPE}_replay_luminosity_${RUNNUMBER}_-1.report" 
 elif [[ ${RUNTYPE} = *"HeePSing"* ]]; then
-    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_shms_production_${RUNNUMBER}_-1.report" # Finalised, all of the available info SHOULD be in the SHMS report file, don't need to look at both
+    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/${ANATYPE}_replay_shms_production_${RUNNUMBER}_-1.report" # Finalised, all of the available info SHOULD be in the SHMS report file, don't need to look at both
 elif [[ ${RUNTYPE} = *"HeePCoin"* ]]; then
-    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_coin_production_${RUNNUMBER}_-1.report" # Finalised 
+    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/HeeP/${ANATYPE}_replay_coin_production_${RUNNUMBER}_-1.report" # Finalised 
 elif [[ ${RUNTYPE} = *"fADC"* ]]; then
-    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/PionLT/Pion_replay_coin_production_${RUNNUMBER}_-1.report" # Finalised, it just uses a PionLT replay
+    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/${ANATYPE}LT/${ANATYPE}_replay_coin_production_${RUNNUMBER}_-1.report" # Finalised, it just uses a ${ANATYPE}LT replay
 else
-    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/General/Pion_replay_coin_production_${RUNNUMBER}_-1.report" # CHANGE WHEN FINALISED
+    REPORTFILE="${REPLAYPATH}/REPORT_OUTPUT/Analysis/General/${ANATYPE}_replay_coin_production_${RUNNUMBER}_-1.report" # CHANGE WHEN FINALISED
 fi
 
 # Get information available in standard.kinematics, execute a python script to do this for us
-KINFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/kinfile.py ${KINFILE} ${RUNNUMBER}` # The output of this python script is just a comma separated string
+KINFILE_INFO=`python3 $UTILPATH/scripts/runlist/kinfile.py ${KINFILE} ${RUNNUMBER}` # The output of this python script is just a comma separated string
 # Split the string we get to individual variables, easier for printing and use later
 SHMS_Angle=`echo ${KINFILE_INFO} | cut -d ','  -f1` # Cut the string on , delimitter, select field (f) 1, set variable to output of command
 SHMS_P=`echo ${KINFILE_INFO} | cut -d ','  -f2`
@@ -51,11 +68,11 @@ EBeam=`echo ${KINFILE_INFO} | cut -d ','  -f7`
 # Get information available in the report file
 if [[ -f ${REPORTFILE} ]]; then
     if [[ ${RUNTYPE} == "Lumi" ]]; then
-	REPORTFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/reportfile_Lumi.py ${REPORTFILE}`
+	REPORTFILE_INFO=`python3 $UTILPATH/scripts/runlist/reportfile_Lumi.py ${REPORTFILE}`
     elif [[ ${RUNTYPE} == "HeePSing" ]]; then
-	REPORTFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/reportfile_HeePSing.py ${REPORTFILE}`
+	REPORTFILE_INFO=`python3 $UTILPATH/scripts/runlist/reportfile_HeePSing.py ${REPORTFILE}`
     elif [[ ${RUNTYPE} != "HeePSing" || ${RUNTYPE} == "Lumi" ]]; then
-	REPORTFILE_INFO=`python3 $REPLAYPATH/UTIL_PION/scripts/runlist/reportfile.py ${REPORTFILE}`
+	REPORTFILE_INFO=`python3 $UTILPATH/scripts/runlist/reportfile.py ${REPORTFILE}`
     fi
     Current=`echo ${REPORTFILE_INFO} | cut -d ',' -f1`
     PS1=`echo ${REPORTFILE_INFO} | cut -d ',' -f2`

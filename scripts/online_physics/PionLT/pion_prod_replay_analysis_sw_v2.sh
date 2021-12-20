@@ -32,19 +32,21 @@ elif [[ "${HOSTNAME}" = *"farm"* ]]; then
 fi
 
 # Split the string we get to individual variables, easier for printing and use later
-HCANAPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f1` # Cut the string on , delimitter, select field (f) 1, set variable to output of command
-REPLAYPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f2`
-UTILPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f3`
-PACKAGEPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f4`
-OUTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f5`
-ROOTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f6`
-REPORTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f7`
-CUTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f8`
-PARAMPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f9`
-SCRIPTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f10`
-ANATYPE=`echo ${PATHFILE_INFO} | cut -d ','  -f11`
-USER=`echo ${PATHFILE_INFO} | cut -d ','  -f12`
-HOST=`echo ${PATHFILE_INFO} | cut -d ','  -f13`
+VOLATILEPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f1` # Cut the string on , delimitter, select field (f) 1, set variable to output of command
+ANALYSISPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f2`
+HCANAPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f3`
+REPLAYPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f4`
+UTILPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f5`
+PACKAGEPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f6`
+OUTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f7`
+ROOTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f8`
+REPORTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f9`
+CUTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f10`
+PARAMPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f11`
+SCRIPTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f12`
+ANATYPE=`echo ${PATHFILE_INFO} | cut -d ','  -f13`
+USER=`echo ${PATHFILE_INFO} | cut -d ','  -f14`
+HOST=`echo ${PATHFILE_INFO} | cut -d ','  -f15`
 
 # #################################################################################################################################################
 
@@ -86,12 +88,12 @@ sleep 3
 if [ ! -f "$UTILPATH/ROOTfiles/Analysis/PionLT/Pion_coin_replay_production_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
     if [[ "${HOST}" != *"ifarm"* ]]; then
 	if [[ "${HOST}" == *"cdaq"* ]]; then
-	    eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\"" | tee $UTILPATH/REPORT_OUTPUT/Analysis/PionLT/Pion_output_coin_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
+	    eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/PionLT/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\"" | tee $UTILPATH/REPORT_OUTPUT/Analysis/PionLT/Pion_output_coin_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
 	else	
-	    eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\"" 
+	    eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/PionLT/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\"" 
 	fi
     elif [[ "${HOST}" == *"ifarm"* ]]; then
-	eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\"" | tee $UTILPATH/REPORT_OUTPUT/Analysis/PionLT/Pion_output_coin_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
+	eval "$REPLAYPATH/hcana -l -q \"UTIL_PION/scripts/replay/PionLT/replay_production_coin.C($RUNNUMBER,$MAXEVENTS)\"" | tee $UTILPATH/REPORT_OUTPUT/Analysis/PionLT/Pion_output_coin_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
     fi
 else echo "Replayfile already found for this run in $UTILPATH/ROOTfiles/Analysis/PionLT/ - Skipping replay step"
 fi
@@ -105,12 +107,12 @@ if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_D
     if [[ $option1 == "y" || $option1 == "Y" || $option1 == "yes" || $option1 == "Yes" ]]; then
 	rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root"
 	echo "Reprocessing"
-	python3 ${UTILPATH}/scripts/online_pion_physics/pion_prod_analysis_sw_v2.py Pion_coin_replay_production ${RUNNUMBER} ${MAXEVENTS}
+	python3 ${UTILPATH}/scripts/online_physics/PionLT/pion_prod_analysis_sw_v2.py Pion_coin_replay_production ${RUNNUMBER} ${MAXEVENTS}
     else
 	echo "Skipping python analysis script step"
     fi
 elif [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
-	python3 ${UTILPATH}/scripts/online_pion_physics/pion_prod_analysis_sw_v2.py Pion_coin_replay_production ${RUNNUMBER} ${MAXEVENTS}
+	python3 ${UTILPATH}/scripts/online_physics/PionLT/pion_prod_analysis_sw_v2.py Pion_coin_replay_production ${RUNNUMBER} ${MAXEVENTS}
 fi
 
 sleep 3
@@ -122,12 +124,12 @@ if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Dat
     if [[ $option2 == "y" || $option2 == "Y" || $option2 == "yes" || $option2 == "Yes" ]]; then
 	rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root"
 	echo "Reprocessing"
-	python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw_v2.py Analysed_Data ${RUNNUMBER} ${MAXEVENTS}
+	python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw_v2.py Analysed_Data ${RUNNUMBER} ${MAXEVENTS}
     else
 	echo "Skipping python physics plotting script step"
     fi
 elif [ ! -f  "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
-	python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw_v2.py Analysed_Data ${RUNNUMBER} ${MAXEVENTS}
+	python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw_v2.py Analysed_Data ${RUNNUMBER} ${MAXEVENTS}
 fi
 evince "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_sw_Pion_Analysis_Distributions.pdf" &
 exit 0

@@ -1,5 +1,5 @@
-Run_Start,Run_End,Bunch_Spacing,Coin_Offset,nSkip,nWindows,Pion_Prompt_Peak,Kaon_Prompt_Peak,Proton_Prompt_Peak,PiRFLow,PiRFHigh,KRFLow,KRFHigh,pRFLow,pRFHigh
-8000,11882,4.008,0.25,2,6,0,0,0,0,4.008,0.75,1.75,0,0.75
-11883,11904,4.008,0.25,2,6,-0.6,0,0,0,4.008,0.75,1.75,0,0.75
-11905,13444,4.008,0.25,2,6,-0.4,0,0,0,4.008,0,4.008,0,4.008
-13445,99999,2.008,0.25,2,6,-0.4,0,0,0,4.008,0,4.008,0,4.008
+Run_Start,Run_End,Bunch_Spacing,Coin_Offset,nSkip,nWindows,Pion_Prompt_Peak,Kaon_Prompt_Peak,Proton_Prompt_Peak,PiRFLow,PiRFHigh,KRFLow,KRFHigh,pRFLow,pRFHigh,Raw_Prompt_Peak
+8000,11882,4.008,0.25,2,6,0,0,0,0,4.008,0.75,1.75,0,0.75,62
+11883,11904,4.008,0.25,2,6,-0.6,0,0,0.5,3.1,1.1,2.3,0.5,1.6,62
+11905,13444,4.008,0.25,2,6,-0.4,0,0,0.5,3.1,1.1,2.3,0.5,1.6,62
+13445,99999,2.008,0.25,2,6,-0.4,0,0,0.5,3.1,1.1,2.3,0.5,1.6,62
