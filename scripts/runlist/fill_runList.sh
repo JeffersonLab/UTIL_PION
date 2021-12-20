@@ -35,8 +35,9 @@ RUNTYPE=$2
 TARGET=$3
 if [[ ${ANATYPE} = *"Pion"* ]]; then
     RUNLIST="${UTILPATH}/runlist_pionLT_2021.csv"
-if [[ ${ANATYPE} = *"Kaon"* ]]; then
+elif [[ ${ANATYPE} = *"Kaon"* ]]; then
     RUNLIST="${UTILPATH}/runlist_kaonLT_2021.csv"
+fi
 # Need to fix paths rather than give relative paths, also need to check information is still in these files and that it can grab it correctly
 KINFILE="${REPLAYPATH}/DBASE/COIN/standard.kinematics"
 # Get report file based upon run type
