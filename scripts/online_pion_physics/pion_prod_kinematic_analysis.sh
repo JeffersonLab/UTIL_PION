@@ -116,7 +116,13 @@ if [ $TestingVar == 1 ]; then
     fi
     if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf" ]; then
 	python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw.py -1 ${runNum} -1 ${KINFILE}
-    else echo "Pion analysis plots already found in - ${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf - Plotting macro skipped"
+    elif [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf" ]; then
+	    read -p "Pion analysis plots already found in - ${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf, remove and remake? <Y/N> " prompt4
+	    if [[ $prompt4 == "y" || $prompt4 == "Y" || $prompt4 == "yes" || $prompt4 == "Yes" ]]; then
+		 rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf"
+		 python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw.py -1 ${runNum} -1 ${KINFILE}
+	    fi
+	    else echo "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf not removed"
     fi
 fi
 

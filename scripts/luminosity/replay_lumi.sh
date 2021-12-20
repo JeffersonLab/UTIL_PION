@@ -19,7 +19,7 @@ fi
 
 # Runs script in the ltsep python package that grabs current path enviroment
 if [[ ${HOSTNAME} = *"cdaq"* ]]; then
-    PATHFILE_INFO=`python3 /home/cdaq/pionLT-2021/hallc_replay_lt/UTIL_PION/bin/python/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
+    PATHFILE_INFO=`python3 /home/cdaq/pionLT-2021/PythonPackages3.6/lib/python3.6/site-packages/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
 elif [[ "${HOSTNAME}" = *"farm"* ]]; then
     PATHFILE_INFO=`python3 /u/home/${USER}/.local/lib/python3.4/site-packages/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
 fi
@@ -39,13 +39,21 @@ ANATYPE=`echo ${PATHFILE_INFO} | cut -d ','  -f11`
 USER=`echo ${PATHFILE_INFO} | cut -d ','  -f12`
 HOST=`echo ${PATHFILE_INFO} | cut -d ','  -f13`
 
-source /site/12gev_phys/softenv.sh 2.3
-source /apps/root/6.18.04/setroot_CUE.bash
+# Source stuff depending upon hostname. Change or add more as needed  
+if [[ "${HOST}" = *"farm"* ]]; then
+    if [[ "${HOST}" != *"ifarm"* ]]; then
+	source /site/12gev_phys/softenv.sh 2.3
+	source /apps/root/6.18.04/setroot_CUE.bash
+    fi
+    cd "$HCANAPATH"
+    source "$HCANAPATH/setup.sh"
+    cd "$REPLAYPATH"
+    source "$REPLAYPATH/setup.sh"
+elif [[ "${HOST}" = *"qcd"* ]]; then
+    source "$REPLAYPATH/setup.sh" 
+fi
 
-cd "${HCANAPATH}"
-source "${HCANAPATH}/setup.sh"
-cd "${REPLAYPATH}"
-source "${REPLAYPATH}/setup.sh"
+cd $REPLAYPATH
 
 ###################################################################################################################################################
 if [ ! -f "$UTILPATH/ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMBER}_${MAXEVENTS}.root" ]; then

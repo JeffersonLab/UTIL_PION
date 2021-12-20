@@ -124,7 +124,8 @@ if spec == "HMS":
     H_cal_etotnorm = e_tree.array("H.cal.etotnorm")                  #
     H_cal_etottracknorm = e_tree.array("H.cal.etottracknorm")        #
     H_cer_npeSum = e_tree.array("H.cer.npeSum")                      #
-    H_RF_Dist = e_tree.array("RFTime.HMS_RFtimeDist")                #
+    H_RF_Dist = e_tree.array("RFTime.HMS_RFtimeDist")                #                   
+    H_W = e_tree.array("H.kin.primary.W")    
 
 if spec == "SHMS":    
     # SHMS info
@@ -226,9 +227,9 @@ def sing():
     if spec == "HMS":
         # Define the array of arrays containing the relevant HMS and SHMS info                              
         
-        NoCut_SING = [H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist]
+        NoCut_SING = [H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist, H_W]
         
-        Uncut_SING = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist) in zip(*NoCut_SING)]
+        Uncut_SING = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist, H_W) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist, H_W) in zip(*NoCut_SING)]
         
         # Create array of arrays of pions after cuts, all events
         
@@ -238,7 +239,7 @@ def sing():
         for arr in Cut_SING_tmp:
             Cut_SING_all_tmp.append(c.add_cut(arr, "sing_ee_cut_all_noRF"))
             
-        Cut_SING_all = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist) in zip(*Cut_SING_all_tmp)]
+        Cut_SING_all = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist, H_W) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist, H_W) in zip(*Cut_SING_all_tmp)]
         
         SING = {
             "Uncut_Events" : Uncut_SING,
@@ -279,7 +280,7 @@ def main():
     # Should base the branches to include based on some list and just repeat the list here (or call it again directly below)
 
     if spec == "HMS":
-        SING_Data_Header = ["H_gtr_beta","H_gtr_xp","H_gtr_yp","H_gtr_dp", "H_gtr_p","H_hod_goodscinhit","H_hod_goodstarttime","H_cal_etotnorm","H_cal_etottracknorm","H_cer_npeSum","H_RF_Dist"]
+        SING_Data_Header = ["H_gtr_beta","H_gtr_xp","H_gtr_yp","H_gtr_dp", "H_gtr_p","H_hod_goodscinhit","H_hod_goodstarttime","H_cal_etotnorm","H_cal_etottracknorm","H_cer_npeSum","H_RF_Dist","H_W"]
     if spec == "SHMS":
         SING_Data_Header = ["pmiss_z","pmiss_y","pmiss_x", "W","MMpi","pmiss","emiss","P_gtr_beta","P_gtr_xp","P_gtr_yp","P_gtr_p","P_gtr_dp","P_hod_goodscinhit","P_hod_goodstarttime","P_cal_etotnorm","P_cal_etottracknorm","P_aero_npeSum","P_aero_xAtAero","P_aero_yAtAero","P_hgcer_npeSum","P_hgcer_xAtCer","P_hgcer_yAtCer", "P_ngcer_npeSum", "P_ngcer_xAtCer", "P_ngcer_yAtCer","P_RF_Dist"]
         
