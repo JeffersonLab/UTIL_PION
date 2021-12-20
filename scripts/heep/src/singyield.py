@@ -3,7 +3,7 @@
 #
 # Description:
 # ================================================================
-# Time-stamp: "2021-12-15 06:33:23 trottar"
+# Time-stamp: "2021-11-02 01:13:10 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -33,6 +33,7 @@ import scipy.integrate as integrate
 import matplotlib.pyplot as plt
 import sys, math, os, subprocess
 
+sys.path.insert(0, 'python/')
 
 ##################################################################################################################################################
 
@@ -51,37 +52,59 @@ spec = sys.argv[4]
 
 spec = spec.upper()
 
-################################################################################################################################################
-'''
-ltsep package import and pathing definitions
-'''
+USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
+HOST = subprocess.getstatusoutput("hostname")
+if ("farm" in HOST[1]):
+    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
+#    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
 
-# Import package for cuts
-import ltsep as lt 
+elif ("qcd" in HOST[1]):
+    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
+#    REPLAYPATH = "/group/c-kaonlt/USERS/%s/hallc_replay_lt" % USER[1]
 
-# Add this to all files for more dynamic pathing
-USER =  lt.SetPath(os.path.realpath(__file__)).getPath("USER") # Grab user info for file finding
-HOST = lt.SetPath(os.path.realpath(__file__)).getPath("HOST")
-REPLAYPATH = lt.SetPath(os.path.realpath(__file__)).getPath("REPLAYPATH")
-UTILPATH = lt.SetPath(os.path.realpath(__file__)).getPath("UTILPATH")
-ANATYPE=lt.SetPath(os.path.realpath(__file__)).getPath("ANATYPE")
+elif ("phys.uregina" in HOST[1]):
+    REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
+
+elif ("cdaq" in HOST[1]):
+    REPLAYPATH = "/home/cdaq/hallc-online/hallc_replay_lt"
+
+elif("skynet" in HOST[1]):
+    REPLAYPATH = "/home/%s/Work/JLab/hallc_replay_lt" % USER[1]
 
 ################################################################################################################################################
 
 # Add more path setting as needed in a similar manner
-OUTPATH = "%s/OUTPUT/Analysis/HeeP" % UTILPATH        # Output folder location
-CUTPATH = "%s/DB/CUTS" % UTILPATH
+OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/HeeP" % REPLAYPATH        # Output folder location
+CUTPATH = "%s/UTIL_PION/DB/CUTS" % REPLAYPATH
+sys.path.insert(0, '%s/UTIL_PION/bin/python/' % REPLAYPATH)
 
-################################################################################################################################################
-'''
-Check that root/output paths and files exist for use
-'''
+import kaonlt as klt # Import kaonlt module, need the path setting line above prior to importing this
+
+print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
+
+#################################################################################################################################################
 
 # Construct the name of the rootfile based upon the info we provided
-rootName = "%s/ROOTfiles/Analysis/HeeP/%s_%s_%s.root" % (UTILPATH, ROOTPrefix, runNum, MaxEvent)     # Input file location and variables taking
+rootName = "%s/UTIL_PION/ROOTfiles/Analysis/HeeP/%s_%s_%s.root" % (REPLAYPATH, ROOTPrefix, runNum, MaxEvent)     # Input file location and variables taking
+
 print ("Attempting to process %s" %(rootName))
-lt.SetPath(os.path.realpath(__file__)).checkDir(OUTPATH)
-lt.SetPath(os.path.realpath(__file__)).checkFile(rootName)
+if os.path.exists(OUTPATH):
+    if os.path.islink(OUTPATH):
+        pass
+    elif os.path.isdir(OUTPATH):
+        pass
+    else:
+        print ("%s exists but is not a directory or sym link, check your directory/link and try again" % (OUTPATH))
+        sys.exit(2)
+else:
+    print("Output path not found, please make a sym link or directory called OUTPUT in UTIL_PION to store output")
+    sys.exit(3)
+print ("Attempting to process %s" %(rootName))
+if os.path.isfile(rootName):
+    print ("%s exists, attempting to process" % (rootName))
+else:
+    print ("%s not found - do you have the correct sym link/folder set up?" % (rootName))
+    sys.exit(4)
 print("Output path checks out, outputting to %s" % (OUTPATH))
 
 ###############################################################################################################################################
@@ -102,7 +125,7 @@ if spec == "HMS":
     H_cal_etottracknorm = e_tree.array("H.cal.etottracknorm")        #
     H_cer_npeSum = e_tree.array("H.cer.npeSum")                      #
     H_RF_Dist = e_tree.array("RFTime.HMS_RFtimeDist")                #                   
-    H_W = e_tree.array("H.kin.primary.W")                              # JM added in, 2021/12/11
+    H_W = e_tree.array("H.kin.primary.W")    
 
 if spec == "SHMS":    
     # SHMS info
@@ -137,10 +160,11 @@ if spec == "SHMS":
 ##############################################################################################################################################
 
 # Defining path for cut file  
+r = klt.pyRoot()
 if spec == "HMS":
-    fout = '%s/DB/CUTS/run_type/hSing_prod.cuts' % UTILPATH
+    fout = '%s/UTIL_PION/DB/CUTS/run_type/hSing_prod.cuts' % REPLAYPATH
 if spec == "SHMS":
-    fout = '%s/DB/CUTS/run_type/pSing_prod.cuts' % UTILPATH
+    fout = '%s/UTIL_PION/DB/CUTS/run_type/pSing_prod.cuts' % REPLAYPATH
 
 #################################################################################################################################################################
 
@@ -150,7 +174,13 @@ if spec == "HMS":
 if spec == "SHMS":
     cuts = ["sing_ee_cut_ngcer_all_noRF"]
 
-def make_cutDict(cuts,fout,runNum,CURRENT_ENV,DEBUG=False):
+# read in cuts file and make dictionary
+c = klt.pyPlot(REPLAYPATH)
+readDict = c.read_dict(cuts,fout,runNum)
+
+#################################################################################################################################################################
+
+def make_cutDict(cut,inputDict=None):
     '''
     This method calls several methods in kaonlt package. It is required to create properly formated
     dictionaries. The evaluation must be in the analysis script because the analysis variables (i.e. the
@@ -159,20 +189,36 @@ def make_cutDict(cuts,fout,runNum,CURRENT_ENV,DEBUG=False):
     implimented.
     '''
 
-    # read in cuts file and make dictionary
-    importDict = lt.SetCuts(CURRENT_ENV).importDict(cuts,fout,runNum,False)
-    for i,cut in enumerate(cuts):
-        x = lt.SetCuts(CURRENT_ENV,importDict).booleanDict(cut)
-        print("\n%s" % cut)
-        print(x, "\n")
-        if i == 0:
-            inputDict = {}
-        cutDict = lt.SetCuts(CURRENT_ENV,importDict).readDict(cut,inputDict)
-        for j,val in enumerate(x):
-            cutDict = lt.SetCuts(CURRENT_ENV,importDict).evalDict(cut,eval(x[j]),cutDict)
-    return lt.SetCuts(CURRENT_ENV,cutDict)
+    global c
 
-c = make_cutDict(cuts,fout,runNum,os.path.realpath(__file__))
+    c = klt.pyPlot(REPLAYPATH,readDict)
+    x = c.w_dict(cut)
+    print("%s" % cut)
+    print("x ", x)
+    
+    if inputDict == None:
+        inputDict = {}
+        
+    for key,val in readDict.items():
+        if key == cut:
+            inputDict.update({key : {}})
+
+    for i,val in enumerate(x):
+        tmp = x[i]
+        if tmp == "":
+            continue
+        else:
+            inputDict[cut].update(eval(tmp))
+        
+    return inputDict
+
+for i,c in enumerate(cuts):
+    if i == 0:
+        cutDict = make_cutDict("%s" % c )
+    else:
+        cutDict = make_cutDict("%s" % c,cutDict)
+
+c = klt.pyPlot(REPLAYPATH,cutDict)
 
 #################################################################################################################################################################
 
@@ -181,9 +227,9 @@ def sing():
     if spec == "HMS":
         # Define the array of arrays containing the relevant HMS and SHMS info                              
         
-        NoCut_SING = [H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist]
+        NoCut_SING = [H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist, H_W]
         
-        Uncut_SING = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist) in zip(*NoCut_SING)]
+        Uncut_SING = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist, H_W) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist, H_W) in zip(*NoCut_SING)]
         
         # Create array of arrays of pions after cuts, all events
         
@@ -193,7 +239,7 @@ def sing():
         for arr in Cut_SING_tmp:
             Cut_SING_all_tmp.append(c.add_cut(arr, "sing_ee_cut_all_noRF"))
             
-        Cut_SING_all = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist) in zip(*Cut_SING_all_tmp)]
+        Cut_SING_all = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist, H_W) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist, H_W) in zip(*Cut_SING_all_tmp)]
         
         SING = {
             "Uncut_Events" : Uncut_SING,
@@ -234,7 +280,7 @@ def main():
     # Should base the branches to include based on some list and just repeat the list here (or call it again directly below)
 
     if spec == "HMS":
-        SING_Data_Header = ["H_gtr_beta","H_gtr_xp","H_gtr_yp","H_gtr_dp", "H_gtr_p","H_hod_goodscinhit","H_hod_goodstarttime","H_cal_etotnorm","H_cal_etottracknorm","H_cer_npeSum","H_RF_Dist"]
+        SING_Data_Header = ["H_gtr_beta","H_gtr_xp","H_gtr_yp","H_gtr_dp", "H_gtr_p","H_hod_goodscinhit","H_hod_goodstarttime","H_cal_etotnorm","H_cal_etottracknorm","H_cer_npeSum","H_RF_Dist","H_W"]
     if spec == "SHMS":
         SING_Data_Header = ["pmiss_z","pmiss_y","pmiss_x", "W","MMpi","pmiss","emiss","P_gtr_beta","P_gtr_xp","P_gtr_yp","P_gtr_p","P_gtr_dp","P_hod_goodscinhit","P_hod_goodstarttime","P_cal_etotnorm","P_cal_etottracknorm","P_aero_npeSum","P_aero_xAtAero","P_aero_yAtAero","P_hgcer_npeSum","P_hgcer_xAtCer","P_hgcer_yAtCer", "P_ngcer_npeSum", "P_ngcer_xAtCer", "P_ngcer_yAtCer","P_RF_Dist"]
         

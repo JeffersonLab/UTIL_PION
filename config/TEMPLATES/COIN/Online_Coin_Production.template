@@ -77,6 +77,10 @@ SW_SHMS_Hadron_Singles_TRACK_EFF	     :		{shmsScinDidh.npassed / (shmsScinShould
 
 SW_HMS_Electron_Singles_TRACK_EFF	     :		{HMSScinDide.npassed/(HMSScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt(HMSScinShoulde.npassed-HMSScinDide.npassed) / (HMSScinShoulde.npassed+.0001)):%8.4f} 
 
+This is Pi- tracking efficiency which is only useful for LD- data taking
+
+SW_SHMS_Pi-_Singles_TRACK_EFF	  	     :		{shmsScinDidpi.npassed / (shmsScinShouldpi.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShouldpi.npassed-shmsScinDidpi.npassed) / (shmsScinShouldpi.npassed+.0001)):%8.4f}
+
 ===============================
 ======= Expert Section ========
 ===============================

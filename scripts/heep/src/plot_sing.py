@@ -104,6 +104,7 @@ Cut_Events_All_tree = infile.Get("Cut_Events_All")
  # Defining Histograms for Protons
 if spec == "HMS":
     H_gtr_beta_uncut = ROOT.TH1D("H_gtr_beta_uncut", "HMS #beta; HMS_gtr_#beta; Counts", 200, 0.8, 1.2)
+    H_W_uncut = ROOT.TH1D("H_W_uncut", "HMS W; HMS_W; Counts", 200, 0.1, 2.0)
     H_gtr_xp_uncut = ROOT.TH1D("H_gtr_xp_uncut", "HMS x'; HMS_gtr_xp; Counts", 200, -0.2, 0.2)
     H_gtr_yp_uncut = ROOT.TH1D("H_gtr_yp_uncut", "HMS y'; HMS_gtr_yp; Counts", 200, -0.2, 0.2)
     H_gtr_dp_uncut = ROOT.TH1D("H_gtr_dp_uncut", "HMS #delta; HMS_gtr_dp; Counts", 200, -15, 15)
@@ -116,6 +117,7 @@ if spec == "HMS":
     H_RFTime_Dist_uncut = ROOT.TH1D("H_RFTime_Dist_uncut", "HMS RFTime; HMS_RFTime; Counts", 200, 0, 4)
     
     H_gtr_beta_cut_all = ROOT.TH1D("H_gtr_beta_cut_all", "HMS #beta; HMS_gtr_#beta; Counts", 200, 0.8, 1.2)
+    H_W_cut_all = ROOT.TH1D("H_W_cut_all", "HMS W; HMS_W; Counts", 200, 0.1, 2.0)
     H_gtr_xp_cut_all = ROOT.TH1D("H_gtr_xp_cut_all", "HMS x'; HMS_gtr_xp; Counts", 200, -0.2, 0.2)
     H_gtr_yp_cut_all = ROOT.TH1D("H_gtr_yp_cut_all", "HMS y'; HMS_gtr_yp; Counts", 200, -0.2, 0.2)
     H_gtr_dp_cut_all = ROOT.TH1D("H_gtr_dp_cut_all", "HMS #delta; HMS_gtr_dp; Counts", 200, -15, 15)
@@ -129,6 +131,7 @@ if spec == "HMS":
     
 if spec == "SHMS":
     P_gtr_beta_uncut = ROOT.TH1D("P_gtr_beta_uncut", "SHMS #beta; SHMS_gtr_#beta; Counts", 200, 0.7, 1.3)
+    P_W_uncut = ROOT.TH1D("P_W_uncut", "SHMS W; SHMS_W; Counts", 200, 0.1, 2.0)
     P_gtr_xp_uncut = ROOT.TH1D("P_gtr_xp_uncut", "SHMS x'; SHMS_gtr_xp; Counts", 200, -0.2, 0.2)
     P_gtr_yp_uncut = ROOT.TH1D("P_gtr_yp_uncut", "SHMS y'; SHMS_gtr_yp; Counts", 200, -0.2, 0.2)
     P_gtr_dp_uncut = ROOT.TH1D("P_gtr_dp_uncut", "SHMS delta; SHMS_gtr_dp; Counts", 200, -30, 30)
@@ -154,6 +157,7 @@ if spec == "SHMS":
      
     
     P_gtr_beta_cut_all = ROOT.TH1D("P_gtr_beta_cut_all", "SHMS #beta; SHMS_gtr_#beta; Counts", 200, 0.8, 1.2)
+    P_W_cut_all = ROOT.TH1D("P_W_cut_all", "SHMS W; SHMS_W; Counts", 200, 0.1, 2.0)
     P_gtr_xp_cut_all = ROOT.TH1D("P_gtr_xp_cut_all", "SHMS x'; SHMS_gtr_xp; Counts", 200, -0.2, 0.2)
     P_gtr_yp_cut_all = ROOT.TH1D("P_gtr_yp_cut_all", "SHMS y'; SHMS_gtr_yp; Counts", 200, -0.2, 0.2)
     P_gtr_dp_cut_all = ROOT.TH1D("P_gtr_dp_cut_all", "SHMS #delta; SHMS_gtr_dp; Counts", 200, -15, 15)
@@ -207,6 +211,7 @@ if spec == "SHMS":
 for event in Uncut_Events_tree:
     if spec == "HMS":
         H_gtr_beta_uncut.Fill(event.H_gtr_beta)
+        H_W_uncut.Fill(event.H_W)
         H_gtr_xp_uncut.Fill(event.H_gtr_xp)
         H_gtr_yp_uncut.Fill(event.H_gtr_yp)
         H_gtr_dp_uncut.Fill(event.H_gtr_dp)
@@ -221,6 +226,7 @@ for event in Uncut_Events_tree:
         
     if spec == "SHMS":    
         P_gtr_beta_uncut.Fill(event.P_gtr_beta)
+        P_W_uncut.Fill(event.W)
         P_gtr_xp_uncut.Fill(event.P_gtr_xp)
         P_gtr_yp_uncut.Fill(event.P_gtr_yp)
         P_gtr_dp_uncut.Fill(event.P_gtr_dp)
@@ -251,6 +257,7 @@ for event in Uncut_Events_tree:
 for event in Cut_Events_All_tree:
     if spec == "HMS":
         H_gtr_beta_cut_all.Fill(event.H_gtr_beta)
+        H_W_cut_all.Fill(event.H_W)
         H_gtr_xp_cut_all.Fill(event.H_gtr_xp)
         H_gtr_yp_cut_all.Fill(event.H_gtr_yp)
         H_gtr_dp_cut_all.Fill(event.H_gtr_dp)
@@ -265,6 +272,7 @@ for event in Cut_Events_All_tree:
         
     if spec == "SHMS":        
         P_gtr_beta_cut_all.Fill(event.P_gtr_beta)
+        P_W_cut_all.Fill(event.W)
         P_gtr_xp_cut_all.Fill(event.P_gtr_xp)
         P_gtr_yp_cut_all.Fill(event.P_gtr_yp)
         P_gtr_dp_cut_all.Fill(event.P_gtr_dp)
@@ -345,7 +353,21 @@ if spec == "HMS":
     legend7.Draw("same")
     c1_pid.cd(2)
     H_cal_etottracknorm_vs_H_cer_npeSum_cut_all.Draw("COLZ")
-    c1_pid.Print(Analysis_Distributions + ')')
+    c1_pid.Print(Analysis_Distributions)
+    
+    c1_W = TCanvas("c1_W", "W Distributions", 100, 0, 1000, 900)
+    c1_W.Divide(1,1)
+    c1_W.cd(1)
+    #gPad.SetLogy()
+    H_W_uncut.SetLineColor(2)
+    H_W_uncut.Draw()
+    H_W_cut_all.SetLineColor(4)
+    H_W_cut_all.Draw("same")
+    legend7 = ROOT.TLegend(0.115, 0.835, 0.43, 0.9)
+    legend7.AddEntry("H_W_uncut", "without cuts", "l")
+    legend7.AddEntry("H_W_cut_all", "with cuts (acpt/RF/PID)", "l")
+    legend7.Draw("same")
+    c1_W.Print(Analysis_Distributions + ')')
     
 if spec == "SHMS":
     # Saving histograms in PDF
@@ -443,7 +465,22 @@ if spec == "SHMS":
     P_ngcer_npeSum_vs_aero_npeSum_uncut.Draw("COLZ")
     c3_pid.cd(6)
     P_ngcer_npeSum_vs_aero_npeSum_cut_all.Draw("COLZ")
-    c3_pid.Print(Analysis_Distributions + ')')
+    c3_pid.Print(Analysis_Distributions)
+    
+    c3_W = TCanvas("c3_W", "W Distributions", 100, 0, 1000, 900)
+    c3_W.Divide(1,1)
+    c3_W.cd(1)
+    #gPad.SetLogy()
+    P_W_uncut.SetLineColor(2)
+    P_W_uncut.Draw()
+    P_W_cut_all.SetLineColor(4)
+    P_W_cut_all.Draw("same")
+    legend7 = ROOT.TLegend(0.115, 0.835, 0.43, 0.9)
+    legend7.AddEntry("P_W_uncut", "without cuts", "l")
+    legend7.AddEntry("P_W_cut_all", "with cuts (acpt/RF/PID)", "l")
+    legend7.Draw("same")
+    c3_W.Print(Analysis_Distributions + ')')
+    
 
 #############################################################################################################################################
 
@@ -458,6 +495,7 @@ d_Cut_Events_Random = outHistFile.mkdir("Cut_Events_Random")
 d_Uncut_Events.cd()
 if spec == "HMS":
     H_gtr_beta_uncut.Write()
+    H_W_uncut.Write()
     H_gtr_xp_uncut.Write()
     H_gtr_yp_uncut.Write()
     H_gtr_dp_uncut.Write()
@@ -472,6 +510,7 @@ if spec == "HMS":
 
 if spec == "SHMS":    
     P_gtr_beta_uncut.Write()
+    P_W_uncut.Write()
     P_gtr_xp_uncut.Write()
     P_gtr_yp_uncut.Write()
     P_gtr_dp_uncut.Write()
@@ -501,6 +540,7 @@ if spec == "SHMS":
 d_Cut_Events_All.cd()
 if spec == "HMS":
     H_gtr_beta_cut_all.Write()
+    H_W_cut_all.Write()
     H_gtr_xp_cut_all.Write()
     H_gtr_yp_cut_all.Write()
     H_gtr_dp_cut_all.Write()
@@ -515,6 +555,7 @@ if spec == "HMS":
 
 if spec == "SHMS":    
     P_gtr_beta_cut_all.Write()
+    P_W_cut_all.Write()
     P_gtr_xp_cut_all.Write()
     P_gtr_yp_cut_all.Write()
     P_gtr_dp_cut_all.Write()
@@ -540,7 +581,23 @@ if spec == "SHMS":
     P_ngcer_yAtCer_vs_ngcer_xAtCer_cut_all.Write()
     P_ngcer_npeSum_vs_hgcer_npeSum_cut_all.Write()
     P_ngcer_npeSum_vs_aero_npeSum_cut_all.Write()
-        
+
+
+# NH 11/12/2021 - added these to the scripts so that you can see from the treminal total elastics
+if spec == "HMS":
+    print("\n\n\n================================================================")
+    print("================================================================")
+    print("Total Elastics HMS: %.0f" % (Cut_Events_All_tree.GetEntries()))
+    print("================================================================")
+    print("================================================================\n\n\n")
+
+if spec == "SHMS":
+    print("\n\n\n================================================================")
+    print("================================================================")
+    print("Total Elastics SHMS: %.0f" % (Cut_Events_All_tree.GetEntries()))
+    print("================================================================")
+    print("================================================================\n\n\n")
+
 outHistFile.Close()
 infile.Close() 
 print ("Processing Complete")

@@ -41,16 +41,16 @@ elif [[ "${HOSTNAME}" = *"phys.uregina.ca"* ]]; then
     REPLAYPATH="/home/${USER}/work/JLab/hallc_replay_lt"
 fi
 UTILPATH="${REPLAYPATH}/UTIL_PION"
-RunListFile="${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}"
+RunListFile="${UTILPATH}/scripts/online_pion_physics/Kinematics/${KINEMATIC}"
 if [ ! -f "${RunListFile}" ]; then
     echo "Error, ${RunListFile} not found, exiting"
     exit 3
 fi
 cd $REPLAYPATH
 
-if [ -f "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses" ]; then
-    rm "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses"
-else touch "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses" && chmod 775 "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses"
+if [ -f "${UTILPATH}/scripts/online_pion_physics/Kinematics/${KINEMATIC}_MissingAnalyses" ]; then
+    rm "${UTILPATH}/scripts/online_pion_physics/Kinematics/${KINEMATIC}_MissingAnalyses"
+else touch "${UTILPATH}/scripts/online_pion_physics/Kinematics/${KINEMATIC}_MissingAnalyses" && chmod 775 "${UTILPATH}/scripts/online_pion_physics/Kinematics/${KINEMATIC}_MissingAnalyses"
 fi
 
 TestingVar=$((1))
@@ -58,16 +58,16 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
     runNum=$line
     if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${runNum}_-1_Analysed_Data.root" ]; then
 	echo "Analysis not found for run $runNum in ${UTILPATH}/OUTPUT/"
-	echo "${runNum}" >> "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses"
+	echo "${runNum}" >> "${UTILPATH}/scripts/online_pion_physics/Kinematics/${KINEMATIC}_MissingAnalyses"
 	TestingVar=$((TestingVar+1))
     fi
 done < "$RunListFile"
 
 if [ $TestingVar == 1 ]; then
     echo "All PionLT  analysis files found"
-    rm "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses"
+    rm "${UTILPATH}/scripts/online_pion_physics/Kinematics/${KINEMATIC}_MissingAnalyses"
 elif [ $TestingVar != 1 ]; then
-    cp "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses" "$REPLAYPATH/UTIL_BATCH/InputRunLists/Pion_Data/${KINEMATIC}_MissingAnalyses"
+    cp "${UTILPATH}/scripts/online_pion_physics/Kinematics/${KINEMATIC}_MissingAnalyses" "$REPLAYPATH/UTIL_BATCH/InputRunLists/Pion_Data/${KINEMATIC}_MissingAnalyses"
     chmod 775 "$REPLAYPATH/UTIL_BATCH/InputRunLists/Pion_Data/${KINEMATIC}_MissingAnalyses"
     if [ $Autosub == 1 ]; then
 	while IFS='' read -r line || [[ -n "$line" ]]; do
@@ -78,7 +78,7 @@ elif [ $TestingVar != 1 ]; then
 	    if [ -f "${UTILPATH}/ROOTfiles/Analysis/PionLT/Pion_coin_replay_production_${runNum}_-1.root" ]; then
 		rm "${UTILPATH}/ROOTfiles/Analysis/PionLT/Pion_coin_replay_production_${runNum}_-1.root"
 	    fi
-	done < "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses"
+	done < "${UTILPATH}/scripts/online_pion_physics/Kinematics/${KINEMATIC}_MissingAnalyses"
 	yes y | eval "$REPLAYPATH/UTIL_BATCH/batch_scripts/run_batch_PionLT.sh Pion_Data/${KINEMATIC}_MissingAnalyses"
 	sleep 2
 	rm "$REPLAYPATH/UTIL_BATCH/InputRunLists/Pion_Data/${KINEMATIC}_MissingAnalyses" 
@@ -89,7 +89,7 @@ elif [ $TestingVar != 1 ]; then
 	    while IFS='' read -r line || [[ -n "$line" ]]; do
 		runNum=$line
 		if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${runNum}_-1_Analysed_Data.root" ]; then
-		    python3 $UTILPATH/scripts/online_physics/PionLT/pion_prod_analysis_sw.py "Pion_coin_replay_production" ${runNum} "-1"
+		    python3 $UTILPATH/scripts/online_pion_physics/pion_prod_analysis_sw.py "Pion_coin_replay_production" ${runNum} "-1"
 		fi
             done < "$RunListFile"
 	else echo "Not processing python script interactively"
@@ -115,8 +115,14 @@ if [ $TestingVar == 1 ]; then
 	fi
     fi
     if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf" ]; then
-	python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw.py -1 ${runNum} -1 ${KINFILE}
-    else echo "Pion analysis plots already found in - ${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf - Plotting macro skipped"
+	python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw.py -1 ${runNum} -1 ${KINFILE}
+    elif [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf" ]; then
+	    read -p "Pion analysis plots already found in - ${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf, remove and remake? <Y/N> " prompt4
+	    if [[ $prompt4 == "y" || $prompt4 == "Y" || $prompt4 == "yes" || $prompt4 == "Yes" ]]; then
+		 rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf"
+		 python3 ${UTILPATH}/scripts/online_pion_physics/PlotPionPhysics_sw.py -1 ${runNum} -1 ${KINFILE}
+	    fi
+	    else echo "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf not removed"
     fi
 fi
 
