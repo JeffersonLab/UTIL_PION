@@ -9,6 +9,14 @@ config/         : replay configuration files (e.g. DEF-files, PARAM)
 
 Please contact Stephen Kay (stephen.kay@uregina.ca) or Richard Trotta (trotta@cua.edu) or Muhammad Junaid (mjo147@uregina.ca) for more information.
 
+Before running any scripts, execute the following -
+
+cp -r bin/python/ltsep ~/.local/lib/python3.4/site-packages/
+
+OR if you're not on the farm, copy the ltsep package to wherever your local packages for python 3.4 are.
+
+After you copy this package into place, you can run the sym link setup script
+
 # UTIL_PION
 
 A selection of various utility and analysis scripts associated with the Pion experiments, E12-06-101 and E12-07-105.

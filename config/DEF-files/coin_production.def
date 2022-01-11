@@ -48,6 +48,9 @@ block T.coin.hRF*
 block H.dc.InsideDipoleExit
 block P.dc.InsideDipoleExit
 block P.cal.fly.numGoodAdcHits
+block g.evtyp
+block g.evnum
+block P.dc.ntrack
 
 # For debugging cherenkovs, all variables for them are included for now
 block P.ngcer.*
