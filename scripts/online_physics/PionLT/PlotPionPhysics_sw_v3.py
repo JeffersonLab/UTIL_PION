@@ -1,16 +1,16 @@
 #! /usr/bin/python
 ###########################################################################################################################
 # Created - 20/July/21, Author - Muhammad Junaid (mjo147@uregina.ca), University of Regina, Canada (Copyright (c) junaid) #
+# 05/October/21: Jacob Murphy added in another page of plots with focal plane variables vs beta.
+# 16/10/21 - JM - Added in X/Y Calo with projections of ADC hits (SJDK Stop-Gap Measure)
 # 28/11/21 - Version 2 - Utilises new ltsep package by Richard Trotta
-# 19/01/22 - Version 3 - added function o use target to select missing mass range
+# 19/01/22 - Version 3 - Added function to use target to select missing mass range
 
 ###########################################################################################################################
 # Python version of the pion plotting script. Now utilises uproot to select event of each type and writes them to a root file.
 # Python should allow for easier reading of databases storing diferent variables.
 # This version of script is for shift workers at JLab
 # To run this script, execute: python3 scriptname runnumber
-# 05/October/21: Jacob Murphy added in another page of plots with focal plane variables vs beta.
-# 16/10/21 - JM - Added in X/Y Calo with projections of ADC hits (SJDK Stop-Gap Measure)
 
 ###################################################################################################################################################
 
@@ -31,10 +31,10 @@ maxrangeuser = 0.6 #  max range for -t vs phi plot     : 13/12/2021 - SJDK - Cha
 ##################################################################################################################################################
 
 # Check the number of arguments provided to the script
-FilenameOverride=False # SJDK 21/09/21 - Added a secret 4th argument so that a full kinematic can be processed, the run number is needed for cuts, but for the kinematic analysis, the filename is not by run number
+FilenameOverride=False # SJDK 21/09/21 - Added a secret 5th argument so that a full kinematic can be processed, the run number is needed for cuts, but for the kinematic analysis, the filename is not by run number
 if len(sys.argv)-1!=4:
     if len(sys.argv)-1!=5:
-        print("!!!!! ERROR !!!!!\n Expected 3 arguments\n Usage is with - ROOTfileSuffix RunNumber MaxEvents Target \n!!!!! ERROR !!!!!")
+        print("!!!!! ERROR !!!!!\n Expected 4 arguments\n Usage is with - ROOTfileSuffix RunNumber MaxEvents Target \n!!!!! ERROR !!!!!")
         sys.exit(1)
     else:
         print ("!!!!! Running with secret 5th argument - FilenameOverride - Taking file name to process as stated EXACTLY in 5th arg !!!!!")
@@ -68,7 +68,6 @@ Target = sys.argv[4]
 #################################################################################################################################################
 
 # Add more path setting as needed in a similar manner
-
 OUTPATH=UTILPATH+"/OUTPUT/Analysis/PionLT"
 
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, REPLAYPATH))
@@ -81,13 +80,13 @@ elif (FilenameOverride != False): # If filename override set, format the file na
 if Target == "LD2":
     minbin = 0.88 # minimum bin for selecting neutrons events in missing mass distribution
     maxbin = 1.04 # maximum bin for selecting neutrons events in missing mass distribution
-else: # setting for LH2, figure it should be fine for dummy too
+elif Target == "LH2" or Target == "Dummy10cm": # setting for LH2, figure it should be fine for dummy too
     minbin = 0.90 # minimum bin for selecting neutrons events in missing mass distribution
     maxbin = 0.98 # maximum bin for selecting neutrons events in missing mass distribution
-# SJDK - 25/11/21 - Doubled the range of the MM selection for the LD2 runs at Q2 = 6.0. I expanded this asymmetrically, I raised the upper limit by 0.06 and the lower limit by 0.02
-#minbin = 0.88 # minimum bin for selecting neutrons events in missing mass distribution
-#maxbin = 1.04 # maximum bin for selecting neutrons events in missing mass distribution
-
+else:
+    print("Target argument not given or entered incorrectly, should be LH2, LD2 or Dummy10cm - defaulting to LH2 MM cut values")
+    minbin = 0.90 # minimum bin for selecting neutrons events in missing mass distribution
+    maxbin = 0.98 # maximum bin for selecting neutrons events in missing mass distribution
 
 if (FilenameOverride != False):
     # Split string on W value, replace p with . and strip the leading Q before converting to a float
@@ -115,7 +114,6 @@ print("Output path checks out, outputting to %s" % (OUTPATH))
 ###############################################################################################################################################
 ROOT.gROOT.SetBatch(ROOT.kTRUE) # Set ROOT to batch mode explicitly, does not splash anything to screen
 ###############################################################################################################################################
-
 # Section for grabing Prompt/Random selection parameters from PARAM filePARAMPATH = UTILPATH+"/DB/PARAM"
 PARAMPATH = UTILPATH+"/DB/PARAM"
 TimingCutFile = "%s/Timing_Parameters.csv" % PARAMPATH # This should match the param file actually being used!
@@ -158,7 +156,7 @@ elif(TempPar > 1):
 PromptWindow[0] = PromptPeak - (BunchSpacing/2) - CoinOffset
 PromptWindow[1] = PromptPeak + (BunchSpacing/2) + CoinOffset
 RandomWindows[0] = PromptPeak - (BunchSpacing/2) - CoinOffset - (nSkip*BunchSpacing) - ((nWindows/2)*BunchSpacing)
-RandomWindows[1] = PromptPeak - (BunchSpacing/2) - CoinOffset - (nSkip*BunchSpacing) 
+RandomWindows[1] = PromptPeak - (BunchSpacing/2) - CoinOffset - (nSkip*BunchSpacing)
 RandomWindows[2] = PromptPeak + (BunchSpacing/2) + CoinOffset + (nSkip*BunchSpacing) 
 RandomWindows[3] = PromptPeak + (BunchSpacing/2) + CoinOffset + (nSkip*BunchSpacing) + ((nWindows/2)*BunchSpacing)
 
@@ -434,7 +432,6 @@ NGC_proj_yx_pions_uncut = ROOT.TProfile2D(P_NGC_xy_npe_pions_uncut.Project3DProf
 NGC_proj_yx_pions_cut = ROOT.TProfile2D(P_NGC_xy_npe_pions_cut.Project3DProfile("yx"))
 Aero_proj_yx_pions_uncut = ROOT.TProfile2D(P_Aero_xy_npe_pions_uncut.Project3DProfile("yx"))
 Aero_proj_yx_pions_cut = ROOT.TProfile2D(P_Aero_xy_npe_pions_cut.Project3DProfile("yx"))
-
 
 Calo_proj_yx_pions_uncut = ROOT.TProfile2D(P_cal_xy_etottracknorm_pions_uncut.Project3DProfile("yx"))
 Calo_proj_yx_pions_cut = ROOT.TProfile2D(P_cal_xy_etottracknorm_pions_cut.Project3DProfile("yx"))
@@ -887,7 +884,7 @@ c1_pions_proj.Print(Pion_Analysis_Distributions + ')')
 # Making directories in output file
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
        outHistFile = ROOT.TFile.Open("%s/%s_%s_Output_Data.root" % (OUTPATH, runNum, MaxEvent), "RECREATE")
-elif (FilenameOverride != False): # Special condition, with 4th arg, use 4th arg as file name
+elif (FilenameOverride != False): # Special condition, with 5th arg, use 5th arg as file name
        outHistFile = ROOT.TFile.Open("%s/%s_%s_Output_Data.root" % (OUTPATH, (FilenameOverride.split("_Analysed_Data.root",1)[0]), MaxEvent), "RECREATE")
 
 d_Uncut_Pion_Events = outHistFile.mkdir("Uncut_Pion_Events")

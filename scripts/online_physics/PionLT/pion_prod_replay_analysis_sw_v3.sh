@@ -2,7 +2,7 @@
 ###########################################################################################################################
 # Created - 20/July/21, Author - Muhammad Junaid (mjo147@uregina.ca), University of Regina, Canada (Copyright (c) junaid) #
 # 28/11/21 - Version 2 - Utilises new ltsep package by Richard Trotta
-
+# 19/01/22 - Version 3 - Target type is now an argument
 ###########################################################################################################################
 # This version of script is for shift workers at JLAB
 # Executes the replay script and python analysis script and at the end python plotting script
@@ -20,8 +20,8 @@ if [[ -z "$1" ]]; then
 fi
 TARGET=$2
 if [[ -z "$2" ]]; then
-    echo "I need a Target"
-    echo "Please provide a Target"
+    echo "I need a Target type"
+    echo "Please provide a Target (LH2, LD2 or Dummy10cm)"
 fi
 MAXEVENTS=$3
 if [[ -z "$3" ]]; then
