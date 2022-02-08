@@ -219,7 +219,7 @@ P_MMpi_pions_cut_randm_sub = ROOT.TH1D("P_MMpi_pions_cut_randm_sub", "Missing Ma
 phiq_plot = ROOT.TH1D("Phiq", "#phi Dist for Prompt Events (Incl MM Cut); #phi; Counts", 12, -3.14, 3.14) # 2021/10/25 NH - added these at garths request
 t_plot = ROOT.TH1D("-t", "-t Dist for Prompt Events (Incl MM Cut); -t; Counts", 18, 0, 0.6) # SJDK - 2022/01/13 - Changed t range, kept bin width consistent
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
-    Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; Counts", 200, 2.5, 6.5) # 13/12/21 - SJDK - Adjusted ranges again
+    Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; Counts", 200, 2.5, 7.5) # 13/12/21 - SJDK - Adjusted ranges again
     W_pions_cut = ROOT.TH1D("W_pions_cut", "W Dist for Prompt Events (Incl MM Cut); W; Counts", 200, 2.0, 4.0)
 elif (FilenameOverride != False): # Special case, run with specifc file name, construct histo with ranges based upon filename
     Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; Counts", 200, Q2min, Q2max) 
@@ -277,7 +277,7 @@ P_cal_xy_pions_cut = ROOT.TH2D("P_cal_xy_pions_cut", "SHMS Calorimeter yCalo vs 
 P_DPexit_xy_pions_cut = ROOT.TH2D("P_DPexit_xy_pions_cut", "SHMS Dipole Exit  yExit vs xExit (with cuts); yExit(cm); xExit(cm)", 200, -50.0, 50.0, 200, -50.0, 50.0)
 # SJDK - 26/10/21 - Changed the plot title to be more accurate
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
-    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W Dist for Prompt Events (Incl MM Cut); Q2; W", 200, 2.5, 6.5, 200, 2.0, 4.0) # 13/12/21 - SJDK - Adjusted range 
+    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W Dist for Prompt Events (Incl MM Cut); Q2; W", 200, 2.5, 7.5, 200, 2.0, 4.0) # 13/12/21 - SJDK - Adjusted range 
 elif (FilenameOverride != False): # Special case, run with specifc file name, construct histo with ranges based upon filename
     Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W Dist for Prompt Events (Incl MM Cut); Q2; W", 200, Q2min, Q2max, 200, Wmin, Wmax)
 # SJDK - 26/10/21 - Changed the plot title to be more accurate

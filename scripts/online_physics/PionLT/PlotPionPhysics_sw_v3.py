@@ -26,7 +26,8 @@ from ROOT import kBlack, kBlue, kRed
 
 # Defining some variables here
 minrangeuser = 0 # min range for -t vs phi plot
-maxrangeuser = 0.6 #  max range for -t vs phi plot     : 13/12/2021 - SJDK - Changed range again
+#maxrangeuser = 0.6 #  max range for -t vs phi plot     : 13/12/2021 - SJDK - Changed range again
+maxrangeuser = 1.5 #  max range for -t vs phi plot     : 2/6/2022 DJG - opened this up
 
 ##################################################################################################################################################
 
@@ -80,13 +81,14 @@ elif (FilenameOverride != False): # If filename override set, format the file na
 if Target == "LD2":
     minbin = 0.88 # minimum bin for selecting neutrons events in missing mass distribution
     maxbin = 1.04 # maximum bin for selecting neutrons events in missing mass distribution
+# SJDK - 08/02/22 - In some ways, whether the dummy is like LD2 or LH2 depends upon the runs around it, something that will have to be adressed offline (the online count was a  little irellevant anyway)
 elif Target == "LH2" or Target == "Dummy10cm": # setting for LH2, figure it should be fine for dummy too
     minbin = 0.90 # minimum bin for selecting neutrons events in missing mass distribution
     maxbin = 0.98 # maximum bin for selecting neutrons events in missing mass distribution
 else:
     print("Target argument not given or entered incorrectly, should be LH2, LD2 or Dummy10cm - defaulting to LH2 MM cut values")
-    minbin = 0.90 # minimum bin for selecting neutrons events in missing mass distribution
-    maxbin = 0.98 # maximum bin for selecting neutrons events in missing mass distribution
+    minbin = 0.88 # minimum bin for selecting neutrons events in missing mass distribution
+    maxbin = 1.04 # maximum bin for selecting neutrons events in missing mass distribution
 
 if (FilenameOverride != False):
     # Split string on W value, replace p with . and strip the leading Q before converting to a float
@@ -225,7 +227,8 @@ P_MMpi_pions_cut_randm_scaled = ROOT.TH1D("P_MMpi_pions_cut_randm_scaled", "Miss
 P_MMpi_pions_cut_randm_sub = ROOT.TH1D("P_MMpi_pions_cut_randm_sub", "Missing Mass Rndm Sub; MM_{#pi}; Counts", 200, 0.5, 1.8)
 # SJDK - 26/10/21 - Changed the plot title to be more accurate
 phiq_plot = ROOT.TH1D("Phiq", "#phi Dist for Prompt Events (Incl MM Cut); #phi; Counts", 12, -3.14, 3.14) # 2021/10/25 NH - added these at garths request
-t_plot = ROOT.TH1D("-t", "-t Dist for Prompt Events (Incl MM Cut); -t; Counts", 18, 0, 0.6) # SJDK - 2022/01/13 - Changed t range, kept bin width consistent
+#t_plot = ROOT.TH1D("-t", "-t Dist for Prompt Events (Incl MM Cut); -t; Counts", 18, 0, 0.6) # SJDK - 2022/01/13 - Changed t range, kept bin width consistent
+t_plot = ROOT.TH1D("-t", "-t Dist for Prompt Events (Incl MM Cut); -t; Counts", 18, 0, 1.5) # DJG FEb. 6, 2022 - Changed t range,
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
     Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; Counts", 200, 2.5, 6.5) # 13/12/21 - SJDK - Adjusted ranges again
     W_pions_cut = ROOT.TH1D("W_pions_cut", "W Dist for Prompt Events (Incl MM Cut); W; Counts", 200, 2.0, 4.0)
