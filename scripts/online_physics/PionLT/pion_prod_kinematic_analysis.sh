@@ -1,6 +1,8 @@
 #!/bin/bash
 # 23/07/21 - Stephen Kay, University of Regina
 # Script to analyse an entire pion kinematic setting
+# 03/02/22 - SJDK - Modified script to use newest versions of plotting and analysis scripts as appropriate
+# I also modified the script to get the target type from the kin file name where it's relevant, it will default to LH2 otherwise
 
 KINEMATIC=$1
 
@@ -51,6 +53,14 @@ if [ ! -f "${RunListFile}" ]; then
 fi
 cd $REPLAYPATH
 
+# 03/02/22 - SJDK - Determine target type from kin file name, default to LH2 if not in name
+if [[ ${KINEMATIC} == *"_LH"* ]]; then
+    TargetType="LH2"
+elif [[ ${KINEMATIC} == *"_LD"* ]]; then
+    TargetType="LD2"
+else TargetType="LH2"
+fi
+
 if [ -f "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses" ]; then
     rm "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses"
 else touch "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses" && chmod 775 "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses"
@@ -66,6 +76,7 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
     fi
 done < "$RunListFile"
 
+# 03/02/22 - SJDK - Script calls v3 for python scripts, these versions need the target type specified (they default to LH2)
 if [ $TestingVar == 1 ]; then
     echo "All PionLT  analysis files found"
     rm "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses"
@@ -82,7 +93,8 @@ elif [ $TestingVar != 1 ]; then
 		rm "${UTILPATH}/ROOTfiles/Analysis/PionLT/Pion_coin_replay_production_${runNum}_-1.root"
 	    fi
 	done < "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses"
-	yes y | eval "$REPLAYPATH/UTIL_BATCH/batch_scripts/run_batch_PionLT.sh Pion_Data/${KINEMATIC}_MissingAnalyses"
+	# 03/02/22 - SJDK - This script needs to be checked, may not run v3 scripts (which require a target type too)
+	yes y | eval "$REPLAYPATH/UTIL_BATCH/batch_scripts/run_batch_PionLT.sh Pion_Data/${KINEMATIC}_MissingAnalyses" # SJDK 11/01/22 - Need to check this script is actually OK tbh...
 	sleep 2
 	rm "$REPLAYPATH/UTIL_BATCH/InputRunLists/Pion_Data/${KINEMATIC}_MissingAnalyses" 
     elif [ $Autosub != 1 ]; then
@@ -92,7 +104,7 @@ elif [ $TestingVar != 1 ]; then
 	    while IFS='' read -r line || [[ -n "$line" ]]; do
 		runNum=$line
 		if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${runNum}_-1_Analysed_Data.root" ]; then
-		    python3 $UTILPATH/scripts/online_physics/PionLT/pion_prod_analysis_sw.py "Pion_coin_replay_production" ${runNum} "-1"
+		    python3 $UTILPATH/scripts/online_physics/PionLT/pion_prod_analysis_sw_v3.py "Pion_coin_replay_production" ${runNum} "-1" ${TargetType}
 		fi
             done < "$RunListFile"
 	else echo "Not processing python script interactively"
@@ -118,12 +130,12 @@ if [ $TestingVar == 1 ]; then
 	fi
     fi
     if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf" ]; then
-	python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw.py -1 ${runNum} -1 ${KINFILE}
+	python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw_v3.py -1 ${runNum} -1 ${TargetType} ${KINFILE}
     elif [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf" ]; then
 	    read -p "Pion analysis plots already found in - ${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf, remove and remake? <Y/N> " prompt4
 	    if [[ $prompt4 == "y" || $prompt4 == "Y" || $prompt4 == "yes" || $prompt4 == "Yes" ]]; then
 		 rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf"
-		 python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw.py -1 ${runNum} -1 ${KINFILE}
+		 python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw_v3.py -1 ${runNum} -1 ${TargetType} ${KINFILE}
 	    fi
 	    else echo "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf not removed"
     fi
