@@ -47,14 +47,19 @@ l_flag = "1"
 
 if l_flag == "all":
     # All lumi runs
-    lumi_list = [12126,12128,12129,12130,12131,12132,12133,12135,12137,12140,12141,12142,12143,12144,12145,12147,12148,12150,
-                 12151,12152,12153,12154,12156,12157,12158,12159,12160,12161,12162,12163,12164,12166,12167,12170,12171,12172,
-                 12173,12174,12175,12178,12179,12181,12184,12185,12186,12187,12189,12190,12191,12192,12193,12194,12195,12196,
-                 12197,12198,12199,13874,13876,13877,13878,13879,13880,13881,13882,13885,13886,13887,13891,13892,13894,13897,
-                 13898,13899,13900,13901,13902,13903,13904,13905,13906,13907,13908,13910,13911,13912,13913,13914,13915,13916,13918,13919]
+    lumi_list = [13874,13876,13877,13878,13879,13880,13881,13882,13885,13886,13887,13891,13892,13894,13897,
+                 13898,13904,13906,13907,13908,13910]
+
+                 #[12126,12128,12129,12130,12131,12132,12133,12135,12137,12140,12141,12142,12143,12144,12145,12147,12148,12150,
+                 #12151,12152,12153,12154,12156,12157,12158,12159,12160,12161,12162,12163,12164,12166,12167,12170,12171,12172,
+                 #12173,12174,12175,12178,12179,12181,12184,12185,12186,12187,12189,12190,12191,12192,12193,12194,12195,12196,
+                 #12197,12198,12199,13874,13876,13877,13878,13879,13880,13881,13882,13885,13886,13887,13891,13892,13894,13897,
+                 #13898,13904,13906,13907,13908,13910]
+
+                 #13898,13899,13900,13901,13902,13903,13904,13905,13906,13907,13908,13910,13911,13912,13913,13914,13915,13916,13918,13919]
 elif l_flag == "1":
     # One run (change as needed)
-    lumi_list = [13874]
+    lumi_list = [13898]
 else:
     # Any number of runs
     #lumi_list = [12126,12128,12129,12130,12131,12132,12133,12135,12137,12140,12141,12142]
@@ -68,7 +73,7 @@ Reanalyze data
 # If reanalyze argument is called then all lumi data will be processed again
 if args.reanalyze:
     for l in lumi_list:
-        os.system("../replay_lumi.sh %s" % l) 
+        os.system("../play_lumi.sh %s" % l) 
 
 ################################################################################################################################################
 '''
@@ -89,7 +94,6 @@ def convertDFtoCSV(inp_data,out_f):
     '''
     table  = pd.DataFrame(inp_data, columns=inp_data.keys())
     table = table.reindex(sorted(table.columns), axis=1)
-    
     table.to_csv(out_f, index = False, header=True, mode='w+',)  
 
 # Redefine lumi data by run number
@@ -115,12 +119,12 @@ print("Lumi #2 LD2 runs {0} are now in {1}".format(list(l2_ld2["run number"]),SC
 l3_lh2 = dict(lumi_data.loc[(lumi_data["run number"] >= 13874) & (lumi_data["run number"] <= 13881)])
 convertDFtoCSV(l3_lh2,SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/LH2/lumi_data_l3_lh2.csv")
 print("Lumi #3 LH2 runs {0} are now in {1}".format(list(l3_lh2["run number"]),SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/LH2/lumi_data_l3_lh2.csv"))
-l3_c = dict(lumi_data.loc[(lumi_data["run number"] >= 13897) & (lumi_data["run number"] <= 13910)])
+l3_c = dict(lumi_data.loc[((lumi_data["run number"] >= 13897) & (lumi_data["run number"] <= 13898)) | ((lumi_data["run number"] >= 13904) & (lumi_data["run number"] <= 13910) & (lumi_data["run number"] != 13905))])
 convertDFtoCSV(l3_c,SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/Carbon0p5/lumi_data_l3_c0p5.csv")
 print("Lumi #3 C runs {0} are now in {1}".format(list(l3_c["run number"]),SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/Carbon0p5/lumi_data_l3_c0p5.csv"))
 l3_ld2 = dict(lumi_data.loc[(lumi_data["run number"] >= 13885) & (lumi_data["run number"] <= 13894)])
 convertDFtoCSV(l3_ld2,SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/LD2/lumi_data_l3_ld2.csv")
 print("Lumi #3 LD2 runs {0} are now in {1}".format(list(l3_ld2["run number"]),SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/LD2/lumi_data_l3_ld2.csv"))
-l3_edtm = dict(lumi_data.loc[(lumi_data["run number"] >= 13911) & (lumi_data["run number"] <= 13919)])
-convertDFtoCSV(l3_edtm,SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/EDTM/lumi_data_l3_edtm.csv")
-print("Lumi #3 EDTM runs {0} are now in {1}".format(list(l3_edtm["run number"]),SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/EDTM/lumi_data_l2_edtm.csv"))
+#l3_edtm = dict(lumi_data.loc[((lumi_data["run number"] >= 13899) & (lumi_data["run number"] <= 13903)) | ((lumi_data["run number"] >= 13911) & (lumi_data["run number"] <= 13919)) | (lumi_data["run number"] == 13905)])
+#convertDFtoCSV(l3_edtm,SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/EDTM/lumi_data_l3_edtm.csv")
+#print("Lumi #3 EDTM runs {0} are now in {1}".format(list(l3_edtm["run number"]),SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/EDTM/lumi_data_l2_edtm.csv"))

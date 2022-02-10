@@ -69,6 +69,22 @@ elif "2" in inp_name:
         inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_2/Carbon0p5/lumi_data_l2_c0p5.csv"
         out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_2/Carbon0p5/yield_data_l2_c0p5.csv"
         print("\nGrabbing input...\n\n%s" % str(inp_f))
+elif "3" in inp_name:
+    if "LH2" in inp_name.upper():
+        target = "LH2"
+        inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/LH2/lumi_data_l3_lh2.csv"
+        out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/LH2/yield_data_l3_lh2.csv"
+        print("\nGrabbing input...\n\n%s" % str(inp_f))
+    if "LD2" in inp_name.upper():
+        target = "LD2"
+        inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/LD2/lumi_data_l3_ld2.csv"
+        out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/LD2/yield_data_l3_ld2.csv"
+        print("\nGrabbing input...\n\n%s" % str(inp_f))
+    if "C" in inp_name.upper():
+        target = "carbon"
+        inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/Carbon0p5/lumi_data_l3_c0p5.csv"
+        out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/Carbon0p5/yield_data_l3_c0p5.csv"
+        print("\nGrabbing input...\n\n%s" % str(inp_f))
 elif inp_name == None:
     target = "carbon"
     inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/lumi_data.csv"
@@ -550,6 +566,14 @@ def plot_yield():
             plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi2_%s_yield_%s.png' % ("lh2","edtmPlot"))
         else :
             plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi2_%s_yield_%s.png' % ("c","edtmPlot"))
+
+    if "3" in inp_name:            
+        if target == 'LD2' :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi3_%s_yield_%s.png' % ("ld2","edtmPlot"))
+        elif target == 'LH2' :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi3_%s_yield_%s.png' % ("lh2","edtmPlot"))
+        else :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi3_%s_yield_%s.png' % ("c","edtmPlot"))
             
     #########################################################################################################################################################
 
@@ -696,6 +720,14 @@ def plot_yield():
             plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi2_%s_yield_%s.png' % ("lh2","logPlot"))
         else :
             plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi2_%s_yield_%s.png' % ("c","logPlot"))
+
+    if "3" in inp_name:            
+        if target == 'LD2' :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi3_%s_yield_%s.png' % ("ld2","logPlot"))
+        elif target == 'LH2' :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi3_%s_yield_%s.png' % ("lh2","logPlot"))
+        else :
+            plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Lumi3_%s_yield_%s.png' % ("c","logPlot"))
             
     plt.show()
 

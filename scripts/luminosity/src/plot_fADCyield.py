@@ -173,9 +173,9 @@ def calc_yield():
     yield_dict.update({"yield_COIN_notrack": yield_COIN_notrack})
     yield_dict.update({"yield_COIN_track": yield_COIN_track}) 
 
-    # Define relative yield relative to maximum current
+    # Define relative yield relative to minimum current
     for i,curr in enumerate(yield_dict["current"]):
-        if curr == max(yield_dict["current"]):
+        if curr == min(yield_dict["current"]):
             max_yield_HMS_scaler = yield_dict["yield_HMS_scaler"][i]
             max_yield_SHMS_scaler = yield_dict["yield_SHMS_scaler"][i]
             max_yield_COIN_scaler = yield_dict["yield_COIN_scaler"][i]
