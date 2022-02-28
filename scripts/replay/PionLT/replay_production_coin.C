@@ -14,6 +14,7 @@ void replay_production_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
       //exit;
     }
   }
+
   const char* RunFileNamePattern;
   // Create file name patterns. Base this upon run number
   if (RunNumber >= 10000){
@@ -25,10 +26,12 @@ void replay_production_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   vector<TString> pathList;
   pathList.push_back(".");
   pathList.push_back("./raw");
+  pathList.push_back("./raw_PionLT");
+  pathList.push_back("./raw_KaonLT");
   pathList.push_back("./raw/../raw.copiedtotape");
   pathList.push_back("./cache");
   pathList.push_back("./cache_kaonlt");
-  pathList.push_back("./raw.volatile");
+  pathList.push_back("./raw_volatile");
 
   const char* ROOTFileNamePattern = "UTIL_PION/ROOTfiles/Analysis/PionLT/Pion_coin_replay_production_%d_%d.root";
   

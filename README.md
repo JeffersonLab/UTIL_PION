@@ -24,7 +24,7 @@ A selection of various utility and analysis scripts associated with the Pion exp
 ### SJDK 05/08/21 - Update on contents and instructions needed, may also need to tweak structure above, outline usage of setup shell script
 
 ##############################################################################
-			SCIENTIFIC MOTIVATION
+# SCIENTIFIC MOTIVATION
 ##############################################################################
 
 The pion occupies a special place in nature as one of the lightest hadrons, with one valence quark, and one valence antiquark. Small as it might be, the pion is also responsible for the long range character of the strong interaction that binds the atomic nucleus together. If chiral symmetry, which implies that Dirac Fermions are massless, were an exact global symmetry of strong interactions then pions would be massless. Through gluon-quark interaction and by explicit inclusion of light quark masses, chiral symmetry of massless QCD undergoes explicit symmetry breaking, thus giving the pion its mass. This puts the pion at the core of the mechanism that dynamically generates all the mass of the hadrons and makes it a crucial element in understanding hadron structure. Globally, this experiment will aim to confirm the potential of pion measurements both for studies of the pion structure itself and of the 3D structure of the proton, in terms of spatial imaging (tomography). In particular, E12-07-105 will probe if the measurements to map the spatial extension of the charged pion can be utilized to enable 3D spatial tomography of light quarks.

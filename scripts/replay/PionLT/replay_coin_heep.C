@@ -15,14 +15,23 @@ void replay_coin_heep (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
     }
   }
 
-  // Create file name patterns.
-  const char* RunFileNamePattern = "shms_all_%05d.dat";
+  const char* RunFileNamePattern;
+  // Create file name patterns. Base this upon run number
+  if (RunNumber >= 10000){
+    RunFileNamePattern = "shms_all_%05d.dat";
+  }
+  else if (RunNumber < 10000){
+    RunFileNamePattern = "coin_all_%05d.dat";
+  }
   vector<TString> pathList;
   pathList.push_back(".");
   pathList.push_back("./raw");
+  pathList.push_back("./raw_PionLT");
+  pathList.push_back("./raw_KaonLT");
   pathList.push_back("./raw/../raw.copiedtotape");
   pathList.push_back("./cache");
-  pathList.push_back("./raw.volatile");
+  pathList.push_back("./cache_kaonlt");
+  pathList.push_back("./raw_volatile");
 
   //const char* RunFileNamePattern = "raw/coin_all_%05d.dat";
   const char* ROOTFileNamePattern = "UTIL_PION/ROOTfiles/Analysis/HeeP/Pion_coin_replay_production_%d_%d.root";
