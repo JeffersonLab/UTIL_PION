@@ -1,0 +1,23 @@
+block CTime.*     
+block RFTime.*
+block H.cer.*
+block P.aero.*
+block P.hgcer.*
+block P.ngcer.*
+block H.kin.primary.*
+block P.kin.secondary.*
+block T.coin.*
+block T.coin.pTRIG5_ROC2_tdcTime
+block T.coin.pEDTM_tdcTime
+
+begin epics
+IBC3H00CRCUR4
+hac_bcm_average
+ibcm1
+ibcm2
+iunser
+itov3out
+itov4out
+MOFC1DELTA
+MOFC1FREQ
+end epics
