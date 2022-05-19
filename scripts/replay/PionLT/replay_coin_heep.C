@@ -35,11 +35,11 @@ void replay_coin_heep (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
 
   //const char* RunFileNamePattern = "raw/coin_all_%05d.dat";
   const char* ROOTFileNamePattern = "UTIL_PION/ROOTfiles/Analysis/HeeP/Pion_coin_replay_production_%d_%d.root";
-  // const char* ROOTFileNamePattern = "/group/c-kaonlt/USERS/vijay/hallc_replay_lt/UTIL_KAONLT/scripts/HeepCoinStudy/OUTPUT/Pion_coin_replay_production_%d_%d_VK.root";
   
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
-  gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard_KaonLTCalib.database");
+  //gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard_KaonLTCalib.database");
+  gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard.database");
   gHcParms->Load(gHcParms->GetString("g_ctp_database_filename"), RunNumber);
   gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
   gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);

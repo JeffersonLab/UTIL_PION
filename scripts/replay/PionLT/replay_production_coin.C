@@ -37,7 +37,8 @@ void replay_production_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
-  gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard_KaonLTCalib.database");
+  //gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard_KaonLTCalib.database");
+  gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard.database");
   gHcParms->Load(gHcParms->GetString("g_ctp_database_filename"), RunNumber);
   gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
   gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
@@ -265,8 +266,6 @@ void replay_production_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   analyzer->SetOutFile(ROOTFileName.Data());
   // Define DEF-file+
   analyzer->SetOdefFile("UTIL_PION/config/DEF-files/coin_production.def");
-  // SJDK - 09/09/21 - Who uncommented the line below and used this in the replay?!
-  //analyzer->SetOdefFile("UTIL_PION/config/DEF-files/Full_Replay_Pass2_Coin.def");
   // Define cuts file
   analyzer->SetCutFile("UTIL_PION/config/DEF-files/Online_Coin_Production_Cuts.def");  // optional
   // File to record accounting information for cuts
