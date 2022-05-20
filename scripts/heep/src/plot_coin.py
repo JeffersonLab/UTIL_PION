@@ -91,14 +91,12 @@ lt.SetPath(os.path.realpath(__file__)).checkDir(OUTPATH)
 lt.SetPath(os.path.realpath(__file__)).checkFile(rootName)
 print("Output path checks out, outputting to %s" % (OUTPATH))
 
-
 ###############################################################################################################################################
 ROOT.gROOT.SetBatch(ROOT.kTRUE) # Set ROOT to batch mode explicitly, does not splash anything to screen
 ###############################################################################################################################################
 
 # Section for grabing Prompt/Random selection parameters from PARAM file
 PARAMPATH = "%s/DB/PARAM" % UTILPATH
-print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 TimingCutFile = "%s/Timing_Parameters.csv" % PARAMPATH # This should match the param file actually being used!
 TimingCutf = open(TimingCutFile)
 try:

@@ -32,6 +32,7 @@ void replay_coin_scalers (Int_t RunNumber = 0, Int_t MaxEvent = 0,Int_t FirstEve
   pathList.push_back("./cache");
   pathList.push_back("./cache_kaonlt");
   pathList.push_back("./raw_volatile");
+  pathList.push_back("./raw.volatile");
 
   const char* ROOTFileNamePattern = "UTIL_PION/ROOTfiles/Scalers/coin_replay_scalers_%d_%d.root";
 

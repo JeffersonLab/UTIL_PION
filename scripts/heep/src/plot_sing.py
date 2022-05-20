@@ -82,7 +82,7 @@ Check that root/output paths and files exist for use
 '''
 
 # Construct the name of the rootfile based upon the info we provided
-rootName = "%s/OUTPUT/Analysis/HeeP/%s_%s_%s.root" % (UTILPATH, runNum, MaxEvent, ROOTSuffix)     # Input file location and variables taking
+rootName = "%s/OUTPUT/Analysis/HeeP/%s_%s_%s_%s.root" % (UTILPATH, spec, runNum, MaxEvent, ROOTSuffix)     # Input file location and variables taking
 print ("Attempting to process %s" %(rootName))
 lt.SetPath(os.path.realpath(__file__)).checkDir(OUTPATH)
 lt.SetPath(os.path.realpath(__file__)).checkFile(rootName)
