@@ -2,6 +2,10 @@
 ******Author - Ali Usman******
 *****Created - Mar, 2021******
 ******************************
+******************************
+**** Updated -  22/05/22 *****
+******* Stephen JD Kay *******
+******************************
 
 =====================================
 ======= Shift Worker Section ========
@@ -86,14 +90,13 @@ SW_EDTM_Accepted_Triggers		     :		{edtm_accepted.npassed}
 
 This needs to be filled in the Shift Checklist corresponding to "(S)HMS Chamber fiducial efficiency (online analysis) [%] (Enter value; ideally > 95%) "
 
-SW_SHMS_Hadron_Singles_TRACK_EFF	     :		{shmsScinDidh.npassed / (shmsScinShouldh.npassed+0.0001):%8.4f} +- {(sqrt(((shmsScinShouldh.npassed)*(shmsScinDidh.npassed))*(shmsScinShouldh.npassed+shmsScinDidh.npassed)) / (shmsScinShouldh.npassed+.0001)):%8.4f}
+SW_SHMS_Hadron_Singles_TRACK_EFF	     :		{shmsScinDidh.npassed / (shmsScinShouldh.npassed+0.0001):%8.4f} +- {(sqrt((((shmsScinShouldh.npassed)*(shmsScinDidh.npassed))+((shmsScinDidh.npassed)*(shmsScinDidh.npassed))) / ((shmsScinShouldh.npassed)*(shmsScinShouldh.npassed)*(shmsScinShouldh.npassed)))):%8.4f}
 
-SW_HMS_Electron_Singles_TRACK_EFF	     :		{HMSScinDide.npassed/(HMSScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt(((HMSScinShoulde.npassed)*(HMSScinDide.npassed))*(HMSScinShoulde.npassed+HMSScinDide.npassed))/(HMSScinShoulde.npassed+.0001)):%8.4f} 
+SW_HMS_Electron_Singles_TRACK_EFF	     :		{HMSScinDide.npassed/(HMSScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt((((HMSScinShoulde.npassed)*(HMSScinDide.npassed))+((HMSScinDide.npassed)*(HMSScinDide.npassed))) / ((HMSScinShoulde.npassed)*(HMSScinShoulde.npassed)*(HMSScinShoulde.npassed)))):%8.4f}
 
 ===============================
 ======= Expert Section ========
 ===============================
-
 
 **************************
 * General Run Information
@@ -208,6 +211,8 @@ All Triggers           :  {ALL_events.npassed}
 
 EDTM Accepted Triggers	   :	{edtm_accepted.npassed}
 EDTM Live Time		   :	{edtm_accepted.npassed/(P.EDTM.scalerCut+0.0001):%8.4f} +- {(sqrt(P.EDTM.scalerCut-edtm_accepted.npassed) / (P.EDTM.scalerCut+.0001)):%8.4f}
+# SJDK - 20/09/21 - Testing NON scaler cut values to see if number makes more sense
+EDTM Live Time		   :	{edtm_accepted.npassed/(P.EDTM.scaler+0.0001):%8.4f} +-  {(sqrt((((P.EDTM.scaler)*(edtm_accepted.npassed))+((edtm_accepted.npassed)*(edtm_accepted.npassed))) / ((P.EDTM.scaler)*(P.EDTM.scaler)*(P.EDTM.scaler)))):%8.4f}
 
 =:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:
 =   Computer Live/Dead Times   = 
@@ -246,11 +251,15 @@ pscinshouldh               :   {shmsScinShouldh.npassed}
 pscinshouldpi              :   {shmsScinShouldpi.npassed}
 pscinshouldp               :   {shmsScinShouldp.npassed}
 
-SHMS Singles FID TRACK EFF           :   {shmsScinDid.npassed / (shmsScinShould.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShould.npassed-shmsScinDid.npassed) / (shmsScinShould.npassed+.0001)):%8.4f}
-SHMS Positron Singles TRACK EFF      :   {shmsScinDide.npassed / (shmsScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShoulde.npassed-shmsScinDide.npassed) / (shmsScinShoulde.npassed+.0001)):%8.4f}
-SHMS Hadron Singles TRACK EFF        :   {shmsScinDidh.npassed / (shmsScinShouldh.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShouldh.npassed-shmsScinDidh.npassed) / (shmsScinShouldh.npassed+.0001)):%8.4f}
-SHMS Pion Sinles TRACK EFF           :   {shmsScinDidpi.npassed / (shmsScinShouldpi.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShouldpi.npassed-shmsScinDidpi.npassed) / (shmsScinShouldpi.npassed+.0001)):%8.4f}
-SHMS Proton Singles TRACK EFF        :   {shmsScinDidp.npassed / (shmsScinShouldp.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShouldp.npassed-shmsScinDidp.npassed) / (shmsScinShouldp.npassed+.0001)):%8.4f}
+SHMS Singles FID TRACK EFF           :   {shmsScinDid.npassed / (shmsScinShould.npassed+0.0001):%8.4f} +- {(sqrt((((shmsScinShould.npassed)*(shmsScinDid.npassed))+((shmsScinDid.npassed)*(shmsScinDid.npassed))) / ((shmsScinShould.npassed)*(shmsScinShould.npassed)*(shmsScinShould.npassed)))):%8.4f}
+
+SHMS Positron Singles TRACK EFF      :   {shmsScinDide.npassed / (shmsScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt((((shmsScinShoulde.npassed)*(shmsScinDide.npassed))+((shmsScinDide.npassed)*(shmsScinDide.npassed))) / ((shmsScinShoulde.npassed)*(shmsScinShoulde.npassed)*(shmsScinShoulde.npassed)))):%8.4f}
+
+SHMS Hadron Singles TRACK EFF        :   {shmsScinDidh.npassed / (shmsScinShouldh.npassed+0.0001):%8.4f} +- {(sqrt((((shmsScinShouldh.npassed)*(shmsScinDidh.npassed))+((shmsScinDidh.npassed)*(shmsScinDidh.npassed))) / ((shmsScinShouldh.npassed)*(shmsScinShouldh.npassed)*(shmsScinShouldh.npassed)))):%8.4f}
+
+SHMS Pion Singles TRACK EFF           :   {shmsScinDidpi.npassed / (shmsScinShouldpi.npassed+0.0001):%8.4f} +- {(sqrt((((shmsScinShouldpi.nnpassed)*(shmsScinDidpi.nnpassed))+((shmsScinDidpi.nnpassed)*(shmsScinDidpi.nnpassed))) / ((shmsScinShouldpi.nnpassed)*(shmsScinShouldpi.nnpassed)*(shmsScinShouldpi.nnpassed)))):%8.4f}
+
+SHMS Proton Singles TRACK EFF        :   {shmsScinDidp.npassed / (shmsScinShouldp.npassed+0.0001):%8.4f} +- {(sqrt((((shmsScinShouldp.npassed)*(shmsScinDidp.npassed))+((shmsScinDidp.npassed)*(shmsScinDidp.npassed))) / ((shmsScinShouldp.npassed)*(shmsScinShouldp.npassed)*(shmsScinShouldp.npassed)))):%8.4f}
 
 ------------------------------
 -------- SHMS COIN -----------
@@ -265,10 +274,13 @@ pcoinshoulde               :   {PcoinShoulde.npassed}
 pcoinshouldpi              :   {PcoinShouldpi.npassed}
 pcoinshouldp               :   {PcoinShouldp.npassed}
 
-SHMS Coin FID TRACK EFF              :   {PcoinDid.npassed / (PcoinShould.npassed+0.0001):%8.4f} +- {(sqrt(PcoinShould.npassed-PcoinDid.npassed) / (PcoinShould.npassed+.0001)):%8.4f}
-SHMS Positron Coin TRACK EFF         :   {PcoinDide.npassed / (PcoinShoulde.npassed+0.0001):%8.4f} +- {(sqrt(PcoinShoulde.npassed-PcoinDide.npassed) / (PcoinShoulde.npassed+.0001)):%8.4f}
-SHMS Pion Coin TRACK EFF             :   {PcoinDidpi.npassed / (PcoinShouldpi.npassed+0.0001):%8.4f} +- {(sqrt(PcoinShouldpi.npassed-PcoinDidpi.npassed) / (PcoinShouldpi.npassed+.0001)):%8.4f}
-SHMS Proton Coin TRACK EFF           :   {PcoinDidp.npassed / (PcoinShouldp.npassed+0.0001):%8.4f} +- {(sqrt(PcoinShouldp.npassed-PcoinDidp.npassed) / (PcoinShouldp.npassed+.0001)):%8.4f}
+SHMS Coin FID TRACK EFF              :   {PcoinDid.npassed / (PcoinShould.npassed+0.0001):%8.4f} +- {(sqrt((((PcoinShould.npassed)*(PcoinDid.npassed))+((PcoinDid.npassed)*(PcoinDid.npassed))) / ((PcoinShould.npassed)*(PcoinShould.npassed)*(PcoinShould.npassed)))):%8.4f}
+
+SHMS Positron Coin TRACK EFF         :   {PcoinDide.npassed / (PcoinShoulde.npassed+0.0001):%8.4f} +- {(sqrt((((PcoinShoulde.npassed)*(PcoinDide.npassed))+((PcoinDide.npassed)*(PcoinDide.npassed))) / ((PcoinShoulde.npassed)*(PcoinShoulde.npassed)*(PcoinShoulde.npassed)))):%8.4f}
+
+SHMS Pion Coin TRACK EFF             :   {PcoinDidpi.npassed / (PcoinShouldpi.npassed+0.0001):%8.4f} +- {(sqrt((((PcoinShouldpi.npassed)*(PcoinDidpi.npassed))+((PcoinDidpi.npassed)*(PcoinDidpi.npassed))) / ((PcoinShouldpi.npassed)*(PcoinShouldpi.npassed)*(PcoinShouldpi.npassed)))):%8.4f}
+
+SHMS Proton Coin TRACK EFF           :   {PcoinDidp.npassed / (PcoinShouldp.npassed+0.0001):%8.4f} +- {(sqrt((((PcoinShouldp.npassed)*(PcoinDidp.npassed))+((PcoinDidp.npassed)*(PcoinDidp.npassed))) / ((PcoinShouldp.npassed)*(PcoinShouldp.npassed)*(PcoinShouldp.npassed)))):%8.4f}
 
 *****************************
 * HMS TRACKING EFFICIENCIES *
@@ -285,9 +297,11 @@ hscinshould                :   {HMSScinShould.npassed}
 hscinshoulde               :   {HMSScinShoulde.npassed}
 hscinshouldpi              :   {HMSScinShouldpi.npassed}
 
-HMS Singles FID TRACK EFF            :   {HMSScinDid.npassed/(HMSScinShould.npassed+0.0001):%8.4f} +- {(sqrt(HMSScinShould.npassed-HMSScinDid.npassed)/(HMSScinShould.npassed+.0001)):%8.4f}
-HMS Electron Singles TRACK EFF       :   {HMSScinDide.npassed/(HMSScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt(HMSScinShoulde.npassed-HMSScinDide.npassed)/(HMSScinShoulde.npassed+.0001)):%8.4f}
-HMS Pion Singles TRACK EFF           :   {HMSScinDidpi.npassed/(HMSScinShouldpi.npassed+0.0001):%8.4f} +- {(sqrt(HMSScinShouldpi.npassed-HMSScinDidpi.npassed)/(HMSScinShouldpi.npassed+.0001)):%8.4f}
+HMS Singles FID TRACK EFF            :   {HMSScinDid.npassed/(HMSScinShould.npassed+0.0001):%8.4f} +- {(sqrt((((HMSScinShould.npassed)*(HMSScinDid.npassed))+((HMSScinDid.npassed)*(HMSScinDid.npassed))) / ((HMSScinShould.npassed)*(HMSScinShould.npassed)*(HMSScinShould.npassed)))):%8.4f}
+
+HMS Electron Singles TRACK EFF       :   {HMSScinDide.npassed/(HMSScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt((((HMSScinShoulde.npassed)*(HMSScinDide.npassed))+((HMSScinDide.npassed)*(HMSScinDide.npassed))) / ((HMSScinShoulde.npassed)*(HMSScinShoulde.npassed)*(HMSScinShoulde.npassed)))):%8.4f}
+
+HMS Pion Singles TRACK EFF           :   {HMSScinDidpi.npassed/(HMSScinShouldpi.npassed+0.0001):%8.4f} +- {(sqrt((((HMSScinShouldpi.npassed)*(HMSScinDidpi.npassed))+((HMSScinDidpi.npassed)*(HMSScinDidpi.npassed))) / ((HMSScinShouldpi.npassed)*(HMSScinShouldpi.npassed)*(HMSScinShouldpi.npassed)))):%8.4f}
 
 ------------------------------
 --------- HMS Coin -----------
@@ -300,35 +314,15 @@ hcoinshould                :   {HcoinShould.npassed}
 hcoinshoulde               :   {HcoinShoulde.npassed}
 hcoinshouldpi              :   {HcoinShouldpi.npassed}
 
-HMS COIN FID TRACK EFF               :   {HcoinDid.npassed/(HcoinShould.npassed+0.0001):%8.4f} +- {(sqrt(HcoinShould.npassed-HcoinDid.npassed)/(HcoinShould.npassed+.0001)):%8.4f}
-HMS Electron COIN TRACK EFF          :   {HcoinDide.npassed/(HcoinShoulde.npassed+0.0001):%8.4f} +- {(sqrt(HcoinShoulde.npassed-HcoinDide.npassed)/(HcoinShoulde.npassed+.0001)):%8.4f}
-HMS Pion COIN TRACK EFF              :   {HcoinDidpi.npassed/(HcoinShouldpi.npassed+0.0001):%8.4f} +- {(sqrt(HcoinShouldpi.npassed-HcoinDidpi.npassed)/(HcoinShouldpi.npassed+.0001)):%8.4f}
+HMS COIN FID TRACK EFF               :   {HcoinDid.npassed/(HcoinShould.npassed+0.0001):%8.4f} +- {(sqrt((((HcoinShould.npassed)*(HcoinDid.npassed))+((HcoinDid.npassed)*(HcoinDid.npassed))) / ((HcoinShould.npassed)*(HcoinShould.npassed)*(HcoinShould.npassed)))):%8.4f}
+
+HMS Electron COIN TRACK EFF          :   {HcoinDide.npassed/(HcoinShoulde.npassed+0.0001):%8.4f} +- {(sqrt((((HcoinShoulde.npassed)*(HcoinDide.npassed))+((HcoinDide.npassed)*(HcoinDide.npassed))) / ((HcoinShoulde.npassed)*(HcoinShoulde.npassed)*(HcoinShoulde.npassed)))):%8.4f}
+
+HMS Pion COIN TRACK EFF              :   {HcoinDidpi.npassed/(HcoinShouldpi.npassed+0.0001):%8.4f} +- {(sqrt((((HcoinShouldpi.npassed)*(HcoinDidpi.npassed))+((HcoinDidpi.npassed)*(HcoinDidpi.npassed))) / ((HcoinShouldpi.npassed)*(HcoinShouldpi.npassed)*(HcoinShouldpi.npassed)))):%8.4f}
 
 #############################
 ### Detector Efficiencies ###
 #############################
-
-=:=:=:=:=:=:=:=:=:=:=:=:=
-=     SHMS Cerenkovs    =
-=:=:=:=:=:=:=:=:=:=:=:=:=
-
-***************
-* HGC Cerenkov
-***************
-
-PHGCdidpi		    :   {SHMSHGCDidpi.npassed}
-PHGCshouldpi		    :	{SHMSHGCShouldpi.npassed}
-
-SHMS HGC Pion Eff		      :   {SHMSHGCDidpi.npassed/(SHMSHGCShouldpi.npassed+0.0001):%8.4f} +- {(sqrt(SHMSHGCShouldpi.npassed-SHMSHGCDidpi.npassed)/(SHMSHGCShouldpi.npassed+.0001)):%8.4f}
-
-**********
-* Aerogel
-**********
-
-PAerodidpi		    :   {SHMSAeroDidpi.npassed}
-PAeroshouldpi		    :	{SHMSAeroShouldpi.npassed}
-
-SHMS Aero Pion Eff		      :   {SHMSAeroDidpi.npassed/(SHMSAeroShouldpi.npassed+0.0001):%8.4f} +- {(sqrt(SHMSAeroShouldpi.npassed-SHMSAeroDidpi.npassed)/(SHMSAeroShouldpi.npassed+.0001)):%8.4f}
 
 =:=:=:=:=:=:=:=:=:=:=:=:=
 =      HMS Cerenkov     =
@@ -337,8 +331,7 @@ SHMS Aero Pion Eff		      :   {SHMSAeroDidpi.npassed/(SHMSAeroShouldpi.npassed+0
 HCerdide		    :   {HMSHGCDidelec.npassed}
 HCershoulde		    :	{HMSHGCShouldelec.npassed}
 
-HMS Cer Electron Eff		      :   {HMSHGCDidelec.npassed/(HMSHGCShouldelec.npassed+0.0001):%8.4f} +- {(sqrt(HMSHGCShouldelec.npassed-HMSHGCDidelec.npassed)/(HMSHGCShouldelec.npassed+.0001)):%8.4f}
-
+HMS Cer Electron Eff		      :   {HMSHGCDidelec.npassed/(HMSHGCShouldelec.npassed+0.0001):%8.4f} +- {(sqrt((((HMSHGCShouldelec.npassed)*(HMSHGCDidelec.npassed))+((HMSHGCDidelec.npassed)*(HMSHGCDidelec.npassed))) / ((HMSHGCShouldelec.npassed)*(HMSHGCShouldelec.npassed)*(HMSHGCShouldelec.npassed)))):%8.4f}
 
 ****************************
 * Calorimeter Efficiencies *

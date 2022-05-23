@@ -2,6 +2,10 @@
 ******Author - Ali Usman******
 *****Created - Mar, 2021******
 ******************************
+******************************
+**** Updated -  22/05/22 *****
+******* Stephen JD Kay *******
+******************************
 
 =====================================
 ======= Shift Worker Section ========
@@ -77,9 +81,9 @@ SW_EDTM_Accepted_Triggers		     :		{edtm_accepted.npassed}
 This needs to be filled in the Shift Checklist corresponding to "(S)HMS Chamber fiducial efficiency (online analysis) [%] (Enter value; ideally > 95%) "
 For Singles Running You should expect that only one of these numbers make sense at a time!!!
 
-SW_SHMS_Electron_Singles_TRACK_EFF	     :		{shmsScinDide.npassed / (shmsScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShoulde.npassed-shmsScinDide.npassed) / (shmsScinShoulde.npassed+.0001)):%8.4f}
+SW_SHMS_Electron_Singles_TRACK_EFF	     :		{SHMSScinDide.npassed / (SHMSScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt((((SHMSScinShoulde.npassed)*(SHMSScinDide.npassed))+((SHMSScinDide.npassed)*(SHMSScinDide.npassed))) / ((SHMSScinShoulde.npassed)*(SHMSScinShoulde.npassed)*(SHMSScinShoulde.npassed)))):%8.4f}
 
-SW_HMS_Electron_Singles_TRACK_EFF	     :		{HMSScinDide.npassed/(HMSScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt(HMSScinShoulde.npassed-HMSScinDide.npassed) / (HMSScinShoulde.npassed+.0001)):%8.4f} 
+SW_HMS_Electron_Singles_TRACK_EFF	     :		{HMSScinDide.npassed/(HMSScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt((((HMSScinShoulde.npassed)*(HMSScinDide.npassed))+((HMSScinDide.npassed)*(HMSScinDide.npassed))) / ((HMSScinShoulde.npassed)*(HMSScinShoulde.npassed)*(HMSScinShoulde.npassed)))):%8.4f}
 
 ===============================
 ======= Expert Section ========
@@ -132,6 +136,8 @@ HMS Hodoscope S1X	   :	{H.S1X.scalerCut} [ {(H.S1X.scalerCut/H.1MHz.scalerTimeCu
 
 EDTM Accepted Triggers	   :	{edtm_accepted.npassed}
 EDTM Live Time		   :	{edtm_accepted.npassed/(P.EDTM.scalerCut+0.0001):%8.4f} +- {(sqrt(P.EDTM.scalerCut-edtm_accepted.npassed) / (P.EDTM.scalerCut+.0001)):%8.4f}
+# SJDK - 20/09/21 - Testing NON scaler cut values to see if number makes more sense
+EDTM Live Time		   :	{edtm_accepted.npassed/(P.EDTM.scaler+0.0001):%8.4f} +-  {(sqrt((((P.EDTM.scaler)*(edtm_accepted.npassed))+((edtm_accepted.npassed)*(edtm_accepted.npassed))) / ((P.EDTM.scaler)*(P.EDTM.scaler)*(P.EDTM.scaler)))):%8.4f}
 
 =:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:
 =   Computer Live/Dead Times   = 
@@ -157,19 +163,28 @@ EDTM Live Time		   :	{edtm_accepted.npassed/(P.EDTM.scalerCut+0.0001):%8.4f} +- 
 * HGC Cerenkov
 ***************
 
-PHGCdidpi		    :   {SHMSHGCDidpi.npassed}
-PHGCshouldpi		    :	{SHMSHGCShouldpi.npassed}
+PHGCdidel		    :   {SHMSHGCDidel.npassed}
+PHGCshouldel		    :	{SHMSHGCShouldel.npassed}
 
-SHMS HGC Pion Eff		      :   {SHMSHGCDidpi.npassed/(SHMSHGCShouldpi.npassed+0.0001):%8.4f} +- {(sqrt(SHMSHGCShouldpi.npassed-SHMSHGCDidpi.npassed)/(SHMSHGCShouldpi.npassed+.0001)):%8.4f}
+SHMS HGCElectron Eff		      :   {SHMSHGCDidel.npassed/(SHMSHGCShouldel.npassed+0.0001):%8.4f} +-  {(sqrt((((SHMSHGCShouldel.npassed)*(SHMSHGCDidel.npassed))+((SHMSHGCDidel.npassed)*(SHMSHGCDidel.npassed))) / ((SHMSHGCDidel.npassed)*(SHMSHGCDidel.npassed)*(SHMSHGCDidel.npassed)))):%8.4f}
 
 **********
 * Aerogel
 **********
 
-PAerodidpi		    :   {SHMSAeroDidpi.npassed}
-PAeroshouldpi		    :	{SHMSAeroShouldpi.npassed}
+PAerodidel		    :   {SHMSAeroDidel.npassed}
+PAeroshouldel		    :	{SHMSAeroShouldel.npassed}
 
-SHMS Aero Pion Eff		      :   {SHMSAeroDidpi.npassed/(SHMSAeroShouldpi.npassed+0.0001):%8.4f} +- {(sqrt(SHMSAeroShouldpi.npassed-SHMSAeroDidpi.npassed)/(SHMSAeroShouldpi.npassed+.0001)):%8.4f}
+SHMS Aero Electron Eff		      :   {SHMSAeroDidel.npassed/(SHMSAeroShouldel.npassed+0.0001):%8.4f} +- {(sqrt((((SHMSAeroShouldel.npassed)*(SHMSAeroDidel.npassed))+((SHMSAeroDidel.npassed)*(SHMSAeroDidel.npassed))) / ((SHMSAeroShouldel.npassed)*(SHMSAeroShouldel.npassed)*(SHMSAeroShouldel.npassed)))):%8.4f}
+
+**********
+**  NGC **
+**********
+
+PNGCdidel	    		    :   {SHMSNGCDidel.npassed}
+PNGCshouldel			    :	{SHMSNGCShouldel.npassed}
+
+SHMS NGC Elec Eff		          :   {SHMSNGCDidel.npassed/(SHMSNGCShouldel.npassed+0.0001):%8.4f} +- {(sqrt((((SHMSNGCShouldel.npassed)*(SHMSNGCDidel.npassed))+((SHMSNGCDidel.npassed)*(SHMSNGCDidel.npassed))) / ((SHMSNGCShouldel.npassed)*(SHMSNGCShouldel.npassed)*(SHMSNGCShouldel.npassed)))):%8.4f}
 
 =:=:=:=:=:=:=:=:=:=:=:=:=
 =      HMS Cerenkov     =
@@ -178,8 +193,7 @@ SHMS Aero Pion Eff		      :   {SHMSAeroDidpi.npassed/(SHMSAeroShouldpi.npassed+0
 HCerdide		    :   {HMSHGCDidelec.npassed}
 HCershoulde		    :	{HMSHGCShouldelec.npassed}
 
-HMS Cer Electron Eff		      :   {HMSHGCDidelec.npassed/(HMSHGCShouldelec.npassed+0.0001):%8.4f} +- {(sqrt(HMSHGCShouldelec.npassed-HMSHGCDidelec.npassed)/(HMSHGCShouldelec.npassed+.0001)):%8.4f}
-
+HMS Cer Electron Eff		      :   {HMSHGCDidelec.npassed/(HMSHGCShouldelec.npassed+0.0001):%8.4f} +- {(sqrt((((HMSHGCShouldelec.npassed)*(HMSHGCDidelec.npassed))+((HMSHGCDidelec.npassed)*(HMSHGCDidelec.npassed))) / ((HMSHGCShouldelec.npassed)*(HMSHGCShouldelec.npassed)*(HMSHGCShouldelec.npassed)))):%8.4f}
 
 ****************************
 * Calorimeter Efficiencies *
@@ -189,8 +203,8 @@ HMS Cer Electron Eff		      :   {HMSHGCDidelec.npassed/(HMSHGCShouldelec.npassed
 = SHMS  =
 =:=:=:=:=
 
-shmsPreShower        Counts: {P.cal.stat_trksum1} eff : {P.cal.stat_hitsum1 / P.cal.stat_trksum1}
-shmsShowerArray      Counts: {P.cal.stat_trksum_array} eff : {P.cal.stat_hitsum_array / P.cal.stat_trksum_array}
+SHMSPreShower        Counts: {P.cal.stat_trksum1} eff : {P.cal.stat_hitsum1 / P.cal.stat_trksum1}
+SHMSShowerArray      Counts: {P.cal.stat_trksum_array} eff : {P.cal.stat_hitsum_array / P.cal.stat_trksum_array}
 
 =:=:=:=:=
 =  HMS  =

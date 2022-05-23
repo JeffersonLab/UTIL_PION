@@ -60,18 +60,18 @@ pcut_elec_all             pcut_cer_hg_elec && pcut_cer_ag_elec && pcut_cal_elec
 
 # Scin cuts defined here for SHMS
 
-shmsScinGood        P.hod.goodscinhit == 1
-shmsGoodBetanotrk   P.hod.betanotrack > 0.5 && P.hod.betanotrack < 1.4
-shmshodstarttime    P.hod.goodstarttime == 1
+SHMSScinGood        P.hod.goodscinhit == 1
+SHMSGoodBetanotrk   P.hod.betanotrack > 0.5 && P.hod.betanotrack < 1.4
+SHMShodstarttime    P.hod.goodstarttime == 1
 
 # Tracking Efficiency calculation (Should = denominator, Did = Numerator)
 
-shmsScinShould      shmsScinGood && shmsGoodBetanotrk && shmshodstarttime
-shmsScinShoulde     shmsScinShould && pcut_elec_all
-shmsScinShouldh     shmsScinShould && P.cal.etotnorm <= 0.6 && P.cal.etotnorm > 0.5
-shmsScinDid         shmsScinShould && P.dc.ntrack > 0
-shmsScinDide        shmsScinShoulde && P.dc.ntrack > 0
-shmsScinDidh        shmsScinShouldh && P.dc.ntrack > 0
+SHMSScinShould      SHMSScinGood && SHMSGoodBetanotrk && SHMShodstarttime
+SHMSScinShoulde     SHMSScinShould && pcut_elec_all
+SHMSScinShouldh     SHMSScinShould && P.cal.etotnorm <= 0.6 && P.cal.etotnorm > 0.5
+SHMSScinDid         SHMSScinShould && P.dc.ntrack > 0
+SHMSScinDide        SHMSScinShoulde && P.dc.ntrack > 0
+SHMSScinDidh        SHMSScinShouldh && P.dc.ntrack > 0
 
 ##################
 ####    HMS    ###
@@ -100,27 +100,42 @@ HMSScinShoulde        HMSScinShould && hcut_cer_elec && hcut_cal_elec
 HMSScinDid            HMSScinShould && H.dc.ntrack > 0
 HMSScinDide           HMSScinShoulde && H.dc.ntrack > 0
 
+HMS_TRACK_FOUND      H.dc.ntrack > 0 && ALL_HMS_events_NOEDTM
+SHMS_TRACK_FOUND     P.dc.ntrack > 0 && ALL_SHMS_events_NOEDTM
+COIN_TRACK_FOUND     P.dc.ntrack > 0 && H.dc.ntrack > 0 && ALL_COIN_events_NO_EDTM
+
+Tracking_master SHMS_TRACK_FOUND
+
+Block: Physics       
+
 ##################
 ###  SHMS HGC  ###
 ##################
 
+SHMSCalel	P.cal.etottracknorm > 0.7
 SHMScoindcindipole	P.dc.InsideDipoleExit == 1
 
-SHMSGEN		shmsScinGood && shmshodstarttime && SHMScoindcindipole
-SHMSCalpi	P.cal.etottracknorm < 0.7
-SHMSAEROpi      P.aero.npeSum  > 1.5
+SHMSGEN		SHMSScinGood && SHMShodstarttime && SHMScoindcindipole
+SHMSAEROel      P.aero.npeSum  > 1.5
 
-SHMSHGCShouldpi		SHMSGEN && SHMSCalpi && SHMSAEROpi
-SHMSHGCDidpi		SHMSHGCShouldpi && P.hgcer.npeSum > 1.5
+SHMSHGCShouldel		SHMSGEN && SHMSCalel && SHMSAEROel
+SHMSHGCDidel		SHMSHGCShouldel && P.hgcer.npeSum > 1.5
 
 ###################
 ###  SHMS Aero  ###
 ###################
 
-SHMSHGCpi      P.hgcer.npeSum  > 1.5
+SHMSHGCel      P.hgcer.npeSum  > 1.5
 
-SHMSAeroShouldpi         SHMSGEN && SHMSCalpi && SHMSHGCpi
-SHMSAeroDidpi            SHMSAeroShouldpi && P.aero.npeSum > 1.5
+SHMSAeroShouldel         SHMSGEN && SHMSCalel && SHMSHGCel
+SHMSAeroDidel            SHMSAeroShouldel && P.aero.npeSum > 1.5
+
+##################
+###  SHMS NGC  ###
+##################
+
+SHMSNGCShouldel         	    SHMSGEN && SHMSCalel && SHMSHGCel && SHMSAEROel
+SHMSNGCDidel			    SHMSNGCShouldel && P.ngcer.npeSum > 0.5
 
 ##################
 ###   HMS HGC  ###
@@ -134,13 +149,6 @@ HMSCalelec         H.cal.etottracknorm > 0.05
 HMSHGCShouldelec         HMSGEN && HMSCalelec 
 HMSHGCDidelec            HMSHGCShouldelec && H.cer.npeSum > 1.5
 
-HMS_TRACK_FOUND      H.dc.ntrack > 0 && ALL_HMS_events_NOEDTM
-SHMS_TRACK_FOUND     P.dc.ntrack > 0 && ALL_SHMS_events_NOEDTM
-COIN_TRACK_FOUND     P.dc.ntrack > 0 && H.dc.ntrack > 0 && ALL_COIN_events_NO_EDTM
-
-Tracking_master SHMS_TRACK_FOUND
-
-Block: Physics       
 DELTA_SHMS           P.gtr.dp>-15.5&&P.gtr.dp<25.
 SHMS_ELEC            P.cal.etotnorm>.35
 GOOD_EVENT           SHMS_TRACK_FOUND&&DELTA_SHMS&&SHMS_ELEC

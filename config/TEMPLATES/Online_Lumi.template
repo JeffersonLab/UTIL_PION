@@ -2,6 +2,10 @@
 ******Author - Ali Usman******
 *****Created - Mar, 2021******
 ******************************
+******************************
+**** Updated -  22/05/22 *****
+******* Stephen JD Kay *******
+******************************
 
 =====================================
 ======= Shift Worker Section ========
@@ -73,9 +77,9 @@ SW_EDTM_Accepted_Triggers		     :		{edtm_accepted.npassed}
 
 This needs to be filled in the Shift Checklist corresponding to "(S)HMS Chamber fiducial efficiency (online analysis) [%] (Enter value; ideally > 95%) "
 
-SW_SHMS_Electron_Singles_TRACK_EFF	     :		{shmsScinDidh.npassed / (shmsScinShouldh.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShouldh.npassed-shmsScinDidh.npassed) / (shmsScinShouldh.npassed+.0001)):%8.4f}
+SW_SHMS_Electron_Singles_TRACK_EFF	     :		{shmsScinDidh.npassed / (shmsScinShouldh.npassed+0.0001):%8.4f} +- {(sqrt((((shmsScinShoulde.npassed)*(shmsScinDide.npassed))+((shmsScinDide.npassed)*(shmsScinDide.npassed))) / ((shmsScinShoulde.npassed)*(shmsScinShoulde.npassed)*(shmsScinShoulde.npassed)))):%8.4f}
 
-SW_HMS_Electron_Singles_TRACK_EFF	     :		{HMSScinDide.npassed/(HMSScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt(HMSScinShoulde.npassed-HMSScinDide.npassed) / (HMSScinShoulde.npassed+.0001)):%8.4f} 
+SW_HMS_Electron_Singles_TRACK_EFF	     :		{HMSScinDide.npassed/(HMSScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt((((HMSScinShoulde.npassed)*(HMSScinDide.npassed))+((HMSScinDide.npassed)*(HMSScinDide.npassed))) / ((HMSScinShoulde.npassed)*(HMSScinShoulde.npassed)*(HMSScinShoulde.npassed)))):%8.4f}
 
 ===============================
 ======= Expert Section ========
@@ -189,7 +193,7 @@ EDTM Live Time		   :	{edtm_accepted.npassed/(P.EDTM.scalerCut+0.0001):%8.4f} +- 
 PHGCdidpi		    :   {SHMSHGCDidpi.npassed}
 PHGCshouldpi		    :	{SHMSHGCShouldpi.npassed}
 
-SHMS HGC Pion Eff		      :   {SHMSHGCDidpi.npassed/(SHMSHGCShouldpi.npassed+0.0001):%8.4f} +- {(sqrt(SHMSHGCShouldpi.npassed-SHMSHGCDidpi.npassed)/(SHMSHGCShouldpi.npassed+.0001)):%8.4f}
+SHMS HGC Pion Eff		      :   {SHMSHGCDidpi.npassed/(SHMSHGCShouldpi.npassed+0.0001):%8.4f} +- {(sqrt((((SHMSHGCShouldpi.npassed)*(SHMSHGCDidpi.npassed))+((SHMSHGCDidpi.npassed)*(SHMSHGCDidpi.npassed))) / ((SHMSHGCDidpi.npassed)*(SHMSHGCDidpi.npassed)*(SHMSHGCDidpi.npassed)))):%8.4f}
 
 **********
 * Aerogel
@@ -198,23 +202,7 @@ SHMS HGC Pion Eff		      :   {SHMSHGCDidpi.npassed/(SHMSHGCShouldpi.npassed+0.00
 PAerodidpi		    :   {SHMSAeroDidpi.npassed}
 PAeroshouldpi		    :	{SHMSAeroShouldpi.npassed}
 
-SHMS Aero Pion Eff		      :   {SHMSAeroDidpi.npassed/(SHMSAeroShouldpi.npassed+0.0001):%8.4f} +- {(sqrt(SHMSAeroShouldpi.npassed-SHMSAeroDidpi.npassed)/(SHMSAeroShouldpi.npassed+.0001)):%8.4f}
-
-**********
-**  NGC **
-**********
-
-This is only useful for negatove polarity run and calculates electron efficiency
-
-PNGCdidelxpos	    		    :   {SHMSNGCDidelxpos.npassed}
-PNGCshouldelxpos		    :	{SHMSNGCShouldelxpos.npassed}
-
-SHMS NGC Elec Eff (Positive X)		      :   {SHMSNGCDidelxpos.npassed/(SHMSNGCShouldelxpos.npassed+0.0001):%8.4f} +- {(sqrt(SHMSNGCShouldelxpos.npassed-SHMSNGCDidelxpos.npassed)/(SHMSNGCShouldelxpos.npassed+.0001)):%8.4f}
-
-PNGCdidelxneg	    		    :   {SHMSNGCDidelxneg.npassed}
-PNGCshouldelxneg		    :	{SHMSNGCShouldelxneg.npassed}
-
-SHMS NGC Elec Eff (Negative X)		      :   {SHMSNGCDidelxneg.npassed/(SHMSNGCShouldelxneg.npassed+0.0001):%8.4f} +- {(sqrt(SHMSNGCShouldelxneg.npassed-SHMSNGCDidelxneg.npassed)/(SHMSNGCShouldelxneg.npassed+.0001)):%8.4f}
+SHMS Aero Pion Eff		      :   {SHMSAeroDidpi.npassed/(SHMSAeroShouldpi.npassed+0.0001):%8.4f} +- {(sqrt((((SHMSAeroShouldpi.npassed)*(SHMSAeroDidpi.npassed))+((SHMSAeroDidpi.npassed)*(SHMSAeroDidpi.npassed))) / ((SHMSAeroDidpi.npassed)*(SHMSAeroDidpi.npassed)*(SHMSAeroDidpi.npassed)))):%8.4f}
 
 =:=:=:=:=:=:=:=:=:=:=:=:=
 =      HMS Cerenkov     =
@@ -223,8 +211,7 @@ SHMS NGC Elec Eff (Negative X)		      :   {SHMSNGCDidelxneg.npassed/(SHMSNGCShou
 HCerdide		    :   {HMSHGCDidelec.npassed}
 HCershoulde		    :	{HMSHGCShouldelec.npassed}
 
-HMS Cer Electron Eff		      :   {HMSHGCDidelec.npassed/(HMSHGCShouldelec.npassed+0.0001):%8.4f} +- {(sqrt(HMSHGCShouldelec.npassed-HMSHGCDidelec.npassed)/(HMSHGCShouldelec.npassed+.0001)):%8.4f}
-
+HMS Cer Electron Eff		      :   {HMSHGCDidelec.npassed/(HMSHGCShouldelec.npassed+0.0001):%8.4f} +- {(sqrt((((HMSHGCShouldelec.npassed)*(HMSHGCDidelec.npassed))+((HMSHGCDidelec.npassed)*(HMSHGCDidelec.npassed))) / ((HMSHGCShouldelec.npassed)*(HMSHGCShouldelec.npassed)*(HMSHGCShouldelec.npassed)))):%8.4f}
 
 ****************************
 * Calorimeter Efficiencies *
