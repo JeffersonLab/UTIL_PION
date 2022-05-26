@@ -77,18 +77,19 @@ SW_EDTM_Accepted_Triggers		     :		{edtm_accepted.npassed}
 
 This needs to be filled in the Shift Checklist corresponding to "(S)HMS Chamber fiducial efficiency (online analysis) [%] (Enter value; ideally > 95%) "
 
-SW_SHMS_Hadron_Singles_TRACK_EFF	     :		{shmsScinDidh.npassed / (shmsScinShouldh.npassed+0.0001):%8.4f} +- {(sqrt((((shmsScinShouldh.npassed)*(shmsScinDidh.npassed))+((shmsScinDidh.npassed)*(shmsScinDidh.npassed))) / ((shmsScinShouldh.npassed)*(shmsScinShouldh.npassed)*(shmsScinShouldh.npassed)))):%8.4f}
+SW_SHMS_Hadron_Coin_TRACK_EFF	     :		{shmsScinDidh.npassed / (shmsScinShouldh.npassed+0.0001):%8.4f} +- {(sqrt((((shmsScinShouldh.npassed)*(shmsScinDidh.npassed))+((shmsScinDidh.npassed)*(shmsScinDidh.npassed))) / ((shmsScinShouldh.npassed)*(shmsScinShouldh.npassed)*(shmsScinShouldh.npassed)))):%8.4f}
 
-SW_HMS_Electron_Singles_TRACK_EFF	     :		{HMSScinDide.npassed/(HMSScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt((((HMSScinShoulde.npassed)*(HMSScinDide.npassed))+((HMSScinDide.npassed)*(HMSScinDide.npassed))) / ((HMSScinShoulde.npassed)*(HMSScinShoulde.npassed)*(HMSScinShoulde.npassed)))):%8.4f}
+SW_HMS_Electron_Coin_TRACK_EFF	     :		{HMSScinDide.npassed/(HMSScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt((((HMSScinShoulde.npassed)*(HMSScinDide.npassed))+((HMSScinDide.npassed)*(HMSScinDide.npassed))) / ((HMSScinShoulde.npassed)*(HMSScinShoulde.npassed)*(HMSScinShoulde.npassed)))):%8.4f}
 
-This is Pi- tracking efficiency which is only useful for LD- data taking
+This is the SHMS Coin Pi- tracking efficiency which is only useful for LD- data taking
 
-SW_SHMS_Pi-_Singles_TRACK_EFF	  	     :		{shmsScinDidpi.npassed / (shmsScinShouldpi.npassed+0.0001):%8.4f} +- {(sqrt((((shmsScinShouldpi.npassed)*(shmsScinDidpi.npassed))+((shmsScinDidpi.npassed)*(shmsScinDidpi.npassed))) / ((shmsScinShouldpi.npassed)*(shmsScinShouldpi.npassed)*(shmsScinShouldpi.npassed)))):%8.4f}
+SW_SHMS_Pi-_Coin_TRACK_EFF	  	     :		{shmsScinDidpi.npassed / (shmsScinShouldpi.npassed+0.0001):%8.4f} +- {(sqrt((((shmsScinShouldpi.npassed)*(shmsScinDidpi.npassed))+((shmsScinDidpi.npassed)*(shmsScinDidpi.npassed))) / ((shmsScinShouldpi.npassed)*(shmsScinShouldpi.npassed)*(shmsScinShouldpi.npassed)))):%8.4f}
+
+Note, these are explicitly *coincidence* tracking efficiencies due to the way that the cuts file has been set up. As a consequence, the statistics may be relatively low. In turn, this may lead to large error bars. Don't worry about this!
 
 ===============================
 ======= Expert Section ========
 ===============================
-
 
 ***********
 * Beamline
@@ -199,7 +200,7 @@ EDTM Live Time		   :	{edtm_accepted.npassed/(P.EDTM.scaler+0.0001):%8.4f} +-  {(
 PHGCdidpi		    :   {SHMSHGCDidpi.npassed}
 PHGCshouldpi		    :	{SHMSHGCShouldpi.npassed}
 
-SHMS HGC Pion Eff		      :   {SHMSHGCDidpi.npassed/(SHMSHGCShouldpi.npassed+0.0001):%8.4f} +- {(sqrt((((SHMSHGCShouldpi.npassed)*(SHMSHGCDidpi.npassed))+((SHMSHGCDidpi.npassed)*(SHMSHGCDidpi.npassed))) / ((SHMSHGCDidpi.npassed)*(SHMSHGCDidpi.npassed)*(SHMSHGCDidpi.npassed)))):%8.4f}
+SHMS HGC Coin Pion Eff		      :   {SHMSHGCDidpi.npassed/(SHMSHGCShouldpi.npassed+0.0001):%8.4f} +- {(sqrt((((SHMSHGCShouldpi.npassed)*(SHMSHGCDidpi.npassed))+((SHMSHGCDidpi.npassed)*(SHMSHGCDidpi.npassed))) / ((SHMSHGCDidpi.npassed)*(SHMSHGCDidpi.npassed)*(SHMSHGCDidpi.npassed)))):%8.4f}
 
 **********
 * Aerogel
@@ -208,23 +209,18 @@ SHMS HGC Pion Eff		      :   {SHMSHGCDidpi.npassed/(SHMSHGCShouldpi.npassed+0.00
 PAerodidpi		    :   {SHMSAeroDidpi.npassed}
 PAeroshouldpi		    :	{SHMSAeroShouldpi.npassed}
 
-SHMS Aero Pion Eff		      :   {SHMSAeroDidpi.npassed/(SHMSAeroShouldpi.npassed+0.0001):%8.4f} +- {(sqrt((((SHMSAeroShouldpi.npassed)*(SHMSAeroDidpi.npassed))+((SHMSAeroDidpi.npassed)*(SHMSAeroDidpi.npassed))) / ((SHMSAeroShouldpi.npassed)*(SHMSAeroShouldpi.npassed)*(SHMSAeroShouldpi.npassed)))):%8.4f}
+SHMS Aero Coin Pion Eff		      :   {SHMSAeroDidpi.npassed/(SHMSAeroShouldpi.npassed+0.0001):%8.4f} +- {(sqrt((((SHMSAeroShouldpi.npassed)*(SHMSAeroDidpi.npassed))+((SHMSAeroDidpi.npassed)*(SHMSAeroDidpi.npassed))) / ((SHMSAeroShouldpi.npassed)*(SHMSAeroShouldpi.npassed)*(SHMSAeroShouldpi.npassed)))):%8.4f}
 
 **********
 **  NGC **
 **********
 
-This is only useful for negatove polarity run
+This is only useful for negatove polarity runs
 
 PNGCdidel	    		    :   {SHMSNGCDidel.npassed}
 PNGCshouldel			    :	{SHMSNGCShouldel.npassed}
 
-SHMS NGC Elec Eff		          :   {SHMSNGCDidel.npassed/(SHMSNGCShouldel.npassed+0.0001):%8.4f} +-  {(sqrt((((SHMSNGCShouldel.npassed)*(SHMSNGCDidel.npassed))+((SHMSNGCDidel.npassed)*(SHMSNGCDidel.npassed))) / ((SHMSNGCShouldel.npassed)*(SHMSNGCShouldel.npassed)*(SHMSNGCShouldel.npassed)))):%8.4f}
-
-PNGCdidpi	    		    :   {SHMSNGCDidpi.npassed}
-PNGCshouldpi			    :	{SHMSNGCShouldpi.npassed}
-
-SHMS NGC Pion Eff		          :   {SHMSNGCDidpi.npassed/(SHMSNGCShouldpi.npassed+0.0001):%8.4f} +- {(sqrt((((SHMSNGCShouldpi.npassed)*(SHMSNGCDidpi.npassed))+((SHMSNGCDidpi.npassed)*(SHMSNGCDidpi.npassed))) / ((SHMSNGCShouldpi.npassed)*(SHMSNGCShouldpi.npassed)*(SHMSNGCShouldpi.npassed)))):%8.4f}
+SHMS NGC Coin Elec Eff		          :   {SHMSNGCDidel.npassed/(SHMSNGCShouldel.npassed+0.0001):%8.4f} +-  {(sqrt((((SHMSNGCShouldel.npassed)*(SHMSNGCDidel.npassed))+((SHMSNGCDidel.npassed)*(SHMSNGCDidel.npassed))) / ((SHMSNGCShouldel.npassed)*(SHMSNGCShouldel.npassed)*(SHMSNGCShouldel.npassed)))):%8.4f}
 
 =:=:=:=:=:=:=:=:=:=:=:=:=
 =      HMS Cerenkov     =
@@ -233,7 +229,7 @@ SHMS NGC Pion Eff		          :   {SHMSNGCDidpi.npassed/(SHMSNGCShouldpi.npassed+
 HCerdide		    :   {HMSHGCDidelec.npassed}
 HCershoulde		    :	{HMSHGCShouldelec.npassed}
 
-HMS Cer Electron Eff		      :   {HMSHGCDidelec.npassed/(HMSHGCShouldelec.npassed+0.0001):%8.4f} +- {(sqrt((((HMSHGCShouldelec.npassed)*(HMSHGCDidelec.npassed))+((HMSHGCDidelec.npassed)*(HMSHGCDidelec.npassed))) / ((HMSHGCShouldelec.npassed)*(HMSHGCShouldelec.npassed)*(HMSHGCShouldelec.npassed)))):%8.4f}
+HMS Cer Coin Electron Eff		      :   {HMSHGCDidelec.npassed/(HMSHGCShouldelec.npassed+0.0001):%8.4f} +- {(sqrt((((HMSHGCShouldelec.npassed)*(HMSHGCDidelec.npassed))+((HMSHGCDidelec.npassed)*(HMSHGCDidelec.npassed))) / ((HMSHGCShouldelec.npassed)*(HMSHGCShouldelec.npassed)*(HMSHGCShouldelec.npassed)))):%8.4f}
 
 ****************************
 * Calorimeter Efficiencies *

@@ -5,7 +5,8 @@
 #################################
 #################################
 ####### Stephen JD Kay  #########
-###### 26/05/22 - Updated #######
+# 26/05/22 - Updated, intending #
+#### to use in upcoming run. ####
 #################################
 
 Block: RawDecode
@@ -60,13 +61,10 @@ shmshodstarttime    P.hod.goodstarttime == 1
 
 shmsScinShould      shmsScinGood && shmsGoodBetanotrk && shmshodstarttime
 shmsScinShouldh     shmsScinShould && P.cal.etotnorm < 0.7 &&  P.cal.etotnorm > 0.05
+shmsScinShouldp     shmsScinShouldh && P.ngcer.npeSum < 1.5 && P.hgcer.npeSum < 1.5 && P.aero.npeSum < 1.5
 shmsScinDid         shmsScinShould && P.dc.ntrack > 0
 shmsScinDidh        shmsScinShouldh && P.dc.ntrack > 0
-
-# SHMS Coin Tracking efficiency for pi- at negative polarity - Added by AU on 03/12/2021
-
-shmsScinShouldpi    shmsScinShouldh && P.ngcer.npeSum < 1.5
-shmsScinDidpi	    shmsScinShouldpi && P.dc.ntrack > 0
+shmsScinDidp        shmsScinShouldp && P.dc.ntrack > 0
 
 ##################
 ####    HMS    ###
@@ -90,8 +88,8 @@ HMSScinShoulde        HMSScinShould && hcut_cer_elec && hcut_cal_elec
 HMSScinDid            HMSScinShould && H.dc.ntrack > 0
 HMSScinDide           HMSScinShoulde && H.dc.ntrack > 0
 
-HMS_CAL_FOUND      H.cal.etotnorm > 0.5 
-SHMS_CAL_FOUND     P.cal.etotnorm > 0.0 
+HMS_CAL_FOUND      H.cal.etotnorm > 0.5
+SHMS_CAL_FOUND     P.cal.etotnorm > 0.0
 
 GOOD_HMS_TRACK	      	      HMS_CAL_FOUND && H.dc.ntrack > 0
 GOOD_SHMS_TRACK	      	      SHMS_CAL_FOUND && P.dc.ntrack > 0
@@ -101,43 +99,12 @@ Tracking_master GOOD_COIN_TRACK_FOUND
 
 Block: Physics       
 
-# Accceptance cuts for SHMS gloden track defined here (Not used in SHMS Tracking)
-
+# Accceptance cuts for SHMS golden track defined here (Not used in SHMS Tracking)
 pcut_acceptance		  P.gtr.th > -0.06 && P.gtr.th < 0.06 && P.gtr.ph > -0.04 && P.gtr.ph < 0.04 && P.gtr.dp > -10 && P.gtr.dp < 20
-
-# Define some rough calorimeter cuts
-
-SHMSCalel	P.cal.etottracknorm > 0.7
-SHMSCalpi	P.cal.etottracknorm < 0.7
-
-##################
-###  SHMS HGC  ###
-##################
-
+# Define a rough hadron calorimeter cut
+SHMSCalh	P.cal.etottracknorm < 0.7
 SHMScoindcindipole	P.dc.InsideDipoleExit == 1
-
 SHMSGEN		shmshodstarttime && SHMScoindcindipole && pcut_acceptance
-SHMSMMpicut     P.kin.secondary.MMpi > 0.901 && P.kin.secondary.MMpi < 1.054
-SHMSAEROpi      P.aero.npeSum  > 1.5
-
-SHMSHGCShouldpi		SHMSGEN && SHMSCalpi && SHMSMMpicut && SHMSAEROpi
-SHMSHGCDidpi		SHMSHGCShouldpi && P.hgcer.npeSum > 1.5
-
-###################
-###  SHMS Aero  ###
-###################
-
-SHMSHGCpi      P.hgcer.npeSum  > 1.5
-
-SHMSAeroShouldpi         SHMSGEN && SHMSCalpi && SHMSMMpicut && SHMSHGCpi
-SHMSAeroDidpi            SHMSAeroShouldpi && P.aero.npeSum > 1.0
-
-##################
-###  SHMS NGC  ###
-##################
-
-SHMSNGCShouldel         	    SHMSGEN && SHMSCalel && SHMSHGCpi && SHMSAEROpi
-SHMSNGCDidel			    SHMSNGCShouldel && P.ngcer.npeSum > 0.5
 
 ##################
 ###   HMS HGC  ###
