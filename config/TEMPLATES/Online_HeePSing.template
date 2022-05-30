@@ -135,21 +135,12 @@ HMS Hodoscope S1X	   :	{H.S1X.scalerCut} [ {(H.S1X.scalerCut/H.1MHz.scalerTimeCu
 =:=:=:=:
 
 EDTM Accepted Triggers	   :	{edtm_accepted.npassed}
-EDTM Live Time		   :	{edtm_accepted.npassed/(P.EDTM.scalerCut+0.0001):%8.4f} +- {(sqrt(P.EDTM.scalerCut-edtm_accepted.npassed) / (P.EDTM.scalerCut+.0001)):%8.4f}
-# SJDK - 20/09/21 - Testing NON scaler cut values to see if number makes more sense
-EDTM Live Time		   :	{edtm_accepted.npassed/(P.EDTM.scaler+0.0001):%8.4f} +-  {(sqrt((((P.EDTM.scaler)*(edtm_accepted.npassed))+((edtm_accepted.npassed)*(edtm_accepted.npassed))) / ((P.EDTM.scaler)*(P.EDTM.scaler)*(P.EDTM.scaler)))):%8.4f}
 
-=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:
-=   Computer Live/Dead Times   = 
-=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:
+SHMS_Scale_Fact		   :	{gHC_ti_ps_factors[1]}
+HMS_Scale_Fact		   : 	{gHC_ti_ps_factors[3]/(1-(1/gHC_ti_ps_factors[1]))}
 
-#Needs fixing
-
-###########################
-######### LUMI ############
-###########################
-
-#Needs fixing
+SHMS_EDTM_LT		   : {(edtm_accepted.npassed/(P.EDTM.scalerCut+0.0001))*SHMS_Scale_Fact:%8.4f} +- {{(sqrt((((P.EDTM.scaler)*(edtm_accepted.npassed)*(SHMS_Scale_Fact)*(SHMS_Scale_Fact))+((edtm_accepted.npassed)*(edtm_accepted.npassed)*(SHMS_Scale_Fact)*(SHMS_Scale_Fact))) / ((P.EDTM.scaler)*(P.EDTM.scaler)*(P.EDTM.scaler)))):%8.4f}}
+HMS_EDTM_LT		   : {(edtm_accepted.npassed/(P.EDTM.scalerCut+0.0001))*HMS_Scale_Fact:%8.4f} +- {{(sqrt((((P.EDTM.scaler)*(edtm_accepted.npassed)*(HMS_Scale_Fact)*(HMS_Scale_Fact))+((edtm_accepted.npassed)*(edtm_accepted.npassed)*(HMS_Scale_Fact)*(HMS_Scale_Fact))) / ((P.EDTM.scaler)*(P.EDTM.scaler)*(P.EDTM.scaler)))):%8.4f}}
 
 #############################
 ### Detector Efficiencies ###
