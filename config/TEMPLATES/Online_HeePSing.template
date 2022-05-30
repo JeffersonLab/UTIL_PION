@@ -135,12 +135,14 @@ HMS Hodoscope S1X	   :	{H.S1X.scalerCut} [ {(H.S1X.scalerCut/H.1MHz.scalerTimeCu
 =:=:=:=:
 
 EDTM Accepted Triggers	   :	{edtm_accepted.npassed}
+HMS EDTM Accepted Triggers :	{hms_edtm_accepted.npassed}
+SHMS EDTM Accepted Triggers :	{shms_edtm_accepted.npassed}
 
-SHMS_Scale_Fact		   :	{gHC_ti_ps_factors[1]}
 HMS_Scale_Fact		   : 	{gHC_ti_ps_factors[3]/(1-(1/gHC_ti_ps_factors[1]))}
+SHMS_Scale_Fact		   :	{gHC_ti_ps_factors[1]}
 
-SHMS_EDTM_LT		   : {(edtm_accepted.npassed/(P.EDTM.scalerCut+0.0001))*SHMS_Scale_Fact:%8.4f} +- {{(sqrt((((P.EDTM.scaler)*(edtm_accepted.npassed)*(SHMS_Scale_Fact)*(SHMS_Scale_Fact))+((edtm_accepted.npassed)*(edtm_accepted.npassed)*(SHMS_Scale_Fact)*(SHMS_Scale_Fact))) / ((P.EDTM.scaler)*(P.EDTM.scaler)*(P.EDTM.scaler)))):%8.4f}}
-HMS_EDTM_LT		   : {(edtm_accepted.npassed/(P.EDTM.scalerCut+0.0001))*HMS_Scale_Fact:%8.4f} +- {{(sqrt((((P.EDTM.scaler)*(edtm_accepted.npassed)*(HMS_Scale_Fact)*(HMS_Scale_Fact))+((edtm_accepted.npassed)*(edtm_accepted.npassed)*(HMS_Scale_Fact)*(HMS_Scale_Fact))) / ((P.EDTM.scaler)*(P.EDTM.scaler)*(P.EDTM.scaler)))):%8.4f}}
+HMS_EDTM_LT		   : 	{(((hms_edtm_accepted.npassed/(P.EDTM.scaler+0.0001))*(gHC_ti_ps_factors[3]/(1-(1/gHC_ti_ps_factors[1]))))):%8.4f} +- {(sqrt((((P.EDTM.scaler)*(hms_edtm_accepted.npassed)*(gHC_ti_ps_factors[3]/(1-(1/gHC_ti_ps_factors[1])))*(gHC_ti_ps_factors[3]/(1-(1/gHC_ti_ps_factors[1]))))+((hms_edtm_accepted.npassed)*(hms_edtm_accepted.npassed)*(gHC_ti_ps_factors[3]/(1-(1/gHC_ti_ps_factors[1])))*(gHC_ti_ps_factors[3]/(1-(1/gHC_ti_ps_factors[1]))))) / ((P.EDTM.scaler)*(P.EDTM.scaler)*(P.EDTM.scaler)))):%8.4f}
+SHMS_EDTM_LT		   : 	{((shms_edtm_accepted.npassed/(P.EDTM.scaler+0.0001))*(gHC_ti_ps_factors[1])):%8.4f} +- {(sqrt((((P.EDTM.scaler)*(shms_edtm_accepted.npassed)*(gHC_ti_ps_factors[1])*(gHC_ti_ps_factors[1]))+((shms_edtm_accepted.npassed)*(shms_edtm_accepted.npassed)*(gHC_ti_ps_factors[1])*(gHC_ti_ps_factors[1]))) / ((P.EDTM.scaler)*(P.EDTM.scaler)*(P.EDTM.scaler)))):%8.4f}
 
 #############################
 ### Detector Efficiencies ###
