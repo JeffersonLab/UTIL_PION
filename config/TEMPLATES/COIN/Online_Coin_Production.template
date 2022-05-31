@@ -173,6 +173,16 @@ EDTM Live Time		   :	{edtm_accepted.npassed/(P.EDTM.scalerCut+0.0001):%8.4f} +- 
 # SJDK - 20/09/21 - Testing NON scaler cut values to see if number makes more sense
 EDTM Live Time		   :	{edtm_accepted.npassed/(P.EDTM.scaler+0.0001):%8.4f} +- {(sqrt((((P.EDTM.scaler)*(edtm_accepted.npassed))+((edtm_accepted.npassed)*(edtm_accepted.npassed))) / ((P.EDTM.scaler)*(P.EDTM.scaler)*(P.EDTM.scaler)))):%8.4f}
 
+=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:
+=   Computer Live/Dead Times   = 
+=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:
+
+*New* work in progress calculations, might give numbers that make sense
+
+HMS_CPULT  		   :	{((pTRIG4_ROC2.npassed)/(P.pTRIG4.scaler)):%8.4f} +- {(sqrt(((P.pTRIG4.scaler*pTRIG4_ROC2.npassed)+((pTRIG4_ROC2.npassed)*(pTRIG4_ROC2.npassed)))/(P.pTRIG4.scaler*P.pTRIG4.scaler*P.pTRIG4.scaler))):%8.4f}
+SHMS_CPULT  		   :	{((pTRIG1_ROC2.npassed)/(P.pTRIG1.scaler)):%8.4f} +- {(sqrt(((P.pTRIG1.scaler*pTRIG1_ROC2.npassed)+((pTRIG1_ROC2.npassed)*(pTRIG1_ROC2.npassed)))/(P.pTRIG1.scaler*P.pTRIG1.scaler*P.pTRIG1.scaler))):%8.4f}
+COIN_CPULT  		   :	{((pTRIG5_ROC2.npassed)/(P.pTRIG5.scaler)):%8.4f} +- {(sqrt(((P.pTRIG5.scaler*pTRIG5_ROC2.npassed)+((pTRIG5_ROC2.npassed)*(pTRIG5_ROC2.npassed)))/(P.pTRIG5.scaler*P.pTRIG5.scaler*P.pTRIG5.scaler))):%8.4f}
+
 #############################
 ### Detector Efficiencies ###
 #############################

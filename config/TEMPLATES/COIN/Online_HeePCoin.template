@@ -173,13 +173,11 @@ EDTM Live Time		   :	{edtm_accepted.npassed/(P.EDTM.scaler+0.0001):%8.4f} +- {(s
 =   Computer Live/Dead Times   = 
 =:=:=:=:=:=:=:=:=:=:=:=:=:=:=:=:
 
-#Needs fixing
+*New* work in progress calculations, might give numbers that make sense
 
-###########################
-######### LUMI ############
-###########################
-
-#Needs fixing
+HMS_CPULT  		   :	{((pTRIG4_ROC2.npassed)/(P.pTRIG4.scaler)):%8.4f} +- {(sqrt(((P.pTRIG4.scaler*pTRIG4_ROC2.npassed)+((pTRIG4_ROC2.npassed)*(pTRIG4_ROC2.npassed)))/(P.pTRIG4.scaler*P.pTRIG4.scaler*P.pTRIG4.scaler))):%8.4f}
+SHMS_CPULT  		   :	{((pTRIG1_ROC2.npassed)/(P.pTRIG1.scaler)):%8.4f} +- {(sqrt(((P.pTRIG1.scaler*pTRIG1_ROC2.npassed)+((pTRIG1_ROC2.npassed)*(pTRIG1_ROC2.npassed)))/(P.pTRIG1.scaler*P.pTRIG1.scaler*P.pTRIG1.scaler))):%8.4f}
+COIN_CPULT  		   :	{((pTRIG5_ROC2.npassed)/(P.pTRIG5.scaler)):%8.4f} +- {(sqrt(((P.pTRIG5.scaler*pTRIG5_ROC2.npassed)+((pTRIG5_ROC2.npassed)*(pTRIG5_ROC2.npassed)))/(P.pTRIG5.scaler*P.pTRIG5.scaler*P.pTRIG5.scaler))):%8.4f}
 
 #############################
 ### Detector Efficiencies ###
