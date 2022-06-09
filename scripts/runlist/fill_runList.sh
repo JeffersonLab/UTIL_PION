@@ -34,7 +34,7 @@ RUNNUMBER=$1
 RUNTYPE=$2
 TARGET=$3
 if [[ ${ANATYPE} = *"Pion"* ]]; then
-    RUNLIST="${UTILPATH}/runlist_pionLT_2021.csv"
+    RUNLIST="${UTILPATH}/runlist_pionLT_2022.csv"
 elif [[ ${ANATYPE} = *"Kaon"* ]]; then
     RUNLIST="${UTILPATH}/runlist_kaonLT_2021.csv"
 fi
