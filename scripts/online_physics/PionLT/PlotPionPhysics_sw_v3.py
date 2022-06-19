@@ -31,7 +31,7 @@ maxrangeuser = 1.5     #  max range for -t vs phi plot     : 2/6/2022 DJG - open
 
 Q2min_user = 2.5        # min range for Q2 plot (Standard Running with runnumber as an input)
 Q2max_user = 6.5        # max range for Q2 plot (Standard Running with runnumber as an input)
-Wmin_user = 2.0         # min range for W plot (Standard Running with runnumber as an input)
+Wmin_user = 1.0         # min range for W plot (Standard Running with runnumber as an input)
 Wmax_user = 4.0         # max range for W plot (Standard Running with runnumber as an input)
 tmin_user = 0.0         # min range for t plot (Standard Running with runnumber as an input)
 tmax_user = 1.5         # max range for t plot (Standard Running with runnumber as an input)

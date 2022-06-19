@@ -39,7 +39,8 @@ from ROOT import kBlack, kBlue, kRed
 
 # Defining some constants here
 minbin = 0.0 # minbin for selecting neutrons events in missing mass distribution
-maxbin = 0.05 # maxbin for selecting neutrons events in missing mass distribution
+# NH - changed this at Dave G's request, as we were cutting out good elastics (radiative tail) 
+maxbin = 0.4 # maxbin for selecting neutrons events in missing mass distribution
 
 ##################################################################################################################################################
 
