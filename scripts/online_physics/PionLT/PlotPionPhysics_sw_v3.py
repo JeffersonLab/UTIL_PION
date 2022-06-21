@@ -29,12 +29,12 @@ minrangeuser = 0       #  min range for -t vs phi plot
 #maxrangeuser = 0.6    #  max range for -t vs phi plot     : 13/12/2021 - SJDK - Changed range again
 maxrangeuser = 0.9     #  max range for -t vs phi plot     : 2/6/2022 DJG - opened this up
 
-Q2min_user = 0.5        # min range for Q2 plot (Standard Running with runnumber as an input)
-Q2max_user = 4.5        # max range for Q2 plot (Standard Running with runnumber as an input)
-Wmin_user = 1.0         # min range for W plot (Standard Running with runnumber as an input)
-Wmax_user = 4.0         # max range for W plot (Standard Running with runnumber as an input)
-tmin_user = 0.0         # min range for t plot (Standard Running with runnumber as an input)
-tmax_user = 0.9         # max range for t plot (Standard Running with runnumber as an input)
+Q2min_user = 2.0        # min range for Q2 plot (Standard running with runnumber as an input)
+Q2max_user = 6.0        # max range for Q2 plot (Standard running with runnumber as an input)
+Wmin_user = 1.0         # min range for W plot (Standard running with runnumber as an input)
+Wmax_user = 4.0         # max range for W plot (Standard running with runnumber as an input)
+tmin_user = 0.0         # min range for t plot (Standard running with runnumber as an input)
+tmax_user = 0.9         # max range for t plot (Standard running with runnumber as an input)
 
 ##################################################################################################################################################
 
@@ -88,12 +88,12 @@ elif (FilenameOverride != False): # If filename override set, format the file na
 if Target == "LD2":
     minbin = 0.88 # minimum bin for selecting neutrons events in missing mass distribution
     maxbin = 1.04 # maximum bin for selecting neutrons events in missing mass distribution
-# SJDK - 08/02/22 - In some ways, whether the dummy is like LD2 or LH2 depends upon the runs around it, something that will have to be adressed offline (the online count was a  little irellevant anyway)
+# SJDK - 08/02/22 - In some ways, whether the dummy is like LD2 or LH2 depends upon the runs around it, something that will have to be adressed offline (the online count was a little irellevant anyway)
 elif Target == "LH2" or Target == "Dummy10cm": # setting for LH2, figure it should be fine for dummy too
     minbin = 0.90 # minimum bin for selecting neutrons events in missing mass distribution
     maxbin = 0.98 # maximum bin for selecting neutrons events in missing mass distribution
 else:
-    print("Target argument not given or entered incorrectly, should be LH2, LD2 or Dummy10cm - defaulting to LH2 MM cut values")
+    print("Target argument not given or entered incorrectly, should be LH2, LD2 or Dummy10cm - defaulting to LD2 MM cut values")
     minbin = 0.88 # minimum bin for selecting neutrons events in missing mass distribution
     maxbin = 1.04 # maximum bin for selecting neutrons events in missing mass distribution
 
@@ -199,9 +199,7 @@ P_aero_npe_pions_uncut = ROOT.TH1D("P_aero_npe_pions_uncut", "SHMS aero npeSum; 
 P_ngcer_npe_pions_uncut = ROOT.TH1D("P_ngcer_npe_pions_uncut", "SHMS NGC npeSum; SHMS_ngcer_npeSum; Counts", 200, 0, 50)
 P_MMpi_pions_uncut = ROOT.TH1D("P_MMpi_pions_uncut", "Missing Mass (no cuts); MM_{#pi}; Counts", 200, 0.5, 1.8)
 P_RFTime_pions_uncut = ROOT.TH1D("P_RFTime_pions_uncut", "SHMS RFTime; SHMS_RFTime; Counts", 200, 0, 4)
-#ePiCoinTime_pions_uncut = ROOT.TH1D("ePiCoinTime_pions_uncut", "Electron-Pion CTime (no cuts); e #pi Coin_Time; Counts", 200, -50, 50)
-# SJDK 26/11/21 - Narrowed the range for 2ns running, bin size still the same
-ePiCoinTime_pions_uncut = ROOT.TH1D("ePiCoinTime_pions_uncut", "Electron-Pion CTime (no cuts); e #pi Coin_Time; Counts", 100, -25, 25)
+ePiCoinTime_pions_uncut = ROOT.TH1D("ePiCoinTime_pions_uncut", "Electron-Pion CTime (no cuts); e #pi Coin_Time; Counts", 120, -30, 30)
 
 H_xp_pions_cut = ROOT.TH1D("H_xp_pions_cut", "HMS x'; HMS_gtr_xp; Counts", 200, -0.2, 0.2)
 H_yp_pions_cut = ROOT.TH1D("H_yp_pions_cut", "HMS y'; HMS_gtr_yp; Counts", 200, -0.2, 0.2)
@@ -217,18 +215,14 @@ P_aero_npe_pions_cut = ROOT.TH1D("P_aero_npe_pions_cut", "SHMS aero npeSum; SHMS
 P_ngcer_npe_pions_cut = ROOT.TH1D("P_ngcer_npe_pions_cut", "SHMS NGC npeSum; SHMS_ngcer_npeSum; Counts", 200, 0, 50)
 P_MMpi_pions_cut = ROOT.TH1D("P_MMpi_pions_cut", "Missing Mass (with cuts); MM_{#pi}; Counts", 200, 0.5, 1.8)
 P_RFTime_pions_cut = ROOT.TH1D("P_RFTime_pions_cut", "SHMS RFTime; SHMS_RFTime; Counts", 200, 0, 4)
-#ePiCoinTime_pions_cut = ROOT.TH1D("ePiCoinTime_pions_cut", "Electron-Pion CTime (with cuts); e #pi Coin_Time; Counts", 200, -50, 50)
-# SJDK 26/11/21 - Narrowed the range for 2ns running, bin size still the same
-ePiCoinTime_pions_cut = ROOT.TH1D("ePiCoinTime_pions_cut", "Electron-Pion CTime (with cuts); e #pi Coin_Time; Counts", 100, -25, 25)
+ePiCoinTime_pions_cut = ROOT.TH1D("ePiCoinTime_pions_cut", "Electron-Pion CTime (with cuts); e #pi Coin_Time; Counts", 120, -30, 30)
 epsilon_pions_cut = ROOT.TH1D("epsilon_pions_cut", "Epsilon Dist for Prompt Events (Incl MM Cut); epsilon; Counts", 200, 0, 1.0)
 
 ePiCoinTime_pions_cut_prompt = ROOT.TH1D("ePiCoinTime_pions_cut_prompt", "Electron-Pion CTime; e #pi Coin_Time; Counts", 8, -2, 2)
 P_MMpi_pions_cut_prompt = ROOT.TH1D("P_MMpi_pions_cut_prompt", "Missing Mass; MM_{#pi}; Counts", 200, 0.5, 1.8)
 
-#ePiCoinTime_pions_cut_randm = ROOT.TH1D("ePiCoinTime_pions_cut_randm", "Electron-Pion CTime; e #pi Coin_Time; Counts", 160, -40, 40)
-# SJDK 26/11/21 - Narrowed the range for 2ns running, bin size still the same
 # SJDK 20/06/22 - Changed the binning of the 1D CT distribution for randoms. It was different from the full distribution so some values were actually getting cut off and making the random selection look bad (it isn't)
-ePiCoinTime_pions_cut_randm = ROOT.TH1D("ePiCoinTime_pions_cut_randm", "Electron-Pion CTime; e #pi Coin_Time; Counts", 100, -25, 25)
+ePiCoinTime_pions_cut_randm = ROOT.TH1D("ePiCoinTime_pions_cut_randm", "Electron-Pion CTime; e #pi Coin_Time; Counts", 120, -30, 30)
 P_MMpi_pions_cut_randm = ROOT.TH1D("P_MMpi_pions_cut_randm", "Missing Mass; MM_{#pi}; Counts", 200, 0.5, 1.8)
 
 P_MMpi_pions_cut_randm_scaled = ROOT.TH1D("P_MMpi_pions_cut_randm_scaled", "Missing Mass; MM_{#pi}; Counts", 200, 0.5, 1.8)
@@ -248,11 +242,8 @@ elif (FilenameOverride != False): # Special case, run with specifc file name, co
 
 # 2D Histograms for pions
 P_hgcer_vs_aero_npe_pions_uncut = ROOT.TH2D("P_hgcer_vs_aero_npe_pions_uncut", "SHMS HGC npeSum vs SHMS Aero npeSum (no cut); SHMS_hgcer_npeSum; SHMS_aero_npeSum", 100, 0, 50, 100, 0, 50)
-#ePiCoinTime_vs_MMpi_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_MMpi_pions_uncut","Electron-Pion CTime vs Missing Mass (no cut); e #pi Coin_Time; MM_{#pi}", 160, -40, 40, 200, 0, 2)
-#ePiCoinTime_vs_beta_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_beta_pions_uncut", "Electron-Pion CTime vs SHMS #beta (no cut); e #pi Coin_Time; SHMS_#beta", 160, -40, 40, 200, 0, 2)
-# SJDK 26/11/21 - Narrowed the range for 2ns running, bin size still the same
-ePiCoinTime_vs_MMpi_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_MMpi_pions_uncut","Electron-Pion CTime vs Missing Mass (no cut); e #pi Coin_Time; MM_{#pi}", 100, -25, 25, 200, 0, 2)
-ePiCoinTime_vs_beta_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_beta_pions_uncut", "Electron-Pion CTime vs SHMS #beta (no cut); e #pi Coin_Time; SHMS_#beta", 100, -25, 25, 200, 0, 2)
+ePiCoinTime_vs_MMpi_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_MMpi_pions_uncut","Electron-Pion CTime vs Missing Mass (no cut); e #pi Coin_Time; MM_{#pi}", 120, -30, 30, 200, 0, 2)
+ePiCoinTime_vs_beta_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_beta_pions_uncut", "Electron-Pion CTime vs SHMS #beta (no cut); e #pi Coin_Time; SHMS_#beta", 120, -30, 30, 200, 0, 2)
 P_RFTime_vs_MMpi_pions_uncut = ROOT.TH2D("P_RFTime_vs_MMpi_pions_uncut", "SHMS RFTime vs Missing Mass (no cuts); SHMS_RFTime_Dist; MM_{#pi}", 100, 0, 4, 100, 0, 2)
 P_cal_etottracknorm_vs_ngcer_npe_pions_uncut = ROOT.TH2D("P_cal_etottracknorm_vs_ngcer_npe_pions_uncut", "SHMS cal etottracknorm vs SHMS NGC xAtCer (no cut); SHMS_cal_etottracknorm; SHMS_ngcer_xAtCer", 100, -10, 10, 100, -10, 10)
 P_cal_fly_numGoodAdcHits_col_row_uncut = ROOT.TH2D("P_cal_fly_numGoodAdcHits_col_row_uncut","SHMS Shower  Occupancy ; Col Number ;  Row Number",14,0,14,16,0,16)
@@ -278,8 +269,8 @@ P_hgcer_vs_aero_npe_pions_cut = ROOT.TH2D("P_hgcer_vs_aero_npe_pions_cut", "SHMS
 ePiCoinTime_vs_MMpi_pions_cut = ROOT.TH2D("ePiCoinTime_vs_MMpi_pions_cut","Electron-Pion CTime vs Missing Mass Prompt Peak (with PID cuts); e #pi Coin_Time; MM_{#pi}", 100, -2, 2, 200, 0, 2)
 ePiCoinTime_vs_beta_pions_cut = ROOT.TH2D("ePiCoinTime_vs_beta_pions_cut", "Electron-Pion CTime vs SHMS #beta Prompt Peak (with PID cuts); e #pi Coin_Time; SHMS_#beta", 100, -2, 2, 80, 0.6, 1.4)
 # SJDK 20/06/22 - New versions showing the full range
-ePiCoinTime_vs_MMpi_pions_cut_Full = ROOT.TH2D("ePiCoinTime_vs_MMpi_pions_cut_Full","Electron-Pion CTime vs Missing Mass (with PID cuts); e #pi Coin_Time; MM_{#pi}", 100, -25, 25, 200, 0, 2)
-ePiCoinTime_vs_beta_pions_cut_Full = ROOT.TH2D("ePiCoinTime_vs_beta_pions_cut_Full", "Electron-Pion CTime vs SHMS #beta (with PID cuts); e #pi Coin_Time; SHMS_#beta", 100, -25, 25, 80, 0.6, 1.4)
+ePiCoinTime_vs_MMpi_pions_cut_Full = ROOT.TH2D("ePiCoinTime_vs_MMpi_pions_cut_Full","Electron-Pion CTime vs Missing Mass (with PID cuts); e #pi Coin_Time; MM_{#pi}", 120, -30, 30, 200, 0, 2)
+ePiCoinTime_vs_beta_pions_cut_Full = ROOT.TH2D("ePiCoinTime_vs_beta_pions_cut_Full", "Electron-Pion CTime vs SHMS #beta (with PID cuts); e #pi Coin_Time; SHMS_#beta", 120, -30, 30, 80, 0.6, 1.4)
 P_RFTime_vs_MMpi_pions_cut = ROOT.TH2D("P_RFTime_vs_MMpi_pions_cut", "SHMS RFTime vs Missing Mass (with cuts); SHMS_RFTime_Dist; MM_{#pi}", 100, 0, 4, 100, 0, 2)
 P_cal_etottracknorm_vs_ngcer_npe_pions_cut = ROOT.TH2D("P_cal_etottracknorm_vs_ngcer_npe_pions_cut", "P cal etottracknorm vs SHMS NGC xAtCer (with cuts); SHMS_cal_etottracknorm; SHMS_ngcer_xAtCer", 100, -10, 10, 100, -10, 10)
 P_cal_fly_numGoodAdcHits_col_row_cut = ROOT.TH2D("P_cal_fly_numGoodAdcHits_col_row_cut","SHMS Shower  Occupancy ; Col Number ;  Row Number",14,0,14,16,0,16)
