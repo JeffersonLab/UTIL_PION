@@ -194,3 +194,5 @@ if [[ `echo "${#DuplicateLines[@]}"` != 0 ]]; then # If the array is not empty, 
 else
     echo ${RUNLIST_INFO} >> ${RUNLIST} # Print the run list info to the file
 fi
+
+python3 $UTILPATH/scripts/online_physics/PionLT/calculate_charge.py $RUNNUMBER

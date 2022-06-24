@@ -99,12 +99,12 @@ if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_D
     if [[ $option1 == "y" || $option1 == "Y" || $option1 == "yes" || $option1 == "Yes" ]]; then
 	rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root"
 	echo "Reprocessing"
-	python3 ${UTILPATH}/scripts/online_physics/PionLT/pion_prod_analysis_sw_v3.py Pion_coin_replay_production ${RUNNUMBER} ${MAXEVENTS} ${TARGET}
+	python3 ${UTILPATH}/scripts/online_physics/PionLT/pion_prod_analysis_sw.py Pion_coin_replay_production ${RUNNUMBER} ${MAXEVENTS} ${TARGET}
     else
 	echo "Skipping python analysis script step"
     fi
 elif [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Analysed_Data.root" ]; then
-	python3 ${UTILPATH}/scripts/online_physics/PionLT/pion_prod_analysis_sw_v3.py Pion_coin_replay_production ${RUNNUMBER} ${MAXEVENTS} ${TARGET}
+	python3 ${UTILPATH}/scripts/online_physics/PionLT/pion_prod_analysis_sw.py Pion_coin_replay_production ${RUNNUMBER} ${MAXEVENTS} ${TARGET}
 fi
 
 sleep 3
@@ -116,12 +116,12 @@ if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Dat
     if [[ $option2 == "y" || $option2 == "Y" || $option2 == "yes" || $option2 == "Yes" ]]; then
 	rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root"
 	echo "Reprocessing"
-	python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw_v3.py Analysed_Data ${RUNNUMBER} ${MAXEVENTS} ${TARGET}
+	python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw.py Analysed_Data ${RUNNUMBER} ${MAXEVENTS} ${TARGET}
     else
 	echo "Skipping python physics plotting script step"
     fi
 elif [ ! -f  "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_Output_Data.root" ]; then
-	python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw_v3.py Analysed_Data ${RUNNUMBER} ${MAXEVENTS} ${TARGET}
+	python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw.py Analysed_Data ${RUNNUMBER} ${MAXEVENTS} ${TARGET}
 fi
 evince "${UTILPATH}/OUTPUT/Analysis/PionLT/${RUNNUMBER}_${MAXEVENTS}_sw_Pion_Analysis_Distributions.pdf" &
 exit 0
