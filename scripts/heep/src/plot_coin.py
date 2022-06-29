@@ -45,9 +45,15 @@ maxbin = 0.4 # maxbin for selecting neutrons events in missing mass distribution
 ##################################################################################################################################################
 
 # Check the number of arguments provided to the script
+FilenameOverride=False # SJDK 23/06/22 - Added secret argument like the physics analysis script
 if len(sys.argv)-1!=3:
-    print("!!!!! ERROR !!!!!\n Expected 3 arguments\n Usage is with - ROOTfileSuffix RunNumber MaxEvents \n!!!!! ERROR !!!!!")
-    sys.exit(1)
+    if len(sys.argv)-1!=4:
+        print("!!!!! ERROR !!!!!\n Expected 3 arguments\n Usage is with - ROOTfileSuffix RunNumber MaxEvents \n!!!!! ERROR !!!!!")
+        sys.exit(1)
+    else:
+        print ("!!!!! Running with secret 4th argument - FilenameOverride - Taking file name to process as stated EXACTLY in 4th arg !!!!!")
+        FilenameOverride=sys.argv[4] # If 4 arguments provided, set the FilenameOverride value to be arg 4
+
 
 ##################################################################################################################################################
 
@@ -78,15 +84,21 @@ ANATYPE=lt.SetPath(os.path.realpath(__file__)).getPath("ANATYPE")
 OUTPATH = "%s/OUTPUT/Analysis/HeeP" % UTILPATH        # Output folder location
 
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, REPLAYPATH))
-Proton_Analysis_Distributions = "%s/%s_%s_sw_heep_Proton_Analysis_Distributions.pdf" % (OUTPATH, runNum, MaxEvent)
+if (FilenameOverride == False):
+    Proton_Analysis_Distributions = OUTPATH+"/%s_%s_sw_heep_Proton_Analysis_Distributions.pdf" % (runNum, MaxEvent)
+elif (FilenameOverride != False): # If filename override set, format the file name based upon the override file name
+    Proton_Analysis_Distributions = OUTPATH+"/%s_heep_Proton_Analysis_Distributions.pdf" %((FilenameOverride.split("_Analysed_Data.root",1)[0]))
 
 #################################################################################################################################################
 '''
 Check that root/output paths and files exist for use
 '''
-
 # Construct the name of the rootfile based upon the info we provided
-rootName = "%s/OUTPUT/Analysis/HeeP/%s_%s_%s.root" % (UTILPATH, runNum, MaxEvent, ROOTSuffix)     # Input file location and variables taking
+if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
+    rootName = OUTPATH+"/%s_%s_%s.root" % (runNum, MaxEvent, ROOTSuffix)     # Input file location and variables taking
+elif (FilenameOverride != False): # Special condition, with 5th arg, use 5th arg as file name
+    rootName = OUTPATH+"/%s" % (FilenameOverride)
+
 print ("Attempting to process %s" %(rootName))
 lt.SetPath(os.path.realpath(__file__)).checkDir(OUTPATH)
 lt.SetPath(os.path.realpath(__file__)).checkFile(rootName)

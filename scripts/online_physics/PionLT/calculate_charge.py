@@ -64,7 +64,7 @@ kinDict = {
 
 #print(kinDict)
 
-bool_data = [i for i,row in charge_data.iterrows() if kinDict['EBeam'] == row['EBeam'] and kinDict['P_HMS'] == row['P_HMS'] and kinDict['Theta_HMS'] == row['Theta_HMS'] and kinDict['Theta_SHMS'] == row['Theta_SHMS'] and kinDict['P_SHMS'] == row['P_SHMS'] and kinDict['Target'] == row['Target'] and 'junk' not in row['Comments']]
+bool_data = [i for i,row in charge_data.iterrows() if kinDict['EBeam'] == row['EBeam'] and kinDict['P_HMS'] == row['P_HMS'] and kinDict['Theta_HMS'] == row['Theta_HMS'] and kinDict['Theta_SHMS'] == row['Theta_SHMS'] and kinDict['P_SHMS'] == row['P_SHMS'] and kinDict['Target'] == row['Target'] and 'junk' not in row['Comments'] and 'bcm' not in row['Comments'] and 'dummy' not in row['Comments']]
 #print(bool_data)
 
 charge_data = charge_data.iloc[bool_data]

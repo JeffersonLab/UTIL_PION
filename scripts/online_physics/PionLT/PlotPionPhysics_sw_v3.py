@@ -26,15 +26,15 @@ from ROOT import kBlack, kBlue, kRed
 
 # Defining some variables here
 minrangeuser = 0       #  min range for -t vs phi plot
-#maxrangeuser = 0.6    #  max range for -t vs phi plot     : 13/12/2021 - SJDK - Changed range again
-maxrangeuser = 0.9     #  max range for -t vs phi plot     : 2/6/2022 DJG - opened this up
+maxrangeuser = 0.6    #  max range for -t vs phi plot     : 13/12/2021 - SJDK - Changed range again
+#maxrangeuser = 1.5     #  max range for -t vs phi plot     : 2/6/2022 DJG - opened this up
 
 Q2min_user = 2.0        # min range for Q2 plot (Standard running with runnumber as an input)
 Q2max_user = 6.0        # max range for Q2 plot (Standard running with runnumber as an input)
-Wmin_user = 1.0         # min range for W plot (Standard running with runnumber as an input)
+Wmin_user = 2.0         # min range for W plot (Standard running with runnumber as an input)
 Wmax_user = 4.0         # max range for W plot (Standard running with runnumber as an input)
 tmin_user = 0.0         # min range for t plot (Standard running with runnumber as an input)
-tmax_user = 0.9         # max range for t plot (Standard running with runnumber as an input)
+tmax_user = 1.5         # max range for t plot (Standard running with runnumber as an input)
 
 ##################################################################################################################################################
 

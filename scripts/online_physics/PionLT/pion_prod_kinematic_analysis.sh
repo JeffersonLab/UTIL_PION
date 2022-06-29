@@ -70,7 +70,7 @@ TestingVar=$((1))
 while IFS='' read -r line || [[ -n "$line" ]]; do
     runNum=$line
     if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${runNum}_-1_Analysed_Data.root" ]; then
-	echo "Analysis not found for run $runNum in ${UTILPATH}/OUTPUT/"
+	echo "Analysis not found for run $runNum in ${UTILPATH}/OUTPUT/Analysis/PionLT"
 	echo "${runNum}" >> "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses"
 	TestingVar=$((TestingVar+1))
     fi
@@ -94,7 +94,7 @@ elif [ $TestingVar != 1 ]; then
 	    fi
 	done < "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses"
 	# 03/02/22 - SJDK - This script needs to be checked, may not run v3 scripts (which require a target type too)
-	yes y | eval "$REPLAYPATH/UTIL_BATCH/batch_scripts/run_batch_PionLT.sh Pion_Data/${KINEMATIC}_MissingAnalyses" # SJDK 11/01/22 - Need to check this script is actually OK tbh...
+        eval "$REPLAYPATH/UTIL_BATCH/batch_scripts/run_batch_PionLT.sh Prod ${TargetType} Pion_Data/${KINEMATIC}_MissingAnalyses" # SJDK 11/01/22 - Need to check this script is actually OK tbh...
 	sleep 2
 	rm "$REPLAYPATH/UTIL_BATCH/InputRunLists/Pion_Data/${KINEMATIC}_MissingAnalyses" 
     elif [ $Autosub != 1 ]; then
