@@ -53,6 +53,15 @@ except IOError:
 
 run_data = charge_data[charge_data["Run"] == int(runNum)]
 
+try:
+    run_data["EBeam"].iloc[0]
+except IndexError:
+    print('''
+    ERROR: Invalid run number {0}
+           Not found in {1}
+    '''.format(runNum,runList))
+    sys.exit(0)
+
 kinDict = {
     "EBeam" : run_data["EBeam"].iloc[0],
     "P_HMS" : run_data["P_HMS"].iloc[0],
@@ -64,7 +73,7 @@ kinDict = {
 
 #print(kinDict)
 
-bool_data = [i for i,row in charge_data.iterrows() if kinDict['EBeam'] == row['EBeam'] and kinDict['P_HMS'] == row['P_HMS'] and kinDict['Theta_HMS'] == row['Theta_HMS'] and kinDict['Theta_SHMS'] == row['Theta_SHMS'] and kinDict['P_SHMS'] == row['P_SHMS'] and kinDict['Target'] == row['Target'] and 'junk' not in row['Comments'] and 'bcm' not in row['Comments'] and 'dummy' not in row['Comments']]
+bool_data = [i for i,row in charge_data.iterrows() if kinDict['EBeam'] == row['EBeam'] and kinDict['P_HMS'] == row['P_HMS'] and kinDict['Theta_HMS'] == row['Theta_HMS'] and kinDict['Theta_SHMS'] == row['Theta_SHMS'] and kinDict['P_SHMS'] == row['P_SHMS'] and kinDict['Target'] == row['Target'] and row['Comments'].isdigit()]
 #print(bool_data)
 
 charge_data = charge_data.iloc[bool_data]

@@ -21,20 +21,35 @@ import array
 import re # Regexp package - for string manipulation
 from ROOT import TCanvas, TColor, TGaxis, TH1F, TH2F, TPad, TStyle, gStyle, gPad, TGaxis, TLine, TMath, TPaveText, TArc, TGraphPolar 
 from ROOT import kBlack, kBlue, kRed
+from array import array
 
 ##################################################################################################################################################
 
 # Defining some variables here
 minrangeuser = 0       #  min range for -t vs phi plot
-maxrangeuser = 0.6    #  max range for -t vs phi plot     : 13/12/2021 - SJDK - Changed range again
+maxrangeuser = 0.9   #  max range for -t vs phi plot     : 13/12/2021 - SJDK - Changed range again
 #maxrangeuser = 1.5     #  max range for -t vs phi plot     : 2/6/2022 DJG - opened this up
 
-Q2min_user = 2.0        # min range for Q2 plot (Standard running with runnumber as an input)
-Q2max_user = 6.0        # max range for Q2 plot (Standard running with runnumber as an input)
-Wmin_user = 2.0         # min range for W plot (Standard running with runnumber as an input)
-Wmax_user = 4.0         # max range for W plot (Standard running with runnumber as an input)
+Q2min_user = 4.0        # min range for Q2 plot (Standard running with runnumber as an input)
+Q2max_user = 8.0        # max range for Q2 plot (Standard running with runnumber as an input)
+Wmin_user = 2.4         # min range for W plot (Standard running with runnumber as an input)
+Wmax_user = 3.8         # max range for W plot (Standard running with runnumber as an input)
 tmin_user = 0.0         # min range for t plot (Standard running with runnumber as an input)
 tmax_user = 1.5         # max range for t plot (Standard running with runnumber as an input)
+
+#FreedomInitiative=True
+FreedomInitiative=False
+NRGBs = 3
+NCont = 255
+stops = [ 0.0, 0.5, 1.0 ]
+red =   [ 0.0, 1.0, 1.0 ]
+green = [ 0.0, 1.0, 0.0 ]
+blue =  [ 1.0, 1.0, 0.0 ]
+s = array('d', stops)
+r = array('d', red)
+g = array('d', green)
+b = array('d', blue)
+
 
 ##################################################################################################################################################
 
@@ -461,7 +476,11 @@ phiqvst_pions_cut.SetStats(0)
 phiqvst_pions_cut.GetYaxis().SetRangeUser(minrangeuser,maxrangeuser)
 phiqvst_pions_cut.Draw("SURF2 POL")
 # Section for polar plotting
-gStyle.SetPalette(55)
+if (FreedomInitiative == True):
+    TColor.CreateGradientColorTable(NRGBs, s, r, g, b, NCont)
+    gStyle.SetNumberContours(NCont)
+else:
+    gStyle.SetPalette(55)
 gPad.SetTheta(90)
 gPad.SetPhi(180)
 tvsphi_title_pions = TPaveText(0.0277092,0.89779,0.096428,0.991854,"NDC")

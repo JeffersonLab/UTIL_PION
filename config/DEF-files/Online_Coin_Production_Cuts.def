@@ -155,8 +155,8 @@ HMSCalelec         H.cal.etottracknorm > 0.7 &&  H.cal.etottracknorm < 1.6
 HMSHGCShouldelec         HMSGEN && HMSCalelec 
 HMSHGCDidelec            HMSHGCShouldelec && H.cer.npeSum > 1.5
 
-DELTA_SHMS           P.gtr.dp>-15.5&&P.gtr.dp<25. 
-DELTA_HMS            H.gtr.dp>-10&&H.gtr.dp<10. 
+DELTA_SHMS           P.gtr.dp>-20&&P.gtr.dp<25. 
+DELTA_HMS            H.gtr.dp>-13&&H.gtr.dp<13. 
 HMS_ELEC             H.cal.etottracknorm>.5&&H.cer.npeSum>0.5
 GOOD_EVENT           DELTA_SHMS&&DELTA_HMS&&HMS_ELEC
 
