@@ -63,6 +63,11 @@ shmsScinShouldh     shmsScinShould && P.cal.etotnorm < 0.7 &&  P.cal.etotnorm > 
 shmsScinDid         shmsScinShould && P.dc.ntrack > 0
 shmsScinDidh        shmsScinShouldh && P.dc.ntrack > 0
 
+# Added Pion Tracking eff variables - Added by AU on July 12, 2022
+
+shmsScinShouldpiplus		    shmsScinShouldh && P.aero.npeSum > 1.5
+shmsScinDidpiplus		    shmsScinShouldpiplus && P.dc.ntrack > 0
+
 # SHMS Coin Tracking efficiency for pi- at negative polarity - Added by AU on 03/12/2021
 
 shmsScinShouldpi    shmsScinShouldh && P.ngcer.npeSum < 1.5

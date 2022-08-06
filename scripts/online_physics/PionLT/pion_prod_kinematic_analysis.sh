@@ -65,7 +65,6 @@ if [ -f "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_Missi
     rm "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses"
 else touch "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses" && chmod 775 "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses"
 fi
-
 TestingVar=$((1))
 while IFS='' read -r line || [[ -n "$line" ]]; do
     runNum=$line
@@ -75,7 +74,6 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
 	TestingVar=$((TestingVar+1))
     fi
 done < "$RunListFile"
-
 # 03/02/22 - SJDK - Script calls v3 for python scripts, these versions need the target type specified (they default to LH2)
 if [ $TestingVar == 1 ]; then
     echo "All PionLT  analysis files found"

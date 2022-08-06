@@ -85,7 +85,13 @@ This is the SHMS Coin Pi- tracking efficiency which is only useful for LD- data 
 
 SW_SHMS_Pi-_Coin_TRACK_EFF	  	     :		{shmsScinDidpi.npassed / (shmsScinShouldpi.npassed+0.0001):%8.4f} +- {(sqrt((((shmsScinShouldpi.npassed)*(shmsScinDidpi.npassed))+((shmsScinDidpi.npassed)*(shmsScinDidpi.npassed))) / ((shmsScinShouldpi.npassed)*(shmsScinShouldpi.npassed)*(shmsScinShouldpi.npassed)))):%8.4f}
 
+This is the Pi+ Tracking efficiency which has a Aerogel cut of > 1.5. Do not use this in Shift Checklist - Added by AU on July 12, 2022
+
+SW_SHMS_Pi+_Coin_TRACK_EFF	     :		{shmsScinDidpiplus.npassed / (shmsScinShouldpiplus.npassed+0.0001):%8.4f} +- {(sqrt((((shmsScinShouldpiplus.npassed)*(shmsScinDidpiplus.npassed))+((shmsScinDidpiplus.npassed)*(shmsScinDidpiplus.npassed))) / ((shmsScinShouldpiplus.npassed)*(shmsScinShouldpiplus.npassed)*(shmsScinShouldpiplus.npassed)))):%8.4f}
+
 Note, these are explicitly *coincidence* tracking efficiencies due to the way that the cuts file has been set up. As a consequence, the statistics may be relatively low. In turn, this may lead to large error bars. Don't worry about this!
+
+
 
 ===============================
 ======= Expert Section ========
