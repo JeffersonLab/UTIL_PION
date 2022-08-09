@@ -117,8 +117,8 @@ if spec == "HMS":
     H_hod_goodscinhit = e_tree.array("H.hod.goodscinhit")            #
     H_hod_goodstarttime = e_tree.array("H.hod.goodstarttime")        #
     H_gtr_beta = e_tree.array("H.gtr.beta")                          # Beta is velocity of particle between pairs of hodoscopes
-    H_gtr_xp = e_tree.array("H.gtr.th")                              # xpfp -> Theta
-    H_gtr_yp = e_tree.array("H.gtr.ph")                              # ypfp -> Phi
+    H_gtr_th = e_tree.array("H.gtr.th")                              # 
+    H_gtr_ph = e_tree.array("H.gtr.ph")                              # 
     H_gtr_dp = e_tree.array("H.gtr.dp")                              # dp is Delta
     H_gtr_p = e_tree.array("H.gtr.p")                                # 
     H_cal_etotnorm = e_tree.array("H.cal.etotnorm")                  #
@@ -132,8 +132,8 @@ if spec == "SHMS":
     P_hod_goodscinhit = e_tree.array("P.hod.goodscinhit")            #
     P_hod_goodstarttime = e_tree.array("P.hod.goodstarttime")        #
     P_gtr_beta = e_tree.array("P.gtr.beta")                          # Beta is velocity of particle between pairs of hodoscopes
-    P_gtr_xp = e_tree.array("P.gtr.th")                              # xpfp -> Theta
-    P_gtr_yp = e_tree.array("P.gtr.ph")                              # ypfp -> Phi
+    P_gtr_th = e_tree.array("P.gtr.th")                              # 
+    P_gtr_ph = e_tree.array("P.gtr.ph")                              # 
     P_gtr_dp = e_tree.array("P.gtr.dp")                              # dp is Delta
     P_gtr_p = e_tree.array("P.gtr.p")                                # 
     P_cal_etotnorm = e_tree.array("P.cal.etotnorm")                  #
@@ -227,9 +227,9 @@ def sing():
     if spec == "HMS":
         # Define the array of arrays containing the relevant HMS and SHMS info                              
         
-        NoCut_SING = [H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist, H_W]
+        NoCut_SING = [H_gtr_beta, H_gtr_th, H_gtr_ph, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist, H_W]
         
-        Uncut_SING = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist, H_W) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist, H_W) in zip(*NoCut_SING)]
+        Uncut_SING = [(H_gtr_beta, H_gtr_th, H_gtr_ph, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist, H_W) for (H_gtr_beta, H_gtr_th, H_gtr_ph, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist, H_W) in zip(*NoCut_SING)]
         
         # Create array of arrays of pions after cuts, all events
         
@@ -239,7 +239,7 @@ def sing():
         for arr in Cut_SING_tmp:
             Cut_SING_all_tmp.append(c.add_cut(arr, "sing_ee_cut_all_noRF"))
             
-        Cut_SING_all = [(H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist, H_W) for (H_gtr_beta, H_gtr_xp, H_gtr_yp, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist, H_W) in zip(*Cut_SING_all_tmp)]
+        Cut_SING_all = [(H_gtr_beta, H_gtr_th, H_gtr_ph, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist, H_W) for (H_gtr_beta, H_gtr_th, H_gtr_ph, H_gtr_dp, H_gtr_p, H_hod_goodscinhit, H_hod_goodstarttime, H_cal_etotnorm, H_cal_etottracknorm, H_cer_npeSum, H_RF_Dist, H_W) in zip(*Cut_SING_all_tmp)]
         
         SING = {
             "Uncut_Events" : Uncut_SING,
@@ -249,9 +249,9 @@ def sing():
     if spec == "SHMS":
         # Define the array of arrays containing the relevant HMS and SHMS info                              
         
-        NoCut_SING = [pmiss_z, pmiss_y, pmiss_x, W, MMpi, pmiss, emiss, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, P_RF_Dist]
+        NoCut_SING = [pmiss_z, pmiss_y, pmiss_x, W, MMpi, pmiss, emiss, P_gtr_beta, P_gtr_th, P_gtr_ph, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, P_RF_Dist]
         
-        Uncut_SING = [(pmiss_z, pmiss_y, pmiss_x, W, MMpi, pmiss, emiss, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, P_RF_Dist) for (pmiss_z, pmiss_y, pmiss_x, W, MMpi, pmiss, emiss, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, P_RF_Dist) in zip(*NoCut_SING)]
+        Uncut_SING = [(pmiss_z, pmiss_y, pmiss_x, W, MMpi, pmiss, emiss, P_gtr_beta, P_gtr_th, P_gtr_ph, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, P_RF_Dist) for (pmiss_z, pmiss_y, pmiss_x, W, MMpi, pmiss, emiss, P_gtr_beta, P_gtr_th, P_gtr_ph, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, P_RF_Dist) in zip(*NoCut_SING)]
         
         # Create array of arrays of pions after cuts, all events
         
@@ -261,7 +261,7 @@ def sing():
         for arr in Cut_SING_tmp:
             Cut_SING_all_tmp.append(c.add_cut(arr, "sing_ee_cut_ngcer_all_noRF"))
             
-        Cut_SING_all = [(pmiss_z, pmiss_y, pmiss_x, W, MMpi, pmiss, emiss, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, P_RF_Dist) for (pmiss_z, pmiss_y, pmiss_x, W, MMpi, pmiss, emiss, P_gtr_beta, P_gtr_xp, P_gtr_yp, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, P_RF_Dist) in zip(*Cut_SING_all_tmp)]
+        Cut_SING_all = [(pmiss_z, pmiss_y, pmiss_x, W, MMpi, pmiss, emiss, P_gtr_beta, P_gtr_th, P_gtr_ph, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, P_RF_Dist) for (pmiss_z, pmiss_y, pmiss_x, W, MMpi, pmiss, emiss, P_gtr_beta, P_gtr_th, P_gtr_ph, P_gtr_p, P_gtr_dp, P_hod_goodscinhit, P_hod_goodstarttime, P_cal_etotnorm, P_cal_etottracknorm, P_aero_npeSum, P_aero_xAtAero, P_aero_yAtAero, P_hgcer_npeSum, P_hgcer_xAtCer, P_hgcer_yAtCer, P_ngcer_npeSum, P_ngcer_xAtCer, P_ngcer_yAtCer, P_RF_Dist) in zip(*Cut_SING_all_tmp)]
         
         SING = {
             "Uncut_Events" : Uncut_SING,
@@ -280,9 +280,9 @@ def main():
     # Should base the branches to include based on some list and just repeat the list here (or call it again directly below)
 
     if spec == "HMS":
-        SING_Data_Header = ["H_gtr_beta","H_gtr_xp","H_gtr_yp","H_gtr_dp", "H_gtr_p","H_hod_goodscinhit","H_hod_goodstarttime","H_cal_etotnorm","H_cal_etottracknorm","H_cer_npeSum","H_RF_Dist","H_W"]
+        SING_Data_Header = ["H_gtr_beta","H_gtr_th","H_gtr_ph","H_gtr_dp", "H_gtr_p","H_hod_goodscinhit","H_hod_goodstarttime","H_cal_etotnorm","H_cal_etottracknorm","H_cer_npeSum","H_RF_Dist","H_W"]
     if spec == "SHMS":
-        SING_Data_Header = ["pmiss_z","pmiss_y","pmiss_x", "W","MMpi","pmiss","emiss","P_gtr_beta","P_gtr_xp","P_gtr_yp","P_gtr_p","P_gtr_dp","P_hod_goodscinhit","P_hod_goodstarttime","P_cal_etotnorm","P_cal_etottracknorm","P_aero_npeSum","P_aero_xAtAero","P_aero_yAtAero","P_hgcer_npeSum","P_hgcer_xAtCer","P_hgcer_yAtCer", "P_ngcer_npeSum", "P_ngcer_xAtCer", "P_ngcer_yAtCer","P_RF_Dist"]
+        SING_Data_Header = ["pmiss_z","pmiss_y","pmiss_x", "W","MMpi","pmiss","emiss","P_gtr_beta","P_gtr_th","P_gtr_ph","P_gtr_p","P_gtr_dp","P_hod_goodscinhit","P_hod_goodstarttime","P_cal_etotnorm","P_cal_etottracknorm","P_aero_npeSum","P_aero_xAtAero","P_aero_yAtAero","P_hgcer_npeSum","P_hgcer_xAtCer","P_hgcer_yAtCer", "P_ngcer_npeSum", "P_ngcer_xAtCer", "P_ngcer_yAtCer","P_RF_Dist"]
         
     # Need to create a dict for all the branches we grab                                                
     data = {}

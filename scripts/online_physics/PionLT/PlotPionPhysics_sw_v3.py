@@ -24,27 +24,33 @@ from ROOT import kBlack, kBlue, kRed
 from array import array
 
 ##################################################################################################################################################
-# 2022/08/05 - JM removed Q2, W, and t ranges. Now replaced with calculations from Diamond_t_cuts file to auto determine best plotting ranges.
-# Note that DDiamond cuts are not necessary to get these ranges. If the script cannot find them,
-# then theta and/or momenta values are greater than 10% off current runplan values
 
-# Some values still defined here, redefined later in 'if' statements
-Q2Val = 5.00
-WVal = 2.95
-tmin = 0
-tmax = 1
+# Defining some variables here
+minrangeuser = 0       #  min range for -t vs phi plot
+maxrangeuser = 0.9   #  max range for -t vs phi plot     : 13/12/2021 - SJDK - Changed range again
+#maxrangeuser = 1.5     #  max range for -t vs phi plot     : 2/6/2022 DJG - opened this up
 
-Dcuts = True          # Diamond Cuts Enabled?
-#Dcuts = True          
+Q2min_user = 4.0        # min range for Q2 plot (Standard running with runnumber as an input)
+Q2max_user = 8.0        # max range for Q2 plot (Standard running with runnumber as an input)
+Wmin_user = 2.4         # min range for W plot (Standard running with runnumber as an input)
+Wmax_user = 3.8         # max range for W plot (Standard running with runnumber as an input)
+tmin_user = 0.0         # min range for t plot (Standard running with runnumber as an input)
+tmax_user = 1.5         # max range for t plot (Standard running with runnumber as an input)
+
+#FreedomInitiative=True
+FreedomInitiative=False
+NRGBs = 3
+NCont = 255
+stops = [ 0.0, 0.5, 1.0 ]
+red =   [ 0.0, 1.0, 1.0 ]
+green = [ 0.0, 1.0, 0.0 ]
+blue =  [ 1.0, 1.0, 0.0 ]
+s = array('d', stops)
+r = array('d', red)
+g = array('d', green)
+b = array('d', blue)
 
 
-useroverride = False    # Set to true to use above values and not rely on runlist or diamond cuts csv file
-#useroverride = True
-if useroverride == True: 
-    Dcuts = False
-
-polarity = 'P'     # P(positive) or E (negative) SHMS polarity (needed for diamond cuts when taking from run list)
-#polarity = 'E'
 ##################################################################################################################################################
 
 # Check the number of arguments provided to the script
@@ -82,7 +88,6 @@ runNum = sys.argv[2]
 MaxEvent = sys.argv[3]
 Target = sys.argv[4]
 
-
 #################################################################################################################################################
 
 # Add more path setting as needed in a similar manner
@@ -107,157 +112,16 @@ else:
     minbin = 0.88 # minimum bin for selecting neutrons events in missing mass distribution
     maxbin = 1.04 # maximum bin for selecting neutrons events in missing mass distribution
 
-#################################################################################################################################################
-
-targetf = ''
-a1 = 0
-b1 = 0
-a2 = 0
-b2 = 0
-a3 = 0
-b3 = 0
-a4 = 0
-b4 = 0
-angle = 'undef'
-
 if (FilenameOverride != False):
     # Split string on W value, replace p with . and strip the leading Q before converting to a float
     Q2Val = float(((FilenameOverride.split("W")[0]).replace("p",".")).lstrip("Q"))
     # Split string on W, replace p with . and strip leading W, THEN split based on numeric characters and non numeric characters. Select the first entry and convert it to a float with 1 DP precision
-    WVal = float(re.split('[a-zAZ]',((FilenameOverride.split("W")[1]).replace("p",".")).lstrip("W"))[0])
-    if 'center' in FilenameOverride:
-        angle = 'center'
-    elif 'left' in FilenameOverride:
-        angle = 'left'
-    elif 'right' in FilenameOverride:
-        angle = 'right'
+    WVal = round(float(re.split('[a-zAZ]',((FilenameOverride.split("W")[1]).replace("p",".")).lstrip("W"))[0]),1)
+    Q2min = Q2Val - 2 # Minimum value of Q2 on the Q2 vs W plot
+    Q2max = Q2Val + 2 # Maximum value of Q2 on the Q2 vs W plot
+    Wmin = WVal - 0.5 # min y-range for Q2vsW plot
+    Wmax = WVal + 0.5 # max y-range for Q2vsW plot
 
-#################################################################################################################################################
-
-# 2022/08/05 - JM added pulling values from runlist and comparing to diamond cuts file
-
-if useroverride == False:
-    import pandas as pd
-
-    # Taken from UTIL_PION/scripts/rnlists/kinfile.py: Get kinematic setting
-    KinFilePath = REPLAYPATH+"/DBASE/COIN/standard.kinematics"
-    RunNum = runNum
-
-    KinFile = open(KinFilePath)
-    KinFileContent = KinFile.read()
-    KinFile.close()
-
-    pHMS = 0
-    thetaHMS = 0
-    thetaSHMS = 0
-    pSHMS = 0
-
-    TestVar = 0
-    # The loop here is explicitly written such that if there are multiple entries, the values will be overwrriten
-    # The LAST matching block in the file is the one that will be used
-    for KinFileBlock in KinFileContent.split('\n\n'):
-        nLines=0 # Counter for the number of lines in the block of text
-        Lines =[]
-        for KinFileLine in KinFileBlock.split('\n'):
-            nLines+=1
-            if not KinFileLine.startswith("#"): # If line does NOT start with a #, add it to our array
-                Lines.append(KinFileLine)
-        if nLines < 12: # If less than 12 lines, skip to next block
-            continue
-        # If it's an entry with a -, it's a range of run numbers, set the start and end accordingly
-        if "-" in Lines[0]:
-            RunNumArr = Lines[0].split("-")
-            RunStart = int(RunNumArr[0])
-            RunEnd = int(RunNumArr[1])
-        # If there's no -, it's a single line entry and run start and end are the same
-        elif "-" not in Lines[0]:
-            RunStart=int(Lines[0])
-            RunEnd=int(Lines[0])
-        # Check if the provided run number is in the run number range for the block, if it is, set the values
-        if int(RunNum) in range (RunStart, RunEnd+1) :
-            TestVar +=1
-            for entry in Lines :
-                if "ptheta_lab" in entry :
-                    thetaSHMS = float((entry.split("="))[1])
-                if "ppcentral" in entry :
-                    pSHMS = float((entry.split("="))[1])
-                if "htheta_lab" in entry :
-                    thetaHMS = abs(float((entry.split("="))[1]))
-                if "hpcentral" in entry :
-                    pHMS = float((entry.split("="))[1])
-
-    # Now compare kinematic file to csv with all kinematics aligned with Q2, W, t-range, and diamond-cut values
-    df = pd.read_csv(UTILPATH+"/scripts/online_physics/PionLT/Diamond_t_cuts.csv", index_col='Id')
-
-    if FilenameOverride == False:
-        qw=df.loc[(abs(1-thetaHMS/df['thetaHMS'])<0.1) & (abs(1-thetaSHMS/df['thetaSHMS'])<0.1) & (abs(1-pHMS/df['pHMS'])<0.1) & (abs(1-pSHMS/df['pSHMS'])<0.1)]
-        Q2Val = qw.iloc[0]['Q2']
-        WVal = qw.iloc[0]['W']
-        tmin = qw.iloc[0]['tmin']
-        tmax = qw.iloc[0]['tmax']
-
-
-
-    if (Dcuts == True):
-        if ("LH" in Target):
-            targetf = '0'
-        elif 'LD' in Target:
-            if polarity == 'P':
-                targetf = 'LD+'
-            elif polarity == 'E':
-                targetf = 'LD-'
-            else: print ("LD2 polarity undefined, assuming positive")
-        else:
-            print ("!!!!! Target not LH or LD; no diamond cuts !!!!!")
-            Dcuts = False
-
-    if (Dcuts == True and FilenameOverride == False):
-        row=df.loc[(abs(1-thetaHMS/df['thetaHMS'])<0.1) & (abs(1-thetaSHMS/df['thetaSHMS'])<0.1) & (abs(1-pHMS/df['pHMS'])<0.1) & (abs(1-pSHMS/df['pSHMS'])<0.1) & (df['target'] == targetf)]
-        if (row.iloc[0]['status'] == 'y'):
-            a1 = row.iloc[0]['a1']
-            a2 = row.iloc[0]['a2']
-            a3 = row.iloc[0]['a3']
-            a4 = row.iloc[0]['a4']
-            b1 = row.iloc[0]['b1']
-            b2 = row.iloc[0]['b2']
-            b3 = row.iloc[0]['b3']
-            b4 = row.iloc[0]['b4']
-        else: Dcuts = False
-
-
-
-
-    if FilenameOverride != False:
-        qw=df.loc[(df['Q2']==Q2Val) & (df['W'] == WVal) & (df['angle'] == angle)]
-        tmin = qw.iloc[0]['tmin']
-        tmax = qw.iloc[0]['tmax']
-
-    if (Dcuts == True and FilenameOverride != False):
-        row=df.loc[(df['Q2']==Q2Val) & (df['W'] == WVal) & (df['angle'] == angle) & (df['target'] == targetf)]
-        #print (len(row))
-        if (row.iloc[0]['status'] == 'y'):
-            a1 = row.iloc[0]['a1']
-            a2 = row.iloc[0]['a2']
-            a3 = row.iloc[0]['a3']
-            a4 = row.iloc[0]['a4']
-            b1 = row.iloc[0]['b1']
-            b2 = row.iloc[0]['b2']
-            b3 = row.iloc[0]['b3']
-            b4 = row.iloc[0]['b4']
-        else: Dcuts = False
-
-
-
-Q2min = Q2Val - 2 # Minimum value of Q2 on the Q2 vs W plot
-Q2max = Q2Val + 2 # Maximum value of Q2 on the Q2 vs W plot
-Wmin = WVal - 0.5 # min y-range for Q2vsW plot
-Wmax = WVal + 0.5 # max y-range for Q2vsW plot
-# t plotting ranges, set to be multiples of 0.3
-minrangeuser = round(tmin*.5/0.3)*.3
-maxrangeuser = min(round(tmax*2/0.3)*.3,1.5)
-if useroverride==True:
-    minrangeuser = round(tmin/.3)*.3
-    maxrangeuser = round(tmax/.3)*.3
 #################################################################################################################################################
 
 # Construct the name of the rootfile based upon the info we provided
@@ -270,7 +134,6 @@ print ("Attempting to process %s" %(rootName))
 lt.SetPath(os.path.realpath(__file__)).checkDir(OUTPATH)
 lt.SetPath(os.path.realpath(__file__)).checkFile(rootName)
 print("Output path checks out, outputting to %s" % (OUTPATH))
-
 
 ###############################################################################################################################################
 ROOT.gROOT.SetBatch(ROOT.kTRUE) # Set ROOT to batch mode explicitly, does not splash anything to screen
@@ -369,26 +232,26 @@ P_MMpi_pions_cut = ROOT.TH1D("P_MMpi_pions_cut", "Missing Mass (with cuts); MM_{
 P_RFTime_pions_cut = ROOT.TH1D("P_RFTime_pions_cut", "SHMS RFTime; SHMS_RFTime; Counts", 200, 0, 4)
 ePiCoinTime_pions_cut = ROOT.TH1D("ePiCoinTime_pions_cut", "Electron-Pion CTime (with cuts); e #pi Coin_Time; Counts", 120, -30, 30)
 epsilon_pions_cut = ROOT.TH1D("epsilon_pions_cut", "Epsilon Dist for Prompt Events (Incl MM Cut); epsilon; Counts", 200, 0, 1.0)
-epsilon_pions_cut_D = ROOT.TH1D("epsilon_pions_cut_D", "Epsilon Dist for Prompt Events (Incl MM, t-range, and Diamond Cut); epsilon; Counts", 200, 0, 1.0)
 
 ePiCoinTime_pions_cut_prompt = ROOT.TH1D("ePiCoinTime_pions_cut_prompt", "Electron-Pion CTime; e #pi Coin_Time; Counts", 8, -2, 2)
 P_MMpi_pions_cut_prompt = ROOT.TH1D("P_MMpi_pions_cut_prompt", "Missing Mass; MM_{#pi}; Counts", 260, 0.5, 1.8)
-P_MMpi_pions_cut_D_prompt = ROOT.TH1D("P_MMpi_pions_cut_D_prompt", "Missing Mass; MM_{#pi}; Counts", 260, 0.5, 1.8)
 
 # SJDK 20/06/22 - Changed the binning of the 1D CT distribution for randoms. It was different from the full distribution so some values were actually getting cut off and making the random selection look bad (it isn't)
 ePiCoinTime_pions_cut_randm = ROOT.TH1D("ePiCoinTime_pions_cut_randm", "Electron-Pion CTime; e #pi Coin_Time; Counts", 120, -30, 30)
 P_MMpi_pions_cut_randm = ROOT.TH1D("P_MMpi_pions_cut_randm", "Missing Mass; MM_{#pi}; Counts", 260, 0.5, 1.8)
 
 P_MMpi_pions_cut_randm_scaled = ROOT.TH1D("P_MMpi_pions_cut_randm_scaled", "Missing Mass; MM_{#pi}; Counts", 260, 0.5, 1.8)
-P_MMpi_pions_cut_D_randm_scaled = ROOT.TH1D("P_MMpi_pions_cut_D_randm_scaled", "Missing Mass Diamond Cuts; MM_{#pi}; Counts", 260, 0.5, 1.8)
 P_MMpi_pions_cut_randm_sub = ROOT.TH1D("P_MMpi_pions_cut_randm_sub", "Missing Mass Rndm Sub; MM_{#pi}; Counts", 260, 0.5, 1.8)
-P_MMpi_pions_cut_D_randm_sub = ROOT.TH1D("P_MMpi_pions_cut_D_randm_sub", "Missing Mass Rndm Sub w/ Diamond Cuts; MM_{#pi}; Counts", 260, 0.5, 1.8)
 # SJDK - 26/10/21 - Changed the plot title to be more accurate
 phiq_plot = ROOT.TH1D("Phiq", "#phi Dist for Prompt Events (Incl MM Cut); #phi; Counts", 12, -3.14, 3.14) # 2021/10/25 NH - added these at garths request
 #t_plot = ROOT.TH1D("-t", "-t Dist for Prompt Events (Incl MM Cut); -t; Counts", 18, 0, 0.6) # SJDK - 2022/01/13 - Changed t range, kept bin width consistent
-t_plot = ROOT.TH1D("-t", "-t Dist for Prompt Events (Incl MM Cut); -t; Counts", 18, minrangeuser, maxrangeuser) # DJG FEb. 6, 2022 - Changed t range,
-Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; Counts", 200, Q2min, Q2max) 
-W_pions_cut = ROOT.TH1D("W_pions_cut", "W Dist for Prompt Events (Incl MM Cut); W; Counts", 200, Wmin, Wmax)  
+t_plot = ROOT.TH1D("-t", "-t Dist for Prompt Events (Incl MM Cut); -t; Counts", 18, tmin_user, tmax_user) # DJG FEb. 6, 2022 - Changed t range,
+if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
+    Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; Counts", 200, Q2min_user, Q2max_user) # 13/12/21 - SJDK - Adjusted ranges again
+    W_pions_cut = ROOT.TH1D("W_pions_cut", "W Dist for Prompt Events (Incl MM Cut); W; Counts", 200, Wmin_user, Wmax_user)
+elif (FilenameOverride != False): # Special case, run with specifc file name, construct histo with ranges based upon filename
+    Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; Counts", 200, Q2min, Q2max) 
+    W_pions_cut = ROOT.TH1D("W_pions_cut", "W Dist for Prompt Events (Incl MM Cut); W; Counts", 200, Wmin, Wmax)  
 
 ##############################################################################################################################################
 
@@ -414,8 +277,6 @@ P_ypfp_vs_beta_pions_uncut = ROOT.TH2D("P_ypfp_vs_beta_pions_uncut", "SHMS Y'_{f
 P_MMpi_vs_beta_pions_uncut = ROOT.TH2D("P_MMpi_vs_beta_pions_uncut", "Missing Mass vs SHMS #beta (no cut); MM_{#pi}; SHMS_#beta", 100, 0, 2, 200, 0, 2)
 P_cal_xy_pions_uncut = ROOT.TH2D("P_cal_xy_pions_uncut", "SHMS Calorimeter yCalo vs xCalo (no cuts); cal_yCalo(cm); cal_xCalo(cm)", 14, -62.3, 62.3, 16, -71.2, 71.2)
 P_DPexit_xy_pions_uncut = ROOT.TH2D("P_DPexit_xy_pions_uncut", "SHMS Dipole Exit yExit vs xExit (no cuts); yExit(cm); xExit(cm)", 200, -50.0, 50.0, 200, -50.0, 50.0)
-P_dp_vs_H_dp_pions_uncut = ROOT.TH2D("H_dp_vs_P_dp_pions_uncut", "SHMS #delta vs HMS #delta (no cut); SHMS #delta; HMS #delta", 450, -20, 25, 300, -15, 15)
-P_dp_vs_MMpi_pions_uncut = ROOT.TH2D("P_dp_vs_MMpi_pions_uncut", "SHMS #delta vs #pi Missing Mass (no cut); SHMS #delta; MM_{#pi}", 450, -20, 25, 200, 0, 2)
 
 H_cal_etottracknorm_vs_cer_npe_pions_cut = ROOT.TH2D("H_cal_etottracknorm_vs_cer_npe_pions_cut","HMS cal etottracknorm vs HMS cer npeSum (with cuts); H_cal_etottracknorm; H_cer_npeSum",100, 0.5, 1.5, 100, 0, 40)
 P_hgcer_vs_aero_npe_pions_cut = ROOT.TH2D("P_hgcer_vs_aero_npe_pions_cut", "SHMS HGC npeSum vs SHMS aero npeSum (with cuts); SHMS_hgcer_npeSum; SHMS_aero_npeSum", 100, 0, 50, 100, 0, 50)
@@ -444,18 +305,15 @@ P_MMpi_vs_beta_pions_cut = ROOT.TH2D("P_MMpi_vs_beta_pions_cut", "Missing Mass v
 P_cal_xy_pions_cut = ROOT.TH2D("P_cal_xy_pions_cut", "SHMS Calorimeter yCalo vs xCalo (with cuts); cal_yCalo(cm); cal_xCalo(cm)", 14, -62.3, 62.3, 16, -71.2, 71.2)
 P_DPexit_xy_pions_cut = ROOT.TH2D("P_DPexit_xy_pions_cut", "SHMS Dipole Exit  yExit vs xExit (with cuts); yExit(cm); xExit(cm)", 200, -50.0, 50.0, 200, -50.0, 50.0)
 # SJDK - 26/10/21 - Changed the plot title to be more accurate
-Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W Dist for Prompt Events (Incl MM Cut); Q2; W", 200, Q2min, Q2max, 200, Wmin, Wmax)
-Q2vsW_pions_cut_D = ROOT.TH2D("Q2vsW_pions_cut_D", "Q2 vs W Dist for Prompt Events (Incl MM, t-range, and Diamond Cut); Q2; W", 200, Q2min, Q2max, 200, Wmin, Wmax)
+if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
+    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W Dist for Prompt Events (Incl MM Cut); Q2; W", 200, Q2min_user, Q2max_user, 200, Wmin_user, Wmax_user) # 13/12/21 - SJDK - Adjusted range 
+elif (FilenameOverride != False): # Special case, run with specifc file name, construct histo with ranges based upon filename
+    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W Dist for Prompt Events (Incl MM Cut); Q2; W", 200, Q2min, Q2max, 200, Wmin, Wmax)
 # SJDK - 26/10/21 - Changed the plot title to be more accurate
 # NH 2021 11 25 - I changed max value back to 1.5, do not change this or the t marks on the t-phi plots will be wrong!!! Instead ONLY change the range with the constanst on line 31!!
 phiqvst_pions_cut = ROOT.TH2D("phiqvst_pions_cut","#phi vs -t Dist for Prompt Events (Incl MM Cut); #phi ;-t", 12, -3.14, 3.14, 48, 0.0, 1.5) #2021 08 12 - NH doubled binning range and # bins : 2021/11/11 JM changed t range - 20/11/21 SJDK - Changed max value from 1.5 to 0.9 
-phiqvst_pions_cut_D = ROOT.TH2D("phiqvst_pions_cut_D","#phi vs -t Dist for Prompt Events (Incl MM, t-range, and Diamond Cut); #phi ;-t", 12, -3.14, 3.14, 48, 0.0, 1.5)
 # SJDK 03/11/21 - New phi_q vs theta_q plot that Steve Wood wanted
 phiqvsthq_pions_cut = ROOT.TH2D("phiqvsthq_pions_cut","#phi_{q} vs #theta_{q}; #phi_{q}; #theta_{q}", 12, -3.14, 3.14, 20, 0, 0.1)
-
-# 08/07/22 - Made the binning here consistent with the uncut version, the bin width differed between the two versions. If you reduce the range (to reduce the blank space) SCALE the number of bins appropriately
-P_dp_vs_H_dp_pions_cut = ROOT.TH2D("H_dp_vs_P_dp_pions_cut", "SHMS #delta vs HMS #delta (Accept+PID cuts); SHMS #delta; HMS #delta", 450, -20, 25, 300, -15, 15)
-P_dp_vs_MMpi_pions_cut = ROOT.TH2D("P_dp_vs_MMpi_pions_cut", "SHMS #delta vs #pi Missing Mass (Accept+PID cuts); SHMS #delta; MM_{#pi}", 450, -20, 25, 200, 0, 2)
 
 P_HGC_xy_npe_pions_uncut = ROOT.TH3D("P_HGC_xy_npe_pions_uncut", "SHMS HGC NPE as fn of yAtCer vs SHMS HGC xAtCer (no cuts); HGC_yAtCer(cm); HGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
 P_Aero_xy_npe_pions_uncut = ROOT.TH3D("P_Aero_xy_npe_pions_uncut", "SHMS Aerogel NPE as fn of yAtCer vs xAtCer (no cuts); Aero_yAtCer(cm); Aero_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
@@ -513,8 +371,6 @@ for event in Uncut_Pion_Events_tree:
     P_NGC_xy_npe_pions_uncut.Fill(event.P_ngcer_yAtCer,event.P_ngcer_xAtCer,event.P_ngcer_npeSum)
     P_cal_xy_etottracknorm_pions_uncut.Fill(event.yCalo,event.xCalo,event.P_cal_etottracknorm)
     P_cal_xy_hits_pions_uncut.Fill(event.yCalo,event.xCalo,event.Cal_Adc_Hits)
-    P_dp_vs_H_dp_pions_uncut.Fill(event.P_gtr_dp, event.H_gtr_dp) 
-    P_dp_vs_MMpi_pions_uncut.Fill(event.P_gtr_dp, event.MMpi)
 
 # SJDK - 26/10/21 - Moved filling of kinematic quantity distributions to a different loop (one over tree with MM cut applied)
 for event in Cut_Pion_Events_All_tree:
@@ -561,14 +417,8 @@ for event in Cut_Pion_Events_All_tree:
     P_NGC_xy_npe_pions_cut.Fill(event.P_ngcer_yAtCer,event.P_ngcer_xAtCer,event.P_ngcer_npeSum)
     P_cal_xy_etottracknorm_pions_cut.Fill(event.yCalo,event.xCalo,event.P_cal_etottracknorm)
     P_cal_xy_hits_pions_cut.Fill(event.yCalo,event.xCalo,event.Cal_Adc_Hits)
-    P_dp_vs_H_dp_pions_cut.Fill(event.P_gtr_dp, event.H_gtr_dp)
-    P_dp_vs_MMpi_pions_cut.Fill(event.P_gtr_dp, event.MMpi)
 
 for event in Cut_Pion_Events_Prompt_tree:
-    if (Dcuts == True):
-        if (-event.MandelT<tmax):
-            if(event.W/event.Q2>a1+b1/event.Q2 and event.W/event.Q2<a2+b2/event.Q2 and event.W/event.Q2>a3+b3/event.Q2 and event.W/event.Q2<a4+b4/event.Q2):
-                P_MMpi_pions_cut_D_prompt.Fill(event.MMpi)
     ePiCoinTime_pions_cut_prompt.Fill(event.CTime_ePiCoinTime_ROC1)
     P_MMpi_pions_cut_prompt.Fill(event.MMpi)
 
@@ -577,15 +427,7 @@ for event in Cut_Pion_Events_Random_tree:
     P_MMpi_pions_cut_randm.Fill(event.MMpi)
 
 # SJDK 26/10/21 - For kinematic quantities, fill the histograms from the tree with the pion MM cut
-if Dcuts == True: print ("Diamond Cuts Applied!")
 for event in Cut_Pion_Events_Prompt_MM_tree:
-    if (Dcuts == True):
-        if (-event.MandelT<tmax):
-            if(event.W/event.Q2>a1+b1/event.Q2 and event.W/event.Q2<a2+b2/event.Q2 and event.W/event.Q2>a3+b3/event.Q2 and event.W/event.Q2<a4+b4/event.Q2):
-                epsilon_pions_cut_D.Fill(event.epsilon)
-                Q2vsW_pions_cut_D.Fill(event.Q2, event.W)
-                phiqvst_pions_cut_D.Fill(event.ph_q, -event.MandelT)
-
     phiq_plot.Fill(event.ph_q)
     t_plot.Fill(-event.MandelT) 
     Q2_pions_cut.Fill(event.Q2)
@@ -601,15 +443,9 @@ print("Histograms filled")
 
 # Random subtraction from missing mass and coin_Time
 for event in Cut_Pion_Events_Random_tree:
-    if (Dcuts == True):
-        if (-event.MandelT<tmax):
-            if(event.W/event.Q2>a1+b1/event.Q2 and event.W/event.Q2<a2+b2/event.Q2 and event.W/event.Q2>a3+b3/event.Q2 and event.W/event.Q2<a4+b4/event.Q2):
-                P_MMpi_pions_cut_D_randm_scaled.Fill(event.MMpi)
-                P_MMpi_pions_cut_D_randm_scaled.Scale(1.0/nWindows)
     P_MMpi_pions_cut_randm_scaled.Fill(event.MMpi)
     P_MMpi_pions_cut_randm_scaled.Scale(1.0/nWindows)
 P_MMpi_pions_cut_randm_sub.Add(P_MMpi_pions_cut_prompt, P_MMpi_pions_cut_randm_scaled, 1, -1)
-P_MMpi_pions_cut_D_randm_sub.Add(P_MMpi_pions_cut_D_prompt, P_MMpi_pions_cut_D_randm_scaled, 1, -1)
 
 ###########################################################################################################################################
 
@@ -640,7 +476,11 @@ phiqvst_pions_cut.SetStats(0)
 phiqvst_pions_cut.GetYaxis().SetRangeUser(minrangeuser,maxrangeuser)
 phiqvst_pions_cut.Draw("SURF2 POL")
 # Section for polar plotting
-gStyle.SetPalette(55)
+if (FreedomInitiative == True):
+    TColor.CreateGradientColorTable(NRGBs, s, r, g, b, NCont)
+    gStyle.SetNumberContours(NCont)
+else:
+    gStyle.SetPalette(55)
 gPad.SetTheta(90)
 gPad.SetPhi(180)
 tvsphi_title_pions = TPaveText(0.0277092,0.89779,0.096428,0.991854,"NDC")
@@ -702,80 +542,6 @@ NeutronEvt_pions.AddText("e #pi n Events: %i" %(BinIntegral_pions))
 NeutronEvt_pions.Draw()
 # End of Neutron Peak Events Selection Section
 c1_pions_kin.Print(Pion_Analysis_Distributions + '(')
-if Dcuts == True:
-    c1_pion_kin_D = TCanvas("c1_pion_kin_D", "Pions Kinematic Distributions", 100, 0, 1000, 900)
-    c1_pion_kin_D.Divide(2,2)
-    c1_pion_kin_D.cd(1)
-    Q2vsW_pions_cut_D.Draw("COLZ")
-    c1_pion_kin_D.cd(2)
-    epsilon_pions_cut_D.Draw()
-    c1_pion_kin_D.cd(3)
-    phiqvst_pions_cut_D.SetStats(0)
-    phiqvst_pions_cut_D.GetYaxis().SetRangeUser(minrangeuser,maxrangeuser)
-    phiqvst_pions_cut_D.Draw("SURF2 POL")
-    # Section for polar plotting
-    gStyle.SetPalette(55)
-    gPad.SetTheta(90)
-    gPad.SetPhi(180)
-    tvsphi_title_pions_D = TPaveText(0.0277092,0.89779,0.096428,0.991854,"NDC")
-    tvsphi_title_pions_D.AddText("-t vs #phi")
-    tvsphi_title_pions_D.Draw()
-    ptphizero_pions_D = TPaveText(0.923951,0.513932,0.993778,0.574551,"NDC")
-    ptphizero_pions_D.AddText("#phi = 0")
-    ptphizero_pions_D.Draw()
-    phihalfpi_pions_D = TLine(0,0,0,0.6)
-    phihalfpi_pions_D.SetLineColor(kBlack)
-    phihalfpi_pions_D.SetLineWidth(2)
-    phihalfpi_pions_D.Draw()
-    ptphihalfpi_pions_D = TPaveText(0.417855,0.901876,0.486574,0.996358,"NDC")
-    ptphihalfpi_pions_D.AddText("#phi = #frac{#pi}{2}")
-    ptphihalfpi_pions_D.Draw()
-    phipi_pions_D = TLine(0,0,-0.6,0)
-    phipi_pions_D.SetLineColor(kBlack)
-    phipi_pions_D.SetLineWidth(2)
-    phipi_pions_D.Draw()
-    ptphipi_pions_D = TPaveText(0.0277092,0.514217,0.096428,0.572746,"NDC")
-    ptphipi_pions_D.AddText("#phi = #pi")
-    ptphipi_pions_D.Draw()
-    phithreepi_pions_D = TLine(0,0,0,-0.6)
-    phithreepi_pions_D.SetLineColor(kBlack)
-    phithreepi_pions_D.SetLineWidth(2)
-    phithreepi_pions_D.Draw()
-    ptphithreepi_pions_D = TPaveText(0.419517,0.00514928,0.487128,0.0996315,"NDC")
-    ptphithreepi_pions_D.AddText("#phi = #frac{3#pi}{2}")
-    ptphithreepi_pions_D.Draw()
-    Arc_pions_D = TArc()
-    for k in range(0, 6):
-        Arc_pions_D.SetFillStyle(0)
-        Arc_pions_D.SetLineWidth(2)
-        # To change the arc radius we have to change number 0.825 in the lower line.
-        Arc_pions_D.DrawArc(0,0,0.95*(k+1)/(10),0.,360.,"same")
-    tradius_pions_D = TGaxis(0,0,0.575,0,minrangeuser,maxrangeuser,6,"-+N") # NH 2021 08 12 - added "N" option which forces there to be 6 divisions, meaning we should be able to change the range of this plot without having to fiddle with the drawing of the arcs!
-    tradius_pions_D.SetLineColor(2)
-    tradius_pions_D.SetLabelColor(2)
-    tradius_pions_D.Draw()
-    phizero_pions_D = TLine(0,0,0.6,0)
-    phizero_pions_D.SetLineColor(kBlack)
-    phizero_pions_D.SetLineWidth(2)
-    phizero_pions_D.Draw()
-    # End of polar plotting section
-    c1_pion_kin_D.cd(4)
-    P_MMpi_pions_cut_D_randm_sub.Draw("hist")
-    # Section for Neutron Peak Events Selection
-    shadedpeak_pions_D = P_MMpi_pions_cut_D_randm_sub.Clone()
-    shadedpeak_pions_D.SetFillColor(2)
-    shadedpeak_pions_D.SetFillStyle(3244)
-    shadedpeak_pions_D.GetXaxis().SetRangeUser(minbin, maxbin)
-    shadedpeak_pions_D.Draw("samehist")
-    NeutronEvt_pions_D = TPaveText(0.58934,0.675,0.95,0.75,"NDC")
-    BinLow_pions_D = P_MMpi_pions_cut_D_randm_sub.GetXaxis().FindBin(minbin)
-    BinHigh_pions_D = P_MMpi_pions_cut_D_randm_sub.GetXaxis().FindBin(maxbin)
-    BinIntegral_pions_D = int(P_MMpi_pions_cut_D_randm_sub.Integral(BinLow_pions_D, BinHigh_pions_D))
-    NeutronEvt_pions_D.SetLineColor(2)
-    NeutronEvt_pions_D.AddText("e #pi n Events: %i" %(BinIntegral_pions_D))
-    NeutronEvt_pions_D.Draw()
-    # End of Neutron Peak Events Selection Section
-    c1_pion_kin_D.Print(Pion_Analysis_Distributions)
 
 c1_pion_kin_pg2 = TCanvas("c1_pions_kin_pg2", "Pion Kinematic Distributions part 2", 100, 0, 1000, 900)
 c1_pion_kin_pg2.Divide(2,2)
@@ -946,7 +712,6 @@ gPad.SetLogz()
 P_ngcer_vs_aero_npe_pions_cut.Draw("COLZ")
 c3_pions_pid.Print(Pion_Analysis_Distributions)
 
-# SJDK 01/08/22 - I changed the ordering of the plots a bit here, the CT plots are pads 1 and 4 (first column), MM is 2/5 (2nd column) and the MM vs Beta is 3/6 (3rd column)
 c1_pions_MM = TCanvas("c1_pions_MM", "Electron-Pion CTime/Missing Mass Distributions", 100, 0, 1000, 900)
 c1_pions_MM.Divide(3,2)
 c1_pions_MM.cd(1)
@@ -961,7 +726,7 @@ legend13_pions.AddEntry("ePiCoinTime_pions_uncut", "CT_without cuts", "l")
 legend13_pions.AddEntry("ePiCoinTime_pions_cut_prompt", "CT_prompt with cuts (acpt/RF/PID)", "l")
 legend13_pions.AddEntry("ePiCoinTime_pions_cut_randm", "CT_randoms with cuts (acpt/RF/PID)", "l")
 legend13_pions.Draw("same")
-c1_pions_MM.cd(4)
+c1_pions_MM.cd(2)
 ePiCoinTime_pions_cut.SetLineColor(4)
 ePiCoinTime_pions_cut.Draw()
 ePiCoinTime_pions_cut_prompt.SetLineColor(6)
@@ -973,7 +738,7 @@ legend13_pions.AddEntry("ePiCoinTime_pions_uncut", "CT_without cuts", "l")
 legend13_pions.AddEntry("ePiCoinTime_pions_cut_prompt", "CT_prompt with cuts (acpt/RF/PID)", "l")
 legend13_pions.AddEntry("ePiCoinTime_pions_cut_randm", "CT_randoms with cuts (acpt/RF/PID)", "l")
 legend13_pions.Draw("same")
-c1_pions_MM.cd(4)
+c1_pions_MM.cd(2)
 ePiCoinTime_pions_cut.SetLineColor(4)
 ePiCoinTime_pions_cut.Draw()
 ePiCoinTime_pions_cut_prompt.SetLineColor(6)
@@ -985,9 +750,9 @@ legend14_pions.AddEntry("ePiCoinTime_pions_cut", "CT_with cuts (acpt/RF/PID)", "
 legend14_pions.AddEntry("ePiCoinTime_pions_cut_prompt", "CT_prompt with cuts (acpt/RF/PID)", "l")
 legend14_pions.AddEntry("ePiCoinTime_pions_cut_randm", "CT_randoms with cuts (acpt/RF/PID)", "l")
 legend14_pions.Draw("same")
-c1_pions_MM.cd(2)
+c1_pions_MM.cd(3)
 P_MMpi_pions_uncut.Draw()
-c1_pions_MM.cd(5)
+c1_pions_MM.cd(4)
 P_MMpi_pions_cut.SetLineColor(4)
 P_MMpi_pions_cut.Draw()
 P_MMpi_pions_cut_prompt.SetLineColor(6)
@@ -999,7 +764,7 @@ legend15_pions.AddEntry("P_MMpi_pions_cut", "MM with cuts (acpt/RF/PID)", "l")
 legend15_pions.AddEntry("P_MMpi_pions_cut_prompt", "MM_prompt with cuts (acpt/RF/PID)", "l")
 legend15_pions.AddEntry("P_MMpi_pions_cut_randm", "MM_randoms with cuts (acpt/RF/PID)", "l")
 legend15_pions.Draw("same")
-c1_pions_MM.cd(3)
+c1_pions_MM.cd(5)
 P_MMpi_vs_beta_pions_uncut.Draw("COLZ")
 c1_pions_MM.cd(6)
 P_MMpi_vs_beta_pions_cut.Draw("COLZ")
@@ -1162,18 +927,6 @@ c1_pions_dp_proj.cd(2)
 P_DPexit_xy_pions_cut.Draw("COLZ")
 c1_pions_dp_proj.Print(Pion_Analysis_Distributions)
 
-c1_pions_dp = TCanvas("c1_pions_dp", "delta vs MMp", 100, 0, 1000, 900)
-c1_pions_dp.Divide(2,2)
-c1_pions_dp.cd(1)
-P_dp_vs_H_dp_pions_uncut.Draw("COLZ")
-c1_pions_dp.cd(2)
-P_dp_vs_H_dp_pions_cut.Draw("COLZ")
-c1_pions_dp.cd(3)
-P_dp_vs_MMpi_pions_uncut.Draw("COLZ")
-c1_pions_dp.cd(4)
-P_dp_vs_MMpi_pions_cut.Draw("COLZ")
-c1_pions_dp.Print(Pion_Analysis_Distributions)
-
 c1_pions_proj = TCanvas("c1_pions_proj", "HGC/NGC/Aero XY Projection", 100, 0, 1000, 900)
 c1_pions_proj.Divide(2,3)
 c1_pions_proj.cd(1)
@@ -1248,9 +1001,6 @@ P_NGC_xy_npe_pions_uncut.Write()
 Calo_proj_yx_pions_uncut.Write()
 Calo_proj_hits_yx_pions_uncut.Write()
 P_DPexit_xy_pions_uncut.Write()
-P_dp_vs_H_dp_pions_uncut.Write()
-P_dp_vs_MMpi_pions_uncut.Write()
-
 
 d_Cut_Pion_Events_All.cd()
 H_xp_pions_cut.Write()
@@ -1268,11 +1018,8 @@ P_MMpi_pions_cut.Write()
 P_RFTime_pions_cut.Write()
 ePiCoinTime_pions_cut.Write()
 epsilon_pions_cut.Write()
-epsilon_pions_cut_D.Write()
 Q2vsW_pions_cut.Write()
-Q2vsW_pions_cut_D.Write()
 phiqvst_pions_cut.Write()
-phiqvst_pions_cut_D.Write()
 H_cal_etottracknorm_vs_cer_npe_pions_cut.Write()
 P_hgcer_vs_aero_npe_pions_cut.Write()
 ePiCoinTime_vs_MMpi_pions_cut.Write()
@@ -1281,7 +1028,6 @@ ePiCoinTime_vs_MMpi_pions_cut_Full.Write()
 ePiCoinTime_vs_beta_pions_cut_Full.Write()
 P_RFTime_vs_MMpi_pions_cut.Write()
 P_MMpi_pions_cut_randm_sub.Write()
-P_MMpi_pions_cut_D_randm_sub.Write()
 P_cal_etottracknorm_vs_ngcer_npe_pions_cut.Write()
 P_ngcer_vs_hgcer_npe_pions_cut.Write()
 P_ngcer_vs_aero_npe_pions_cut.Write()
@@ -1306,9 +1052,6 @@ Aero_proj_yx_pions_cut.Write()
 Calo_proj_yx_pions_cut.Write()
 Calo_proj_hits_yx_pions_cut.Write()
 P_DPexit_xy_pions_cut.Write()
-P_dp_vs_H_dp_pions_cut.Write()
-P_dp_vs_MMpi_pions_cut.Write()
-
 d_Cut_Pion_Events_Prompt.cd()
 ePiCoinTime_pions_cut_prompt.Write()
 P_MMpi_pions_cut_prompt.Write()
@@ -1321,5 +1064,3 @@ outHistFile.Close()
 infile.Close() 
 print ("Processing Complete")
 print("!!!!!!!!\n %i pi-n events \n!!!!!!!!" % BinIntegral_pions)
-#if Dcuts == True: 
-    #print("!!!!!!!!\n %i pi-n events after Diamond and t-Range Cuts\n!!!!!!!!" % BinIntegral_pions_D)

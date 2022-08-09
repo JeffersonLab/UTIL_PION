@@ -128,13 +128,13 @@ if [ $TestingVar == 1 ]; then
 	fi
     fi
     if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf" ]; then
-	python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw_v3.py -1 ${runNum} -1 ${TargetType} ${KINFILE}
+	python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw.py -1 ${runNum} -1 ${TargetType} ${KINFILE}
 	python3 $UTILPATH/scripts/online_physics/PionLT/calculate_charge.py ${runNum}
     elif [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf" ]; then
 	    read -p "Pion analysis plots already found in - ${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf, remove and remake? <Y/N> " prompt4
 	    if [[ $prompt4 == "y" || $prompt4 == "Y" || $prompt4 == "yes" || $prompt4 == "Yes" ]]; then
 		 rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf"
-		 python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw_v3.py -1 ${runNum} -1 ${TargetType} ${KINFILE}
+		 python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw.py -1 ${runNum} -1 ${TargetType} ${KINFILE}
 		 python3 $UTILPATH/scripts/online_physics/PionLT/calculate_charge.py ${runNum}
 	    fi
 	    else echo "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf not removed"
