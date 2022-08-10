@@ -29,17 +29,15 @@ from array import array
 # then theta and/or momenta values are greater than 10% off current runplan values
 
 # Some values still defined here, redefined later in 'if' statements
-Q2Val = 5.00
-WVal = 2.95
+#Q2Val = 5.00
+Q2Val = 2.45
+WVal = 3.20
 tmin = 0
 tmax = 1
 
 Dcuts = True          # Diamond Cuts Enabled?
-#Dcuts = True          
 
-
-useroverride = False    # Set to true to use above values and not rely on runlist or diamond cuts csv file
-#useroverride = True
+useroverride = True    # Set to true to use above values and not rely on runlist or diamond cuts csv file
 if useroverride == True: 
     Dcuts = False
 
@@ -196,8 +194,6 @@ if useroverride == False:
         tmin = qw.iloc[0]['tmin']
         tmax = qw.iloc[0]['tmax']
 
-
-
     if (Dcuts == True):
         if ("LH" in Target):
             targetf = '0'
@@ -224,9 +220,6 @@ if useroverride == False:
             b4 = row.iloc[0]['b4']
         else: Dcuts = False
 
-
-
-
     if FilenameOverride != False:
         qw=df.loc[(df['Q2']==Q2Val) & (df['W'] == WVal) & (df['angle'] == angle)]
         tmin = qw.iloc[0]['tmin']
@@ -245,8 +238,6 @@ if useroverride == False:
             b3 = row.iloc[0]['b3']
             b4 = row.iloc[0]['b4']
         else: Dcuts = False
-
-
 
 Q2min = Q2Val - 2 # Minimum value of Q2 on the Q2 vs W plot
 Q2max = Q2Val + 2 # Maximum value of Q2 on the Q2 vs W plot
@@ -270,7 +261,6 @@ print ("Attempting to process %s" %(rootName))
 lt.SetPath(os.path.realpath(__file__)).checkDir(OUTPATH)
 lt.SetPath(os.path.realpath(__file__)).checkFile(rootName)
 print("Output path checks out, outputting to %s" % (OUTPATH))
-
 
 ###############################################################################################################################################
 ROOT.gROOT.SetBatch(ROOT.kTRUE) # Set ROOT to batch mode explicitly, does not splash anything to screen
