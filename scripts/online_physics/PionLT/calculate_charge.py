@@ -73,7 +73,7 @@ kinDict = {
 
 #print(kinDict)
 
-bool_data = [i for i,row in charge_data.iterrows() if kinDict['EBeam'] == row['EBeam'] and kinDict['P_HMS'] == row['P_HMS'] and kinDict['Theta_HMS'] == row['Theta_HMS'] and kinDict['Theta_SHMS'] == row['Theta_SHMS'] and kinDict['P_SHMS'] == row['P_SHMS'] and kinDict['Target'] == row['Target'] and row['Comments'].isdigit()]
+bool_data = [i for i,row in charge_data.iterrows() if kinDict['EBeam'] == row['EBeam'] and kinDict['P_HMS'] == row['P_HMS'] and kinDict['Theta_HMS'] == row['Theta_HMS'] and kinDict['Theta_SHMS'] == row['Theta_SHMS'] and kinDict['P_SHMS'] == row['P_SHMS'] and kinDict['Target'] == row['Target'] and str(row['Comments']).isdigit()]
 #print(bool_data)
 
 charge_data = charge_data.iloc[bool_data]

@@ -5,7 +5,7 @@
 # 16/10/21 - JM - Added in X/Y Calo with projections of ADC hits (SJDK Stop-Gap Measure)
 # 28/11/21 - Version 2 - Utilises new ltsep package by Richard Trotta
 # 19/01/22 - Version 3 - Added function to use target to select missing mass range
-
+# 11/08/22 - Version 4 - Added diamond cuts and automatic range setting functionality
 ###########################################################################################################################
 # Python version of the pion plotting script. Now utilises uproot to select event of each type and writes them to a root file.
 # Python should allow for easier reading of databases storing diferent variables.
@@ -25,7 +25,7 @@ from array import array
 
 ##################################################################################################################################################
 # 2022/08/05 - JM removed Q2, W, and t ranges. Now replaced with calculations from Diamond_t_cuts file to auto determine best plotting ranges.
-# Note that DDiamond cuts are not necessary to get these ranges. If the script cannot find them,
+# Note that Diamond cuts are not necessary to get these ranges. If the script cannot find them,
 # then theta and/or momenta values are greater than 10% off current runplan values
 
 # Some values still defined here, redefined later in 'if' statements
@@ -33,16 +33,17 @@ from array import array
 Q2Val = 2.45
 WVal = 3.20
 tmin = 0
-tmax = 1
+tmax = 0.6
 
 Dcuts = True          # Diamond Cuts Enabled?
 
-useroverride = True    # Set to true to use above values and not rely on runlist or diamond cuts csv file
+useroverride = False   # Set to true to use above values and not rely on runlist or diamond cuts csv file
 if useroverride == True: 
     Dcuts = False
 
 polarity = 'P'     # P(positive) or E (negative) SHMS polarity (needed for diamond cuts when taking from run list)
 #polarity = 'E'
+
 ##################################################################################################################################################
 
 # Check the number of arguments provided to the script
@@ -80,7 +81,6 @@ runNum = sys.argv[2]
 MaxEvent = sys.argv[3]
 Target = sys.argv[4]
 
-
 #################################################################################################################################################
 
 # Add more path setting as needed in a similar manner
@@ -108,6 +108,37 @@ else:
 #################################################################################################################################################
 
 targetf = ''
+
+if (Dcuts == True):
+    if ("LH" in Target):
+        targetf = '0'
+    elif 'LD' in Target:
+        if polarity == 'P':
+            targetf = 'LD+'
+        elif polarity == 'E':
+            targetf = 'LD-'
+        else: print ("LD2 polarity undefined, assuming positive")
+    else:
+        print ("!!!!! Target not LH or LD; no diamond cuts !!!!!")
+        Dcuts = False
+
+oguser = useroverride
+ogdcuts = Dcuts
+
+coffee_in_computer = False
+target_in_use = Target
+shiftchecklist = ['record useless info','search hall for ghosts','empty coffee machine']
+if (coffee_in_computer == True and 'whop' not in Target):
+    target_in_use = 'whoppers'
+    beam_current = 150 # uA
+elif (coffee_in_computer == True and 'whop' in Target):
+    target_in_use = 'milkduds'
+    beam_current = 420 #uA
+    FreedomInitiative = True
+else:
+    shiftchecklist.append('pour coffee into computer')
+    graphite_on_the_roof = False
+
 a1 = 0
 b1 = 0
 a2 = 0
@@ -133,12 +164,12 @@ if (FilenameOverride != False):
 #################################################################################################################################################
 
 # 2022/08/05 - JM added pulling values from runlist and comparing to diamond cuts file
-
 if useroverride == False:
     import pandas as pd
 
     # Taken from UTIL_PION/scripts/rnlists/kinfile.py: Get kinematic setting
     KinFilePath = REPLAYPATH+"/DBASE/COIN/standard.kinematics"
+    #KinFilePath = REPLAYPATH+"/DBASE/COIN/standard_testv4plot.kinematics"
     RunNum = runNum
 
     KinFile = open(KinFilePath)
@@ -153,6 +184,9 @@ if useroverride == False:
     TestVar = 0
     # The loop here is explicitly written such that if there are multiple entries, the values will be overwrriten
     # The LAST matching block in the file is the one that will be used
+
+    #################################################################################################################################################
+
     for KinFileBlock in KinFileContent.split('\n\n'):
         nLines=0 # Counter for the number of lines in the block of text
         Lines =[]
@@ -184,60 +218,68 @@ if useroverride == False:
                 if "hpcentral" in entry :
                     pHMS = float((entry.split("="))[1])
 
+    #################################################################################################################################################
+
     # Now compare kinematic file to csv with all kinematics aligned with Q2, W, t-range, and diamond-cut values
     df = pd.read_csv(UTILPATH+"/scripts/online_physics/PionLT/Diamond_t_cuts.csv", index_col='Id')
 
     if FilenameOverride == False:
         qw=df.loc[(abs(1-thetaHMS/df['thetaHMS'])<0.1) & (abs(1-thetaSHMS/df['thetaSHMS'])<0.1) & (abs(1-pHMS/df['pHMS'])<0.1) & (abs(1-pSHMS/df['pSHMS'])<0.1)]
+        if (len(qw)==0):
+            qw=df.loc[(abs(1-pSHMS/df['pSHMS'])<0.1)]
+            Dcuts = False
+        if (len(qw)==0):
+            Dcuts = False
+            useroverride = True
+
+if useroverride == False:
+    if FilenameOverride == False:
+        qw=df.loc[(abs(1-thetaHMS/df['thetaHMS'])<0.1) & (abs(1-thetaSHMS/df['thetaSHMS'])<0.1) & (abs(1-pHMS/df['pHMS'])<0.1) & (abs(1-pSHMS/df['pSHMS'])<0.1)]
+        if (len(qw)==0):
+            qw=df.loc[(abs(1-pSHMS/df['pSHMS'])<0.1)]
         Q2Val = qw.iloc[0]['Q2']
         WVal = qw.iloc[0]['W']
         tmin = qw.iloc[0]['tmin']
         tmax = qw.iloc[0]['tmax']
 
-    if (Dcuts == True):
-        if ("LH" in Target):
-            targetf = '0'
-        elif 'LD' in Target:
-            if polarity == 'P':
-                targetf = 'LD+'
-            elif polarity == 'E':
-                targetf = 'LD-'
-            else: print ("LD2 polarity undefined, assuming positive")
-        else:
-            print ("!!!!! Target not LH or LD; no diamond cuts !!!!!")
-            Dcuts = False
-
-    if (Dcuts == True and FilenameOverride == False):
-        row=df.loc[(abs(1-thetaHMS/df['thetaHMS'])<0.1) & (abs(1-thetaSHMS/df['thetaSHMS'])<0.1) & (abs(1-pHMS/df['pHMS'])<0.1) & (abs(1-pSHMS/df['pSHMS'])<0.1) & (df['target'] == targetf)]
-        if (row.iloc[0]['status'] == 'y'):
-            a1 = row.iloc[0]['a1']
-            a2 = row.iloc[0]['a2']
-            a3 = row.iloc[0]['a3']
-            a4 = row.iloc[0]['a4']
-            b1 = row.iloc[0]['b1']
-            b2 = row.iloc[0]['b2']
-            b3 = row.iloc[0]['b3']
-            b4 = row.iloc[0]['b4']
-        else: Dcuts = False
+        if (Dcuts == True):
+            #row=df.loc[(abs(1-thetaHMS/df['thetaHMS'])<0.1) & (abs(1-thetaSHMS/df['thetaSHMS'])<0.1) & (abs(1-pHMS/df['pHMS'])<0.1) & (abs(1-pSHMS/df['pSHMS'])<0.1) & (df['target'] == targetf)]
+            row=df.loc[(abs(1-pSHMS/df['pSHMS'])<0.1) & (df['target'] == targetf)]
+            if (len(row) > 0):
+                if (row.iloc[0]['status'] == 'y'):
+                    a1 = row.iloc[0]['a1']
+                    a2 = row.iloc[0]['a2']
+                    a3 = row.iloc[0]['a3']
+                    a4 = row.iloc[0]['a4']
+                    b1 = row.iloc[0]['b1']
+                    b2 = row.iloc[0]['b2']
+                    b3 = row.iloc[0]['b3']
+                    b4 = row.iloc[0]['b4']
+                else: Dcuts = False
+            else: Dcuts = False
 
     if FilenameOverride != False:
         qw=df.loc[(df['Q2']==Q2Val) & (df['W'] == WVal) & (df['angle'] == angle)]
-        tmin = qw.iloc[0]['tmin']
-        tmax = qw.iloc[0]['tmax']
-
-    if (Dcuts == True and FilenameOverride != False):
-        row=df.loc[(df['Q2']==Q2Val) & (df['W'] == WVal) & (df['angle'] == angle) & (df['target'] == targetf)]
-        #print (len(row))
-        if (row.iloc[0]['status'] == 'y'):
-            a1 = row.iloc[0]['a1']
-            a2 = row.iloc[0]['a2']
-            a3 = row.iloc[0]['a3']
-            a4 = row.iloc[0]['a4']
-            b1 = row.iloc[0]['b1']
-            b2 = row.iloc[0]['b2']
-            b3 = row.iloc[0]['b3']
-            b4 = row.iloc[0]['b4']
-        else: Dcuts = False
+        if (len(qw) > 0):
+            tmin = qw.iloc[0]['tmin']
+            tmax = qw.iloc[0]['tmax']
+        else: 
+            Dcuts = False
+            useroverride = True
+        if (Dcuts == True):
+            row=df.loc[(df['Q2']==Q2Val) & (df['W'] == WVal) & (df['angle'] == angle) & (df['target'] == targetf)]
+            if (len(row) > 0):
+                if (row.iloc[0]['status'] == 'y'):
+                    a1 = row.iloc[0]['a1']
+                    a2 = row.iloc[0]['a2']
+                    a3 = row.iloc[0]['a3']
+                    a4 = row.iloc[0]['a4']
+                    b1 = row.iloc[0]['b1']
+                    b2 = row.iloc[0]['b2']
+                    b3 = row.iloc[0]['b3']
+                    b4 = row.iloc[0]['b4']
+                else: Dcuts = False
+            else: Dcuts = False
 
 Q2min = Q2Val - 2 # Minimum value of Q2 on the Q2 vs W plot
 Q2max = Q2Val + 2 # Maximum value of Q2 on the Q2 vs W plot
@@ -249,6 +291,20 @@ maxrangeuser = min(round(tmax*2/0.3)*.3,1.5)
 if useroverride==True:
     minrangeuser = round(tmin/.3)*.3
     maxrangeuser = round(tmax/.3)*.3
+
+if (Dcuts == True): 
+    print ("Diamond cuts applied!")
+elif (Dcuts == False and ogdcuts == True):
+    print ("Kinematic match not found!! Diamond cuts skipped! Double-check standard.kinematics")
+else: 
+    print ("Kinematic match not found! Diamond cuts skipped!")
+if (useroverride == True and oguser == False):
+    print ("Kinematic match not found!! useroverride values used for binning; Double-check standard.kinematics")
+elif (useroverride == True):
+    print ("useroverride values used for binning")
+else:
+    print ("Q2/W match found!")
+
 #################################################################################################################################################
 
 # Construct the name of the rootfile based upon the info we provided
@@ -1311,5 +1367,5 @@ outHistFile.Close()
 infile.Close() 
 print ("Processing Complete")
 print("!!!!!!!!\n %i pi-n events \n!!!!!!!!" % BinIntegral_pions)
-#if Dcuts == True: 
-    #print("!!!!!!!!\n %i pi-n events after Diamond and t-Range Cuts\n!!!!!!!!" % BinIntegral_pions_D)
+if (Dcuts == True and FilenameOverride != False): 
+    print("!!!!!!!!\n %i pi-n events after Diamond and t-Range Cuts\n!!!!!!!!" % BinIntegral_pions_D)

@@ -27,18 +27,15 @@ from array import array
 
 # Defining some variables here - Try to keep to multiples of 0.3 if possible
 minrangeuser = 0       #  min range for -t vs phi plot
-#maxrangeuser = 0.6   #  max range for -t vs phi plot
-maxrangeuser = 0.9   #  max range for -t vs phi plot
-#maxrangeuser = 1.5     #  max range for -t vs phi plot     : 2/6/2022 DJG - opened this up
+maxrangeuser = 0.6   #  max range for -t vs phi plot
 
-Q2min_user = 3.5        # min range for Q2 plot (Standard running with runnumber as an input)
-Q2max_user = 6.5       # max range for Q2 plot (Standard running with runnumber as an input)
-Wmin_user = 2.4        # min range for W plot (Standard running with runnumber as an input)
-Wmax_user = 3.6         # max range for W plot (Standard running with runnumber as an input)
+Q2min_user = 2.8        # min range for Q2 plot (Standard running with runnumber as an input)
+Q2max_user = 4.8       # max range for Q2 plot (Standard running with runnumber as an input)
+Wmin_user = 2.7        # min range for W plot (Standard running with runnumber as an input)
+Wmax_user = 3.4        # max range for W plot (Standard running with runnumber as an input)
 tmin_user = 0.0         # min range for t plot (Standard running with runnumber as an input)
-tmax_user = 1.5         # max range for t plot (Standard running with runnumber as an input)
+tmax_user = 0.6         # max range for t plot (Standard running with runnumber as an input)
 
-#Dcuts = False          # Diamond Cuts Enabled?
 ##################################################################################################################################################
 
 # Check the number of arguments provided to the script
@@ -75,7 +72,6 @@ ROOTSuffix = sys.argv[1]
 runNum = sys.argv[2]
 MaxEvent = sys.argv[3]
 Target = sys.argv[4]
-
 
 #################################################################################################################################################
 
@@ -123,26 +119,6 @@ print ("Attempting to process %s" %(rootName))
 lt.SetPath(os.path.realpath(__file__)).checkDir(OUTPATH)
 lt.SetPath(os.path.realpath(__file__)).checkFile(rootName)
 print("Output path checks out, outputting to %s" % (OUTPATH))
-
-
-#import pandas as pd
-#if (Dcuts == True):
-#    targetf = ''
-#    df = pd.read_csv(UTILPATH+"/scripts/online_physics/PionLT/Diamond_t_cuts.csv", index_col='Id')
-#    if (target == False or "LH" in target):
-#        targetf = '0'
-#    else: targetf = target
-#    row=df.loc[(df['Q2']==Q2Val) & (df['W'] == WVal) & (df['angle'] == angle) & (df['target'] == targetf)]
-#    tmin = row.iat[0,3]
-#    tmax = row.iat[0,4]
-#    a1 = row.iat[0,6]
-#    a2 = row.iat[0,8]
-#    a3 = row.iat[0,10]
-#    a4 = row.iat[0,12]
-#    b1 = row.iat[0,7]
-#    b2 = row.iat[0,9]
-#    b3 = row.iat[0,11]
-#    b4 = row.iat[0,13]
 
 ###############################################################################################################################################
 ROOT.gROOT.SetBatch(ROOT.kTRUE) # Set ROOT to batch mode explicitly, does not splash anything to screen
@@ -447,10 +423,6 @@ for event in Cut_Pion_Events_Random_tree:
 
 # SJDK 26/10/21 - For kinematic quantities, fill the histograms from the tree with the pion MM cut
 for event in Cut_Pion_Events_Prompt_MM_tree:
-    #if (Dcuts == True):
-        #if (-event.MandelT<tmax):
-            #if(event.W/event.Q2>a1+b1/event.Q2 and event.W/event.Q2<a2+b2/event.Q2 and event.W/event.Q2>a3+b3/event.Q2 and event.W/event.Q2<a4+b4/event.Q2):
-    #else:
     phiq_plot.Fill(event.ph_q)
     t_plot.Fill(-event.MandelT) 
     Q2_pions_cut.Fill(event.Q2)
@@ -706,7 +678,6 @@ P_ngcer_npe_pions_uncut.Draw()
 P_ngcer_npe_pions_cut.SetLineColor(4)
 P_ngcer_npe_pions_cut.Draw("same")
 c2_pions_pid.cd(4)
-#
 c2_pions_pid.Print(Pion_Analysis_Distributions)
 
 c3_pions_pid = TCanvas("c3_pions_pid", "Electron-Pion Aero/HGC/NGC PID Distributions", 100, 0, 1000, 900)
@@ -1035,7 +1006,6 @@ Calo_proj_hits_yx_pions_uncut.Write()
 P_DPexit_xy_pions_uncut.Write()
 P_dp_vs_H_dp_pions_uncut.Write()
 P_dp_vs_MMpi_pions_uncut.Write()
-
 
 d_Cut_Pion_Events_All.cd()
 H_xp_pions_cut.Write()

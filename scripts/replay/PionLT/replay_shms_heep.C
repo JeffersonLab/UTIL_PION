@@ -29,7 +29,7 @@ void replay_shms_heep (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   pathList.push_back("./raw_PionLT");
   pathList.push_back("./raw_KaonLT");
   pathList.push_back("./raw/../raw.copiedtotape");
-  //pathList.push_back("./cache");
+  pathList.push_back("./cache");
   //pathList.push_back("./cache_kaonlt");
   //pathList.push_back("./raw_volatile");
   //pathList.push_back("./raw.volatile");
