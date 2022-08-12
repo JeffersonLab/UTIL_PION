@@ -1,5 +1,4 @@
 #! /usr/bin/python
-
 #
 # Description:
 # ================================================================
@@ -153,8 +152,7 @@ if spec == "SHMS":
     P_pmiss_Dist_uncut = ROOT.TH1D("P_pmiss_Dist_uncut", "SHMS pmiss; pmiss; Counts", 200, -0.8, 10)                                             
     P_emiss_Dist_uncut = ROOT.TH1D("P_emiss_Dist_uncut", "SHMS emiss; emiss; Counts", 200, -0.8, 10)                                                 
     P_W_Dist_uncut = ROOT.TH1D("P_W_Dist_uncut", " W; W; Counts", 200, -0.8, 10)                                                 
-    P_mm_Dist_uncut = ROOT.TH1D("P_mm_Dist_uncut", " MM; MM; Counts", 200, -0.8, 10) 
-     
+    P_mm_Dist_uncut = ROOT.TH1D("P_mm_Dist_uncut", " MM; MM; Counts", 200, -0.8, 10)      
     
     P_gtr_beta_cut_all = ROOT.TH1D("P_gtr_beta_cut_all", "SHMS #beta; SHMS_gtr_#beta; Counts", 200, 0.8, 1.2)
     P_W_cut_all = ROOT.TH1D("P_W_cut_all", "SHMS W; SHMS_W; Counts", 200, 0.1, 2.0)
@@ -253,7 +251,6 @@ for event in Uncut_Events_tree:
         P_ngcer_npeSum_vs_hgcer_npeSum_uncut.Fill(event.P_ngcer_npeSum, event.P_hgcer_npeSum)
         P_ngcer_npeSum_vs_aero_npeSum_uncut.Fill(event.P_ngcer_npeSum, event.P_aero_npeSum)
       
-
 for event in Cut_Events_All_tree:
     if spec == "HMS":
         H_gtr_beta_cut_all.Fill(event.H_gtr_beta)
@@ -481,7 +478,6 @@ if spec == "SHMS":
     legend7.Draw("same")
     c3_W.Print(Analysis_Distributions + ')')
     
-
 #############################################################################################################################################
 
 # Making directories in output file
@@ -582,8 +578,7 @@ if spec == "SHMS":
     P_ngcer_npeSum_vs_hgcer_npeSum_cut_all.Write()
     P_ngcer_npeSum_vs_aero_npeSum_cut_all.Write()
 
-
-# NH 11/12/2021 - added these to the scripts so that you can see from the treminal total elastics
+# NH 11/12/2021 - added these to the scripts so that you can see from the terminal total elastics
 if spec == "HMS":
     print("\n\n\n================================================================")
     print("================================================================")
