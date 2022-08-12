@@ -460,8 +460,8 @@ P_ypfp_vs_beta_pions_uncut = ROOT.TH2D("P_ypfp_vs_beta_pions_uncut", "SHMS Y'_{f
 P_MMpi_vs_beta_pions_uncut = ROOT.TH2D("P_MMpi_vs_beta_pions_uncut", "Missing Mass vs SHMS #beta (no cut); MM_{#pi}; SHMS_#beta", 100, 0, 2, 200, 0, 2)
 P_cal_xy_pions_uncut = ROOT.TH2D("P_cal_xy_pions_uncut", "SHMS Calorimeter yCalo vs xCalo (no cuts); cal_yCalo(cm); cal_xCalo(cm)", 14, -62.3, 62.3, 16, -71.2, 71.2)
 P_DPexit_xy_pions_uncut = ROOT.TH2D("P_DPexit_xy_pions_uncut", "SHMS Dipole Exit yExit vs xExit (no cuts); yExit(cm); xExit(cm)", 200, -50.0, 50.0, 200, -50.0, 50.0)
-P_dp_vs_H_dp_pions_uncut = ROOT.TH2D("H_dp_vs_P_dp_pions_uncut", "SHMS #delta vs HMS #delta (no cut); SHMS #delta; HMS #delta", 450, -20, 25, 300, -15, 15)
-P_dp_vs_MMpi_pions_uncut = ROOT.TH2D("P_dp_vs_MMpi_pions_uncut", "SHMS #delta vs #pi Missing Mass (no cut); SHMS #delta; MM_{#pi}", 450, -20, 25, 200, 0, 2)
+P_dp_vs_H_dp_pions_uncut = ROOT.TH2D("H_dp_vs_P_dp_pions_uncut", "SHMS #delta vs HMS #delta (no cut); SHMS #delta; HMS #delta", 225, -20, 25, 150, -15, 15)
+P_dp_vs_MMpi_pions_uncut = ROOT.TH2D("P_dp_vs_MMpi_pions_uncut", "SHMS #delta vs #pi Missing Mass (no cut); SHMS #delta; MM_{#pi}", 225, -20, 25, 100, 0, 2)
 
 H_cal_etottracknorm_vs_cer_npe_pions_cut = ROOT.TH2D("H_cal_etottracknorm_vs_cer_npe_pions_cut","HMS cal etottracknorm vs HMS cer npeSum (with cuts); H_cal_etottracknorm; H_cer_npeSum",100, 0.5, 1.5, 100, 0, 40)
 P_hgcer_vs_aero_npe_pions_cut = ROOT.TH2D("P_hgcer_vs_aero_npe_pions_cut", "SHMS HGC npeSum vs SHMS aero npeSum (with cuts); SHMS_hgcer_npeSum; SHMS_aero_npeSum", 100, 0, 50, 100, 0, 50)
@@ -500,8 +500,9 @@ phiqvst_pions_cut_D = ROOT.TH2D("phiqvst_pions_cut_D","#phi vs -t Dist for Promp
 phiqvsthq_pions_cut = ROOT.TH2D("phiqvsthq_pions_cut","#phi_{q} vs #theta_{q}; #phi_{q}; #theta_{q}", 12, -3.14, 3.14, 20, 0, 0.1)
 
 # 08/07/22 - Made the binning here consistent with the uncut version, the bin width differed between the two versions. If you reduce the range (to reduce the blank space) SCALE the number of bins appropriately
-P_dp_vs_H_dp_pions_cut = ROOT.TH2D("H_dp_vs_P_dp_pions_cut", "SHMS #delta vs HMS #delta (Accept+PID cuts); SHMS #delta; HMS #delta", 450, -20, 25, 300, -15, 15)
-P_dp_vs_MMpi_pions_cut = ROOT.TH2D("P_dp_vs_MMpi_pions_cut", "SHMS #delta vs #pi Missing Mass (Accept+PID cuts); SHMS #delta; MM_{#pi}", 450, -20, 25, 200, 0, 2)
+# 12/08/22 - Reduced the number of bins (delta vs delta in particular had far too many) - SJDK
+P_dp_vs_H_dp_pions_cut = ROOT.TH2D("H_dp_vs_P_dp_pions_cut", "SHMS #delta vs HMS #delta (Accept+PID cuts); SHMS #delta; HMS #delta", 225, -20, 25, 150, -15, 15)
+P_dp_vs_MMpi_pions_cut = ROOT.TH2D("P_dp_vs_MMpi_pions_cut", "SHMS #delta vs #pi Missing Mass (Accept+PID cuts); SHMS #delta; MM_{#pi}", 225, -20, 25, 100, 0, 2)
 
 P_HGC_xy_npe_pions_uncut = ROOT.TH3D("P_HGC_xy_npe_pions_uncut", "SHMS HGC NPE as fn of yAtCer vs SHMS HGC xAtCer (no cuts); HGC_yAtCer(cm); HGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
 P_Aero_xy_npe_pions_uncut = ROOT.TH3D("P_Aero_xy_npe_pions_uncut", "SHMS Aerogel NPE as fn of yAtCer vs xAtCer (no cuts); Aero_yAtCer(cm); Aero_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
