@@ -30,8 +30,8 @@ from array import array
 
 # Some values still defined here, redefined later in 'if' statements
 #Q2Val = 5.00
-Q2Val = 2.45
-WVal = 3.20
+Q2Val = 3.85
+WVal = 3.07
 tmin = 0
 tmax = 0.6
 
