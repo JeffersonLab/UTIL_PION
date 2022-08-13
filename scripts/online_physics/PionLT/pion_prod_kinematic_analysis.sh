@@ -134,8 +134,8 @@ if [ $TestingVar == 1 ]; then
 	    read -p "Pion analysis plots already found in - ${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf, remove and remake? <Y/N> " prompt4
 	    if [[ $prompt4 == "y" || $prompt4 == "Y" || $prompt4 == "yes" || $prompt4 == "Yes" ]]; then
 		 rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf"
-		 #python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw.py -1 ${runNum} -1 ${TargetType} ${KINFILE}
-		 python3 ${UTILPATH}/scripts/online_physics/PionLT/2022_Run/PlotPionPhysics_sw_v4.py -1 ${runNum} -1 ${TargetType} ${KINFILE} # SJDK 11/08/22 - Switched to use v4 which includes the diamond cuts, for the full kinematic analysis, this is what we want.
+		 python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw.py -1 ${runNum} -1 ${TargetType} ${KINFILE}
+		 #python3 ${UTILPATH}/scripts/online_physics/PionLT/2022_Run/PlotPionPhysics_sw_v4.py -1 ${runNum} -1 ${TargetType} ${KINFILE} # SJDK 11/08/22 - Switched to use v4 which includes the diamond cuts, for the full kinematic analysis, this is what we want.
 		 python3 $UTILPATH/scripts/online_physics/PionLT/calculate_charge.py ${runNum}
 	    fi
 	    else echo "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf not removed"
