@@ -102,7 +102,7 @@ elif [ $TestingVar != 1 ]; then
 	    while IFS='' read -r line || [[ -n "$line" ]]; do
 		runNum=$line
 		if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${runNum}_-1_Analysed_Data.root" ]; then
-		    python3 $UTILPATH/scripts/online_physics/PionLT/pion_prod_analysis_sw_v3.py "Pion_coin_replay_production" ${runNum} "-1" ${TargetType}
+		    python3 $UTILPATH/scripts/online_physics/PionLT/pion_prod_analysis_sw.py "Pion_coin_replay_production" ${runNum} "-1" ${TargetType}
 		fi
             done < "$RunListFile"
 	else echo "Not processing python script interactively"
