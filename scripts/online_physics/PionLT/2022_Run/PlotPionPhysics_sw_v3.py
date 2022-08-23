@@ -27,12 +27,12 @@ from array import array
 
 # Defining some variables here - Try to keep to multiples of 0.3 if possible
 minrangeuser = 0       #  min range for -t vs phi plot
-maxrangeuser = 0.6   #  max range for -t vs phi plot
+maxrangeuser = 0.3  #  max range for -t vs phi plot
 
-Q2min_user = 1.2        # min range for Q2 plot (Standard running with runnumber as an input)
-Q2max_user = 3.0      # max range for Q2 plot (Standard running with runnumber as an input)
-Wmin_user = 1.6        # min range for W plot (Standard running with runnumber as an input)
-Wmax_user = 2.8        # max range for W plot (Standard running with runnumber as an input)
+Q2min_user = 1.20        # min range for Q2 plot (Standard running with runnumber as an input)
+Q2max_user = 2.00      # max range for Q2 plot (Standard running with runnumber as an input)
+Wmin_user = 2.90        # min range for W plot (Standard running with runnumber as an input)
+Wmax_user = 3.25        # max range for W plot (Standard running with runnumber as an input)
 tmin_user = 0.0         # min range for t plot (Standard running with runnumber as an input)
 tmax_user = 0.6         # max range for t plot (Standard running with runnumber as an input)
 
@@ -263,6 +263,7 @@ P_MMpi_vs_beta_pions_uncut = ROOT.TH2D("P_MMpi_vs_beta_pions_uncut", "Missing Ma
 P_cal_xy_pions_uncut = ROOT.TH2D("P_cal_xy_pions_uncut", "SHMS Calorimeter yCalo vs xCalo (no cuts); cal_yCalo(cm); cal_xCalo(cm)", 14, -62.3, 62.3, 16, -71.2, 71.2)
 P_DPexit_xy_pions_uncut = ROOT.TH2D("P_DPexit_xy_pions_uncut", "SHMS Dipole Exit yExit vs xExit (no cuts); yExit(cm); xExit(cm)", 200, -50.0, 50.0, 200, -50.0, 50.0)
 P_dp_vs_H_dp_pions_uncut = ROOT.TH2D("H_dp_vs_P_dp_pions_uncut", "SHMS #delta vs HMS #delta (no cut); SHMS #delta; HMS #delta", 225, -20, 25, 150, -15, 15)
+H_dp_vs_MMpi_pions_uncut = ROOT.TH2D("H_dp_vs_MMpi_pions_uncut", "HMS #delta vs #pi Missing Mass (no cut); HMS #delta; MM_{#pi}", 100, -10, 10, 100, 0, 2)
 P_dp_vs_MMpi_pions_uncut = ROOT.TH2D("P_dp_vs_MMpi_pions_uncut", "SHMS #delta vs #pi Missing Mass (no cut); SHMS #delta; MM_{#pi}", 225, -20, 25, 100, 0, 2)
 
 H_cal_etottracknorm_vs_cer_npe_pions_cut = ROOT.TH2D("H_cal_etottracknorm_vs_cer_npe_pions_cut","HMS cal etottracknorm vs HMS cer npeSum (with cuts); H_cal_etottracknorm; H_cer_npeSum",100, 0.5, 1.5, 100, 0, 40)
@@ -305,6 +306,7 @@ phiqvsthq_pions_cut = ROOT.TH2D("phiqvsthq_pions_cut","#phi_{q} vs #theta_{q}; #
 # 08/07/22 - Made the binning here consistent with the uncut version, the bin width differed between the two versions. If you reduce the range (to reduce the blank space) SCALE the number of bins appropriately
 # 12/08/22 - Reduced the number of bins (delta vs delta in particular had far too many) - SJDK
 P_dp_vs_H_dp_pions_cut = ROOT.TH2D("H_dp_vs_P_dp_pions_cut", "SHMS #delta vs HMS #delta (Accept+PID cuts); SHMS #delta; HMS #delta", 225, -20, 25, 150, -15, 15)
+H_dp_vs_MMpi_pions_cut = ROOT.TH2D("H_dp_vs_MMpi_pions_cut", "HMS #delta vs #pi Missing Mass (Accept+PID cuts); HMS #delta; MM_{#pi}", 100, -10, 10, 100, 0, 2)
 P_dp_vs_MMpi_pions_cut = ROOT.TH2D("P_dp_vs_MMpi_pions_cut", "SHMS #delta vs #pi Missing Mass (Accept+PID cuts); SHMS #delta; MM_{#pi}", 225, -20, 25, 100, 0, 2)
 
 P_HGC_xy_npe_pions_uncut = ROOT.TH3D("P_HGC_xy_npe_pions_uncut", "SHMS HGC NPE as fn of yAtCer vs SHMS HGC xAtCer (no cuts); HGC_yAtCer(cm); HGC_xAtCer(cm); NPE", 100, -50, 50, 100, -50, 50, 100, 0.1 , 50)
@@ -364,6 +366,7 @@ for event in Uncut_Pion_Events_tree:
     P_cal_xy_etottracknorm_pions_uncut.Fill(event.yCalo,event.xCalo,event.P_cal_etottracknorm)
     P_cal_xy_hits_pions_uncut.Fill(event.yCalo,event.xCalo,event.Cal_Adc_Hits)
     P_dp_vs_H_dp_pions_uncut.Fill(event.P_gtr_dp, event.H_gtr_dp) 
+    H_dp_vs_MMpi_pions_uncut.Fill(event.H_gtr_dp, event.MMpi)
     P_dp_vs_MMpi_pions_uncut.Fill(event.P_gtr_dp, event.MMpi)
 
 # SJDK - 26/10/21 - Moved filling of kinematic quantity distributions to a different loop (one over tree with MM cut applied)
@@ -412,6 +415,7 @@ for event in Cut_Pion_Events_All_tree:
     P_cal_xy_etottracknorm_pions_cut.Fill(event.yCalo,event.xCalo,event.P_cal_etottracknorm)
     P_cal_xy_hits_pions_cut.Fill(event.yCalo,event.xCalo,event.Cal_Adc_Hits)
     P_dp_vs_H_dp_pions_cut.Fill(event.P_gtr_dp, event.H_gtr_dp)
+    H_dp_vs_MMpi_pions_cut.Fill(event.H_gtr_dp, event.MMpi)
     P_dp_vs_MMpi_pions_cut.Fill(event.P_gtr_dp, event.MMpi)
 
 for event in Cut_Pion_Events_Prompt_tree:
@@ -920,14 +924,18 @@ P_DPexit_xy_pions_cut.Draw("COLZ")
 c1_pions_dp_proj.Print(Pion_Analysis_Distributions)
 
 c1_pions_dp = TCanvas("c1_pions_dp", "delta vs MMp", 100, 0, 1000, 900)
-c1_pions_dp.Divide(2,2)
+c1_pions_dp.Divide(3,2)
 c1_pions_dp.cd(1)
 P_dp_vs_H_dp_pions_uncut.Draw("COLZ")
 c1_pions_dp.cd(2)
-P_dp_vs_H_dp_pions_cut.Draw("COLZ")
+H_dp_vs_MMpi_pions_uncut.Draw("COLZ")
 c1_pions_dp.cd(3)
 P_dp_vs_MMpi_pions_uncut.Draw("COLZ")
 c1_pions_dp.cd(4)
+P_dp_vs_H_dp_pions_cut.Draw("COLZ")
+c1_pions_dp.cd(5)
+H_dp_vs_MMpi_pions_cut.Draw("COLZ")
+c1_pions_dp.cd(6)
 P_dp_vs_MMpi_pions_cut.Draw("COLZ")
 c1_pions_dp.Print(Pion_Analysis_Distributions)
 
@@ -1006,6 +1014,7 @@ Calo_proj_yx_pions_uncut.Write()
 Calo_proj_hits_yx_pions_uncut.Write()
 P_DPexit_xy_pions_uncut.Write()
 P_dp_vs_H_dp_pions_uncut.Write()
+H_dp_vs_MMpi_pions_uncut.Write()
 P_dp_vs_MMpi_pions_uncut.Write()
 
 d_Cut_Pion_Events_All.cd()
@@ -1059,6 +1068,7 @@ Calo_proj_yx_pions_cut.Write()
 Calo_proj_hits_yx_pions_cut.Write()
 P_DPexit_xy_pions_cut.Write()
 P_dp_vs_H_dp_pions_cut.Write()
+H_dp_vs_MMpi_pions_cut.Write()
 P_dp_vs_MMpi_pions_cut.Write()
 
 d_Cut_Pion_Events_Prompt.cd()

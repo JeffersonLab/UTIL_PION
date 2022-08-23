@@ -18,6 +18,8 @@ if len(sys.argv)-1!=2:
 KinFilePath = sys.argv[1]
 RunNum = sys.argv[2]
 
+# print(KinFilePath)
+
 KinFile = open(KinFilePath)
 KinFileContent = KinFile.read()
 KinFile.close()
@@ -48,7 +50,7 @@ for KinFileBlock in KinFileContent.split('\n\n'):
         RunStart = int(RunNumArr[0])
         RunEnd = int(RunNumArr[1])
     # If there's no -, it's a single line entry and run start and end are the same
-    elif "-" not in Lines[0]:
+    elif (("-" not in Lines[0]) and (Lines[0] != "")): #NH - Added this and here as this was breaking in case where the line was empty!
         RunStart=int(Lines[0])
         RunEnd=int(Lines[0])
     # Check if the provided run number is in the run number range for the block, if it is, set the values
