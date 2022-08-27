@@ -200,15 +200,6 @@ void replay_production_coin_50k (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   coin->SetEvtType(1);
   coin->AddEvtType(2);
   TRG->AddDetector(coin); 
-
-  // THcHelicityScaler *helscaler = new THcHelicityScaler("HS", "Hall C helicity scalers"); 
-  // helscaler->SetROC(8);
-  // helscaler->SetUseFirstEvent(kTRUE);
-  // gHaEvtHandlers->Add(helscaler);
-  // // Add helicity detector to trigger apparatus
-  // THcHelicity* helicity = new THcHelicity("helicity","Helicity Detector");
-  // TRG->AddDetector(helicity);
-  // helicity->SetHelicityScaler(helscaler);
   
   //Add coin physics module THcCoinTime::THcCoinTime (const char *name, const char* description, const char* hadArmName, 
   // const char* elecArmName, const char* coinname) :
@@ -269,7 +260,6 @@ void replay_production_coin_50k (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   analyzer->SetOdefFile("UTIL_PION/config/DEF-files/Full_Replay_50k_Combined.def");
   // Define cuts file
   analyzer->SetCutFile("UTIL_PION/config/DEF-files/Online_Coin_Production_Cuts_50k.def");  // optional
-  //analyzer->SetCutFile("UTIL_PION/config/DEF-files/Online_Coin_Production_Cuts_Tight.def");  // Tighter cuts requiring some SHMS info too, to reduce file size for some events
   // File to record accounting information for cuts
   analyzer->SetSummaryFile(Form("UTIL_PION/config/REPORT_OUTPUT/summary_production_%d_%d.report", RunNumber, MaxEvent)); // optional
   // Start the actual analysis.

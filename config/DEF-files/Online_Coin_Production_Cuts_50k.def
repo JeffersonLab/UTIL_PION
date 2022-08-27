@@ -160,6 +160,9 @@ HMSCalelec         H.cal.etottracknorm > 0.7 &&  H.cal.etottracknorm < 1.6
 HMSHGCShouldelec         HMSGEN && HMSCalelec 
 HMSHGCDidelec            HMSHGCShouldelec && H.cer.npeSum > 1.5
 
+hcut_CleanTrack            H.gtr.index > -1 && H.gtr.dp > -8.0 && H.gtr.dp < 8.0
+pcut_CleanTrack            P.gtr.index > -1 && P.gtr.dp > -10.0 && P.gtr.dp < 22.0
+
 DELTA_SHMS           P.gtr.dp>-20&&P.gtr.dp<25. 
 DELTA_HMS            H.gtr.dp>-13&&H.gtr.dp<13. 
 HMS_ELEC             H.cal.etottracknorm>.5&&H.cer.npeSum>0.5

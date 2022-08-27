@@ -323,7 +323,6 @@ TH1F hdc2x1_drifttime 'HMS DC 2X1 Drift Time; Drift Time (ns); Number of Entries
 TH1F hdc2u2_drifttime 'HMS DC 2U2 Drift Time; Drift Time (ns); Number of Entries / 1 ns' H.dc.2u2.time 400 -50 350
 TH1F hdc2u1_drifttime 'HMS DC 2U1 Drift Time; Drift Time (ns); Number of Entries / 1 ns' H.dc.2u1.time 400 -50 350
 
-
 #-------------------------------------------
 # HMS DC TRACKING VARIABLES AT FOCAL PLANE
 #-------------------------------------------
@@ -412,13 +411,11 @@ TH1F htrig_hT3_good_tdc 'HMS hT3 Good TDC Time (Slot 2, Channel 63); Good Time (
 
 TH1F htrig_hFADC_TREF_ROC1_good_tdc 'HMS hFADC_TREF_ROC1 Good Pulse Time; Good Pulse Time (ns); Counts / 1 ns' T.coin.hFADC_TREF_ROC1_adcPulseTime 800 0 800
 
-
 #--------------------
 # HMS Fast Raster
 #--------------------
 TH2F hFRApos_XvsY 'HMS FRA X vs Y; FRA X Position (cm); FRA Y Position (cm)' H.rb.raster.fr_xa H.rb.raster.fr_ya 140 -0.3 0.3 140 -0.3 0.3 H.dc.ntrack>0
 TH2F hFRBpos_XvsY 'HMS FRB X vs Y; FRB X Position (cm); FRB Y Position (cm)' H.rb.raster.fr_xb H.rb.raster.fr_yb 140 -0.3 0.3 140 -0.3 0.3 H.dc.ntrack>0
-
 
 #--------------------
 # HMS EPICS BPM
@@ -676,7 +673,6 @@ TH2F pgtr_xtar_vs_reactz 'SHMS Golden Track X_{tar}; Z_{react} / 0.1 cm; X_{tar}
 TH1F pgtr_xtar 'SHMS Golden Track X_{tar}; X_{tar} (cm); Number of Entries / 0.05 cm' P.gtr.x 80 -2 2 pcut_CleanTrack
 TH1F pgtr_ytar 'SHMS Golden Track Y_{tar}; Y_{tar} (cm); Number of Entries / 0.25 cm' P.gtr.y 60 -7.5 7.5 pcut_CleanTrack
 TH2F pextcor_xysieve 'SHMS Extended Target Correction XY-Sieve; Y_{sieve} / 0.1 cm; X_{sieve} / 0.1 cm' P.extcor.ysieve P.extcor.xsieve 200 -10 10 300 -15 15 pcut_CleanTrack
-
 
 #--------------------------------
 # SHMS Cherenkovs GOOD OCC/MULT
