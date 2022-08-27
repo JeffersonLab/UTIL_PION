@@ -23,6 +23,7 @@ block P.hod.starttime
 block P.hod.fpHitsTime
 block P.hod.goodscinhit
 block P.hod.goodstarttime
+block P.hod.betanotrack
 block H.gtr.dp
 block H.gtr.p
 block P.gtr.dp
