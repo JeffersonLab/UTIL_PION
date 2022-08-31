@@ -27,12 +27,12 @@ from array import array
 
 # Defining some variables here - Try to keep to multiples of 0.3 if possible
 minrangeuser = 0       #  min range for -t vs phi plot
-maxrangeuser = 0.6  #  max range for -t vs phi plot
+maxrangeuser = 0.3  #  max range for -t vs phi plot
 
-Q2min_user = 2.2        # min range for Q2 plot (Standard running with runnumber as an input)
-Q2max_user = 5.2      # max range for Q2 plot (Standard running with runnumber as an input)
-Wmin_user = 2.3        # min range for W plot (Standard running with runnumber as an input)
-Wmax_user = 3.0        # max range for W plot (Standard running with runnumber as an input)
+Q2min_user = 0.6        # min range for Q2 plot (Standard running with runnumber as an input)
+Q2max_user = 2.6      # max range for Q2 plot (Standard running with runnumber as an input)
+Wmin_user = 2.0        # min range for W plot (Standard running with runnumber as an input)
+Wmax_user = 4.0        # max range for W plot (Standard running with runnumber as an input)
 tmin_user = 0.0         # min range for t plot (Standard running with runnumber as an input)
 tmax_user = 0.6         # max range for t plot (Standard running with runnumber as an input)
 
@@ -617,6 +617,8 @@ c1_pions_pid.cd(2)
 H_cal_etottracknorm_vs_cer_npe_pions_cut.Draw("COLZ")
 c1_pions_pid.cd(3)
 gPad.SetLogy()
+P_cal_etottracknorm_pions_uncut.SetMinimum(0.1*P_cal_etottracknorm_pions_cut.GetMinimum()+1) # Implemented same fixe to plotting ranges - NH
+P_cal_etottracknorm_pions_uncut.SetMaximum(10*P_cal_etottracknorm_pions_uncut.GetBinContent(P_cal_etottracknorm_pions_uncut.GetMaximumBin()))
 P_cal_etottracknorm_pions_uncut.SetLineColor(2)
 P_cal_etottracknorm_pions_uncut.Draw()
 P_cal_etottracknorm_pions_cut.SetLineColor(4)
@@ -658,6 +660,8 @@ c2_pions_pid = TCanvas("c2_pions_pid", "Electron-Pion Aero/HGC/NGC PID Distribut
 c2_pions_pid.Divide(2,2)
 c2_pions_pid.cd(1)
 gPad.SetLogy()
+P_hgcer_npe_pions_uncut.SetMinimum(0.1*P_hgcer_npe_pions_cut.GetMinimum()+1) # Implemented fix to plotting ranges - NH
+P_hgcer_npe_pions_uncut.SetMaximum(10*P_hgcer_npe_pions_uncut.GetBinContent(P_hgcer_npe_pions_uncut.GetMaximumBin()))
 P_hgcer_npe_pions_uncut.SetLineColor(2)
 P_hgcer_npe_pions_uncut.Draw()
 P_hgcer_npe_pions_cut.SetLineColor(4)
@@ -668,6 +672,8 @@ legend10_pions.AddEntry("P_hgcer_npe_pions_cut", "with cuts (acpt/RF/PID)", "l")
 legend10_pions.Draw("same")
 c2_pions_pid.cd(2)
 gPad.SetLogy()
+P_aero_npe_pions_uncut.SetMinimum(0.1*P_aero_npe_pions_cut.GetMinimum()+1) # Implemented same fixed as used above - NH
+P_aero_npe_pions_uncut.SetMaximum(10*P_aero_npe_pions_uncut.GetBinContent(P_aero_npe_pions_uncut.GetMaximumBin()))
 P_aero_npe_pions_uncut.SetLineColor(2)
 P_aero_npe_pions_uncut.Draw()
 P_aero_npe_pions_cut.SetLineColor(4)
@@ -678,6 +684,8 @@ legend11_pions.AddEntry("P_aero_npe_pions_cut", "with cuts (acpt/RF/PID)", "l")
 legend11_pions.Draw("same")
 c2_pions_pid.cd(3)
 gPad.SetLogy()
+P_ngcer_npe_pions_uncut.SetMinimum(0.1*P_ngcer_npe_pions_cut.GetMinimum()+1) # Implemented same fixed as used above - NH
+P_ngcer_npe_pions_uncut.SetMaximum(10*P_ngcer_npe_pions_uncut.GetBinContent(P_ngcer_npe_pions_uncut.GetMaximumBin()))
 P_ngcer_npe_pions_uncut.SetLineColor(2)
 P_ngcer_npe_pions_uncut.Draw()
 P_ngcer_npe_pions_cut.SetLineColor(4)
