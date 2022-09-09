@@ -27,12 +27,12 @@ from array import array
 
 # Defining some variables here - Try to keep to multiples of 0.3 if possible
 minrangeuser = 0       #  min range for -t vs phi plot
-maxrangeuser = 0.3  #  max range for -t vs phi plot
+maxrangeuser = 0.6  #  max range for -t vs phi plot
 
-Q2min_user = 0.6        # min range for Q2 plot (Standard running with runnumber as an input)
-Q2max_user = 2.6      # max range for Q2 plot (Standard running with runnumber as an input)
-Wmin_user = 2.0        # min range for W plot (Standard running with runnumber as an input)
-Wmax_user = 4.0        # max range for W plot (Standard running with runnumber as an input)
+Q2min_user = 2.85        # min range for Q2 plot (Standard running with runnumber as an input)
+Q2max_user = 4.85      # max range for Q2 plot (Standard running with runnumber as an input)
+Wmin_user = 1.5       # min range for W plot (Standard running with runnumber as an input)
+Wmax_user = 3.5        # max range for W plot (Standard running with runnumber as an input)
 tmin_user = 0.0         # min range for t plot (Standard running with runnumber as an input)
 tmax_user = 0.6         # max range for t plot (Standard running with runnumber as an input)
 
