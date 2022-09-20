@@ -59,7 +59,7 @@ fi
 cd "$REPLAYPATH"
 
 ###################################################################################################################################################
-for RUNNUMBER in {14162..14187}
+for RUNNUMBER in {14823..14824}
 do
     if [ ! -f "$UTILPATH/ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
 	eval "$REPLAYPATH/hcana -l -q -b \"SCRIPTS/COIN/SCALERS/replay_coin_scalers.C($RUNNUMBER,${MAXEVENTS})\""

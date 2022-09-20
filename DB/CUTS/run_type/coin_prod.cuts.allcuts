@@ -1,42 +1,42 @@
 ##############
 # COIN picut #
 ##############
-coin_epi_cut_all_noRF = pid.p_coin_picut_ngcer+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_picut.P_cal_etotnorm+misc.starttime+misc.goodscinhit
+coin_epi_cut_all_noRF = pid.p_coin_picut_ngcer+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_picut.P_cal_etotnorm+misc.starttime+misc.goodscinhit
 #
-coin_epi_cut_prompt_noRF = pid.p_coin_picut_ngcer+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_picut.P_cal_etotnorm+coin_time.Coin_Pion_Prompt+misc.starttime+misc.goodscinhit
+coin_epi_cut_prompt_noRF = pid.p_coin_picut_ngcer+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_picut.P_cal_etotnorm+coin_time.Coin_Pion_Prompt+misc.starttime+misc.goodscinhit
 #
-coin_epi_cut_rand_noRF = pid.p_coin_picut_ngcer+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_picut.P_cal_etotnorm+coin_time.Coin_Pion_Rand+misc.starttime+misc.goodscinhit
+coin_epi_cut_rand_noRF = pid.p_coin_picut_ngcer+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_picut.P_cal_etotnorm+coin_time.Coin_Pion_Rand+misc.starttime+misc.goodscinhit
 #
-coin_epi_cut_all_RF = pid.p_coin_picut_ngcer+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_picut.P_cal_etotnorm+coin_time.SHMS_Pi_RF+misc.starttime+misc.goodscinhit
+coin_epi_cut_all_RF = pid.p_coin_picut_ngcer+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_picut.P_cal_etotnorm+coin_time.SHMS_Pi_RF+misc.starttime+misc.goodscinhit
 #
-coin_epi_cut_prompt_RF = pid.p_coin_picut_ngcer+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_picut.P_cal_etotnorm+coin_time.Coin_Pion_Prompt+coin_time.SHMS_Pi_RF+misc.starttime+misc.goodscinhit
+coin_epi_cut_prompt_RF = pid.p_coin_picut_ngcer+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_picut.P_cal_etotnorm+coin_time.Coin_Pion_Prompt+coin_time.SHMS_Pi_RF+misc.starttime+misc.goodscinhit
 #
-coin_epi_cut_rand_RF = pid.p_coin_picut_ngcer+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_picut.P_cal_etotnorm+coin_time.Coin_Pion_Rand+coin_time.SHMS_Pi_RF+misc.starttime+misc.goodscinhit
+coin_epi_cut_rand_RF = pid.p_coin_picut_ngcer+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_picut.P_cal_etotnorm+coin_time.Coin_Pion_Rand+coin_time.SHMS_Pi_RF+misc.starttime+misc.goodscinhit
 ##############
 # COIN kcut  #
 ##############
-coin_ek_cut_all_noRF = pid.p_coin_kcut_ngcer+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_kcut.P_cal_etotnorm+misc.starttime+misc.goodscinhit
+coin_ek_cut_all_noRF = pid.p_coin_kcut_ngcer+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_kcut.P_cal_etotnorm+misc.starttime+misc.goodscinhit
 #
-coin_ek_cut_prompt_noRF = pid.p_coin_kcut_ngcer+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_kcut.P_cal_etotnorm+coin_time.Coin_Kaon_Prompt+misc.starttime+misc.goodscinhit
+coin_ek_cut_prompt_noRF = pid.p_coin_kcut_ngcer+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_kcut.P_cal_etotnorm+coin_time.Coin_Kaon_Prompt+misc.starttime+misc.goodscinhit
 #
-coin_ek_cut_rand_noRF = pid.p_coin_kcut_ngcer+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_kcut.P_cal_etotnorm+coin_time.Coin_Kaon_Rand+misc.starttime+misc.goodscinhit
+coin_ek_cut_rand_noRF = pid.p_coin_kcut_ngcer+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_kcut.P_cal_etotnorm+coin_time.Coin_Kaon_Rand+misc.starttime+misc.goodscinhit
 #
-coin_ek_cut_all_RF = pid.p_coin_kcut_ngcer+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_kcut.P_cal_etotnorm+coin_time.SHMS_K_RF+misc.starttime+misc.goodscinhit
+coin_ek_cut_all_RF = pid.p_coin_kcut_ngcer+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_kcut.P_cal_etotnorm+coin_time.SHMS_K_RF+misc.starttime+misc.goodscinhit
 #
-coin_ek_cut_prompt_RF = pid.p_coin_kcut_ngcer+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_kcut.P_cal_etotnorm+coin_time.Coin_Kaon_Prompt+coin_time.SHMS_K_RF+misc.starttime+misc.goodscinhit
+coin_ek_cut_prompt_RF = pid.p_coin_kcut_ngcer+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_kcut.P_cal_etotnorm+coin_time.Coin_Kaon_Prompt+coin_time.SHMS_K_RF+misc.starttime+misc.goodscinhit
 #
-coin_ek_cut_rand_RF = pid.p_coin_kcut_ngcer+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_kcut.P_cal_etotnorm+coin_time.Coin_Kaon_Rand+coin_time.SHMS_K_RF+misc.starttime+misc.goodscinhit
+coin_ek_cut_rand_RF = pid.p_coin_kcut_ngcer+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_kcut.P_cal_etotnorm+coin_time.Coin_Kaon_Rand+coin_time.SHMS_K_RF+misc.starttime+misc.goodscinhit
 ##############
 # COIN pcut  #
 ##############
-coin_ep_cut_all_noRF = pid.p_coin_pcut_ngcer+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_pcut.P_cal_etotnorm+misc.starttime+misc.goodscinhit
+coin_ep_cut_all_noRF = pid.p_coin_pcut_ngcer+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_pcut.P_cal_etotnorm+misc.starttime+misc.goodscinhit
 #
-coin_ep_cut_prompt_noRF = pid.p_coin_pcut_ngcer+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_pcut.P_cal_etotnorm+coin_time.Coin_Proton_Prompt+misc.starttime+misc.goodscinhit
+coin_ep_cut_prompt_noRF = pid.p_coin_pcut_ngcer+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_pcut.P_cal_etotnorm+coin_time.Coin_Proton_Prompt+misc.starttime+misc.goodscinhit
 #
-coin_ep_cut_rand_noRF = pid.p_coin_pcut_ngcer+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_pcut.P_cal_etotnorm+coin_time.Coin_Proton_Rand+misc.starttime+misc.goodscinhit
+coin_ep_cut_rand_noRF = pid.p_coin_pcut_ngcer+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_pcut.P_cal_etotnorm+coin_time.Coin_Proton_Rand+misc.starttime+misc.goodscinhit
 #
-coin_ep_cut_all_RF = pid.p_coin_pcut_ngcer+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_pcut.P_cal_etotnorm+coin_time.SHMS_p_RF+misc.starttime+misc.goodscinhit
+coin_ep_cut_all_RF = pid.p_coin_pcut_ngcer+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_pcut.P_cal_etotnorm+coin_time.SHMS_p_RF+misc.starttime+misc.goodscinhit
 #
-coin_ep_cut_prompt_RF = pid.p_coin_pcut_ngcer+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_pcut.P_cal_etotnorm+coin_time.Coin_Proton_Prompt+coin_time.SHMS_p_RF+misc.starttime+misc.goodscinhit
+coin_ep_cut_prompt_RF = pid.p_coin_pcut_ngcer+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_pcut.P_cal_etotnorm+coin_time.Coin_Proton_Prompt+coin_time.SHMS_p_RF+misc.starttime+misc.goodscinhit
 #
-coin_ep_cut_rand_RF = pid.p_coin_pcut_ngcer+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_pcut.P_cal_etotnorm+coin_time.Coin_Proton_Rand+coin_time.SHMS_p_RF+misc.starttime+misc.goodscinhit
+coin_ep_cut_rand_RF = pid.p_coin_pcut_ngcer+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_pcut.P_cal_etotnorm+coin_time.Coin_Proton_Rand+coin_time.SHMS_p_RF+misc.starttime+misc.goodscinhit

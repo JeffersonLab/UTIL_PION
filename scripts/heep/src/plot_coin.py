@@ -39,14 +39,21 @@ from ROOT import kBlack, kBlue, kRed
 
 # Defining some constants here
 minbin = 0.0 # minbin for selecting neutrons events in missing mass distribution
-maxbin = 0.05 # maxbin for selecting neutrons events in missing mass distribution
+# NH - changed this at Dave G's request, as we were cutting out good elastics (radiative tail) 
+maxbin = 0.4 # maxbin for selecting neutrons events in missing mass distribution
 
 ##################################################################################################################################################
 
 # Check the number of arguments provided to the script
+FilenameOverride=False # SJDK 23/06/22 - Added secret argument like the physics analysis script
 if len(sys.argv)-1!=3:
-    print("!!!!! ERROR !!!!!\n Expected 3 arguments\n Usage is with - ROOTfileSuffix RunNumber MaxEvents \n!!!!! ERROR !!!!!")
-    sys.exit(1)
+    if len(sys.argv)-1!=4:
+        print("!!!!! ERROR !!!!!\n Expected 3 arguments\n Usage is with - ROOTfileSuffix RunNumber MaxEvents \n!!!!! ERROR !!!!!")
+        sys.exit(1)
+    else:
+        print ("!!!!! Running with secret 4th argument - FilenameOverride - Taking file name to process as stated EXACTLY in 4th arg !!!!!")
+        FilenameOverride=sys.argv[4] # If 4 arguments provided, set the FilenameOverride value to be arg 4
+
 
 ##################################################################################################################################################
 
@@ -77,20 +84,25 @@ ANATYPE=lt.SetPath(os.path.realpath(__file__)).getPath("ANATYPE")
 OUTPATH = "%s/OUTPUT/Analysis/HeeP" % UTILPATH        # Output folder location
 
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, REPLAYPATH))
-Proton_Analysis_Distributions = "%s/%s_%s_sw_heep_Proton_Analysis_Distributions.pdf" % (OUTPATH, runNum, MaxEvent)
+if (FilenameOverride == False):
+    Proton_Analysis_Distributions = OUTPATH+"/%s_%s_sw_heep_Proton_Analysis_Distributions.pdf" % (runNum, MaxEvent)
+elif (FilenameOverride != False): # If filename override set, format the file name based upon the override file name
+    Proton_Analysis_Distributions = OUTPATH+"/%s_heep_Proton_Analysis_Distributions.pdf" %((FilenameOverride.split("_Analysed_Data.root",1)[0]))
 
 #################################################################################################################################################
 '''
 Check that root/output paths and files exist for use
 '''
-
 # Construct the name of the rootfile based upon the info we provided
-rootName = "%s/OUTPUT/Analysis/HeeP/%s_%s_%s.root" % (UTILPATH, runNum, MaxEvent, ROOTSuffix)     # Input file location and variables taking
+if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
+    rootName = OUTPATH+"/%s_%s_%s.root" % (runNum, MaxEvent, ROOTSuffix)     # Input file location and variables taking
+elif (FilenameOverride != False): # Special condition, with 5th arg, use 5th arg as file name
+    rootName = OUTPATH+"/%s" % (FilenameOverride)
+
 print ("Attempting to process %s" %(rootName))
 lt.SetPath(os.path.realpath(__file__)).checkDir(OUTPATH)
 lt.SetPath(os.path.realpath(__file__)).checkFile(rootName)
 print("Output path checks out, outputting to %s" % (OUTPATH))
-
 
 ###############################################################################################################################################
 ROOT.gROOT.SetBatch(ROOT.kTRUE) # Set ROOT to batch mode explicitly, does not splash anything to screen
@@ -98,7 +110,6 @@ ROOT.gROOT.SetBatch(ROOT.kTRUE) # Set ROOT to batch mode explicitly, does not sp
 
 # Section for grabing Prompt/Random selection parameters from PARAM file
 PARAMPATH = "%s/DB/PARAM" % UTILPATH
-print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
 TimingCutFile = "%s/Timing_Parameters.csv" % PARAMPATH # This should match the param file actually being used!
 TimingCutf = open(TimingCutFile)
 try:
@@ -155,8 +166,8 @@ Cut_Proton_Events_Random_tree = infile.Get("Cut_Proton_Events_Random")
 
 # Defining Histograms for Protons
 H_gtr_beta_protons_uncut = ROOT.TH1D("H_gtr_beta_protons_uncut", "HMS #beta; HMS_gtr_#beta; Counts", 200, 0.8, 1.2)
-H_gtr_xp_protons_uncut = ROOT.TH1D("H_gtr_xp_protons_uncut", "HMS x'; HMS_gtr_xp; Counts", 200, -0.2, 0.2)
-H_gtr_yp_protons_uncut = ROOT.TH1D("H_gtr_yp_protons_uncut", "HMS y'; HMS_gtr_yp; Counts", 200, -0.2, 0.2)
+H_gtr_th_protons_uncut = ROOT.TH1D("H_gtr_th_protons_uncut", "HMS #theta; HMS_gtr_th; Counts", 200, -0.2, 0.2)
+H_gtr_ph_protons_uncut = ROOT.TH1D("H_gtr_ph_protons_uncut", "HMS #phi; HMS_gtr_ph; Counts", 200, -0.2, 0.2)
 H_gtr_dp_protons_uncut = ROOT.TH1D("H_gtr_dp_protons_uncut", "HMS #delta; HMS_gtr_dp; Counts", 200, -15, 15)
 H_gtr_p_protons_uncut = ROOT.TH1D("H_gtr_p_protons_uncut", "HMS p; HMS_gtr_p; Counts", 200, 4, 8)
 H_hod_goodscinhit_protons_uncut = ROOT.TH1D("H_hod_goodscinhit_protons_uncut", "HMS hod goodscinhit; HMS_hod_goodscinhi; Counts", 200, 0.7, 1.3)
@@ -166,8 +177,8 @@ H_cal_etottracknorm_protons_uncut = ROOT.TH1D("H_cal_etottracknorm_protons_uncut
 H_cer_npeSum_protons_uncut = ROOT.TH1D("H_cer_npeSum_protons_uncut", "HMS cer npeSum; HMS_cer_npeSum; Counts", 200, 0, 50)
 H_RFTime_Dist_protons_uncut = ROOT.TH1D("H_RFTime_Dist_protons_uncut", "HMS RFTime; HMS_RFTime; Counts", 200, 0, 4)
 P_gtr_beta_protons_uncut = ROOT.TH1D("P_gtr_beta_protons_uncut", "SHMS #beta; SHMS_gtr_#beta; Counts", 200, 0.7, 1.3)
-P_gtr_xp_protons_uncut = ROOT.TH1D("P_gtr_xp_protons_uncut", "SHMS x'; SHMS_gtr_xp; Counts", 200, -0.2, 0.2)
-P_gtr_yp_protons_uncut = ROOT.TH1D("P_gtr_yp_protons_uncut", "SHMS y'; SHMS_gtr_yp; Counts", 200, -0.2, 0.2)
+P_gtr_th_protons_uncut = ROOT.TH1D("P_gtr_th_protons_uncut", "SHMS #theta; SHMS_gtr_th; Counts", 200, -0.2, 0.2)
+P_gtr_ph_protons_uncut = ROOT.TH1D("P_gtr_ph_protons_uncut", "SHMS #phi; SHMS_gtr_ph; Counts", 200, -0.2, 0.2)
 P_gtr_dp_protons_uncut = ROOT.TH1D("P_gtr_dp_protons_uncut", "SHMS delta; SHMS_gtr_dp; Counts", 200, -30, 30)
 P_gtr_p_protons_uncut = ROOT.TH1D("P_gtr_p_protons_uncut", "SHMS p; SHMS_gtr_p; Counts", 200, 4, 8)
 P_hod_goodscinhit_protons_uncut = ROOT.TH1D("P_hod_goodscinhit_protons_uncut", "SHMS hod goodscinhit; SHMS_hod_goodscinhit; Counts", 200, 0.7, 1.3)
@@ -192,8 +203,8 @@ P_kin_secondary_pmiss_y_protons_uncut = ROOT.TH1D("P_kin_secondary_pmiss_y_proto
 P_kin_secondary_pmiss_z_protons_uncut = ROOT.TH1D("P_kin_secondary_pmiss_z_protons_uncut", "Momentum_z Distribution; pmiss_z; Counts", 200, -0.6, 0.6)
 
 H_gtr_beta_protons_cut_all = ROOT.TH1D("H_gtr_beta_protons_cut_all", "HMS #beta; HMS_gtr_#beta; Counts", 200, 0.8, 1.2)
-H_gtr_xp_protons_cut_all = ROOT.TH1D("H_gtr_xp_protons_cut_all", "HMS x'; HMS_gtr_xp; Counts", 200, -0.2, 0.2)
-H_gtr_yp_protons_cut_all = ROOT.TH1D("H_gtr_yp_protons_cut_all", "HMS y'; HMS_gtr_yp; Counts", 200, -0.2, 0.2)
+H_gtr_th_protons_cut_all = ROOT.TH1D("H_gtr_th_protons_cut_all", "HMS #theta; HMS_gtr_th; Counts", 200, -0.2, 0.2)
+H_gtr_ph_protons_cut_all = ROOT.TH1D("H_gtr_ph_protons_cut_all", "HMS #phi; HMS_gtr_ph; Counts", 200, -0.2, 0.2)
 H_gtr_dp_protons_cut_all = ROOT.TH1D("H_gtr_dp_protons_cut_all", "HMS #delta; HMS_gtr_dp; Counts", 200, -15, 15)
 H_gtr_p_protons_cut_all = ROOT.TH1D("H_gtr_p_protons_cut_all", "HMS p; HMS_gtr_p; Counts", 200, 4, 8)
 H_hod_goodscinhit_protons_cut_all = ROOT.TH1D("H_hod_goodscinhit_protons_cut_all", "HMS hod goodscinhit; HMS_hod_goodscinhit; Counts", 200, 0.7, 1.3)
@@ -203,8 +214,8 @@ H_cal_etottracknorm_protons_cut_all = ROOT.TH1D("H_cal_etottracknorm_protons_cut
 H_cer_npeSum_protons_cut_all = ROOT.TH1D("H_cer_npeSum_protons_cut_all", "HMS cer npeSum; HMS_cer_npeSum; Counts", 200, 0, 50)
 H_RFTime_Dist_protons_cut_all = ROOT.TH1D("H_RFTime_Dist_protons_cut_all", "HMS RFTime; HMS_RFTime; Counts", 200, 0, 4)
 P_gtr_beta_protons_cut_all = ROOT.TH1D("P_gtr_beta_protons_cut_all", "SHMS #beta; SHMS_gtr_#beta; Counts", 200, 0.8, 1.2)
-P_gtr_xp_protons_cut_all = ROOT.TH1D("P_gtr_xp_protons_cut_all", "SHMS x'; SHMS_gtr_xp; Counts", 200, -0.2, 0.2)
-P_gtr_yp_protons_cut_all = ROOT.TH1D("P_gtr_yp_protons_cut_all", "SHMS y'; SHMS_gtr_yp; Counts", 200, -0.2, 0.2)
+P_gtr_th_protons_cut_all = ROOT.TH1D("P_gtr_th_protons_cut_all", "SHMS #theta; SHMS_gtr_th; Counts", 200, -0.2, 0.2)
+P_gtr_ph_protons_cut_all = ROOT.TH1D("P_gtr_ph_protons_cut_all", "SHMS #phi; SHMS_gtr_ph; Counts", 200, -0.2, 0.2)
 P_gtr_dp_protons_cut_all = ROOT.TH1D("P_gtr_dp_protons_cut_all", "SHMS #delta; SHMS_gtr_dp; Counts", 200, -15, 15)
 P_gtr_p_protons_cut_all = ROOT.TH1D("P_gtr_p_protons_cut_all", "SHMS p; SHMS_gtr_p; Counts", 200, 1, 7)  # Carlos Yero was here ! Hahahaha. (Jan, 29, 2022) Heep Calibration
 P_hod_goodscinhit_protons_cut_all = ROOT.TH1D("P_hod_goodscinhit_protons_cut_all", "SHMS hod goodscinhit; SHMS_hod_goodscinhit; Counts", 200, 0.7, 1.3)
@@ -283,8 +294,8 @@ P_kin_MMp_vs_CTime_epCoinTime_ROC1_protons_cut_prompt = ROOT.TH2D("P_kin_MMp_vs_
 # Filling Histograms for Protons
 for event in Uncut_Proton_Events_tree:
     H_gtr_beta_protons_uncut.Fill(event.H_gtr_beta)
-    H_gtr_xp_protons_uncut.Fill(event.H_gtr_xp)
-    H_gtr_yp_protons_uncut.Fill(event.H_gtr_yp)
+    H_gtr_th_protons_uncut.Fill(event.H_gtr_th)
+    H_gtr_ph_protons_uncut.Fill(event.H_gtr_ph)
     H_gtr_dp_protons_uncut.Fill(event.H_gtr_dp)
     H_gtr_p_protons_uncut.Fill(event.H_gtr_p)
     H_hod_goodscinhit_protons_uncut.Fill(event.H_hod_goodscinhit)
@@ -294,8 +305,8 @@ for event in Uncut_Proton_Events_tree:
     H_cer_npeSum_protons_uncut.Fill(event.H_cer_npeSum)
     H_RFTime_Dist_protons_uncut.Fill(event.H_RF_Dist)
     P_gtr_beta_protons_uncut.Fill(event.P_gtr_beta)
-    P_gtr_xp_protons_uncut.Fill(event.P_gtr_xp)
-    P_gtr_yp_protons_uncut.Fill(event.P_gtr_yp)
+    P_gtr_th_protons_uncut.Fill(event.P_gtr_th)
+    P_gtr_ph_protons_uncut.Fill(event.P_gtr_ph)
     P_gtr_dp_protons_uncut.Fill(event.P_gtr_dp)
     P_gtr_p_protons_uncut.Fill(event.P_gtr_p)
     P_hod_goodscinhit_protons_uncut.Fill(event.P_hod_goodscinhit)
@@ -335,8 +346,8 @@ for event in Uncut_Proton_Events_tree:
 
 for event in Cut_Proton_Events_All_tree:
     H_gtr_beta_protons_cut_all.Fill(event.H_gtr_beta)
-    H_gtr_xp_protons_cut_all.Fill(event.H_gtr_xp)
-    H_gtr_yp_protons_cut_all.Fill(event.H_gtr_yp)
+    H_gtr_th_protons_cut_all.Fill(event.H_gtr_th)
+    H_gtr_ph_protons_cut_all.Fill(event.H_gtr_ph)
     H_gtr_dp_protons_cut_all.Fill(event.H_gtr_dp)
     H_gtr_p_protons_cut_all.Fill(event.H_gtr_p)
     H_hod_goodscinhit_protons_cut_all.Fill(event.H_hod_goodscinhit)
@@ -346,8 +357,8 @@ for event in Cut_Proton_Events_All_tree:
     H_cer_npeSum_protons_cut_all.Fill(event.H_cer_npeSum)
     H_RFTime_Dist_protons_cut_all.Fill(event.H_RF_Dist)
     P_gtr_beta_protons_cut_all.Fill(event.P_gtr_beta)
-    P_gtr_xp_protons_cut_all.Fill(event.P_gtr_xp)
-    P_gtr_yp_protons_cut_all.Fill(event.P_gtr_yp)
+    P_gtr_th_protons_cut_all.Fill(event.P_gtr_th)
+    P_gtr_ph_protons_cut_all.Fill(event.P_gtr_ph)
     P_gtr_dp_protons_cut_all.Fill(event.P_gtr_dp)
     P_gtr_p_protons_cut_all.Fill(event.P_gtr_p)
     P_hod_goodscinhit_protons_cut_all.Fill(event.P_hod_goodscinhit)
@@ -455,16 +466,16 @@ c1_acpt = TCanvas("c1_H_kin", "Electron-Proton Acceptance Distributions", 100, 0
 c1_acpt.Divide(3,2)
 c1_acpt.cd(1)
 gPad.SetLogy()
-H_gtr_xp_protons_uncut.SetLineColor(2)
-H_gtr_xp_protons_uncut.Draw()
-H_gtr_xp_protons_cut_all.SetLineColor(4)
-H_gtr_xp_protons_cut_all.Draw("same")
+H_gtr_th_protons_uncut.SetLineColor(2)
+H_gtr_th_protons_uncut.Draw()
+H_gtr_th_protons_cut_all.SetLineColor(4)
+H_gtr_th_protons_cut_all.Draw("same")
 c1_acpt.cd(2)
 gPad.SetLogy()
-H_gtr_yp_protons_uncut.SetLineColor(2)
-H_gtr_yp_protons_uncut.Draw()
-H_gtr_yp_protons_cut_all.SetLineColor(4)
-H_gtr_yp_protons_cut_all.Draw("same")
+H_gtr_ph_protons_uncut.SetLineColor(2)
+H_gtr_ph_protons_uncut.Draw()
+H_gtr_ph_protons_cut_all.SetLineColor(4)
+H_gtr_ph_protons_cut_all.Draw("same")
 c1_acpt.cd(3)
 gPad.SetLogy()
 H_gtr_dp_protons_uncut.SetLineColor(2)
@@ -478,16 +489,16 @@ legend2.AddEntry("H_gtr_dp_protons_cut_all", "with cuts (acpt/RF/PID)", "l")
 legend2.Draw("same")
 c1_acpt.cd(4)
 gPad.SetLogy()
-P_gtr_xp_protons_uncut.SetLineColor(2)
-P_gtr_xp_protons_uncut.Draw()
-P_gtr_xp_protons_cut_all.SetLineColor(4)
-P_gtr_xp_protons_cut_all.Draw("same")
+P_gtr_th_protons_uncut.SetLineColor(2)
+P_gtr_th_protons_uncut.Draw()
+P_gtr_th_protons_cut_all.SetLineColor(4)
+P_gtr_th_protons_cut_all.Draw("same")
 c1_acpt.cd(5)
 gPad.SetLogy()
-P_gtr_yp_protons_uncut.SetLineColor(2)
-P_gtr_yp_protons_uncut.Draw()
-P_gtr_yp_protons_cut_all.SetLineColor(4)
-P_gtr_yp_protons_cut_all.Draw("same")
+P_gtr_ph_protons_uncut.SetLineColor(2)
+P_gtr_ph_protons_uncut.Draw()
+P_gtr_ph_protons_cut_all.SetLineColor(4)
+P_gtr_ph_protons_cut_all.Draw("same")
 c1_acpt.cd(6)
 gPad.SetLogy()
 P_gtr_dp_protons_uncut.SetLineColor(2)
@@ -646,8 +657,8 @@ d_Cut_Proton_Events_Random = outHistFile.mkdir("Cut_Proton_Events_Random")
 # Writing Histograms for protons                                                                  
 d_Uncut_Proton_Events.cd()
 H_gtr_beta_protons_uncut.Write()
-H_gtr_xp_protons_uncut.Write()
-H_gtr_yp_protons_uncut.Write()
+H_gtr_th_protons_uncut.Write()
+H_gtr_ph_protons_uncut.Write()
 H_gtr_dp_protons_uncut.Write()
 H_gtr_p_protons_uncut.Write()
 H_hod_goodscinhit_protons_uncut.Write()
@@ -657,8 +668,8 @@ H_cal_etottracknorm_protons_uncut.Write()
 H_cer_npeSum_protons_uncut.Write()
 H_RFTime_Dist_protons_uncut.Write()
 P_gtr_beta_protons_uncut.Write()
-P_gtr_xp_protons_uncut.Write()
-P_gtr_yp_protons_uncut.Write()
+P_gtr_th_protons_uncut.Write()
+P_gtr_ph_protons_uncut.Write()
 P_gtr_dp_protons_uncut.Write()
 P_gtr_p_protons_uncut.Write()
 P_hod_goodscinhit_protons_uncut.Write()
@@ -698,8 +709,8 @@ P_aero_npeSum_vs_beta_protons_uncut.Write()
 
 d_Cut_Proton_Events_All.cd()
 H_gtr_beta_protons_cut_all.Write()
-H_gtr_xp_protons_cut_all.Write()
-H_gtr_yp_protons_cut_all.Write()
+H_gtr_th_protons_cut_all.Write()
+H_gtr_ph_protons_cut_all.Write()
 H_gtr_dp_protons_cut_all.Write()
 H_gtr_p_protons_cut_all.Write()
 H_hod_goodscinhit_protons_cut_all.Write()
@@ -709,8 +720,8 @@ H_cal_etottracknorm_protons_cut_all.Write()
 H_cer_npeSum_protons_cut_all.Write()
 H_RFTime_Dist_protons_cut_all.Write()
 P_gtr_beta_protons_cut_all.Write()
-P_gtr_xp_protons_cut_all.Write()
-P_gtr_yp_protons_cut_all.Write()
+P_gtr_th_protons_cut_all.Write()
+P_gtr_ph_protons_cut_all.Write()
 P_gtr_dp_protons_cut_all.Write()
 P_gtr_p_protons_cut_all.Write()
 P_hod_goodscinhit_protons_cut_all.Write()

@@ -34,7 +34,7 @@ RUNNUMBER=$1
 RUNTYPE=$2
 TARGET=$3
 if [[ ${ANATYPE} = *"Pion"* ]]; then
-    RUNLIST="${UTILPATH}/runlist_pionLT_2021.csv"
+    RUNLIST="${UTILPATH}/runlist_pionLT_2022.csv"
 elif [[ ${ANATYPE} = *"Kaon"* ]]; then
     RUNLIST="${UTILPATH}/runlist_kaonLT_2021.csv"
 fi
@@ -194,3 +194,5 @@ if [[ `echo "${#DuplicateLines[@]}"` != 0 ]]; then # If the array is not empty, 
 else
     echo ${RUNLIST_INFO} >> ${RUNLIST} # Print the run list info to the file
 fi
+
+python3 $UTILPATH/scripts/online_physics/PionLT/calculate_charge.py $RUNNUMBER
