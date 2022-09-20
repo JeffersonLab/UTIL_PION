@@ -45,7 +45,6 @@ HOST=`echo ${PATHFILE_INFO} | cut -d ','  -f15`
 # Source stuff depending upon hostname. Change or add more as needed  
 if [[ "${HOST}" = *"farm"* ]]; then
     if [[ "${HOST}" != *"ifarm"* ]]; then
-	source /site/12gev_phys/softenv.sh 2.3
 	source /apps/root/6.18.04/setroot_CUE.bash
     fi
     cd "$HCANAPATH"
@@ -87,18 +86,18 @@ if [ ! -f "$UTILPATH/ROOTfiles/Analysis/Lumi/${ANATYPE}_replay_luminosity_${RUNN
 else echo "Replayfile already found for this run in $UTILPATH/ROOTfiles/Analysis/Lumi/ - Skipping replay step"
 fi
 
-sleep 3
+#sleep 3
 
 # Sets trigger windows
-echo
-echo "Running trigWindows.sh ${RUNNUMBER}..."
-cd ${UTILPATH}/scripts/trig_windows/
-source trigWindows.sh ${RUNNUMBER}
-cd ${UTILPATH}/scripts/trig_windows/
-source trigWindows.sh -p ${RUNNUMBER}
+#echo
+#echo "Running trigWindows.sh ${RUNNUMBER}..."
+#cd ${UTILPATH}/scripts/trig_windows/
+#source trigWindows.sh ${RUNNUMBER}
+#cd ${UTILPATH}/scripts/trig_windows/
+#source trigWindows.sh -p ${RUNNUMBER}
 
 # Analyzes lumi runs
-echo
-echo "Running lumiyield.py ${RUNNUMBER} ${MAXEVENTS}..."
-cd ${UTILPATH}/scripts/luminosity/src/
-python3 lumiyield.py ${ANATYPE}_replay_luminosity ${RUNNUMBER} ${MAXEVENTS}
+#echo
+#echo "Running lumiyield.py ${RUNNUMBER} ${MAXEVENTS}..."
+#cd ${UTILPATH}/scripts/luminosity/src/
+#python3 lumiyield.py ${ANATYPE}_replay_luminosity ${RUNNUMBER} ${MAXEVENTS}

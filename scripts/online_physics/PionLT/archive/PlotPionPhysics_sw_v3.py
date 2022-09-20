@@ -21,13 +21,35 @@ import array
 import re # Regexp package - for string manipulation
 from ROOT import TCanvas, TColor, TGaxis, TH1F, TH2F, TPad, TStyle, gStyle, gPad, TGaxis, TLine, TMath, TPaveText, TArc, TGraphPolar 
 from ROOT import kBlack, kBlue, kRed
+from array import array
 
 ##################################################################################################################################################
 
 # Defining some variables here
-minrangeuser = 0 # min range for -t vs phi plot
-#maxrangeuser = 0.6 #  max range for -t vs phi plot     : 13/12/2021 - SJDK - Changed range again
-maxrangeuser = 1.5 #  max range for -t vs phi plot     : 2/6/2022 DJG - opened this up
+minrangeuser = 0       #  min range for -t vs phi plot
+maxrangeuser = 0.9   #  max range for -t vs phi plot     : 13/12/2021 - SJDK - Changed range again
+#maxrangeuser = 1.5     #  max range for -t vs phi plot     : 2/6/2022 DJG - opened this up
+
+Q2min_user = 4.0        # min range for Q2 plot (Standard running with runnumber as an input)
+Q2max_user = 8.0        # max range for Q2 plot (Standard running with runnumber as an input)
+Wmin_user = 2.4         # min range for W plot (Standard running with runnumber as an input)
+Wmax_user = 3.8         # max range for W plot (Standard running with runnumber as an input)
+tmin_user = 0.0         # min range for t plot (Standard running with runnumber as an input)
+tmax_user = 1.5         # max range for t plot (Standard running with runnumber as an input)
+
+#FreedomInitiative=True
+FreedomInitiative=False
+NRGBs = 3
+NCont = 255
+stops = [ 0.0, 0.5, 1.0 ]
+red =   [ 0.0, 1.0, 1.0 ]
+green = [ 0.0, 1.0, 0.0 ]
+blue =  [ 1.0, 1.0, 0.0 ]
+s = array('d', stops)
+r = array('d', red)
+g = array('d', green)
+b = array('d', blue)
+
 
 ##################################################################################################################################################
 
@@ -81,12 +103,12 @@ elif (FilenameOverride != False): # If filename override set, format the file na
 if Target == "LD2":
     minbin = 0.88 # minimum bin for selecting neutrons events in missing mass distribution
     maxbin = 1.04 # maximum bin for selecting neutrons events in missing mass distribution
-# SJDK - 08/02/22 - In some ways, whether the dummy is like LD2 or LH2 depends upon the runs around it, something that will have to be adressed offline (the online count was a  little irellevant anyway)
+# SJDK - 08/02/22 - In some ways, whether the dummy is like LD2 or LH2 depends upon the runs around it, something that will have to be adressed offline (the online count was a little irellevant anyway)
 elif Target == "LH2" or Target == "Dummy10cm": # setting for LH2, figure it should be fine for dummy too
     minbin = 0.90 # minimum bin for selecting neutrons events in missing mass distribution
     maxbin = 0.98 # maximum bin for selecting neutrons events in missing mass distribution
 else:
-    print("Target argument not given or entered incorrectly, should be LH2, LD2 or Dummy10cm - defaulting to LH2 MM cut values")
+    print("Target argument not given or entered incorrectly, should be LH2, LD2 or Dummy10cm - defaulting to LD2 MM cut values")
     minbin = 0.88 # minimum bin for selecting neutrons events in missing mass distribution
     maxbin = 1.04 # maximum bin for selecting neutrons events in missing mass distribution
 
@@ -178,60 +200,55 @@ Cut_Pion_Events_Prompt_MM_tree = infile.Get("Cut_Pion_Events_Prompt_MM")
 # Defining Histograms for Pions
 P_RFTime_pions_cut_noRF = ROOT.TH1D("P_RFTime_pions_cut_noRF", "SHMS RFTime; SHMS_RFTime; Counts", 200, 0, 4)
 
-H_xp_pions_uncut = ROOT.TH1D("H_xp_pions_uncut", "HMS x'; HMS_gtr_xp; Counts", 200, -0.2, 0.2)
-H_yp_pions_uncut = ROOT.TH1D("H_yp_pions_uncut", "HMS y'; HMS_gtr_yp; Counts", 200, -0.2, 0.2)
-H_dp_pions_uncut = ROOT.TH1D("H_dp_pions_uncut", "HMS #delta; HMS_gtr_dp; Counts", 200, -12, 12)
+H_xp_pions_uncut = ROOT.TH1D("H_xp_pions_uncut", "HMS x'_{Tar}; HMS_gtr_xptar; Counts", 200, -0.2, 0.2)
+H_yp_pions_uncut = ROOT.TH1D("H_yp_pions_uncut", "HMS y'_{Tar}; HMS_gtr_yptar; Counts", 200, -0.2, 0.2)
+H_dp_pions_uncut = ROOT.TH1D("H_dp_pions_uncut", "HMS #delta; HMS_gtr_dp; Counts", 300, -15, 15)
 H_cal_etottracknorm_pions_uncut = ROOT.TH1D("H_cal_etottracknorm_pions_uncut", "HMS cal etottracknorm; HMS_cal_etottracknorm; Counts", 300, 0.2, 1.8)
-P_xp_pions_uncut = ROOT.TH1D("P_xp_pions_uncut", "SHMS x'; SHMS_gtr_xp; Counts", 200, -0.2, 0.2)
-P_yp_pions_uncut = ROOT.TH1D("P_yp_pions_uncut", "SHMS y'; SHMS_gtr_yp; Counts", 200, -0.2, 0.2)
-P_dp_pions_uncut = ROOT.TH1D("P_dp_pions_uncut", "SHMS #delta; SHMS_gtr_dp; Counts", 200, -30, 30)
+P_xptar_pions_uncut = ROOT.TH1D("P_xptar_pions_uncut", "SHMS x'_{Tar}; SHMS_gtr_xptar; Counts", 200, -0.2, 0.2)
+P_yptar_pions_uncut = ROOT.TH1D("P_yptar_pions_uncut", "SHMS y'_{Tar}; SHMS_gtr_yptar; Counts", 200, -0.2, 0.2)
+P_dp_pions_uncut = ROOT.TH1D("P_dp_pions_uncut", "SHMS #delta; SHMS_gtr_dp; Counts", 600, -30, 30)
 P_cal_etottracknorm_pions_uncut = ROOT.TH1D("P_cal_etottracknorm_pions_uncut", "SHMS cal etottracknorm; SHMS_cal_etottracknorm; Counts", 200, 0, 1.6)
 P_cal_fly_numGoodAdcHits_pions_uncut = ROOT.TH1D("P_cal_fly_numGoodAdcHits_pions_uncut", "SHMS Shower Good Occupancy; PMT Number; Number of Good ADC Hits", 224, 0.5, 224.5)
 P_hgcer_npe_pions_uncut = ROOT.TH1D("P_hgcer_npe_pions_uncut", "SHMS HGC npeSum; SHMS_hgcer_npeSum; Counts", 200, 0, 50)
 P_aero_npe_pions_uncut = ROOT.TH1D("P_aero_npe_pions_uncut", "SHMS aero npeSum; SHMS_aero_npeSum; Counts", 200, 0, 50)
 P_ngcer_npe_pions_uncut = ROOT.TH1D("P_ngcer_npe_pions_uncut", "SHMS NGC npeSum; SHMS_ngcer_npeSum; Counts", 200, 0, 50)
-P_MMpi_pions_uncut = ROOT.TH1D("P_MMpi_pions_uncut", "Missing Mass (no cuts); MM_{#pi}; Counts", 200, 0.5, 1.8)
+P_MMpi_pions_uncut = ROOT.TH1D("P_MMpi_pions_uncut", "Missing Mass (no cuts); MM_{#pi}; Counts", 260, 0.5, 1.8)
 P_RFTime_pions_uncut = ROOT.TH1D("P_RFTime_pions_uncut", "SHMS RFTime; SHMS_RFTime; Counts", 200, 0, 4)
-#ePiCoinTime_pions_uncut = ROOT.TH1D("ePiCoinTime_pions_uncut", "Electron-Pion CTime (no cuts); e #pi Coin_Time; Counts", 200, -50, 50)
-# SJDK 26/11/21 - Narrowed the range for 2ns running, bin size still the same
-ePiCoinTime_pions_uncut = ROOT.TH1D("ePiCoinTime_pions_uncut", "Electron-Pion CTime (no cuts); e #pi Coin_Time; Counts", 100, -25, 25)
+ePiCoinTime_pions_uncut = ROOT.TH1D("ePiCoinTime_pions_uncut", "Electron-Pion CTime (no cuts); e #pi Coin_Time; Counts", 120, -30, 30)
 
-H_xp_pions_cut = ROOT.TH1D("H_xp_pions_cut", "HMS x'; HMS_gtr_xp; Counts", 200, -0.2, 0.2)
-H_yp_pions_cut = ROOT.TH1D("H_yp_pions_cut", "HMS y'; HMS_gtr_yp; Counts", 200, -0.2, 0.2)
-H_dp_pions_cut = ROOT.TH1D("H_dp_pions_cut", "HMS #delta; HMS_gtr_dp; Counts", 200, -12, 12)
+H_xp_pions_cut = ROOT.TH1D("H_xp_pions_cut", "HMS x'_{Tar}; HMS_gtr_xptar; Counts", 200, -0.2, 0.2)
+H_yp_pions_cut = ROOT.TH1D("H_yp_pions_cut", "HMS y'_{Tar}; HMS_gtr_yptar; Counts", 200, -0.2, 0.2)
+H_dp_pions_cut = ROOT.TH1D("H_dp_pions_cut", "HMS #delta; HMS_gtr_dp; Counts", 300, -15, 15)
 H_cal_etottracknorm_pions_cut = ROOT.TH1D("H_cal_etottracknorm_pions_cut", "HMS cal etottracknorm; HMS_cal_etottracknorm; Counts", 200, 0.6, 1.4)
-P_xp_pions_cut = ROOT.TH1D("P_xp_pions_cut", "SHMS x'; SHMS_gtr_xp; Counts", 200, -0.2, 0.2)
-P_yp_pions_cut = ROOT.TH1D("P_yp_pions_cut", "SHMS y'; SHMS_gtr_yp; Counts", 200, -0.2, 0.2)
-P_dp_pions_cut = ROOT.TH1D("P_dp_pions_cut", "SHMS #delta; SHMS_gtr_dp; Counts", 200, -15, 15)
+P_xptar_pions_cut = ROOT.TH1D("P_xptar_pions_cut", "SHMS x'_{Tar}; SHMS_gtr_xptar; Counts", 200, -0.2, 0.2)
+P_yptar_pions_cut = ROOT.TH1D("P_yptar_pions_cut", "SHMS y'_{Tar}; SHMS_gtr_yptar; Counts", 200, -0.2, 0.2)
+P_dp_pions_cut = ROOT.TH1D("P_dp_pions_cut", "SHMS #delta; SHMS_gtr_dp; Counts", 600, -30, 30)
 P_cal_etottracknorm_pions_cut = ROOT.TH1D("P_cal_etottracknorm_pions_cut", "SHMS cal etottracknorm; SHMS_cal_etottracknorm; Counts", 200, 0, 1.6)
 P_cal_fly_numGoodAdcHits_pions_cut = ROOT.TH1D("P_cal_fly_numGoodAdcHits_pions_cut", "SHMS Shower Good Occupancy; PMT Number; Number of Good ADC Hits", 224, 0.5, 224.5)
 P_hgcer_npe_pions_cut = ROOT.TH1D("P_hgcer_npe_pions_cut", "SHMS HGC npeSum; SHMS_hgcer_npeSum; Counts", 200, 0, 50)
 P_aero_npe_pions_cut = ROOT.TH1D("P_aero_npe_pions_cut", "SHMS aero npeSum; SHMS_aero_npeSum; Counts", 200, 0, 50)
 P_ngcer_npe_pions_cut = ROOT.TH1D("P_ngcer_npe_pions_cut", "SHMS NGC npeSum; SHMS_ngcer_npeSum; Counts", 200, 0, 50)
-P_MMpi_pions_cut = ROOT.TH1D("P_MMpi_pions_cut", "Missing Mass (with cuts); MM_{#pi}; Counts", 200, 0.5, 1.8)
+P_MMpi_pions_cut = ROOT.TH1D("P_MMpi_pions_cut", "Missing Mass (with cuts); MM_{#pi}; Counts", 260, 0.5, 1.8)
 P_RFTime_pions_cut = ROOT.TH1D("P_RFTime_pions_cut", "SHMS RFTime; SHMS_RFTime; Counts", 200, 0, 4)
-#ePiCoinTime_pions_cut = ROOT.TH1D("ePiCoinTime_pions_cut", "Electron-Pion CTime (with cuts); e #pi Coin_Time; Counts", 200, -50, 50)
-# SJDK 26/11/21 - Narrowed the range for 2ns running, bin size still the same
-ePiCoinTime_pions_cut = ROOT.TH1D("ePiCoinTime_pions_cut", "Electron-Pion CTime (with cuts); e #pi Coin_Time; Counts", 100, -25, 25)
+ePiCoinTime_pions_cut = ROOT.TH1D("ePiCoinTime_pions_cut", "Electron-Pion CTime (with cuts); e #pi Coin_Time; Counts", 120, -30, 30)
 epsilon_pions_cut = ROOT.TH1D("epsilon_pions_cut", "Epsilon Dist for Prompt Events (Incl MM Cut); epsilon; Counts", 200, 0, 1.0)
 
 ePiCoinTime_pions_cut_prompt = ROOT.TH1D("ePiCoinTime_pions_cut_prompt", "Electron-Pion CTime; e #pi Coin_Time; Counts", 8, -2, 2)
-P_MMpi_pions_cut_prompt = ROOT.TH1D("P_MMpi_pions_cut_prompt", "Missing Mass; MM_{#pi}; Counts", 200, 0.5, 1.8)
+P_MMpi_pions_cut_prompt = ROOT.TH1D("P_MMpi_pions_cut_prompt", "Missing Mass; MM_{#pi}; Counts", 260, 0.5, 1.8)
 
-#ePiCoinTime_pions_cut_randm = ROOT.TH1D("ePiCoinTime_pions_cut_randm", "Electron-Pion CTime; e #pi Coin_Time; Counts", 160, -40, 40)
-# SJDK 26/11/21 - Narrowed the range for 2ns running, bin size still the same
-ePiCoinTime_pions_cut_randm = ROOT.TH1D("ePiCoinTime_pions_cut_randm", "Electron-Pion CTime; e #pi Coin_Time; Counts", 80, -20, 20)
-P_MMpi_pions_cut_randm = ROOT.TH1D("P_MMpi_pions_cut_randm", "Missing Mass; MM_{#pi}; Counts", 200, 0.5, 1.8)
+# SJDK 20/06/22 - Changed the binning of the 1D CT distribution for randoms. It was different from the full distribution so some values were actually getting cut off and making the random selection look bad (it isn't)
+ePiCoinTime_pions_cut_randm = ROOT.TH1D("ePiCoinTime_pions_cut_randm", "Electron-Pion CTime; e #pi Coin_Time; Counts", 120, -30, 30)
+P_MMpi_pions_cut_randm = ROOT.TH1D("P_MMpi_pions_cut_randm", "Missing Mass; MM_{#pi}; Counts", 260, 0.5, 1.8)
 
-P_MMpi_pions_cut_randm_scaled = ROOT.TH1D("P_MMpi_pions_cut_randm_scaled", "Missing Mass; MM_{#pi}; Counts", 200, 0.5, 1.8)
-P_MMpi_pions_cut_randm_sub = ROOT.TH1D("P_MMpi_pions_cut_randm_sub", "Missing Mass Rndm Sub; MM_{#pi}; Counts", 200, 0.5, 1.8)
+P_MMpi_pions_cut_randm_scaled = ROOT.TH1D("P_MMpi_pions_cut_randm_scaled", "Missing Mass; MM_{#pi}; Counts", 260, 0.5, 1.8)
+P_MMpi_pions_cut_randm_sub = ROOT.TH1D("P_MMpi_pions_cut_randm_sub", "Missing Mass Rndm Sub; MM_{#pi}; Counts", 260, 0.5, 1.8)
 # SJDK - 26/10/21 - Changed the plot title to be more accurate
 phiq_plot = ROOT.TH1D("Phiq", "#phi Dist for Prompt Events (Incl MM Cut); #phi; Counts", 12, -3.14, 3.14) # 2021/10/25 NH - added these at garths request
 #t_plot = ROOT.TH1D("-t", "-t Dist for Prompt Events (Incl MM Cut); -t; Counts", 18, 0, 0.6) # SJDK - 2022/01/13 - Changed t range, kept bin width consistent
-t_plot = ROOT.TH1D("-t", "-t Dist for Prompt Events (Incl MM Cut); -t; Counts", 18, 0, 1.5) # DJG FEb. 6, 2022 - Changed t range,
+t_plot = ROOT.TH1D("-t", "-t Dist for Prompt Events (Incl MM Cut); -t; Counts", 18, tmin_user, tmax_user) # DJG FEb. 6, 2022 - Changed t range,
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
-    Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; Counts", 200, 2.5, 6.5) # 13/12/21 - SJDK - Adjusted ranges again
-    W_pions_cut = ROOT.TH1D("W_pions_cut", "W Dist for Prompt Events (Incl MM Cut); W; Counts", 200, 2.0, 4.0)
+    Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; Counts", 200, Q2min_user, Q2max_user) # 13/12/21 - SJDK - Adjusted ranges again
+    W_pions_cut = ROOT.TH1D("W_pions_cut", "W Dist for Prompt Events (Incl MM Cut); W; Counts", 200, Wmin_user, Wmax_user)
 elif (FilenameOverride != False): # Special case, run with specifc file name, construct histo with ranges based upon filename
     Q2_pions_cut = ROOT.TH1D("Q2_pions_cut", "Q2 Dist for Prompt Events (Incl MM Cut); Q2; Counts", 200, Q2min, Q2max) 
     W_pions_cut = ROOT.TH1D("W_pions_cut", "W Dist for Prompt Events (Incl MM Cut); W; Counts", 200, Wmin, Wmax)  
@@ -240,18 +257,15 @@ elif (FilenameOverride != False): # Special case, run with specifc file name, co
 
 # 2D Histograms for pions
 P_hgcer_vs_aero_npe_pions_uncut = ROOT.TH2D("P_hgcer_vs_aero_npe_pions_uncut", "SHMS HGC npeSum vs SHMS Aero npeSum (no cut); SHMS_hgcer_npeSum; SHMS_aero_npeSum", 100, 0, 50, 100, 0, 50)
-#ePiCoinTime_vs_MMpi_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_MMpi_pions_uncut","Electron-Pion CTime vs Missing Mass (no cut); e #pi Coin_Time; MM_{#pi}", 160, -40, 40, 200, 0, 2)
-#ePiCoinTime_vs_beta_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_beta_pions_uncut", "Electron-Pion CTime vs SHMS #beta (no cut); e #pi Coin_Time; SHMS_#beta", 160, -40, 40, 200, 0, 2)
-# SJDK 26/11/21 - Narrowed the range for 2ns running, bin size still the same
-ePiCoinTime_vs_MMpi_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_MMpi_pions_uncut","Electron-Pion CTime vs Missing Mass (no cut); e #pi Coin_Time; MM_{#pi}", 100, -25, 25, 200, 0, 2)
-ePiCoinTime_vs_beta_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_beta_pions_uncut", "Electron-Pion CTime vs SHMS #beta (no cut); e #pi Coin_Time; SHMS_#beta", 100, -25, 25, 200, 0, 2)
+ePiCoinTime_vs_MMpi_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_MMpi_pions_uncut","Electron-Pion CTime vs Missing Mass (no cut); e #pi Coin_Time; MM_{#pi}", 120, -30, 30, 200, 0, 2)
+ePiCoinTime_vs_beta_pions_uncut = ROOT.TH2D("ePiCoinTime_vs_beta_pions_uncut", "Electron-Pion CTime vs SHMS #beta (no cut); e #pi Coin_Time; SHMS_#beta", 120, -30, 30, 200, 0, 2)
 P_RFTime_vs_MMpi_pions_uncut = ROOT.TH2D("P_RFTime_vs_MMpi_pions_uncut", "SHMS RFTime vs Missing Mass (no cuts); SHMS_RFTime_Dist; MM_{#pi}", 100, 0, 4, 100, 0, 2)
 P_cal_etottracknorm_vs_ngcer_npe_pions_uncut = ROOT.TH2D("P_cal_etottracknorm_vs_ngcer_npe_pions_uncut", "SHMS cal etottracknorm vs SHMS NGC xAtCer (no cut); SHMS_cal_etottracknorm; SHMS_ngcer_xAtCer", 100, -10, 10, 100, -10, 10)
 P_cal_fly_numGoodAdcHits_col_row_uncut = ROOT.TH2D("P_cal_fly_numGoodAdcHits_col_row_uncut","SHMS Shower  Occupancy ; Col Number ;  Row Number",14,0,14,16,0,16)
 P_ngcer_vs_hgcer_npe_pions_uncut = ROOT.TH2D("P_ngcer_vs_hgcer_npe_pions_uncut", "SHMS NGC npeSum vs SHMS HGC npeSum (no cut); SHMS_ngcer_npeSum; SHMS_hgcer_npeSum", 100, 0, 50, 100, 0, 50)
 P_ngcer_vs_aero_npe_pions_uncut = ROOT.TH2D("P_ngcer_vs_aero_npe_pions_uncut", "SHMS NGC npeSum vs SHMS aero npeSum (no cut); SHMS_ngcer_npeSum; SHMS_aero_npeSum", 100, 0, 50, 100, 0, 50)
-H_dp_vs_beta_pions_uncut = ROOT.TH2D("H_dp_vs_beta_pions_uncut", "HMS #delta vs HMS #beta (no cut); HMS #delta; HMS_#beta", 200, -12, 12, 200, 0, 2)
-P_dp_vs_beta_pions_uncut = ROOT.TH2D("P_dp_vs_beta_pions_uncut", "SHMS #delta vs SHMS #beta (no cut); SHMS #delta; HMS_#beta", 200, -12, 12, 200, 0, 2)
+H_dp_vs_beta_pions_uncut = ROOT.TH2D("H_dp_vs_beta_pions_uncut", "HMS #delta vs HMS #beta (no cut); HMS #delta; HMS_#beta", 600, -30, 30, 200, 0, 2)
+P_dp_vs_beta_pions_uncut = ROOT.TH2D("P_dp_vs_beta_pions_uncut", "SHMS #delta vs SHMS #beta (no cut); SHMS #delta; HMS_#beta", 300, -15, 15, 200, 0, 2)
 H_xfp_vs_beta_pions_uncut = ROOT.TH2D("H_xfp_vs_beta_pions_uncut", "HMS X_{fp} vs HMS #beta (no cut); HMS X_{fp}; HMS_#beta", 160, -40, 40, 200, 0, 2)
 P_xfp_vs_beta_pions_uncut = ROOT.TH2D("P_xfp_vs_beta_pions_uncut", "SHMS X_{fp} vs SHMS #beta (no cut); SHMS X_{fp}; SHMS_#beta", 160, -40, 40, 200, 0, 2)
 H_yfp_vs_beta_pions_uncut = ROOT.TH2D("H_yfp_vs_beta_pions_uncut", "HMS Y_{fp} vs HMS #beta (no cut); HMS Y_{fp}; HMS_#beta", 100, -25, 25, 200, 0, 2)
@@ -266,14 +280,18 @@ P_DPexit_xy_pions_uncut = ROOT.TH2D("P_DPexit_xy_pions_uncut", "SHMS Dipole Exit
 
 H_cal_etottracknorm_vs_cer_npe_pions_cut = ROOT.TH2D("H_cal_etottracknorm_vs_cer_npe_pions_cut","HMS cal etottracknorm vs HMS cer npeSum (with cuts); H_cal_etottracknorm; H_cer_npeSum",100, 0.5, 1.5, 100, 0, 40)
 P_hgcer_vs_aero_npe_pions_cut = ROOT.TH2D("P_hgcer_vs_aero_npe_pions_cut", "SHMS HGC npeSum vs SHMS aero npeSum (with cuts); SHMS_hgcer_npeSum; SHMS_aero_npeSum", 100, 0, 50, 100, 0, 50)
-ePiCoinTime_vs_MMpi_pions_cut = ROOT.TH2D("ePiCoinTime_vs_MMpi_pions_cut","Electron-Pion CTime vs Missing Mass (with PID cuts); e #pi Coin_Time; MM_{#pi}", 100, -2, 2, 100, 0, 2)
-ePiCoinTime_vs_beta_pions_cut = ROOT.TH2D("ePiCoinTime_vs_beta_pions_cut", "Electron-Pion CTime vs SHMS #beta (with PID cuts); e #pi Coin_Time; SHMS_#beta", 100, -2, 2, 100, 0.6, 1.4)
+# SJDK 20/06/22 - Changed the title, to be honest, this should probably be re-organised or rewritten, should just use the prompt tree
+ePiCoinTime_vs_MMpi_pions_cut = ROOT.TH2D("ePiCoinTime_vs_MMpi_pions_cut","Electron-Pion CTime vs Missing Mass Prompt Peak (with PID cuts); e #pi Coin_Time; MM_{#pi}", 100, -2, 2, 200, 0, 2)
+ePiCoinTime_vs_beta_pions_cut = ROOT.TH2D("ePiCoinTime_vs_beta_pions_cut", "Electron-Pion CTime vs SHMS #beta Prompt Peak (with PID cuts); e #pi Coin_Time; SHMS_#beta", 100, -2, 2, 80, 0.6, 1.4)
+# SJDK 20/06/22 - New versions showing the full range
+ePiCoinTime_vs_MMpi_pions_cut_Full = ROOT.TH2D("ePiCoinTime_vs_MMpi_pions_cut_Full","Electron-Pion CTime vs Missing Mass (with PID cuts); e #pi Coin_Time; MM_{#pi}", 120, -30, 30, 200, 0, 2)
+ePiCoinTime_vs_beta_pions_cut_Full = ROOT.TH2D("ePiCoinTime_vs_beta_pions_cut_Full", "Electron-Pion CTime vs SHMS #beta (with PID cuts); e #pi Coin_Time; SHMS_#beta", 120, -30, 30, 80, 0.6, 1.4)
 P_RFTime_vs_MMpi_pions_cut = ROOT.TH2D("P_RFTime_vs_MMpi_pions_cut", "SHMS RFTime vs Missing Mass (with cuts); SHMS_RFTime_Dist; MM_{#pi}", 100, 0, 4, 100, 0, 2)
 P_cal_etottracknorm_vs_ngcer_npe_pions_cut = ROOT.TH2D("P_cal_etottracknorm_vs_ngcer_npe_pions_cut", "P cal etottracknorm vs SHMS NGC xAtCer (with cuts); SHMS_cal_etottracknorm; SHMS_ngcer_xAtCer", 100, -10, 10, 100, -10, 10)
 P_cal_fly_numGoodAdcHits_col_row_cut = ROOT.TH2D("P_cal_fly_numGoodAdcHits_col_row_cut","SHMS Shower  Occupancy ; Col Number ;  Row Number",14,0,14,16,0,16)
 P_ngcer_vs_hgcer_npe_pions_cut = ROOT.TH2D("P_ngcer_vs_hgcer_npe_pions_cut", "SHMS NGC npeSum vs SHMS HGC npeSum (with cuts); SHMS_ngcer_npeSum; SHMS_hgcer_npeSum", 100, 0, 50, 100, 0, 50)
 P_ngcer_vs_aero_npe_pions_cut = ROOT.TH2D("P_ngcer_vs_aero_npe_pions_cut", "SHMS NGC npeSum vs SHMS aero npeSum (with cuts); SHMS_ngcer_npeSum; SHMS_aero_npeSum", 100, 0, 50, 100, 0, 50)
-H_dp_vs_beta_pions_cut = ROOT.TH2D("H_dp_vs_beta_pions_cut", "HMS #delta vs HMS #beta (with cut); HMS #delta; HMS_#beta", 200, -12, 12, 200, 0, 2)
+H_dp_vs_beta_pions_cut = ROOT.TH2D("H_dp_vs_beta_pions_cut", "HMS #delta vs HMS #beta (with cut); HMS #delta; HMS_#beta", 600, -30, 30, 200, 0, 2)
 P_dp_vs_beta_pions_cut = ROOT.TH2D("P_dp_vs_beta_pions_cut", "SHMS #delta vs SHMS #beta (with cut); SHMS #delta; SHMS_#beta", 200, -30, 30, 200, 0, 2)
 H_xfp_vs_beta_pions_cut = ROOT.TH2D("H_xfp_vs_beta_pions_cut", "HMS X_{fp} vs HMS #beta (with cut); HMS X_{fp}; HMS_#beta", 160, -40, 40, 200, 0, 2)
 P_xfp_vs_beta_pions_cut = ROOT.TH2D("P_xfp_vs_beta_pions_cut", "SHMS X_{fp} vs SHMS #beta (with cut); SHMS X_{fp}; SHMS_#beta", 160, -40, 40, 200, 0, 2)
@@ -288,7 +306,7 @@ P_cal_xy_pions_cut = ROOT.TH2D("P_cal_xy_pions_cut", "SHMS Calorimeter yCalo vs 
 P_DPexit_xy_pions_cut = ROOT.TH2D("P_DPexit_xy_pions_cut", "SHMS Dipole Exit  yExit vs xExit (with cuts); yExit(cm); xExit(cm)", 200, -50.0, 50.0, 200, -50.0, 50.0)
 # SJDK - 26/10/21 - Changed the plot title to be more accurate
 if (FilenameOverride == False): # Standard running condition, construct file name from run number and max events e.t.c.
-    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W Dist for Prompt Events (Incl MM Cut); Q2; W", 200, 2.5, 6.5, 200, 2.0, 4.0) # 13/12/21 - SJDK - Adjusted range 
+    Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W Dist for Prompt Events (Incl MM Cut); Q2; W", 200, Q2min_user, Q2max_user, 200, Wmin_user, Wmax_user) # 13/12/21 - SJDK - Adjusted range 
 elif (FilenameOverride != False): # Special case, run with specifc file name, construct histo with ranges based upon filename
     Q2vsW_pions_cut = ROOT.TH2D("Q2vsW_pions_cut", "Q2 vs W Dist for Prompt Events (Incl MM Cut); Q2; W", 200, Q2min, Q2max, 200, Wmin, Wmax)
 # SJDK - 26/10/21 - Changed the plot title to be more accurate
@@ -318,8 +336,8 @@ for event in Uncut_Pion_Events_tree:
     H_yp_pions_uncut.Fill(event.H_gtr_yp)
     H_dp_pions_uncut.Fill(event.H_gtr_dp)
     H_cal_etottracknorm_pions_uncut.Fill(event.H_cal_etottracknorm)
-    P_xp_pions_uncut.Fill(event.P_gtr_xp)
-    P_yp_pions_uncut.Fill(event.P_gtr_yp)
+    P_xptar_pions_uncut.Fill(event.P_gtr_xptar)
+    P_yptar_pions_uncut.Fill(event.P_gtr_yptar)
     P_dp_pions_uncut.Fill(event.P_gtr_dp)
     P_cal_etottracknorm_pions_uncut.Fill(event.P_cal_etottracknorm)
     P_hgcer_npe_pions_uncut.Fill(event.P_hgcer_npeSum)
@@ -360,8 +378,8 @@ for event in Cut_Pion_Events_All_tree:
     H_yp_pions_cut.Fill(event.H_gtr_yp)
     H_dp_pions_cut.Fill(event.H_gtr_dp)
     H_cal_etottracknorm_pions_cut.Fill(event.H_cal_etottracknorm)
-    P_xp_pions_cut.Fill(event.P_gtr_xp)
-    P_yp_pions_cut.Fill(event.P_gtr_yp)
+    P_xptar_pions_cut.Fill(event.P_gtr_xptar)
+    P_yptar_pions_cut.Fill(event.P_gtr_yptar)
     P_dp_pions_cut.Fill(event.P_gtr_dp)
     P_cal_etottracknorm_pions_cut.Fill(event.P_cal_etottracknorm)
     P_hgcer_npe_pions_cut.Fill(event.P_hgcer_npeSum)
@@ -374,6 +392,9 @@ for event in Cut_Pion_Events_All_tree:
     P_hgcer_vs_aero_npe_pions_cut.Fill(event.P_hgcer_npeSum, event.P_aero_npeSum)
     ePiCoinTime_vs_beta_pions_cut.Fill(event.CTime_ePiCoinTime_ROC1, event.P_gtr_beta)
     ePiCoinTime_vs_MMpi_pions_cut.Fill(event.CTime_ePiCoinTime_ROC1, event.MMpi)
+    # SJDK 20/06/22 - Fill new plots
+    ePiCoinTime_vs_beta_pions_cut_Full.Fill(event.CTime_ePiCoinTime_ROC1, event.P_gtr_beta)
+    ePiCoinTime_vs_MMpi_pions_cut_Full.Fill(event.CTime_ePiCoinTime_ROC1, event.MMpi)
     P_RFTime_vs_MMpi_pions_cut.Fill(event.P_RF_Dist, event.MMpi)    
     P_cal_etottracknorm_vs_ngcer_npe_pions_cut.Fill(event.P_cal_etottracknorm, event.P_ngcer_npeSum)
     P_ngcer_vs_hgcer_npe_pions_cut.Fill(event.P_ngcer_npeSum, event.P_hgcer_npeSum)
@@ -455,7 +476,11 @@ phiqvst_pions_cut.SetStats(0)
 phiqvst_pions_cut.GetYaxis().SetRangeUser(minrangeuser,maxrangeuser)
 phiqvst_pions_cut.Draw("SURF2 POL")
 # Section for polar plotting
-gStyle.SetPalette(55)
+if (FreedomInitiative == True):
+    TColor.CreateGradientColorTable(NRGBs, s, r, g, b, NCont)
+    gStyle.SetNumberContours(NCont)
+else:
+    gStyle.SetPalette(55)
 gPad.SetTheta(90)
 gPad.SetPhi(180)
 tvsphi_title_pions = TPaveText(0.0277092,0.89779,0.096428,0.991854,"NDC")
@@ -560,16 +585,16 @@ legend2_pions.AddEntry("H_dp_pions_cut", "with cuts (acpt/RF/PID)", "l")
 legend2_pions.Draw("same")
 c1_pions_acpt.cd(4)
 gPad.SetLogy()
-P_xp_pions_uncut.SetLineColor(2)
-P_xp_pions_uncut.Draw()
-P_xp_pions_cut.SetLineColor(4)
-P_xp_pions_cut.Draw("same")
+P_xptar_pions_uncut.SetLineColor(2)
+P_xptar_pions_uncut.Draw()
+P_xptar_pions_cut.SetLineColor(4)
+P_xptar_pions_cut.Draw("same")
 c1_pions_acpt.cd(5)
 gPad.SetLogy()
-P_yp_pions_uncut.SetLineColor(2)
-P_yp_pions_uncut.Draw()
-P_yp_pions_cut.SetLineColor(4)
-P_yp_pions_cut.Draw("same")
+P_yptar_pions_uncut.SetLineColor(2)
+P_yptar_pions_uncut.Draw()
+P_yptar_pions_cut.SetLineColor(4)
+P_yptar_pions_cut.Draw("same")
 c1_pions_acpt.cd(6)
 gPad.SetLogy()
 P_dp_pions_uncut.SetMinimum(0.1*P_dp_pions_cut.GetMinimum()+1) # Implemented same fixed as used above for HMS
@@ -744,11 +769,12 @@ P_MMpi_vs_beta_pions_uncut.Draw("COLZ")
 c1_pions_MM.cd(6)
 P_MMpi_vs_beta_pions_cut.Draw("COLZ")
 c1_pions_MM.Print(Pion_Analysis_Distributions)
+
 c1_pions_CT = TCanvas("c1_pions_CT", "Electron-Pion CTime Distributions", 100, 0, 1000, 900)
-c1_pions_CT.Divide(2,2)
+# SJDK 20/06/22 - Added a new column of plots showing the PID cut distributions across the full range
+c1_pions_CT.Divide(3,2)
 c1_pions_CT.cd(1)
 ePiCoinTime_vs_beta_pions_uncut.Draw("COLZ")
-# TLine (x1, y1, x2, y2)
 LowerPrompt1_pions = TLine(PromptWindow[0],gPad.GetUymin(),PromptWindow[0],2)
 LowerPrompt1_pions.SetLineColor(2)
 LowerPrompt1_pions.SetLineWidth(2)
@@ -774,8 +800,36 @@ UpperRandomR1_pions.SetLineColor(8)
 UpperRandomR1_pions.SetLineWidth(2)
 UpperRandomR1_pions.Draw("same")
 c1_pions_CT.cd(2)
-ePiCoinTime_vs_beta_pions_cut.Draw("COLZ")
+# SJDK 20/06/22 Draw full range version of the plot, unfortunately due to the different binning range, I need to adjust the length of the lines!
+# The lines were behaving strangely so I've hard coded the low/high y values for now which sort of sucks
+ePiCoinTime_vs_beta_pions_cut_Full.Draw("COLZ")
+LowerPrompt1_pions_v2 = TLine(PromptWindow[0],0.6,PromptWindow[0],1.4)
+LowerPrompt1_pions_v2.SetLineColor(2)
+LowerPrompt1_pions_v2.SetLineWidth(2)
+LowerPrompt1_pions_v2.Draw("same")
+UpperPrompt1_pions_v2 = TLine(PromptWindow[1],0.6,PromptWindow[1],1.4)
+UpperPrompt1_pions_v2.SetLineColor(2)
+UpperPrompt1_pions_v2.SetLineWidth(2)
+UpperPrompt1_pions_v2.Draw("same")
+LowerRandomL1_pions_v2 = TLine(RandomWindows[0],0.6,RandomWindows[0],1.4)
+LowerRandomL1_pions_v2.SetLineColor(8)
+LowerRandomL1_pions_v2.SetLineWidth(2)
+LowerRandomL1_pions_v2.Draw("same")
+UpperRandomL1_pions_v2 = TLine(RandomWindows[1],0.6,RandomWindows[1],1.4)
+UpperRandomL1_pions_v2.SetLineColor(8)
+UpperRandomL1_pions_v2.SetLineWidth(2)
+UpperRandomL1_pions_v2.Draw("same")
+LowerRandomR1_pions_v2 = TLine(RandomWindows[2],0.6,RandomWindows[2],1.4)
+LowerRandomR1_pions_v2.SetLineColor(8)
+LowerRandomR1_pions_v2.SetLineWidth(2)
+LowerRandomR1_pions_v2.Draw("same")
+UpperRandomR1_pions_v2 = TLine(RandomWindows[3],0.6,RandomWindows[3],1.4)
+UpperRandomR1_pions_v2.SetLineColor(8)
+UpperRandomR1_pions_v2.SetLineWidth(2)
+UpperRandomR1_pions_v2.Draw("same")
 c1_pions_CT.cd(3)
+ePiCoinTime_vs_beta_pions_cut.Draw("COLZ")
+c1_pions_CT.cd(4)
 ePiCoinTime_vs_MMpi_pions_uncut.Draw("COLZ")
 LowerPrompt2_pions = TLine(PromptWindow[0],gPad.GetUymin(),PromptWindow[0],2)
 LowerPrompt2_pions.SetLineColor(2)
@@ -801,7 +855,15 @@ UpperRandomR2_pions = TLine(RandomWindows[3],gPad.GetUymin(),RandomWindows[3],2)
 UpperRandomR2_pions.SetLineColor(8)
 UpperRandomR2_pions.SetLineWidth(2)
 UpperRandomR2_pions.Draw("same")
-c1_pions_CT.cd(4)
+c1_pions_CT.cd(5)
+ePiCoinTime_vs_MMpi_pions_cut_Full.Draw("COLZ")
+LowerPrompt2_pions.Draw("same")
+UpperPrompt2_pions.Draw("same")
+LowerRandomL2_pions.Draw("same")
+UpperRandomL2_pions.Draw("same")
+LowerRandomR2_pions.Draw("same")
+UpperRandomR2_pions.Draw("same")
+c1_pions_CT.cd(6)
 ePiCoinTime_vs_MMpi_pions_cut.Draw("COLZ")
 c1_pions_CT.Print(Pion_Analysis_Distributions)
 
@@ -857,7 +919,6 @@ c1_pions_cal_proj.cd(6)
 Calo_proj_hits_yx_pions_cut.Draw("COLZ")
 c1_pions_cal_proj.Print(Pion_Analysis_Distributions)
 
-
 c1_pions_dp_proj = TCanvas("c1_pions_dp_proj", "SHMS Dipole Exit XY Projections", 100, 0, 1000, 900)
 c1_pions_dp_proj.Divide(1,2)
 c1_pions_dp_proj.cd(1)
@@ -901,8 +962,8 @@ H_xp_pions_uncut.Write()
 H_yp_pions_uncut.Write()
 H_dp_pions_uncut.Write()
 H_cal_etottracknorm_pions_uncut.Write()
-P_xp_pions_uncut.Write()
-P_yp_pions_uncut.Write()
+P_xptar_pions_uncut.Write()
+P_yptar_pions_uncut.Write()
 P_dp_pions_uncut.Write()
 P_cal_etottracknorm_pions_uncut.Write()
 P_hgcer_npe_pions_uncut.Write()
@@ -946,8 +1007,8 @@ H_xp_pions_cut.Write()
 H_yp_pions_cut.Write()
 H_dp_pions_cut.Write()
 H_cal_etottracknorm_pions_cut.Write()
-P_xp_pions_cut.Write()
-P_yp_pions_cut.Write()
+P_xptar_pions_cut.Write()
+P_yptar_pions_cut.Write()
 P_dp_pions_cut.Write()
 P_cal_etottracknorm_pions_cut.Write()
 P_hgcer_npe_pions_cut.Write()
@@ -963,6 +1024,8 @@ H_cal_etottracknorm_vs_cer_npe_pions_cut.Write()
 P_hgcer_vs_aero_npe_pions_cut.Write()
 ePiCoinTime_vs_MMpi_pions_cut.Write()
 ePiCoinTime_vs_beta_pions_cut.Write()
+ePiCoinTime_vs_MMpi_pions_cut_Full.Write()
+ePiCoinTime_vs_beta_pions_cut_Full.Write()
 P_RFTime_vs_MMpi_pions_cut.Write()
 P_MMpi_pions_cut_randm_sub.Write()
 P_cal_etottracknorm_vs_ngcer_npe_pions_cut.Write()

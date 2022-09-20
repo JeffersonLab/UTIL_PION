@@ -32,12 +32,13 @@ void replay_production_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   pathList.push_back("./cache");
   pathList.push_back("./cache_kaonlt");
   pathList.push_back("./raw_volatile");
+  pathList.push_back("./raw.volatile");
 
   const char* ROOTFileNamePattern = "UTIL_PION/ROOTfiles/Analysis/PionLT/Pion_coin_replay_production_%d_%d.root";
   
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
-  gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard_KaonLTCalib.database");
+  gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard.database");
   gHcParms->Load(gHcParms->GetString("g_ctp_database_filename"), RunNumber);
   gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
   gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
@@ -46,9 +47,10 @@ void replay_production_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Load fadc debug parameters
   gHcParms->Load("PARAM/HMS/GEN/h_fadc_debug.param");
   gHcParms->Load("PARAM/SHMS/GEN/p_fadc_debug.param");
+  // SJDK 20/05/22 - Edited out, not needed for production replays
   //Load params for BCM
-  const char* CurrentFileNamePattern = "PARAM/HMS/BCM/CALIB/bcmcurrent_%d.param";
-  gHcParms->Load(Form(CurrentFileNamePattern, RunNumber));
+  //const char* CurrentFileNamePattern = "PARAM/HMS/BCM/CALIB/bcmcurrent_%d.param";
+  //gHcParms->Load(Form(CurrentFileNamePattern, RunNumber));
 
   // Load the Hall C detector map
   gHcDetectorMap = new THcDetectorMap();
@@ -265,10 +267,9 @@ void replay_production_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   analyzer->SetOutFile(ROOTFileName.Data());
   // Define DEF-file+
   analyzer->SetOdefFile("UTIL_PION/config/DEF-files/coin_production.def");
-  // SJDK - 09/09/21 - Who uncommented the line below and used this in the replay?!
-  //analyzer->SetOdefFile("UTIL_PION/config/DEF-files/Full_Replay_Pass2_Coin.def");
   // Define cuts file
   analyzer->SetCutFile("UTIL_PION/config/DEF-files/Online_Coin_Production_Cuts.def");  // optional
+  //analyzer->SetCutFile("UTIL_PION/config/DEF-files/Online_Coin_Production_Cuts_Tight.def");  // Tighter cuts requiring some SHMS info too, to reduce file size for some events
   // File to record accounting information for cuts
   analyzer->SetSummaryFile(Form("UTIL_PION/config/REPORT_OUTPUT/summary_production_%d_%d.report", RunNumber, MaxEvent)); // optional
   // Start the actual analysis.

@@ -30,15 +30,17 @@ void replay_luminosity (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   pathList.push_back("./raw_KaonLT");
   pathList.push_back("./raw/../raw.copiedtotape");
   pathList.push_back("./cache");
-  pathList.push_back("./cache_kaonlt");
-  pathList.push_back("./raw_volatile");
+  //pathList.push_back("./cache_kaonlt");
+  //pathList.push_back("./raw_volatile");
+  //pathList.push_back("./raw.volatile");
 
   //const char* RunFileNamePattern = "raw/coin_all_%05d.dat";
   const char* ROOTFileNamePattern = "UTIL_PION/ROOTfiles/Analysis/Lumi/Pion_replay_luminosity_%d_%d.root";
   
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
-  gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard_KaonLTCalib.database");
+  //gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard_KaonLTCalib.database");
+  gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard.database");
   gHcParms->Load(gHcParms->GetString("g_ctp_database_filename"), RunNumber);
   gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
   gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);

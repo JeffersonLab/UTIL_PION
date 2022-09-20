@@ -65,17 +65,15 @@ if [ -f "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_Missi
     rm "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses"
 else touch "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses" && chmod 775 "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses"
 fi
-
 TestingVar=$((1))
 while IFS='' read -r line || [[ -n "$line" ]]; do
     runNum=$line
     if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${runNum}_-1_Analysed_Data.root" ]; then
-	echo "Analysis not found for run $runNum in ${UTILPATH}/OUTPUT/"
+	echo "Analysis not found for run $runNum in ${UTILPATH}/OUTPUT/Analysis/PionLT"
 	echo "${runNum}" >> "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses"
 	TestingVar=$((TestingVar+1))
     fi
 done < "$RunListFile"
-
 # 03/02/22 - SJDK - Script calls v3 for python scripts, these versions need the target type specified (they default to LH2)
 if [ $TestingVar == 1 ]; then
     echo "All PionLT  analysis files found"
@@ -94,7 +92,7 @@ elif [ $TestingVar != 1 ]; then
 	    fi
 	done < "${UTILPATH}/scripts/online_physics/PionLT/Kinematics/${KINEMATIC}_MissingAnalyses"
 	# 03/02/22 - SJDK - This script needs to be checked, may not run v3 scripts (which require a target type too)
-	yes y | eval "$REPLAYPATH/UTIL_BATCH/batch_scripts/run_batch_PionLT.sh Pion_Data/${KINEMATIC}_MissingAnalyses" # SJDK 11/01/22 - Need to check this script is actually OK tbh...
+        eval "$REPLAYPATH/UTIL_BATCH/batch_scripts/run_batch_PionLT.sh Prod ${TargetType} Pion_Data/${KINEMATIC}_MissingAnalyses" # SJDK 11/01/22 - Need to check this script is actually OK tbh...
 	sleep 2
 	rm "$REPLAYPATH/UTIL_BATCH/InputRunLists/Pion_Data/${KINEMATIC}_MissingAnalyses" 
     elif [ $Autosub != 1 ]; then
@@ -104,7 +102,7 @@ elif [ $TestingVar != 1 ]; then
 	    while IFS='' read -r line || [[ -n "$line" ]]; do
 		runNum=$line
 		if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${runNum}_-1_Analysed_Data.root" ]; then
-		    python3 $UTILPATH/scripts/online_physics/PionLT/pion_prod_analysis_sw_v3.py "Pion_coin_replay_production" ${runNum} "-1" ${TargetType}
+		    python3 $UTILPATH/scripts/online_physics/PionLT/pion_prod_analysis_sw.py "Pion_coin_replay_production" ${runNum} "-1" ${TargetType}
 		fi
             done < "$RunListFile"
 	else echo "Not processing python script interactively"
@@ -130,12 +128,15 @@ if [ $TestingVar == 1 ]; then
 	fi
     fi
     if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf" ]; then
-	python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw_v3.py -1 ${runNum} -1 ${TargetType} ${KINFILE}
+	python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw.py -1 ${runNum} -1 ${TargetType} ${KINFILE}
+	python3 $UTILPATH/scripts/online_physics/PionLT/calculate_charge.py ${runNum}
     elif [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf" ]; then
 	    read -p "Pion analysis plots already found in - ${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf, remove and remake? <Y/N> " prompt4
 	    if [[ $prompt4 == "y" || $prompt4 == "Y" || $prompt4 == "yes" || $prompt4 == "Yes" ]]; then
 		 rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf"
-		 python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw_v3.py -1 ${runNum} -1 ${TargetType} ${KINFILE}
+		 python3 ${UTILPATH}/scripts/online_physics/PionLT/PlotPionPhysics_sw.py -1 ${runNum} -1 ${TargetType} ${KINFILE}
+		 #python3 ${UTILPATH}/scripts/online_physics/PionLT/2022_Run/PlotPionPhysics_sw_v4.py -1 ${runNum} -1 ${TargetType} ${KINFILE} # SJDK 11/08/22 - Switched to use v4 which includes the diamond cuts, for the full kinematic analysis, this is what we want.
+		 python3 $UTILPATH/scripts/online_physics/PionLT/calculate_charge.py ${runNum}
 	    fi
 	    else echo "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Pion_Analysis_Distributions.pdf not removed"
     fi
