@@ -13,7 +13,7 @@
 
 - Before running ensure you are using ROOT 6.18.04 -
 
-  -source /apps/root/6.18.04/setroot_CUE.csh 
+  - source /apps/root/6.18.04/setroot_CUE.csh 
 
   - This assumes you're running this on the JLab iFarm
 
