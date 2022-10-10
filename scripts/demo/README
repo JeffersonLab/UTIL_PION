@@ -1,21 +1,17 @@
 Stephen Kay - University of Regina
 09/10/20
 # RLT 12/15/21, Updated with new ltsep module info
+# SJDK 10/10/222 - Removed reference to using software environment.
 
 A selection of demo python scripts that carry out some simple processes using the new analysis framework.
 
 ### IMPORTANT - SETUP INFO ###
 
-Make sure you are using JLab software environment 2.3, you should source this in your .login
-
-source /site/12gev_phys/softenv.csh 2.3
-
-Unfortunately, this uses an incompatible ROOT version so you also need to source a new ROOT version too.
 Before running ensure you are using ROOT 6.18.04 -
 
 source /apps/root/6.18.04/setroot_CUE.csh
 
-(assuming you're running this on the JLab iFarm, also this assumes you are using softenv v2.3)
+(assuming you're running this on the JLab iFarm)
 
 You should also make sure you have the relevant packages, in particular, execute -
 
