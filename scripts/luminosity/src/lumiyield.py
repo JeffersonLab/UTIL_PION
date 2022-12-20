@@ -332,6 +332,10 @@ def make_cutDict(cuts,fout,runNum,CURRENT_ENV,DEBUG=False):
     overall, but a bit more cumbersome in the analysis script. Perhaps one day a better solution will be
     implimented.
     '''
+    print ("\n !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
+    print (" Ensure that current values are set for the run you are processing in UTIL_PION/DB/PARAM/Current_Parameters.csv \n")
+    print(" You will get errors like - NameError: name 'current' is not defined - if it is not")
+    print ("\n !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
 
     # read in cuts file and make dictionary
     importDict = lt.SetCuts(CURRENT_ENV).importDict(cuts,fout,runNum,False)

@@ -34,6 +34,8 @@ if [[ ${HOSTNAME} = *"cdaq"* ]]; then
     PATHFILE_INFO=`python3 /home/cdaq/pionLT-2021/hallc_replay_lt/UTIL_PION/bin/python/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
 elif [[ "${HOSTNAME}" = *"farm"* ]]; then
     PATHFILE_INFO=`python3 /u/home/${USER}/.local/lib/python3.4/site-packages/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
+elif [[ "${HOSTNAME}" = *"qcd"* ]]; then
+    PATHFILE_INFO=`python3 /u/home/${USER}/.local/lib/python3.4/site-packages/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
 fi
 
 # Split the string we get to individual variables, easier for printing and use later
@@ -58,7 +60,7 @@ HOST=`echo ${PATHFILE_INFO} | cut -d ','  -f15`
 # Source stuff depending upon hostname. Change or add more as needed  
 if [[ "${HOST}" = *"farm"* ]]; then
     if [[ "${HOST}" != *"ifarm"* ]]; then
-	source /site/12gev_phys/softenv.sh 2.3
+	#source /site/12gev_phys/softenv.sh 2.3
 	source /apps/root/6.18.04/setroot_CUE.bash
     fi
     cd "$HCANAPATH"

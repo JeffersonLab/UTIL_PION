@@ -2,20 +2,20 @@
 # COIN picut #
 ##############
 
-#coin_epi_cut = pid.p_picut+accept.delta+accept.h_pfp+accept.p_pfp
-#coin_epi_cut_orig = pid.p_picut+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_picut.P_cal_etotnorm-pid.p_picut.H_cer_npeSum
-coin_epi_cut_orig = accept.delta+accept.h_pfp+accept.p_pfp
+#coin_epi_cut = pid.p_picut+accept.delta+accept.h_ptar+accept.p_ptar
+#coin_epi_cut_orig = pid.p_picut+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_picut.P_cal_etotnorm-pid.p_picut.H_cer_npeSum
+coin_epi_cut_orig = accept.delta+accept.h_ptar+accept.p_ptar
 
 ##############
 # COIN kcut  #
 ##############
 
-#coin_ek_cut = pid.p_kcut+accept.delta+accept.h_pfp+accept.p_pfp
-#coin_ek_cut_orig = pid.p_picut+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_kcut.P_cal_etotnorm-pid.p_kcut.H_cer_npeSum
+#coin_ek_cut = pid.p_kcut+accept.delta+accept.h_ptar+accept.p_ptar
+#coin_ek_cut_orig = pid.p_picut+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_kcut.P_cal_etotnorm-pid.p_kcut.H_cer_npeSum
 
 ##############
 # SHMS pcut  #
 ##############
 
-#coin_ep_cut = pid.p_pcut+accept.delta+accept.h_pfp+accept.p_pfp
-#coin_ep_cut_orig = pid.p_pcut+accept.delta+accept.h_pfp+accept.p_pfp-pid.p_pcut.P_cal_etotnorm-pid.p_pcut.H_cer_npeSum
+#coin_ep_cut = pid.p_pcut+accept.delta+accept.h_ptar+accept.p_ptar
+#coin_ep_cut_orig = pid.p_pcut+accept.delta+accept.h_ptar+accept.p_ptar-pid.p_pcut.P_cal_etotnorm-pid.p_pcut.H_cer_npeSum

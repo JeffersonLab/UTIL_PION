@@ -81,7 +81,7 @@ for line in ReportFile:
         EDTM = float(((line.split(":")[1]).strip()).split(" ")[0]) 
         TestVar+=1
         #print('EDTM', TestVar, "\n")
-    if "SW_SHMS_Hadron_Singles_TRACK_EFF" in line :
+    if "SW_SHMS_Hadron_Coin_TRACK_EFF" in line :
         Had_Track = float(((line.split(":")[1]).strip()).split(" ")[0])  
         TestVar+=1
         #print('Had_Track', TestVar, "\n")

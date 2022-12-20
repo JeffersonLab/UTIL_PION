@@ -1,8 +1,11 @@
-
 #################################
 ###### Author - Ali Usman #######
 ##### University of Regina ######
 ###### Created - May, 2021 ######
+#################################
+#################################
+####### Stephen JD Kay  #########
+###### 26/05/22 - Updated #######
 #################################
 
 Block: RawDecode
@@ -21,7 +24,7 @@ ALL_events             g.evtyp >= 1 && g.evtyp <= 7
 ALL_HMS_events       HMS_event || COIN_ONLY_event || HMS_COIN_event  || COIN_ALL_event 
 ALL_SHMS_events     SHMS_event || COIN_ONLY_event || SHMS_COIN_event || COIN_ALL_event 
 
-RawDecode_master COIN_ONLY_event
+RawDecode_master ALL_COIN_events
 
 Block: Decode
 
@@ -53,14 +56,19 @@ shmsScinGood        P.hod.goodscinhit == 1
 shmsGoodBetanotrk   P.hod.betanotrack > 0.5 && P.hod.betanotrack < 1.4
 shmshodstarttime    P.hod.goodstarttime == 1
 
-# Tracking Efficiency calculation (Should = denominator, Did = Numerator)
+# SHMS Coin Tracking Efficiency calculation (Should = denominator, Did = Numerator)
 
 shmsScinShould      shmsScinGood && shmsGoodBetanotrk && shmshodstarttime
 shmsScinShouldh     shmsScinShould && P.cal.etotnorm < 0.7 &&  P.cal.etotnorm > 0.05
 shmsScinDid         shmsScinShould && P.dc.ntrack > 0
 shmsScinDidh        shmsScinShouldh && P.dc.ntrack > 0
 
-# Tracking efficiency for pi- at negative polarity - Added by AU on 03/12/2021
+# Added Pion Tracking eff variables - Added by AU on July 12, 2022
+
+shmsScinShouldpiplus		    shmsScinShouldh && P.aero.npeSum > 1.5
+shmsScinDidpiplus		    shmsScinShouldpiplus && P.dc.ntrack > 0
+
+# SHMS Coin Tracking efficiency for pi- at negative polarity - Added by AU on 03/12/2021
 
 shmsScinShouldpi    shmsScinShouldh && P.ngcer.npeSum < 1.5
 shmsScinDidpi	    shmsScinShouldpi && P.dc.ntrack > 0
@@ -69,26 +77,26 @@ shmsScinDidpi	    shmsScinShouldpi && P.dc.ntrack > 0
 ####    HMS    ###
 ##################
 
-# HMS PID cuts for different particles in HGC and CAL
+# HMS Coin PID cuts for different particles in HGC and CAL
 
 hcut_cer_elec             H.cer.npeSum > 0.5
 hcut_cal_elec		  H.cal.etotnorm > 0.7 && H.cal.etotnorm < 2.0
 
-# HMS Scin cuts (untracked) for HMS Tracking Efficiency
+# HMS Coin Scin cuts (untracked) for HMS Tracking Efficiency
 
 HMSScinGood           H.hod.goodscinhit == 1
 HMSGoodBetanotrk      H.hod.betanotrack > 0.8 && H.hod.betanotrack < 1.3
 HMShodstarttime       H.hod.goodstarttime == 1
 
-# HMS Tracking Efficiency Calculation (Should = Denominator, Did = Numerator)
+# HMS Coin Tracking Efficiency Calculation (Should = Denominator, Did = Numerator)
 
 HMSScinShould         HMSScinGood && HMSGoodBetanotrk && HMShodstarttime
 HMSScinShoulde        HMSScinShould && hcut_cer_elec && hcut_cal_elec
 HMSScinDid            HMSScinShould && H.dc.ntrack > 0
 HMSScinDide           HMSScinShoulde && H.dc.ntrack > 0
 
-HMS_CAL_FOUND      H.cal.etotnorm > 0.7 && ALL_COIN_events_NO_EDTM
-SHMS_CAL_FOUND     ALL_COIN_events_NO_EDTM
+HMS_CAL_FOUND      H.cal.etotnorm > 0.5 
+SHMS_CAL_FOUND     P.cal.etotnorm > 0.0 
 
 GOOD_HMS_TRACK	      	      HMS_CAL_FOUND && H.dc.ntrack > 0
 GOOD_SHMS_TRACK	      	      SHMS_CAL_FOUND && P.dc.ntrack > 0
@@ -102,6 +110,11 @@ Block: Physics
 
 pcut_acceptance		  P.gtr.th > -0.06 && P.gtr.th < 0.06 && P.gtr.ph > -0.04 && P.gtr.ph < 0.04 && P.gtr.dp > -10 && P.gtr.dp < 20
 
+# Define some rough calorimeter cuts
+
+SHMSCalel	P.cal.etottracknorm > 0.7
+SHMSCalpi	P.cal.etottracknorm < 0.7
+
 ##################
 ###  SHMS HGC  ###
 ##################
@@ -109,7 +122,6 @@ pcut_acceptance		  P.gtr.th > -0.06 && P.gtr.th < 0.06 && P.gtr.ph > -0.04 && P.
 SHMScoindcindipole	P.dc.InsideDipoleExit == 1
 
 SHMSGEN		shmshodstarttime && SHMScoindcindipole && pcut_acceptance
-SHMSCalpi	P.cal.etottracknorm < 0.7              
 SHMSMMpicut     P.kin.secondary.MMpi > 0.901 && P.kin.secondary.MMpi < 1.054
 SHMSAEROpi      P.aero.npeSum  > 1.5
 
@@ -129,13 +141,8 @@ SHMSAeroDidpi            SHMSAeroShouldpi && P.aero.npeSum > 1.0
 ###  SHMS NGC  ###
 ##################
 
-SHMSCalel	P.cal.etottracknorm > 0.7
-
 SHMSNGCShouldel         	    SHMSGEN && SHMSCalel && SHMSHGCpi && SHMSAEROpi
 SHMSNGCDidel			    SHMSNGCShouldel && P.ngcer.npeSum > 0.5
-
-SHMSNGCShouldpi         	    SHMSGEN && SHMSCalpi && SHMSHGCpi && SHMSAEROpi
-SHMSNGCDidpi			    SHMSNGCShouldpi && P.ngcer.npeSum < 5.0
 
 ##################
 ###   HMS HGC  ###
@@ -153,9 +160,8 @@ HMSCalelec         H.cal.etottracknorm > 0.7 &&  H.cal.etottracknorm < 1.6
 HMSHGCShouldelec         HMSGEN && HMSCalelec 
 HMSHGCDidelec            HMSHGCShouldelec && H.cer.npeSum > 1.5
 
-
-DELTA_SHMS           P.gtr.dp>-15.5&&P.gtr.dp<25. 
-DELTA_HMS            H.gtr.dp>-10&&H.gtr.dp<10. 
+DELTA_SHMS           P.gtr.dp>-20&&P.gtr.dp<25. 
+DELTA_HMS            H.gtr.dp>-13&&H.gtr.dp<13. 
 HMS_ELEC             H.cal.etottracknorm>.5&&H.cer.npeSum>0.5
 GOOD_EVENT           DELTA_SHMS&&DELTA_HMS&&HMS_ELEC
 

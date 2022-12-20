@@ -78,6 +78,7 @@ class SetPath():
         '''
 
         CURRENT_ENV = CURRENT_ENV.split("/UTIL_",1)[0] # Redefine path to hallc_replay_lt (if in replay env)
+        CURRENT_ENV = CURRENT_ENV.split("/hcswif",1)[0] # Redefine path to hallc_replay_lt (if in hcswif)
         CURRENT_ENV = CURRENT_ENV.split("/cut.py",1)[0] # Redefine path to ltsep (if in package env)
         self.CURRENT_ENV = CURRENT_ENV
 

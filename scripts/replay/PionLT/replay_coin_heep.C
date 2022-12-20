@@ -15,22 +15,32 @@ void replay_coin_heep (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
     }
   }
 
-  // Create file name patterns.
-  const char* RunFileNamePattern = "shms_all_%05d.dat";
+  const char* RunFileNamePattern;
+  // Create file name patterns. Base this upon run number
+  if (RunNumber >= 10000){
+    RunFileNamePattern = "shms_all_%05d.dat";
+  }
+  else if (RunNumber < 10000){
+    RunFileNamePattern = "coin_all_%05d.dat";
+  }
   vector<TString> pathList;
   pathList.push_back(".");
   pathList.push_back("./raw");
+  pathList.push_back("./raw_PionLT");
+  pathList.push_back("./raw_KaonLT");
   pathList.push_back("./raw/../raw.copiedtotape");
   pathList.push_back("./cache");
-  pathList.push_back("./raw.volatile");
+  //pathList.push_back("./cache_kaonlt");
+  //pathList.push_back("./raw_volatile");
+  //pathList.push_back("./raw.volatile");
 
   //const char* RunFileNamePattern = "raw/coin_all_%05d.dat";
   const char* ROOTFileNamePattern = "UTIL_PION/ROOTfiles/Analysis/HeeP/Pion_coin_replay_production_%d_%d.root";
-  // const char* ROOTFileNamePattern = "/group/c-kaonlt/USERS/vijay/hallc_replay_lt/UTIL_KAONLT/scripts/HeepCoinStudy/OUTPUT/Pion_coin_replay_production_%d_%d_VK.root";
   
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
-  gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard_KaonLTCalib.database");
+  //gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard_KaonLTCalib.database");
+  gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard.database");
   gHcParms->Load(gHcParms->GetString("g_ctp_database_filename"), RunNumber);
   gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
   gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
@@ -39,9 +49,10 @@ void replay_coin_heep (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Load fadc debug parameters
   gHcParms->Load("PARAM/HMS/GEN/h_fadc_debug.param");
   gHcParms->Load("PARAM/SHMS/GEN/p_fadc_debug.param");
+  // SJDK - 20/05/22 - Commented out BCM current file, not used in HeeP analysis
   //Load params for BCM
-  const char* CurrentFileNamePattern = "PARAM/HMS/BCM/CALIB/bcmcurrent_%d.param";
-  gHcParms->Load(Form(CurrentFileNamePattern, RunNumber));
+  //const char* CurrentFileNamePattern = "PARAM/HMS/BCM/CALIB/bcmcurrent_%d.param";
+  //gHcParms->Load(Form(CurrentFileNamePattern, RunNumber));
 
   // Load the Hall C detector map
   gHcDetectorMap = new THcDetectorMap();
@@ -259,11 +270,11 @@ void replay_coin_heep (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Define DEF-file+
   analyzer->SetOdefFile("UTIL_PION/config/DEF-files/coin_production.def");
   // Define cuts file
-  analyzer->SetCutFile("UTIL_PION/config/DEF-files/Online_Coin_Production_Cuts.def");  // optional
+  analyzer->SetCutFile("UTIL_PION/config/DEF-files/Online_HeePCoin_Cuts.def");  // optional
   // File to record accounting information for cuts
   analyzer->SetSummaryFile(Form("UTIL_PION/config/REPORT_OUTPUT/summary_production_%d_%d.report", RunNumber, MaxEvent)); // optional
   // Start the actual analysis.
   analyzer->Process(run);
   // Create report file from template	       
-  analyzer->PrintReport("UTIL_PION/config/TEMPLATES/COIN/Online_Coin_Production.template", Form("UTIL_PION/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_coin_production_%d_%d.report", RunNumber, MaxEvent)); // optional}
+  analyzer->PrintReport("UTIL_PION/config/TEMPLATES/COIN/Online_HeePCoin.template", Form("UTIL_PION/REPORT_OUTPUT/Analysis/HeeP/Pion_replay_coin_production_%d_%d.report", RunNumber, MaxEvent)); // optional}
 }

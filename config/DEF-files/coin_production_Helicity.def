@@ -1,0 +1,73 @@
+block CTime.*     
+block RFTime.*
+block P.gtr.beta
+block P.gtr.th
+block P.gtr.ph
+block H.gtr.beta
+block H.gtr.th
+block H.gtr.ph
+block H.cal.etotnorm
+block H.cal.etottracknorm
+block H.hod.goodscinhit
+block H.hod.goodstarttime
+block H.cer.npeSum
+block P.cal.etotnorm
+block P.cal.etottracknorm
+block P.cal.fly.earray
+block P.cal.fly.goodAdcPulseInt
+block P.cal.pr.eplane
+block P.aero.npeSum
+block P.hgcer.npeSum
+block P.ngcer.npeSum
+block P.hod.starttime
+block P.hod.fpHitsTime
+block P.hod.goodscinhit
+block P.hod.goodstarttime
+block P.hod.betanotrack
+block H.gtr.dp
+block H.gtr.p
+block P.gtr.dp
+block P.gtr.p
+block H.dc.x*
+block H.dc.y*
+block P.dc.x*
+block P.dc.y*
+block P.hgcer.xAtCer
+block P.hgcer.yAtCer
+block P.ngcer.xAtCer
+block P.ngcer.yAtCer
+block P.aero.xAtAero
+block P.aero.yAtAero
+block H.kin.primary.*
+block P.kin.secondary.*
+block T.coin.*
+block T.coin.pTRIG5_ROC2_tdcTime
+block T.coin.pEDTM_tdcTime
+block T.coin.pRF*
+block T.coin.hRF*
+block H.dc.InsideDipoleExit
+block P.dc.InsideDipoleExit
+block P.cal.fly.numGoodAdcHits
+block g.evtyp
+block g.evnum
+block P.dc.ntrack
+
+# SJDK 21/09/22 - Helicity variables
+block T.helicity.*
+
+# For debugging cherenkovs, all variables for them are included for now
+block P.ngcer.*
+block P.hgcer.*
+block P.aero.*
+
+begin epics
+IBC3H00CRCUR4
+hac_bcm_average
+ibcm1
+ibcm2
+iunser
+itov3out
+itov4out
+MOFC1DELTA
+MOFC1FREQ
+end epics
