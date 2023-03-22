@@ -271,7 +271,7 @@ void replay_production_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   analyzer->SetCutFile("UTIL_PION/config/DEF-files/Online_Coin_Production_Cuts.def");  // optional
   //analyzer->SetCutFile("UTIL_PION/config/DEF-files/Online_Coin_Production_Cuts_Tight.def");  // Tighter cuts requiring some SHMS info too, to reduce file size for some events
   // File to record accounting information for cuts
-  analyzer->SetSummaryFile(Form("UTIL_PION/config/REPORT_OUTPUT/summary_production_%d_%d.report", RunNumber, MaxEvent)); // optional
+  analyzer->SetSummaryFile(Form("UTIL_PION/REPORT_OUTPUT/summary_production_%d_%d.report", RunNumber, MaxEvent)); // optional
   // Start the actual analysis.
   analyzer->Process(run);
   // Create report file from template	       

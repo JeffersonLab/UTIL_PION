@@ -1,4 +1,4 @@
-void replay_AllRefTimes (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
+void replay_Cer_Calib_ALL (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -15,23 +15,22 @@ void replay_AllRefTimes (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
     }
   }
 
-  const char* RunFileNamePattern1 = "coin_all_%04d.dat";
-  const char* RunFileNamePattern2 = "shms_all_%05d.dat";
+  // Create file name patterns.
+  const char* RunFileNamePattern = "shms_all_%05d.dat";
   vector<TString> pathList;
   pathList.push_back(".");
   pathList.push_back("./raw");
   pathList.push_back("./raw/../raw.copiedtotape");
   pathList.push_back("./cache");
-  pathList.push_back("./cache_kaonlt");
   pathList.push_back("./raw.volatile");
 
   //const char* RunFileNamePattern = "raw/coin_all_%05d.dat";
-  const char* ROOTFileNamePattern = "ROOTfiles/Calib/General/Pion_coin_replay_AllRefTimes_%d_%d.root";
+  const char* ROOTFileNamePattern = "ROOTfiles/Calib/General/Pion_coin_replay_calibration_%d_%d.root";
   // const char* ROOTFileNamePattern = "/group/c-kaonlt/USERS/vijay/hallc_replay_lt/UTIL_KAONLT/scripts/HeepCoinStudy/OUTPUT/Pion_coin_replay_production_%d_%d_VK.root";
   
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
-  gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard.database");
+  gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard_KaonLTCalib.database");
   gHcParms->Load(gHcParms->GetString("g_ctp_database_filename"), RunNumber);
   gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
   gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
@@ -232,15 +231,7 @@ void replay_AllRefTimes (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
 
   // Define the run(s) that we want to analyze.
   // We just set up one, but this could be many.
-  // Create file name patterns.
-  THcRun* run;
-  if(RunNumber < 10000)
-    {
-      run = new THcRun( pathList, Form(RunFileNamePattern1, RunNumber) );
-    }else{
-      run = new THcRun( pathList, Form(RunFileNamePattern2, RunNumber) );
-    }  
-  
+  THcRun* run = new THcRun( pathList, Form(RunFileNamePattern, RunNumber) );
 
   // Set to read in Hall C run database parameters
   run->SetRunParamClass("THcRunParameters");
@@ -266,9 +257,9 @@ void replay_AllRefTimes (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   // Define output ROOT file
   analyzer->SetOutFile(ROOTFileName.Data());
   // Define DEF-file+
-  analyzer->SetOdefFile("UTIL_PION/config/DEF-files/ALLRefTime.def");
+  analyzer->SetOdefFile("UTIL_PION/config/DEF-files/ALLcer.def");
   // Define cuts file
-  analyzer->SetCutFile("UTIL_PION/config/DEF-files/ALLRefTime_cuts.def");  // optional
+  analyzer->SetCutFile("UTIL_PION/config/DEF-files/ALLcer_cuts.def");  // optional
   // File to record accounting information for cuts
   //analyzer->SetSummaryFile(Form("UTIL_PION/config/REPORT_OUTPUT/summary_production_%d_%d.report", RunNumber, MaxEvent)); // optional
   // Start the actual analysis.
