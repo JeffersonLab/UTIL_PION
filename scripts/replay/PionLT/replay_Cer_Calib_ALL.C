@@ -22,15 +22,15 @@ void replay_Cer_Calib_ALL (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   pathList.push_back("./raw");
   pathList.push_back("./raw/../raw.copiedtotape");
   pathList.push_back("./cache");
-  pathList.push_back("./raw.volatile");
+  //  pathList.push_back("./raw.volatile");
 
   //const char* RunFileNamePattern = "raw/coin_all_%05d.dat";
-  const char* ROOTFileNamePattern = "ROOTfiles/Calib/General/Pion_coin_replay_calibration_%d_%d.root";
+  const char* ROOTFileNamePattern = "ROOTfiles/Calib/CER/Pion_coin_replay_calibration_%d_%d.root";
   // const char* ROOTFileNamePattern = "/group/c-kaonlt/USERS/vijay/hallc_replay_lt/UTIL_KAONLT/scripts/HeepCoinStudy/OUTPUT/Pion_coin_replay_production_%d_%d_VK.root";
   
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
-  gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard_KaonLTCalib.database");
+  gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard_PionLT.database");
   gHcParms->Load(gHcParms->GetString("g_ctp_database_filename"), RunNumber);
   gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
   gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
