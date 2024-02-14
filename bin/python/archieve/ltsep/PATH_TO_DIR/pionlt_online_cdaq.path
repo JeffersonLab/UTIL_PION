@@ -1,0 +1,13 @@
+VOLATILEPATH=/net/cdaq/cdaql1data/cdaq/hallc-online-pionLT
+ANALYSISPATH=/u/home/cdaq/pionLT-2021
+HCANAPATH=/u/home/cdaq/pionLT-2021/hcana
+REPLAYPATH=/u/home/cdaq/pionLT-2021/hallc_replay_lt
+UTILPATH=/u/home/cdaq/pionLT-2021/hallc_replay_lt/UTIL_PION
+PACKAGEPATH=/u/home/cdaq/pionLT-2021/PythonPackages3.6/lib/python3.6/site-packages/ltsep
+OUTPATH=/u/home/cdaq/pionLT-2021/hallc_replay_lt/UTIL_PION/OUTPUT/Analysis
+ROOTPATH=/u/home/cdaq/pionLT-2021/hallc_replay_lt/UTIL_PION/ROOTfiles/Analysis
+REPORTPATH=/u/home/cdaq/pionLT-2021/hallc_replay_lt/UTIL_PION/REPORT_OUTPUT/Analysis
+CUTPATH=/u/home/cdaq/pionLT-2021/hallc_replay_lt/UTIL_PION/DB/CUTS
+PARAMPATH=/u/home/cdaq/pionLT-2021/hallc_replay_lt/UTIL_PION/DB/PARAM
+SCRIPTPATH=/u/home/cdaq/pionLT-2021/hallc_replay_lt/UTIL_PION/scripts
+ANATYPE=Pion
