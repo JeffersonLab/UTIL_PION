@@ -46,6 +46,8 @@ if len(sys.argv)-1!=4:
 ltsep package import and pathing definitions
 '''
 
+print("set paths")
+
 # Import package for cuts
 import ltsep as lt 
 
@@ -91,6 +93,8 @@ print("Output path checks out, outputting to %s" % (OUTPATH))
 # Read stuff from the main event tree
 e_tree = up.open(rootName)["T"]
 
+print("Start tree leaves")
+
 # Timing info
 CTime_ePiCoinTime_ROC1 = e_tree.array("CTime.ePiCoinTime_ROC1")  #
 CTime_eKCoinTime_ROC1 = e_tree.array("CTime.eKCoinTime_ROC1")    #
@@ -117,6 +121,8 @@ H_cer_npeSum = e_tree.array("H.cer.npeSum")                      #
 # JM 12/10/21 Added in dipole exit variables
 H_dc_InsideDipoleExit = e_tree.array("H.dc.InsideDipoleExit")    #
 P_dc_InsideDipoleExit = e_tree.array("P.dc.InsideDipoleExit")    #
+
+print("done HMS")
 
 # SHMS info
 P_hod_goodscinhit = e_tree.array("P.hod.goodscinhit")            #
@@ -153,6 +159,8 @@ P_ngcer_npeSum = e_tree.array("P.ngcer.npeSum")                  #
 P_ngcer_xAtCer = e_tree.array("P.ngcer.xAtCer")                  #
 P_ngcer_yAtCer = e_tree.array("P.ngcer.yAtCer")                  #
 
+print("done SHMS")
+
 # Kinematic quantitites
 Q2 = e_tree.array("H.kin.primary.Q2")                            #
 W = e_tree.array("H.kin.primary.W")                              #
@@ -187,6 +195,8 @@ yExit = np.array([yfp+ypfp*D_Exit for (yfp, ypfp) in zip(P_dc_yfp, P_dc_ypfp)])
 
 ##############################################################################################################################################
 # SJDK 09/11/21 - New method of adding cuts implemented using ltsep package
+
+print("make cuts")
 
 # Defining path for cut file
 fout = UTILPATH+"/DB/CUTS/run_type/coin_prod.cuts"
@@ -274,6 +284,8 @@ def coin_pions():
     return COIN_Pions
 
 #################################################################################################################################################################
+
+print("made cuts")
 
 def main():
     COIN_Pion_Data = coin_pions()

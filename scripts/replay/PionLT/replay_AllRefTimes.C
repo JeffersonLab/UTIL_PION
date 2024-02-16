@@ -31,12 +31,12 @@ void replay_AllRefTimes (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
-  gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/standard.database");
+  gHcParms->AddString("g_ctp_database_filename", "DBASE/COIN/DB_PionLT/standard_PionLT.database");
   gHcParms->Load(gHcParms->GetString("g_ctp_database_filename"), RunNumber);
   gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
   gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
   // Load params for COIN trigger configuration
-  gHcParms->Load("PARAM/TRIG/tcoin.param");
+  gHcParms->Load("PARAM/TRIG/Offline_PionLT/tcoin_test.param");
   // Load fadc debug parameters
   gHcParms->Load("PARAM/HMS/GEN/h_fadc_debug.param");
   gHcParms->Load("PARAM/SHMS/GEN/p_fadc_debug.param");
