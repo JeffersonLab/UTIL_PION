@@ -164,15 +164,20 @@ print("\nPre-scale values...\nPS1:{0}, PS2:{1}, PS3:{2}, PS4:{3}, PS5:{4}, PS6:{
 # Save only the used prescale triggers to the PS_used list
 PS_list = [["PS1",PS1],["PS2",PS2],["PS3",PS3],["PS4",PS4],["PS5",PS5],["PS6",PS6]]
 PS_used = []
+PS_names = []
 for val in enumerate(PS_list):
-    if PS_list[val][1] != 0:
-        PS_used.append(PS_list[val])
-		if (val == 0) || (val == 1)
-			SHMS_PS = PS_list[val]
-		if (val == 2) || (val == 3)
-			HMS_PS = PS_list[val]
-		if (val == 4) || (val == 5)
-			COIN_PS = PS_list[val]
+    print(val[0])
+    if PS_list[val[0]][1] != 0:
+        PS_used.append(PS_list[val[0]])
+        if ((val[0] == 0) or (val[0] == 1)):
+            SHMS_PS = PS_list[val[0]]
+            PS_names.append(PS_list[val[0]][0])
+        if ((val[0] == 2) or (val[0] == 3)):
+            HMS_PS = PS_list[val[0]]
+            PS_names.append(PS_list[val[0]][0])
+        if ((val[0] == 4) or (val[0] == 5)):
+            COIN_PS = PS_list[val[0]]
+            PS_names.append(PS_list[val[0]][0])
 
 # NH - Changed to the more generic code used above
 # Check if COIN trigger is used by seeing it was saved in the PS_used list
