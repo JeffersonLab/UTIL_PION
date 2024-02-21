@@ -204,111 +204,181 @@ P_BCM4A_scalerCharge = s_tree.array("P.BCM4A.scalerCharge")
 '''
 ANALYSIS TREE, T
 '''
-
+SHMSsingle = False
+HMSsingle = False
 tree = up.open(rootName)["T"]
-
-if PS_names[1] is "PS3" or PS_names[1] is "PS4":
-    W = tree.array("H.kin.primary.W")
-    H_cal_etotnorm = tree.array("H.cal.etotnorm")
-    H_cer_npeSum = tree.array("H.cer.npeSum")
-    H_gtr_dp = tree.array("H.gtr.dp")
-    H_tr_tg_th = tree.array("H.gtr.th")
-    H_tr_tg_ph = tree.array("H.gtr.ph")
-    H_gtr_beta = tree.array("H.gtr.beta")
-    H_tr_chi2 = tree.array("H.tr.chi2")
-    H_tr_ndof = tree.array("H.tr.ndof")
-    H_hod_goodscinhit = tree.array("H.hod.goodscinhit")
-    H_hod_betanotrack = tree.array("H.hod.betanotrack")
-    H_hod_goodstarttime = tree.array("H.hod.goodstarttime")
-    H_dc_ntrack = tree.array("H.dc.ntrack")
-    
-    H_dc_1x1_nhit = tree.array("H.dc.1x1.nhit")
-    H_dc_1u2_nhit = tree.array("H.dc.1u2.nhit")
-    H_dc_1u1_nhit = tree.array("H.dc.1u1.nhit")
-    H_dc_1v1_nhit = tree.array("H.dc.1v1.nhit")
-    H_dc_1x2_nhit = tree.array("H.dc.1x2.nhit")
-    H_dc_1v2_nhit = tree.array("H.dc.1v2.nhit")
-    H_dc_2x1_nhit = tree.array("H.dc.2x1.nhit")
-    H_dc_2u2_nhit = tree.array("H.dc.2u2.nhit")
-    H_dc_2u1_nhit = tree.array("H.dc.2u1.nhit")
-    H_dc_2v1_nhit = tree.array("H.dc.2v1.nhit")
-    H_dc_2x2_nhit = tree.array("H.dc.2x2.nhit")
-    H_dc_2v2_nhit = tree.array("H.dc.2v2.nhit")
-    
-    H_bcm_bcm4a_AvgCurrent = tree.array("H.bcm.bcm4a.AvgCurrent")
-    H_cal_etottracknorm = tree.array("H.cal.etottracknorm")
-
-if PS_names[0] is "PS1" or PS_names[0] is "PS2":
-    #W = tree.array("P.kin.primary.W")
-    P_cal_etotnorm = tree.array("P.cal.etotnorm")
-    P_hgcer_npeSum = tree.array("P.hgcer.npeSum")
-    P_aero_npeSum = tree.array("P.aero.npeSum")
-    P_gtr_dp = tree.array("P.gtr.dp")
-    P_gtr_th = tree.array("P.gtr.th")
-    P_gtr_ph = tree.array("P.gtr.ph")
-    P_gtr_beta = tree.array("P.gtr.beta")
-    P_tr_chi2 = tree.array("P.tr.chi2")
-    P_tr_ndof = tree.array("P.tr.ndof")
-    P_hod_goodscinhit = tree.array("P.hod.goodscinhit")
-    P_hod_betanotrack = tree.array("P.hod.betanotrack")
-    P_hod_goodstarttime = tree.array("P.hod.goodstarttime")
-    P_dc_ntrack = tree.array("P.dc.ntrack")
-    if ANATYPE == "Pion":
-        P_ngcer_npeSum = tree.array("P.ngcer.npeSum")
-    
-    P_dc_1x1_nhit = tree.array("P.dc.1x1.nhit")
-    P_dc_1u2_nhit = tree.array("P.dc.1u2.nhit")
-    P_dc_1u1_nhit = tree.array("P.dc.1u1.nhit")
-    P_dc_1v1_nhit = tree.array("P.dc.1v1.nhit")
-    P_dc_1x2_nhit = tree.array("P.dc.1x2.nhit")
-    P_dc_1v2_nhit = tree.array("P.dc.1v2.nhit")
-    P_dc_2x1_nhit = tree.array("P.dc.2x1.nhit")
-    P_dc_2u2_nhit = tree.array("P.dc.2u2.nhit")
-    P_dc_2u1_nhit = tree.array("P.dc.2u1.nhit")
-    P_dc_2v1_nhit = tree.array("P.dc.2v1.nhit")
-    P_dc_2x2_nhit = tree.array("P.dc.2x2.nhit")
-    P_dc_2v2_nhit = tree.array("P.dc.2v2.nhit")
-
-    P_cal_etottracknorm = tree.array("P.cal.etottracknorm")
-
-if PS_names[0] is "PS1":
-    T_coin_pTRIG_SHMS_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG1_ROC1_tdcTimeRaw")
-    T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG1_ROC2_tdcTimeRaw")
-    T_coin_pTRIG_SHMS_ROC1_tdcTime = tree.array("T.coin.pTRIG1_ROC1_tdcTime")
-    T_coin_pTRIG_SHMS_ROC2_tdcTime = tree.array("T.coin.pTRIG1_ROC2_tdcTime")
-
-if PS_names[0] is "PS2":
-    T_coin_pTRIG_SHMS_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG2_ROC1_tdcTimeRaw")
-    T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG2_ROC2_tdcTimeRaw")
-    T_coin_pTRIG_SHMS_ROC1_tdcTime = tree.array("T.coin.pTRIG2_ROC1_tdcTime")
-    T_coin_pTRIG_SHMS_ROC2_tdcTime = tree.array("T.coin.pTRIG2_ROC2_tdcTime")
-
-if PS_names[1] is "PS3":
-    T_coin_pTRIG_HMS_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG3_ROC1_tdcTimeRaw")
-    T_coin_pTRIG_HMS_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG3_ROC2_tdcTimeRaw")
-    T_coin_pTRIG_HMS_ROC1_tdcTime = tree.array("T.coin.pTRIG3_ROC1_tdcTime")
-    T_coin_pTRIG_HMS_ROC2_tdcTime = tree.array("T.coin.pTRIG3_ROC2_tdcTime")
-
-if PS_names[1] is "PS4":
-    T_coin_pTRIG_HMS_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG4_ROC1_tdcTimeRaw")
-    T_coin_pTRIG_HMS_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG4_ROC2_tdcTimeRaw")
-    T_coin_pTRIG_HMS_ROC1_tdcTime = tree.array("T.coin.pTRIG4_ROC1_tdcTime")
-    T_coin_pTRIG_HMS_ROC2_tdcTime = tree.array("T.coin.pTRIG4_ROC2_tdcTime")
-
-# Check if COIN trigger is used
-if len(PS_used) > 2:
-    if PS_names[2] is "PS5":
-        T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG5_ROC1_tdcTimeRaw")
-        T_coin_pTRIG_COIN_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG5_ROC2_tdcTimeRaw")
-        T_coin_pTRIG_COIN_ROC1_tdcTime = tree.array("T.coin.pTRIG5_ROC1_tdcTime")
-        T_coin_pTRIG_COIN_ROC2_tdcTime = tree.array("T.coin.pTRIG5_ROC2_tdcTime")
+if len(PS_names) > 1:
+    if PS_names[1] is "PS3" or PS_names[1] is "PS4":
+        HMSsingle = True
+        W = tree.array("H.kin.primary.W")
+        H_cal_etotnorm = tree.array("H.cal.etotnorm")
+        H_cer_npeSum = tree.array("H.cer.npeSum")
+        H_gtr_dp = tree.array("H.gtr.dp")
+        H_tr_tg_th = tree.array("H.gtr.th")
+        H_tr_tg_ph = tree.array("H.gtr.ph")
+        H_gtr_beta = tree.array("H.gtr.beta")
+        H_tr_chi2 = tree.array("H.tr.chi2")
+        H_tr_ndof = tree.array("H.tr.ndof")
+        H_hod_goodscinhit = tree.array("H.hod.goodscinhit")
+        H_hod_betanotrack = tree.array("H.hod.betanotrack")
+        H_hod_goodstarttime = tree.array("H.hod.goodstarttime")
+        H_dc_ntrack = tree.array("H.dc.ntrack")
         
-    if PS_names[2] is "PS6":
-        T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG6_ROC1_tdcTimeRaw")
-        T_coin_pTRIG_COIN_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG6_ROC2_tdcTimeRaw")
-        T_coin_pTRIG_COIN_ROC1_tdcTime = tree.array("T.coin.pTRIG6_ROC1_tdcTime")
-        T_coin_pTRIG_COIN_ROC2_tdcTime = tree.array("T.coin.pTRIG6_ROC2_tdcTime")
-
+        H_dc_1x1_nhit = tree.array("H.dc.1x1.nhit")
+        H_dc_1u2_nhit = tree.array("H.dc.1u2.nhit")
+        H_dc_1u1_nhit = tree.array("H.dc.1u1.nhit")
+        H_dc_1v1_nhit = tree.array("H.dc.1v1.nhit")
+        H_dc_1x2_nhit = tree.array("H.dc.1x2.nhit")
+        H_dc_1v2_nhit = tree.array("H.dc.1v2.nhit")
+        H_dc_2x1_nhit = tree.array("H.dc.2x1.nhit")
+        H_dc_2u2_nhit = tree.array("H.dc.2u2.nhit")
+        H_dc_2u1_nhit = tree.array("H.dc.2u1.nhit")
+        H_dc_2v1_nhit = tree.array("H.dc.2v1.nhit")
+        H_dc_2x2_nhit = tree.array("H.dc.2x2.nhit")
+        H_dc_2v2_nhit = tree.array("H.dc.2v2.nhit")
+        
+        H_bcm_bcm4a_AvgCurrent = tree.array("H.bcm.bcm4a.AvgCurrent")
+        H_cal_etottracknorm = tree.array("H.cal.etottracknorm")
+    
+    if PS_names[0] is "PS1" or PS_names[0] is "PS2":
+        SHMSsingle = True
+        #W = tree.array("P.kin.primary.W")
+        P_cal_etotnorm = tree.array("P.cal.etotnorm")
+        P_hgcer_npeSum = tree.array("P.hgcer.npeSum")
+        P_aero_npeSum = tree.array("P.aero.npeSum")
+        P_ngcer_npeSum = tree.array("P.ngcer.npeSum")
+        P_gtr_dp = tree.array("P.gtr.dp")
+        P_gtr_th = tree.array("P.gtr.th")
+        P_gtr_ph = tree.array("P.gtr.ph")
+        P_gtr_beta = tree.array("P.gtr.beta")
+        P_tr_chi2 = tree.array("P.tr.chi2")
+        P_tr_ndof = tree.array("P.tr.ndof")
+        P_hod_goodscinhit = tree.array("P.hod.goodscinhit")
+        P_hod_betanotrack = tree.array("P.hod.betanotrack")
+        P_hod_goodstarttime = tree.array("P.hod.goodstarttime")
+        P_dc_ntrack = tree.array("P.dc.ntrack")
+        if ANATYPE == "Pion":
+            P_ngcer_npeSum = tree.array("P.ngcer.npeSum")
+        
+        P_dc_1x1_nhit = tree.array("P.dc.1x1.nhit")
+        P_dc_1u2_nhit = tree.array("P.dc.1u2.nhit")
+        P_dc_1u1_nhit = tree.array("P.dc.1u1.nhit")
+        P_dc_1v1_nhit = tree.array("P.dc.1v1.nhit")
+        P_dc_1x2_nhit = tree.array("P.dc.1x2.nhit")
+        P_dc_1v2_nhit = tree.array("P.dc.1v2.nhit")
+        P_dc_2x1_nhit = tree.array("P.dc.2x1.nhit")
+        P_dc_2u2_nhit = tree.array("P.dc.2u2.nhit")
+        P_dc_2u1_nhit = tree.array("P.dc.2u1.nhit")
+        P_dc_2v1_nhit = tree.array("P.dc.2v1.nhit")
+        P_dc_2x2_nhit = tree.array("P.dc.2x2.nhit")
+        P_dc_2v2_nhit = tree.array("P.dc.2v2.nhit")
+    
+        P_cal_etottracknorm = tree.array("P.cal.etottracknorm")
+    
+    if PS_names[0] is "PS1":
+        T_coin_pTRIG_SHMS_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG1_ROC1_tdcTimeRaw")
+        T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG1_ROC2_tdcTimeRaw")
+        T_coin_pTRIG_SHMS_ROC1_tdcTime = tree.array("T.coin.pTRIG1_ROC1_tdcTime")
+        T_coin_pTRIG_SHMS_ROC2_tdcTime = tree.array("T.coin.pTRIG1_ROC2_tdcTime")
+    
+    if PS_names[0] is "PS2":
+        T_coin_pTRIG_SHMS_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG2_ROC1_tdcTimeRaw")
+        T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG2_ROC2_tdcTimeRaw")
+        T_coin_pTRIG_SHMS_ROC1_tdcTime = tree.array("T.coin.pTRIG2_ROC1_tdcTime")
+        T_coin_pTRIG_SHMS_ROC2_tdcTime = tree.array("T.coin.pTRIG2_ROC2_tdcTime")
+    
+    if PS_names[1] is "PS3":
+        T_coin_pTRIG_HMS_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG3_ROC1_tdcTimeRaw")
+        T_coin_pTRIG_HMS_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG3_ROC2_tdcTimeRaw")
+        T_coin_pTRIG_HMS_ROC1_tdcTime = tree.array("T.coin.pTRIG3_ROC1_tdcTime")
+        T_coin_pTRIG_HMS_ROC2_tdcTime = tree.array("T.coin.pTRIG3_ROC2_tdcTime")
+    
+    if PS_names[1] is "PS4":
+        T_coin_pTRIG_HMS_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG4_ROC1_tdcTimeRaw")
+        T_coin_pTRIG_HMS_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG4_ROC2_tdcTimeRaw")
+        T_coin_pTRIG_HMS_ROC1_tdcTime = tree.array("T.coin.pTRIG4_ROC1_tdcTime")
+        T_coin_pTRIG_HMS_ROC2_tdcTime = tree.array("T.coin.pTRIG4_ROC2_tdcTime")
+    
+    # Check if COIN trigger is used
+    if len(PS_used) > 2:
+        if PS_names[2] is "PS5":
+            T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG5_ROC1_tdcTimeRaw")
+            T_coin_pTRIG_COIN_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG5_ROC2_tdcTimeRaw")
+            T_coin_pTRIG_COIN_ROC1_tdcTime = tree.array("T.coin.pTRIG5_ROC1_tdcTime")
+            T_coin_pTRIG_COIN_ROC2_tdcTime = tree.array("T.coin.pTRIG5_ROC2_tdcTime")
+            
+        if PS_names[2] is "PS6":
+            T_coin_pTRIG_COIN_ROC1_tdcTimeRaw = tree.array("T.coin.pTRIG6_ROC1_tdcTimeRaw")
+            T_coin_pTRIG_COIN_ROC2_tdcTimeRaw = tree.array("T.coin.pTRIG6_ROC2_tdcTimeRaw")
+            T_coin_pTRIG_COIN_ROC1_tdcTime = tree.array("T.coin.pTRIG6_ROC1_tdcTime")
+            T_coin_pTRIG_COIN_ROC2_tdcTime = tree.array("T.coin.pTRIG6_ROC2_tdcTime")
+    else: # case for singles events (i.e. only one of HMS or SHMS single arm, not both)
+        if (PS_names[0] is "PS1") or (PS_names[0] is "PS2"):
+            SHMSsingle = True
+            #W = tree.array("P.kin.primary.W")
+            P_cal_etotnorm = tree.array("P.cal.etotnorm")
+            P_hgcer_npeSum = tree.array("P.hgcer.npeSum")
+            P_aero_npeSum = tree.array("P.aero.npeSum")
+            P_ngcer_npeSum = tree.array("P.ngcer.npeSum")
+            P_gtr_dp = tree.array("P.gtr.dp")
+            P_gtr_th = tree.array("P.gtr.th")
+            P_gtr_ph = tree.array("P.gtr.ph")
+            P_gtr_beta = tree.array("P.gtr.beta")
+            P_tr_chi2 = tree.array("P.tr.chi2")
+            P_tr_ndof = tree.array("P.tr.ndof")
+            P_hod_goodscinhit = tree.array("P.hod.goodscinhit")
+            P_hod_betanotrack = tree.array("P.hod.betanotrack")
+            P_hod_goodstarttime = tree.array("P.hod.goodstarttime")
+            P_dc_ntrack = tree.array("P.dc.ntrack")
+            if ANATYPE == "Pion":
+                P_ngcer_npeSum = tree.array("P.ngcer.npeSum")
+            
+            P_dc_1x1_nhit = tree.array("P.dc.1x1.nhit")
+            P_dc_1u2_nhit = tree.array("P.dc.1u2.nhit")
+            P_dc_1u1_nhit = tree.array("P.dc.1u1.nhit")
+            P_dc_1v1_nhit = tree.array("P.dc.1v1.nhit")
+            P_dc_1x2_nhit = tree.array("P.dc.1x2.nhit")
+            P_dc_1v2_nhit = tree.array("P.dc.1v2.nhit")
+            P_dc_2x1_nhit = tree.array("P.dc.2x1.nhit")
+            P_dc_2u2_nhit = tree.array("P.dc.2u2.nhit")
+            P_dc_2u1_nhit = tree.array("P.dc.2u1.nhit")
+            P_dc_2v1_nhit = tree.array("P.dc.2v1.nhit")
+            P_dc_2x2_nhit = tree.array("P.dc.2x2.nhit")
+            P_dc_2v2_nhit = tree.array("P.dc.2v2.nhit")
+        
+            P_cal_etottracknorm = tree.array("P.cal.etottracknorm")
+        else:
+            HMSsingle = True
+            W = tree.array("H.kin.primary.W")
+            H_cal_etotnorm = tree.array("H.cal.etotnorm")
+            H_cer_npeSum = tree.array("H.cer.npeSum")
+            H_gtr_dp = tree.array("H.gtr.dp")
+            H_tr_tg_th = tree.array("H.gtr.th")
+            H_tr_tg_ph = tree.array("H.gtr.ph")
+            H_gtr_beta = tree.array("H.gtr.beta")
+            H_tr_chi2 = tree.array("H.tr.chi2")
+            H_tr_ndof = tree.array("H.tr.ndof")
+            H_hod_goodscinhit = tree.array("H.hod.goodscinhit")
+            H_hod_betanotrack = tree.array("H.hod.betanotrack")
+            H_hod_goodstarttime = tree.array("H.hod.goodstarttime")
+            H_dc_ntrack = tree.array("H.dc.ntrack")
+            
+            H_dc_1x1_nhit = tree.array("H.dc.1x1.nhit")
+            H_dc_1u2_nhit = tree.array("H.dc.1u2.nhit")
+            H_dc_1u1_nhit = tree.array("H.dc.1u1.nhit")
+            H_dc_1v1_nhit = tree.array("H.dc.1v1.nhit")
+            H_dc_1x2_nhit = tree.array("H.dc.1x2.nhit")
+            H_dc_1v2_nhit = tree.array("H.dc.1v2.nhit")
+            H_dc_2x1_nhit = tree.array("H.dc.2x1.nhit")
+            H_dc_2u2_nhit = tree.array("H.dc.2u2.nhit")
+            H_dc_2u1_nhit = tree.array("H.dc.2u1.nhit")
+            H_dc_2v1_nhit = tree.array("H.dc.2v1.nhit")
+            H_dc_2x2_nhit = tree.array("H.dc.2x2.nhit")
+            H_dc_2v2_nhit = tree.array("H.dc.2v2.nhit")
+            
+            H_bcm_bcm4a_AvgCurrent = tree.array("H.bcm.bcm4a.AvgCurrent")
+            H_cal_etottracknorm = tree.array("H.cal.etottracknorm")
+        
 T_coin_pFADC_TREF_ROC2_adcPed = tree.array("T.coin.pFADC_TREF_ROC2_adcPed")
 T_coin_hFADC_TREF_ROC1_adcPed = tree.array("T.coin.hFADC_TREF_ROC1_adcPed")
 T_coin_pFADC_TREF_ROC2_adcPulseTimeRaw = tree.array("T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw")
@@ -323,17 +393,23 @@ Define and set up cuts
 '''
 
 fout = UTILPATH+'/DB/CUTS/run_type/lumi.cuts'
-
-if ANATYPE == "Pion":
-    cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ngcer_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_curr","h_etrack_lumi_before","h_etrack_lumi_after","p_etrack_lumi_before","p_etrack_lumi_after"]
-    # Check if COIN trigger is used
-    if len(PS_used) > 2:
-        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ngcer_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_ptrigCOIN","c_curr","h_etrack_lumi_before","h_etrack_lumi_after","p_etrack_lumi_before","p_etrack_lumi_after"]
+#check if single arm used:
+if (SHMSsingle or HMSsingle) and not(SHMSsingle and HMSsingle):
+    if SHMSsingle:
+        cuts = ["p_cal_nt","p_hgcer_nt","p_aero_nt","p_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigSHMS","c_curr","p_etrack_lumi_before","p_etrack_lumi_after"]
+    else:
+        cuts = ["h_cal_nt","h_cer_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_curr","h_etrack_lumi_before","h_etrack_lumi_after"]
 else:
-    cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_curr","h_etrack_lumi_before","h_etrack_lumi_after","p_etrack_lumi_before","p_etrack_lumi_after"]
-    # Check if COIN trigger is used
-    if len(PS_used) > 2:
-        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_ptrigCOIN","c_curr","h_etrack_lumi_before","h_etrack_lumi_after","p_etrack_lumi_before","p_etrack_lumi_after"]
+    if ANATYPE == "Pion":
+        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ngcer_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_curr","h_etrack_lumi_before","h_etrack_lumi_after","p_etrack_lumi_before","p_etrack_lumi_after"]
+        # Check if COIN trigger is used
+        if len(PS_used) > 2:
+            cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ngcer_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_ptrigCOIN","c_curr","h_etrack_lumi_before","h_etrack_lumi_after","p_etrack_lumi_before","p_etrack_lumi_after"]
+    else:
+        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_curr","h_etrack_lumi_before","h_etrack_lumi_after","p_etrack_lumi_before","p_etrack_lumi_after"]
+        # Check if COIN trigger is used
+        if len(PS_used) > 2:
+            cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","p_ecut_lumi_nt","h_ecut_lumi_nt","c_noedtm","c_edtm","c_ptrigHMS","c_ptrigSHMS","c_ptrigCOIN","c_curr","h_etrack_lumi_before","h_etrack_lumi_after","p_etrack_lumi_before","p_etrack_lumi_after"]
 
 cutVals = []
 def make_cutDict(cuts,fout,runNum,CURRENT_ENV,DEBUG=False):
@@ -389,42 +465,46 @@ def pid_cuts():
 
     f = plt.figure(figsize=(11.69,8.27))
     f.suptitle("Run %s" % runNum)
+    
+    if (HMSsingle):
+        ax = f.add_subplot(231)
+        ax.hist(H_cal_etotnorm,bins=c.setbin(H_cal_etotnorm,200,0,2.0),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(H_cal_etotnorm,"h_cal_nt"),bins=c.setbin(H_cal_etotnorm,200,0,2.0),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        plt.yscale('log')
+        plt.xlabel('H_cal_etotnorm')
+        plt.ylabel('Count')
+    
+        ax = f.add_subplot(232)
+        ax.hist(H_cer_npeSum,bins=c.setbin(H_cer_npeSum,200,0,60),label='no cut',histtype='step', alpha=0.5,stacked=True, fill=True)
+        ax.hist(c.add_cut(H_cer_npeSum,"h_cer_nt"),bins=c.setbin(H_cer_npeSum,200,0,60),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        plt.yscale('log')
+        plt.xlabel('H_cer_npeSum')
+        plt.ylabel('Count')
+        
+    if(SHMSsingle):
+        ax = f.add_subplot(233)
+        ax.hist(P_cal_etotnorm,bins=c.setbin(P_cal_etotnorm,200,0,4),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(P_cal_etotnorm,"p_cal_nt"),bins=c.setbin(P_cal_etotnorm,200,0,4),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        plt.yscale('log')
+        plt.xlabel('P_cal_etotnorm')
+        plt.ylabel('Count')
 
-    ax = f.add_subplot(231)
-    ax.hist(H_cal_etotnorm,bins=c.setbin(H_cal_etotnorm,200,0,2.0),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(H_cal_etotnorm,"h_cal_nt"),bins=c.setbin(H_cal_etotnorm,200,0,2.0),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('H_cal_etotnorm')
-    plt.ylabel('Count')
+        ax = f.add_subplot(234)
+        ax.hist(P_hgcer_npeSum,bins=c.setbin(P_hgcer_npeSum,200,0,200),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(P_hgcer_npeSum,"p_hgcer_nt"),bins=c.setbin(P_hgcer_npeSum,200,0,200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        plt.yscale('log')
+        plt.xlabel('P_hgcer_npeSum')
+        plt.ylabel('Count')
 
-    ax = f.add_subplot(232)
-    ax.hist(H_cer_npeSum,bins=c.setbin(H_cer_npeSum,200,0,60),label='no cut',histtype='step', alpha=0.5,stacked=True, fill=True)
-    ax.hist(c.add_cut(H_cer_npeSum,"h_cer_nt"),bins=c.setbin(H_cer_npeSum,200,0,60),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('H_cer_npeSum')
-    plt.ylabel('Count')
-
-    ax = f.add_subplot(233)
-    ax.hist(P_cal_etotnorm,bins=c.setbin(P_cal_etotnorm,200,0,4),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(P_cal_etotnorm,"p_cal_nt"),bins=c.setbin(P_cal_etotnorm,200,0,4),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('P_cal_etotnorm')
-    plt.ylabel('Count')
-
-    ax = f.add_subplot(234)
-    ax.hist(P_hgcer_npeSum,bins=c.setbin(P_hgcer_npeSum,200,0,200),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(P_hgcer_npeSum,"p_hgcer_nt"),bins=c.setbin(P_hgcer_npeSum,200,0,200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('P_hgcer_npeSum')
-    plt.ylabel('Count')
-
-    ax = f.add_subplot(235)
-    ax.hist(P_aero_npeSum,bins=c.setbin(P_aero_npeSum,200,0,400),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(P_aero_npeSum,"p_aero_nt"),bins=c.setbin(P_aero_npeSum,200,0,400),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('P_aero_npeSum')
-    plt.ylabel('Count')   
-
+        ax = f.add_subplot(235)
+        ax.hist(P_aero_npeSum,bins=c.setbin(P_aero_npeSum,200,0,400),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(P_aero_npeSum,"p_aero_nt"),bins=c.setbin(P_aero_npeSum,200,0,400),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        plt.yscale('log')
+        plt.xlabel('P_aero_npeSum')
+        plt.ylabel('Count')   
+        
+        #ngcer goes here
+    
     if ANATYPE == "Pion":
         ax = f.add_subplot(236)
         ax.hist(P_ngcer_npeSum,bins=c.setbin(P_ngcer_npeSum,200,0,250),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
@@ -445,23 +525,25 @@ def pid_cuts():
     f = plt.figure(figsize=(19.20,8.00))
     f.suptitle("Run %s" % runNum)
 
-    ax = f.add_subplot(241)
-    ax.hist2d(H_cal_etotnorm,H_cer_npeSum,bins=[c.setbin(H_cal_etotnorm,400,0,2.0),c.setbin(H_cer_npeSum,400,0,30)],cmin=1,label='no cut',alpha=0.5)
-    ax.hist2d(c.add_cut(H_cal_etotnorm,"h_ecut_lumi_nt"), c.add_cut(H_cer_npeSum,"h_ecut_lumi_nt"), bins=[c.setbin(H_cal_etotnorm,400,0,2.0),c.setbin(H_cer_npeSum,400,0,30)],cmin=1,label='cut', alpha=0.5)
-    plt.xlabel('H_cal_etotnorm')
-    plt.ylabel('H_cer_npeSum')
-
-    ax = f.add_subplot(242)
-    ax.hist2d(P_cal_etotnorm,P_hgcer_npeSum,bins=[c.setbin(P_cal_etotnorm,400,0,4),c.setbin(P_hgcer_npeSum,400,0,80)],cmin=1,label='no cut',alpha=0.5)
-    ax.hist2d(c.add_cut(P_cal_etotnorm,"p_ecut_lumi_nt"),c.add_cut(P_hgcer_npeSum,"p_ecut_lumi_nt"),bins=[c.setbin(P_cal_etotnorm,400,0,4),c.setbin(P_hgcer_npeSum,400,0,80)],cmin=1,label='cut', alpha=0.5)
-    plt.xlabel('P_cal_etotnorm')
-    plt.ylabel('P_hgcer_npeSum')
-
-    ax = f.add_subplot(243)
-    ax.hist2d(P_cal_etotnorm,P_aero_npeSum,bins=[c.setbin(P_cal_etotnorm,400,0,4),c.setbin(P_aero_npeSum,400,0,100)],cmin=1,label='no cut',alpha=0.5)
-    ax.hist2d(c.add_cut(P_cal_etotnorm,"p_ecut_lumi_nt"),c.add_cut(P_aero_npeSum,"p_ecut_lumi_nt"),bins=[c.setbin(P_cal_etotnorm,400,0,4),c.setbin(P_aero_npeSum,400,0,100)],cmin=1,label='cut', alpha=0.5)
-    plt.xlabel('P_cal_etotnorm')
-    plt.ylabel('P_aero_npeSum')
+    if(HMSsingle):
+        ax = f.add_subplot(241)
+        ax.hist2d(H_cal_etotnorm,H_cer_npeSum,bins=[c.setbin(H_cal_etotnorm,400,0,2.0),c.setbin(H_cer_npeSum,400,0,30)],cmin=1,label='no cut',alpha=0.5)
+        ax.hist2d(c.add_cut(H_cal_etotnorm,"h_ecut_lumi_nt"), c.add_cut(H_cer_npeSum,"h_ecut_lumi_nt"), bins=[c.setbin(H_cal_etotnorm,400,0,2.0),c.setbin(H_cer_npeSum,400,0,30)],cmin=1,label='cut', alpha=0.5)
+        plt.xlabel('H_cal_etotnorm')
+        plt.ylabel('H_cer_npeSum')
+    
+    if(SHMSsingle):
+        ax = f.add_subplot(242)
+        ax.hist2d(P_cal_etotnorm,P_hgcer_npeSum,bins=[c.setbin(P_cal_etotnorm,400,0,4),c.setbin(P_hgcer_npeSum,400,0,80)],cmin=1,label='no cut',alpha=0.5)
+        ax.hist2d(c.add_cut(P_cal_etotnorm,"p_ecut_lumi_nt"),c.add_cut(P_hgcer_npeSum,"p_ecut_lumi_nt"),bins=[c.setbin(P_cal_etotnorm,400,0,4),c.setbin(P_hgcer_npeSum,400,0,80)],cmin=1,label='cut', alpha=0.5)
+        plt.xlabel('P_cal_etotnorm')
+        plt.ylabel('P_hgcer_npeSum')
+        
+        ax = f.add_subplot(243)
+        ax.hist2d(P_cal_etotnorm,P_aero_npeSum,bins=[c.setbin(P_cal_etotnorm,400,0,4),c.setbin(P_aero_npeSum,400,0,100)],cmin=1,label='no cut',alpha=0.5)
+        ax.hist2d(c.add_cut(P_cal_etotnorm,"p_ecut_lumi_nt"),c.add_cut(P_aero_npeSum,"p_ecut_lumi_nt"),bins=[c.setbin(P_cal_etotnorm,400,0,4),c.setbin(P_aero_npeSum,400,0,100)],cmin=1,label='cut', alpha=0.5)
+        plt.xlabel('P_cal_etotnorm')
+        plt.ylabel('P_aero_npeSum')
 
     if ANATYPE == "Pion":
         ax = f.add_subplot(244)
@@ -470,11 +552,12 @@ def pid_cuts():
         plt.xlabel('P_cal_etotnorm')
         plt.ylabel('P_ngcer_npeSum')
 
-    ax = f.add_subplot(245)
-    ax.hist2d(P_aero_npeSum,P_hgcer_npeSum,bins=[c.setbin(P_aero_npeSum,400,0,100),c.setbin(P_hgcer_npeSum,400,0,80)],cmin=1,label='no cut',alpha=0.5)
-    ax.hist2d(c.add_cut(P_aero_npeSum,"p_ecut_lumi_nt"),c.add_cut(P_hgcer_npeSum,"p_ecut_lumi_nt"),bins=[c.setbin(P_aero_npeSum,400,0,100),c.setbin(P_hgcer_npeSum,400,0,80)],cmin=1,label='cut', alpha=0.5)
-    plt.xlabel('P_aero_npeSum')
-    plt.ylabel('P_hgcer_npeSum')
+    if(SHMSsingle):
+        ax = f.add_subplot(245)
+        ax.hist2d(P_aero_npeSum,P_hgcer_npeSum,bins=[c.setbin(P_aero_npeSum,400,0,100),c.setbin(P_hgcer_npeSum,400,0,80)],cmin=1,label='no cut',alpha=0.5)
+        ax.hist2d(c.add_cut(P_aero_npeSum,"p_ecut_lumi_nt"),c.add_cut(P_hgcer_npeSum,"p_ecut_lumi_nt"),bins=[c.setbin(P_aero_npeSum,400,0,100),c.setbin(P_hgcer_npeSum,400,0,80)],cmin=1,label='cut', alpha=0.5)
+        plt.xlabel('P_aero_npeSum')
+        plt.ylabel('P_hgcer_npeSum')
 
     if ANATYPE == "Pion":
         ax = f.add_subplot(246)
