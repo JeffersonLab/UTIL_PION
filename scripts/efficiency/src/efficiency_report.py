@@ -20,9 +20,9 @@ def dictionary(UTILPATH,ROOTPrefix,runNum,MaxEvent, DEBUG=False):
 
     # Open report file to grab prescale values and tracking efficiency
 #    report = UTILPATH+"/REPORT_OUTPUT/Analysis/HeeP/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
-#    report = UTILPATH+"/REPORT_OUTPUT/Analysis/Lumi/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
+    report = UTILPATH+"/REPORT_OUTPUT/Analysis/Lumi/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
 #    report = UTILPATH+"/REPORT_OUTPUT/Analysis/pTRIG6/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
-    report = UTILPATH+"/REPORT_OUTPUT/Analysis/PionLT/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
+#    report = UTILPATH+"/REPORT_OUTPUT/Analysis/PionLT/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
 
     with open(report) as f:
         effDict = {

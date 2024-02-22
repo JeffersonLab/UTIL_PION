@@ -101,7 +101,7 @@ plt.tight_layout(rect=[0,0.03,1,0.95])
 plt.savefig(UTILPATH+'/scripts/efficiency/OUTPUTS/plots/HMS_EL-REAL_%s.png' % (ROOTPrefix.replace("replay_","")))
 
 ########################################################################################################################################################################################
-
+'''
 plt.figure(figsize=(10,14))
 
 plt.subplot(411)
@@ -146,7 +146,7 @@ plt.title('HMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficie
 plt.tight_layout(rect=[0,0.03,1,0.95])
 plt.savefig(UTILPATH+'/scripts/efficiency/OUTPUTS/plots/Run_Number_HMS_%s.png' % (ROOTPrefix.replace("replay_","")))
 
-
+'''
 #########################################################################################################################################################################################
 
 plt.figure(figsize=(14,10))
@@ -194,10 +194,10 @@ plt.tight_layout(rect=[0,0.03,1,0.95])
 plt.savefig(UTILPATH+'/scripts/efficiency/OUTPUTS/plots/HMS_S1X_%s.png' % (ROOTPrefix.replace("replay_","")))
 
 ###################################################################################################################################################################################################
-
+'''
 plt.figure(figsize=(10,14))
 
-plt.subplot(411)
+plt.subplot(111)
 plt.grid(zorder=1)
 #plt.xlim(0,100)
 #plt.ylim(0.9,1.1)
@@ -227,7 +227,7 @@ plt.title('HMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficie
 
 plt.tight_layout(rect=[0,0.03,1,0.95])
 plt.savefig(UTILPATH+'/scripts/efficiency/OUTPUTS/plots/Run_Number_rates_%s.png' % (ROOTPrefix.replace("replay_","")))
-
+'''
 ################################################################################################################################################################################################
 
 #plt.show()

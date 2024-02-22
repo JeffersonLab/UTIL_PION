@@ -7,11 +7,11 @@
 # ================================================================
 #
 # Copied: Richard L. Trotta III <trotta@cua.edu>
-# Created: Muhammad junaid  <mjo147@uregina.ca>
-# Copyright (c) trottar & junaid
+# Author: Muhammad junaid  <mjo147@uregina.ca>
+# Copyright (c) junaid
 #
 
-while getopts 'hprs' flag; do
+while getopts 'hrs' flag; do
     case "${flag}" in
         h) 
         echo "-------------------------------------------------------------------"
@@ -20,19 +20,15 @@ while getopts 'hprs' flag; do
         echo
         echo "The following flags can be called for the heep analysis..."
 	echo "    If no flags called arguments are..."
-	echo "        coin -> RunType=arg1"
-	echo "        sing -> RunType=arg1 SPEC=arg2 (requires -s flag)"		
+	echo "        coin -> RunList = arg1 RunType=arg2"
+	echo "        sing -> RunList = arg1 RunType=arg2 SPEC=arg3 (requires -s flag)"		
         echo "    -h, help"
-        echo "    -p, plot efficiencies (code exits upon completion, table required)"
-	echo "        coin -> RunType=arg1 DATE=arg2"
-	echo "        sing -> RunType=arg1 DATE=arg2 SPEC=arg3 (requires -s flag)"
-	echo "    -r, run hgcer root analysis"
+	echo "    -r, run hgcer root analysis (not using this flag for now)"
 	echo "        coin -> RunType=arg1"
 	echo "        sing -> RunType=arg1 SPEC=arg2 (requires -s flag)"	
 	echo "    -s, single arm"
         exit 0
         ;;
-        p) p_flag='true' ;;
 	r) r_flag='true' ;;
 	s) s_flag='true' ;;
         *) print_usage
@@ -72,62 +68,7 @@ HOST=`echo ${PATHFILE_INFO} | cut -d ','  -f15`
 
 cd "${SCRIPTPATH}/efficiency/src/"
 
-if [[ $p_flag = "true" ]]; then
-    RunType=$3
-    DATE=$4
-    if [[ $RunType = "HeePCoin" ]]; then
-	ROOTPREFIX=PionLT_replay_HeeP_coin
-#	HGCERPREFIX=${ANATYPE}_coin_replay_production
-    elif [[ $RunType = "LumiCoin" ]]; then
-	ROOTPREFIX=PionLT_replay_luminosity_coin
-#	HGCERPREFIX=${ANATYPE}_coin_replay_production	
-    elif [[ $RunType = "pTRIG6" ]]; then
-        ROOTPREFIX=PionLT_replay_coin_production_pTRIG6
-#       HGCERPREFIX=${ANATYPE}_coin_replay_production
-    elif [[ $RunType = "Prod" ]]; then
-        ROOTPREFIX=PionLT_replay_coin_production
-#       HGCERPREFIX=${ANATYPE}_coin_replay_production 
-    else
-	ROOTPREFIX=PionLT_replay_coin_production
-#       HGCERPREFIX=${ANATYPE}_coin_replay_production 
-    fi
-    python3 plot_efficiency.py ${ROOTPREFIX} ${RunType} ${DATE}
-#    python3 plot/plot_efficiency_beam.py ${ROOTPREFIX} ${RunType} ${DATE}
-    cd "${SCRIPTPATH}/efficiency/OUTPUTS/plots"
-    convert *.png "${RunType}_${DATE}.pdf"
-    evince "${RunType}_${DATE}.pdf"
-    rm -f *.png
-    exit 1
-
-elif [[ $p_flag = "true" && $s_flag = "true" ]]; then
-    RunType=$3
-    DATE=$4
-    spec=$(echo "$5" | tr '[:upper:]' '[:lower:]')
-    SPEC=$(echo "$spec" | tr '[:lower:]' '[:upper:]')
-    if [[ $RunType = "HeePSing" ]]; then
-	ROOTPREFIX=PionLT_replay_${spec}_HeePSing
-#	HGCERPREFIX=${ANATYPE}_${SPEC}_replay_production
-	inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
-	#inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
-    elif [[ $RunType = "LumiSing" ]]; then
-        ROOTPREFIX=PionLT_replay_luminosity
-#       HGCERPREFIX=${ANATYPE}_${SPEC}_replay_production
-        inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
-        #inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
-    else
-	ROOTPREFIX=PionLt_replay_${spec}_production
-#	HGCERPREFIX=${ANATYPE}_${SPEC}_replay_production
-	inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
-	#inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
-    fi
-    python3 plot_efficiency.py ${ROOTPREFIX} ${RunType} ${DATE}
-#    python3 plot/plot_efficiency_beam.py ${ROOTPREFIX} ${RunType} ${DATE}
-    cd "${SCRIPTPATH}/efficiency/OUTPUTS/plots"
-    convert *.png "${RunType}_${DATE}.pdf"
-    evince "${RunType}_${DATE}.pdf"
-    exit 1
-
-elif [[ $s_flag = "true" ]]; then
+if [[ $s_flag = "true" ]]; then
     RunType=$3
     spec=$(echo "$4" | tr '[:upper:]' '[:lower:]')
     SPEC=$(echo "$spec" | tr '[:lower:]' '[:upper:]')
@@ -135,17 +76,12 @@ elif [[ $s_flag = "true" ]]; then
 	ROOTPREFIX=PionLT_replay_${SPEC}_HeePSing
 #	HGCERPREFIX=${ANATYPE}_${SPEC}_replay_production
 	inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
-	#inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
     elif [[ $RunType = "LumiSing" ]]; then
-        ROOTPREFIX=PionLT_replay_luminosity
+        ROOTPREFIX=PionLT_replay_${SPEC}_Lumi
 #       HGCERPREFIX=${ANATYPE}_${SPEC}_replay_production
         inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
-        #inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
     else
-	ROOTPREFIX=PionLT_replay_${spec}_production
-#	HGCERPREFIX=${ANATYPE}_${SPEC}_replay_production	
-	inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
-	#inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
+        echo "Please Provide RUNTYPE"
     fi    
 
 else
@@ -154,27 +90,20 @@ else
         ROOTPREFIX=PionLT_replay_HeeP_coin
 #        HGCERPREFIX=${ANATYPE}_coin_replay_production
         inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
-        #inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
     elif [[ $RunType = "LumiCoin" ]]; then
-	ROOTPREFIX=PionLT_replay_luminosity_coin
-#	HGCERPREFIX=${ANATYPE}_coin_replay_production
-	inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
-	#inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
+        ROOTPREFIX=PionLT_replay_Lumi_coin
+#       HGCERPREFIX=${ANATYPE}_${SPEC}_replay_production
+        inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
     elif [[ $RunType = "pTRIG6" ]]; then
         ROOTPREFIX=PionLT_replay_coin_production_pTRIG6
 #       HGCERPREFIX=${ANATYPE}_coin_replay_production
         inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
-        #inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
     elif [[ $RunType = "Prod" ]]; then
         ROOTPREFIX=PionLT_replay_coin_production
 #       HGCERPREFIX=${ANATYPE}_coin_replay_production
         inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
-        #inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
     else
-	ROOTPREFIX=PionLT_replay_coin_production
-#	HGCERPREFIX=${ANATYPE}_coin_replay_production
-	inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
-	#inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
+        echo "Please Provide RUNTYPE"
     fi    
 fi
 

@@ -61,31 +61,33 @@ if [[ $s_flag = "true" ]]; then
     spec=$(echo "$3" | tr '[:upper:]' '[:lower:]')
     SPEC=$(echo "$spec" | tr '[:lower:]' '[:upper:]')
     COLUMN1=$4
+#    COLUMN1=Run_Number
     COLUMN2=$5
-    TIMESTMP="2024_02_08"
+    TIMESTMP="2024_02_15"
     if [[ $RUNTYPE = "HeePSing" ]]; then
 	ROOTPREFIX=PionLT_${SPEC}_HeePSing
     elif [[ $RUNTYPE = "LumiSing" ]]; then
-        ROOTPREFIX=PionLT_${SPEC}_luminosity
+        ROOTPREFIX=PionLT_${SPEC}_Lumi
     else
-	ROOTPREFIX=PionLT_${SPEC}_HeePSing
+	echo "Please Provide RUNTYPE"
     fi
 
 else
     RUNTYPE=$1
     COLUMN1=$2
+#    COLUMN1=Run_Number
     COLUMN2=$3
-    TIMESTMP="2024_02_08"
+    TIMESTMP="2024_02_15"
     if [[ $RUNTYPE = "HeePCoin" ]]; then
         ROOTPREFIX=PionLT_HeeP_coin
     elif [[ $RUNTYPE = "LumiCoin" ]]; then
-        ROOTPREFIX=PionLT_luminosity_coin
+        ROOTPREFIX=PionLT_Lumi_coin
     elif [[ $RUNTYPE = "Prod" ]]; then
         ROOTPREFIX=PionLT_coin_production
     elif [[ $RUNTYPE = "pTRIG6" ]]; then
         ROOTPREFIX=PionLT_coin_production_pTRIG6
     else
-        ROOTPREFIX=PionLT_coin_production
+        echo "Please Provide RUNTYPE"
     fi
 fi
 

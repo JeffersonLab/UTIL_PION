@@ -58,10 +58,13 @@ def display_columns(csv_file, column1, column2):
 
         # Print column names
         print("{} --- {}".format(column1, column2))
-
         # Iterate over rows and print values
         for row in reader:
-            print(row[column1], " ------ " ,row[column2])
+#            eff = 0.98
+#            if float(row[column2]) < eff:
+#               print(row[column1], " ------ " ,row[column2])
+	
+             print(row[column1], " ------ " ,row[column2])
 
 csv_path = UTILPATH
 
