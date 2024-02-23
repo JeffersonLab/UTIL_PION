@@ -70,12 +70,12 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 {
 
     // make empty histograms	
-	th1_hgcer = new TH1D("hgcerShould", "hgcerShould", 120, -30.0, 30.0);
-	th1_hgcerCut = new TH1D("hgcerDid", "hgcerDid", 120, -30.0, 30.0);
-	th1_aero = new TH1D("aeroShould", "aeroShould", 120, -30.0, 30.0);
-	th1_aeroCut = new TH1D("aeroDid", "aeroDid", 120, -30.0, 30.0);
-	th1_ngcer = new TH1D("aeroShould", "aeroShould", 120, -30.0, 30.0);
-	th1_ngcerCut = new TH1D("aeroDid", "aeroDid", 120, -30.0, 30.0);
+	th1_hgcer = new TH1D("hgcerShould", "hgcerShould", 120, -16.0, 26.0);
+	th1_hgcerCut = new TH1D("hgcerDid", "hgcerDid", 120, -16.0, 26.0);
+	th1_aero = new TH1D("aeroShould", "aeroShould", 120, -16.0, 26.0);
+	th1_aeroCut = new TH1D("aeroDid", "aeroDid", 120, -16.0, 26.0);
+	th1_ngcer = new TH1D("aeroShould", "aeroShould", 120, -16.0, 26.0);
+	th1_ngcerCut = new TH1D("aeroDid", "aeroDid", 120, -16.0, 26.0);
 	
 	
 	th2_aeroXhgcer = new TH2D("aeroNpeSumVhgcerNpeSum","aeroNpeSumVhgcerNpeSum", 100, 0.0, 35, 100, 0.0, 35);
@@ -212,16 +212,23 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	
 	// do division of plots to get efficiency plots
 	Bool_t junk; // for holding return of TH1->Divide() 
-	th1_hgcer_eff = new TH1D("hgcer_eff", "hgcer_eff", 120, -30.0, 30.0);
+	th1_hgcer_eff = new TH1D("hgcer_eff", "hgcer_eff", 120, -16.0, 26.0);
 	th1_hgcer_eff->GetXaxis()->SetNameTitle("#delta","#delta");
 	th1_hgcer_eff->GetYaxis()->SetNameTitle("Efficiency","Efficiency");
+	th1_hgcer_eff->SetStats(0);
+	th1_hgcer_eff->GetYaxis()->SetRangeUser(0.75, 1.25);
 	
-	th1_aero_eff = new TH1D("aero_eff", "aero_eff", 120, -30.0, 30.0);
+	th1_aero_eff = new TH1D("aero_eff", "aero_eff", 120, -16.0, 26.0);
 	th1_aero_eff->GetXaxis()->SetNameTitle("#delta","#delta");
 	th1_aero_eff->GetYaxis()->SetNameTitle("Efficiency","Efficiency");
-	th1_ngcer_eff = new TH1D("ngcer_eff", "ngcer_eff", 120, -30.0, 30.0);
+	th1_aero_eff->GetYaxis()->SetRangeUser(0.75, 1.25);
+	th1_aero_eff->SetStats(0);
+	
+	th1_ngcer_eff = new TH1D("ngcer_eff", "ngcer_eff", 120, -16.0, 26.0);
 	th1_ngcer_eff->GetXaxis()->SetNameTitle("#delta","#delta");
 	th1_ngcer_eff->GetYaxis()->SetNameTitle("Efficiency","Efficiency");
+	th1_ngcer_eff->SetStats(0);
+	th1_ngcer_eff->GetYaxis()->SetRangeUser(0.75, 1.25);
 	
 	junk = th1_hgcer_eff->Divide(th1_hgcerCut,th1_hgcer);
     junk = th1_ngcer_eff->Divide(th1_ngcerCut,th1_ngcer);
@@ -241,7 +248,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
             err = 0;
         }
         
-        cout << "Error in bin: " << th1_hgcer_eff->GetBinError(i) << ", Calculated Error: " << err << '\n';
+        //cout << "Error in bin: " << th1_hgcer_eff->GetBinError(i) << ", Calculated Error: " << err << '\n';
         
         th1_hgcer_eff->SetBinError(i , err);
     }
