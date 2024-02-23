@@ -234,12 +234,50 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
     {
         should = th1_hgcer->GetBinContent(i);
         did = th1_hgcerCut->GetBinContent(i);
-        
-        err = TMath::Sqrt(((did*should) - (did*did))/(should*should*should));
+        if (should != 0)
+        {
+            err = TMath::Sqrt(((did*should) - (did*did))/(should*should*should));
+        }else{
+            err = 0;
+        }
         
         cout << "Error in bin: " << th1_hgcer_eff->GetBinError(i) << ", Calculated Error: " << err << '\n';
         
         th1_hgcer_eff->SetBinError(i , err);
+    }
+    
+    BINS = th1_ngcer_eff->GetNbinsX();
+    for(int i = 0; i < BINS; i++)
+    {
+        should = th1_ngcer->GetBinContent(i);
+        did = th1_ngcerCut->GetBinContent(i);
+        if (should != 0)
+        {
+            err = TMath::Sqrt(((did*should) - (did*did))/(should*should*should));
+        }else{
+            err = 0;
+        }
+        
+        //cout << "Error in bin: " << th1_ngcer_eff->GetBinError(i) << ", Calculated Error: " << err << '\n';
+        
+        th1_ngcer_eff->SetBinError(i , err);
+    }
+    
+    BINS = th1_aero_eff->GetNbinsX();
+    for(int i = 0; i < BINS; i++)
+    {
+        should = th1_aero->GetBinContent(i);
+        did = th1_aeroCut->GetBinContent(i);
+        if (should != 0)
+        {
+            err = TMath::Sqrt(((did*should) - (did*did))/(should*should*should));
+        }else{
+            err = 0;
+        }
+        
+        //cout << "Error in bin: " << th1_aero_eff->GetBinError(i) << ", Calculated Error: " << err << '\n';
+        
+        th1_aero_eff->SetBinError(i , err);
     }
     
     
@@ -288,10 +326,10 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
     th1_hgcer_eff->Draw("E0");
     
     c2->cd(2);
-    th1_ngcer_eff->Draw("E0E1");
+    th1_ngcer_eff->Draw("E0");
     
     c2->cd(3);
-    th1_aero_eff->Draw("E0E2");
+    th1_aero_eff->Draw("E0");
     
     TCanvas *c3 = new TCanvas (Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
     c3->Divide(1,3);
