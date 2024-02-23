@@ -50,6 +50,7 @@ TH2D *th2_fpXhgcer_eff2D, *th2_fpXngcer_eff2D, *th2_fpXaero_eff2D;
 
 //variables for cutting trees and plotting
 Double_t delta, calEtot, hgcerNpeSum, aeroNpeSum, ngcerNpeSum;
+Double_t dc_ntrack, InsideDipoleExit, goodStartTime;
 Double_t xfp, yfp;
 
 //cuts
@@ -59,7 +60,7 @@ const Double_t hgcerNpeSumLow = 1.5; //unit NPE
 const Double_t aeroNpeSumLow = 1.5; //unit NPE
 const Double_t ngcerNpeSumLow = 1.5; //unit NPE
 
-Bool_t calCut, hgcerCut, aeroCut, ngcerCut;
+Bool_t calCut, hgcerCut, aeroCut, ngcerCut, fpcut;
 
 const Int_t INILENGTH = 64;
 Int_t NumEvents = -1;
@@ -108,7 +109,9 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	tree1->SetBranchAddress("P.gtr.dp", &delta);
 	tree1->SetBranchAddress("P.dc.x_fp", &xfp);
 	tree1->SetBranchAddress("P.dc.y_fp", &yfp);
-	
+	tree1->SetBranchAddress("P.dc.ntrack", &dc_ntrack); 
+	tree1->SetBranchAddress("P.dc.InsideDipoleExit", &InsideDipoleExit); 
+	tree1->SetBranchAddress("P.hod.goodstarttime", &goodStartTime);
 	
 	Int_t nEntries;
 	if (NumEvents == -1)
@@ -123,13 +126,16 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 		tree1->GetEntry(iEntry);
 		if (iEntry % 10000 == 0) cout << iEntry << endl;
 		
-        if(true) //Acceptance cut
+        if((dc_ntrack > 0) & (InsideDipoleExit == 1) & (goodStartTime == 1) ) //basic Cuts
         {
+            fpcut = (delta < 25.0) && (delta > -15.5);
             // Fill 2D PID plots
-            th2_aeroXhgcer->Fill(aeroNpeSum, hgcerNpeSum);
-            th2_ngcerXcal->Fill(ngcerNpeSum, calEtot);
-            th2_ngcerXaero->Fill(ngcerNpeSum, aeroNpeSum);
-            th2_ngcerXhgcer->Fill(ngcerNpeSum, hgcerNpeSum);
+            if(fpcut){
+                th2_aeroXhgcer->Fill(aeroNpeSum, hgcerNpeSum);
+                th2_ngcerXcal->Fill(ngcerNpeSum, calEtot);
+                th2_ngcerXaero->Fill(ngcerNpeSum, aeroNpeSum);
+                th2_ngcerXhgcer->Fill(ngcerNpeSum, hgcerNpeSum);
+            }
         
             if(cutType == 0) // electron
             {
@@ -156,7 +162,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
                 aeroCut = aeroNpeSumLow > aeroNpeSum;
                 ngcerCut = ngcerNpeSumLow > ngcerNpeSum;
             }
-            if (calCut & aeroCut & ngcerCut) // should for hgcer
+            if (calCut & aeroCut & ngcerCut & fpcut) // should for hgcer
             {
                 th1_hgcer->Fill(delta);
                 th2_fpXhgcer->Fill(xfp,yfp);
@@ -166,7 +172,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
                     th2_fpXhgcer_cut->Fill(xfp,yfp); // change to fpAthgcer
                 }
             }
-            if (calCut & aeroCut & hgcerCut) // should for ngcer
+            if (calCut & aeroCut & hgcerCut & fpcut) // should for ngcer
             {
                 th1_ngcer->Fill(delta);
                 th2_fpXngcer->Fill(xfp,yfp);
@@ -176,7 +182,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
                     th2_fpXngcer_cut->Fill(xfp,yfp);
                 }
             }
-            if(calCut & hgcerCut & ngcerCut) // should for aero
+            if(calCut & hgcerCut & ngcerCut & fpcut) // should for aero
             {
                 th1_aero->Fill(delta);
                 th2_fpXaero->Fill(xfp,yfp);
