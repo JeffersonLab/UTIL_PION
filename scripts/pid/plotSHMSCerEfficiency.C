@@ -77,17 +77,17 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	th1_ngcerCut = new TH1D("aeroDid", "aeroDid", 120, 0.0, 30.0);
 	
 	
-	th2_aeroXhgcer = new TH2D("aeroNpeSumVhgcerNpeSum","aeroNpeSumVhgcerNpeSum", 50, 0.0, 50, 50, 0.0, 50);
-	th2_ngcerXcal = new TH2D("ngcerNpeSumVP.cal.etottracknorm","ngcerNpeSumVP.cal.etottracknorm", 50, 0.0, 50, 100, 0.0, 1.6);
-	th2_ngcerXaero = new TH2D("ngcerNpeSumVaeroNpeSum","ngcerNpeSumVaeroNpeSum", 50, 0.0, 50, 50, 0.0, 50);
-	th2_ngcerXhgcer = new TH2D("ngcerNpeSumVhgcerNpeSum","ngcerNpeSumVhgcerNpeSum", 50, 0.0, 50, 50, 0.0, 50);
+	th2_aeroXhgcer = new TH2D("aeroNpeSumVhgcerNpeSum","aeroNpeSumVhgcerNpeSum", 100, 0.0, 35, 100, 0.0, 35);
+	th2_ngcerXcal = new TH2D("ngcerNpeSumVP.cal.etottracknorm","ngcerNpeSumVP.cal.etottracknorm", 100, 0.0, 35, 100, 0.0, 1.6);
+	th2_ngcerXaero = new TH2D("ngcerNpeSumVaeroNpeSum","ngcerNpeSumVaeroNpeSum", 100, 0.0, 35, 100, 0.0, 35);
+	th2_ngcerXhgcer = new TH2D("ngcerNpeSumVhgcerNpeSum","ngcerNpeSumVhgcerNpeSum", 100, 0.0, 35, 100, 0.0, 35);
 	
-	th2_fpXhgcer = new TH2D("fpVhgcereff_should", "fpVhgcereff_should", 400, -40.0, 40.0, 100, 0.0, 2.0);
-    th2_fpXngcer = new TH2D("fpVngcereff_should", "fpVngcereff_should", 400, -40.0, 40.0, 100, 0.0, 2.0);
-    th2_fpXaero = new TH2D("fpVaeroeff_should", "fpVaeroeff_should", 400, -40.0, 40.0, 100, 0.0, 2.0);
-    th2_fpXhgcer_cut = new TH2D("fpVhgcereff_did", "fpVhgcereff_did", 400, -40.0, 40.0, 100, 0.0, 2.0);
-    th2_fpXngcer_cut = new TH2D("fpVngcereff_did", "fpVngcereff_did", 400, -40.0, 40.0, 100, 0.0, 2.0);
-    th2_fpXaero_cut = new TH2D("fpVaeroeff_did", "fpVaeroeff_did", 400, -40.0, 40.0, 100, 0.0, 2.0);
+	th2_fpXhgcer = new TH2D("fpVhgcereff_should", "fpVhgcereff_should", 400, -40.0, 40.0, 100, 0.0, 35.0);
+    th2_fpXngcer = new TH2D("fpVngcereff_should", "fpVngcereff_should", 400, -40.0, 40.0, 100, 0.0, 35.0);
+    th2_fpXaero = new TH2D( "fpVaeroeff_should", "fpVaeroeff_should",   400, -40.0, 40.0, 100, 0.0, 35.0);
+    th2_fpXhgcer_cut = new TH2D("fpVhgcereff_did", "fpVhgcereff_did",   400, -40.0, 40.0, 100, 0.0, 35.0);
+    th2_fpXngcer_cut = new TH2D("fpVngcereff_did", "fpVngcereff_did",   400, -40.0, 40.0, 100, 0.0, 35.0);
+    th2_fpXaero_cut = new TH2D( "fpVaeroeff_did", "fpVaeroeff_did",     400, -40.0, 40.0, 100, 0.0, 35.0);
 
 	
 	input1 = new TFile(rootFile, "READ");
@@ -191,20 +191,20 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	
 	// do division of plots to get efficiency plots
 	Bool_t junk; // for holding return of TH1->Divide() 
-	th1_hgcer_eff = new TH1D();
-	th1_aero_eff = new TH1D();
-	th1_ngcer_eff = new TH1D();
+	th1_hgcer_eff = new TH1D("hgcer_eff", "hgcer_eff", 120, 0.0, 30.0);
+	th1_aero_eff = new TH1D("aero_eff", "aero_eff", 120, 0.0, 30.0);
+	th1_ngcer_eff = new TH1D("ngcer_eff", "ngcer_eff", 120, 0.0, 30.0);
 	junk = th1_hgcer_eff->Divide(th1_hgcerCut,th1_hgcer);
     junk = th1_ngcer_eff->Divide(th1_ngcerCut,th1_ngcer);
     junk = th1_aero_eff->Divide(th1_aeroCut,th1_aero);
     
-    th2_fpXhgcer_eff2D = new TH2D();
+    th2_fpXhgcer_eff2D = new TH2D("fpVhgcereff_2Deff", "fpVhgcereff_2Deff", 400, -40.0, 40.0, 100, 0.0, 35.0);
     junk = th2_fpXhgcer_eff2D->Divide(th2_fpXhgcer_cut, th2_fpXhgcer);
     
-    th2_fpXngcer_eff2D = new TH2D();
+    th2_fpXngcer_eff2D = new TH2D("fpVngcereff_2Deff", "fpVngcereff_2Deff", 400, -40.0, 40.0, 100, 0.0, 35.0);
     junk = th2_fpXngcer_eff2D->Divide(th2_fpXngcer_cut, th2_fpXngcer);
     
-    th2_fpXaero_eff2D = new TH2D();
+    th2_fpXaero_eff2D = new TH2D("fpVaeroeff_2Deff", "fpVaeroeff_2Deff", 400, -40.0, 40.0, 100, 0.0, 35.0);
     junk = th2_fpXaero_eff2D->Divide(th2_fpXaero_cut, th2_fpXaero);
     
     cout << "Finished making plots, saving to pdf.\n";
@@ -213,15 +213,19 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
     c1->Divide(2,2);
     
     c1->cd(1);
+    gPad->SetLogz();
     th2_aeroXhgcer->Draw("colz");
 
     c1->cd(2);
+    gPad->SetLogz();
     th2_ngcerXcal->Draw("colz");
 
     c1->cd(3);
+    gPad->SetLogz();
     th2_ngcerXhgcer->Draw("colz");
 
     c1->cd(4);
+    gPad->SetLogz();
     th2_ngcerXaero->Draw("colz");
     
     TCanvas *c2 = new TCanvas (Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
