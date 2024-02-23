@@ -237,7 +237,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
     c3->cd(1);
     th2_fpXhgcer_eff2D->Draw();
     
-    c3-.cd(2);
+    c3->cd(2);
     th2_fpXngcer_eff2D->Draw();
     
     c3->cd(3);
@@ -255,7 +255,7 @@ void plotSHMSCerEfficiency (TString pathToRootFile, Int_t runNum, int NumEventsI
     gROOT->SetBatch(1);
   	cout << "\n\n";
 
-	cout << "Running Run: '"<<runNumber<<"' for " << NumEventsInput << " Events\n";
+	cout << "Running Run: '"<<runNum<<"' for " << NumEventsInput << " Events\n";
 	
 	makePlots(pathToRootFile, runNum, NumEventsInput, cutType);
 	
