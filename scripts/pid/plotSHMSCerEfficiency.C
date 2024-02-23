@@ -79,9 +79,24 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	
 	
 	th2_aeroXhgcer = new TH2D("aeroNpeSumVhgcerNpeSum","aeroNpeSumVhgcerNpeSum", 100, 0.0, 35, 100, 0.0, 35);
+	th2_aeroXhgcer->GetXaxix()->SetNameTitle("Aerogel NPE");
+	th2_aeroXhgcer->GetYaxix()->SetNameTitle("HGC NPE");
+	th2_aeroXhgcer->SetStats(0);
+	
 	th2_ngcerXcal = new TH2D("ngcerNpeSumVP.cal.etottracknorm","ngcerNpeSumVP.cal.etottracknorm", 100, 0.0, 35, 100, 0.0, 1.6);
+	th2_ngcerXcal->GetXaxix()->SetNameTitle("NGC NPE");
+	th2_ngcerXcal->GetYaxix()->SetNameTitle("Normalized Calorimeter Energy");
+	th2_ngcerXcal->SetStats(0);
+	
 	th2_ngcerXaero = new TH2D("ngcerNpeSumVaeroNpeSum","ngcerNpeSumVaeroNpeSum", 100, 0.0, 35, 100, 0.0, 35);
+	th2_ngcerXaero->GetXaxix()->SetNameTitle("NGC NPE");
+	th2_ngcerXaero->GetYaxix()->SetNameTitle("Aerogel NPE");
+	th2_ngcerXaero->SetStats(0);
+	
 	th2_ngcerXhgcer = new TH2D("ngcerNpeSumVhgcerNpeSum","ngcerNpeSumVhgcerNpeSum", 100, 0.0, 35, 100, 0.0, 35);
+	th2_ngcerXhgcer->GetXaxix()->SetNameTitle("NGC NPE");
+	th2_ngcerXhgcer->GetYaxix()->SetNameTitle("HGC NPE");
+	th2_ngcerXhgcer->SetStats(0);
 	
 	th2_fpXhgcer = new TH2D("fpVhgcereff_should", "fpVhgcereff_should", 80, -40.0, 40.0, 80, -40.0, 40.0);
     th2_fpXngcer = new TH2D("fpVngcereff_should", "fpVngcereff_should", 80, -40.0, 40.0, 80, -40.0, 40.0);
@@ -198,20 +213,35 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	// do division of plots to get efficiency plots
 	Bool_t junk; // for holding return of TH1->Divide() 
 	th1_hgcer_eff = new TH1D("hgcer_eff", "hgcer_eff", 120, -30.0, 30.0);
+	th1_hgcer_eff->GetXaxix()->SetNameTitle("#delta");
+	th1_hgcer_eff->GetYaxix()->SetNameTitle("Efficiency");
 	th1_aero_eff = new TH1D("aero_eff", "aero_eff", 120, -30.0, 30.0);
+	th1_aero_eff->GetXaxix()->SetNameTitle("#delta");
+	th1_aero_eff->GetYaxix()->SetNameTitle("Efficiency");
 	th1_ngcer_eff = new TH1D("ngcer_eff", "ngcer_eff", 120, -30.0, 30.0);
+	th1_ngcer_eff->GetXaxix()->SetNameTitle("#delta");
+	th1_ngcer_eff->GetYaxix()->SetNameTitle("Efficiency");
 	junk = th1_hgcer_eff->Divide(th1_hgcerCut,th1_hgcer);
     junk = th1_ngcer_eff->Divide(th1_ngcerCut,th1_ngcer);
     junk = th1_aero_eff->Divide(th1_aeroCut,th1_aero);
     
     th2_fpXhgcer_eff2D = new TH2D("fpVhgcereff_2Deff", "fpVhgcereff_2Deff", 80, -40.0, 40.0, 80, -40.0, 40.0);
     junk = th2_fpXhgcer_eff2D->Divide(th2_fpXhgcer_cut, th2_fpXhgcer);
+    th2_fpXhgcer_eff2D->GetXaxix()->SetNameTitle("Focal Plane X");
+    th2_fpXhgcer_eff2D->GetYaxix()->SetNameTitle("Focal Plane Y");
+    th2_fpXhgcer_eff2D->SetStats(0);
     
     th2_fpXngcer_eff2D = new TH2D("fpVngcereff_2Deff", "fpVngcereff_2Deff", 80, -40.0, 40.0, 80, -40.0, 40.0);
     junk = th2_fpXngcer_eff2D->Divide(th2_fpXngcer_cut, th2_fpXngcer);
+    th2_fpXngcer_eff2D->GetXaxix()->SetNameTitle("Focal Plane X");
+    th2_fpXngcer_eff2D->GetYaxix()->SetNameTitle("Focal Plane Y");
+    th2_fpXngcer_eff2D->SetStats(0);
     
     th2_fpXaero_eff2D = new TH2D("fpVaeroeff_2Deff", "fpVaeroeff_2Deff", 80, -40.0, 40.0, 80, -40.0, 40.0);
     junk = th2_fpXaero_eff2D->Divide(th2_fpXaero_cut, th2_fpXaero);
+    th2_fpXaero_eff2D->GetXaxix()->SetNameTitle("Focal Plane X");
+    th2_fpXaero_eff2D->GetYaxix()->SetNameTitle("Focal Plane Y");
+    th2_fpXaero_eff2D->SetStats(0);
     
     cout << "Finished making plots, saving to pdf.\n";
     //make and print canvas output to pdf
