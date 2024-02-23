@@ -31,10 +31,8 @@
 #include <TF1.h>
 
 //Files and containers and histograms
-TFile *Outfile;
-TFile *input1, *input2;
-TTree *tree1, *tree2;
-TDirectory *betaDir, *cutsDir; 
+TFile *input1;
+TTree *tree1;
 
 //Cut Names
 string cutNames[4] = {"Electron", "Pion", "Kaon", "Proton"};
@@ -209,21 +207,22 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
     th2_fpXaero_eff2D = new TH2D();
     junk = th2_fpXaero_eff2D->Divide(th2_fpXaero_cut, th2_fpXaero);
     
+    cout << "Finished making plots, saving to pdf.\n";
     //make and print canvas output to pdf
     TCanvas *c1 = new TCanvas (Form("SHMS_%s_PID_Plots_%d", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_PID_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
     c1->Divide(2,2);
     
     c1->cd(1);
-    th2_aeroXhgcer->Draw();
+    th2_aeroXhgcer->Draw("colz");
 
     c1->cd(2);
-    th2_ngcerXcal->Draw();
+    th2_ngcerXcal->Draw("colz");
 
     c1->cd(3);
-    th2_ngcerXhgcer->Draw();
+    th2_ngcerXhgcer->Draw("colz");
 
     c1->cd(4);
-    th2_ngcerXaero->Draw();
+    th2_ngcerXaero->Draw("colz");
     
     TCanvas *c2 = new TCanvas (Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
     c2->Divide(1,3);
@@ -239,13 +238,13 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
     TCanvas *c3 = new TCanvas (Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
     c3->Divide(1,3);
     c3->cd(1);
-    th2_fpXhgcer_eff2D->Draw();
+    th2_fpXhgcer_eff2D->Draw("colz");
     
     c3->cd(2);
-    th2_fpXngcer_eff2D->Draw();
+    th2_fpXngcer_eff2D->Draw("colz");
     
     c3->cd(3);
-    th2_fpXaero_eff2D->Draw();
+    th2_fpXaero_eff2D->Draw("colz");
     
     c1->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf(", cutNames[cutType].c_str(), runNum));
     c2->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf", cutNames[cutType].c_str(), runNum));
@@ -263,7 +262,6 @@ void plotSHMSCerEfficiency (TString pathToRootFile, Int_t runNum, int NumEventsI
 	
 	makePlots(pathToRootFile, runNum, NumEventsInput, cutType);
 	
-	Outfile->Close();
 	return;
     
 }
