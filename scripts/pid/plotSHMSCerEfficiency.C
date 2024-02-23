@@ -239,7 +239,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
         
         cout << "Error in bin: " << th1_hgcer_eff->GetBinError(i) << ", Calculated Error: " << err << '\n';
         
-        th1_hgcer_eff->setBinError(i , err);
+        th1_hgcer_eff->SetBinError(i , err);
     }
     
     
