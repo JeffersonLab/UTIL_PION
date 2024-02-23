@@ -43,7 +43,7 @@ string cutNames[4] = {"Electron", "Pion", "Kaon", "Proton"};
 TH1D *th1_cal, *th1_calCut, *th1_hgcer, *th1_hgcerCut, *th1_aero, *th1_aeroCut, *th1_ngcer, *th1_ngcerCut;
 TH1D *th1_cal_eff, *th1_hgcer_eff, *th1_aero_eff, *th1_ngcer_eff;
 
-TH2D *th2_aeroXhgcer, *th2_calXngcer, *th2_ngcerXaero, *th2_ngcerXhgcer;
+TH2D *th2_aeroXhgcer, *th2_ngcerXcal, *th2_ngcerXaero, *th2_ngcerXhgcer;
 
 TH2D *th2_fpXhgcer, *th2_fpXngcer, *th2_fpXaero;
 TH2D *th2_fpXhgcer_cut, *th2_fpXngcer_cut, *th2_fpXaero_cut;
@@ -77,10 +77,10 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	th1_aeroCut = new TH1D("aeroDid", "aeroDid", 120, 0.0, 30.0);
 	
 	
-	th2_aeroXhgcer = new TH2D("aeroNpeSumVhgcerNpeSum","aeroNpeSumVhgcerNpeSum", 50, 0.0, 50, 50, 0.0, 50)
-	th2_ngcerXcal = new TH2D("ngcerNpeSumVP.cal.etottracknorm","ngcerNpeSumVP.cal.etottracknorm", 50, 0.0, 50, 100, 0.0, 1.6)
-	th2_ngcerXaero = new TH2D("ngcerNpeSumVaeroNpeSum","ngcerNpeSumVaeroNpeSum", 50, 0.0, 50, 50, 0.0, 50)
-	th2_ngcerXhgcer = new TH2D("ngcerNpeSumVhgcerNpeSum","ngcerNpeSumVhgcerNpeSum", 50, 0.0, 50, 50, 0.0, 50)
+	th2_aeroXhgcer = new TH2D("aeroNpeSumVhgcerNpeSum","aeroNpeSumVhgcerNpeSum", 50, 0.0, 50, 50, 0.0, 50);
+	th2_ngcerXcal = new TH2D("ngcerNpeSumVP.cal.etottracknorm","ngcerNpeSumVP.cal.etottracknorm", 50, 0.0, 50, 100, 0.0, 1.6);
+	th2_ngcerXaero = new TH2D("ngcerNpeSumVaeroNpeSum","ngcerNpeSumVaeroNpeSum", 50, 0.0, 50, 50, 0.0, 50);
+	th2_ngcerXhgcer = new TH2D("ngcerNpeSumVhgcerNpeSum","ngcerNpeSumVhgcerNpeSum", 50, 0.0, 50, 50, 0.0, 50);
 	
 	th2_fpXhgcer = new TH2D("fpVhgcereff_should", "fpVhgcereff_should", 400, -40.0, 40.0, 100, 0.0, 2.0);
     th2_fpXngcer = new TH2D("fpVngcereff_should", "fpVngcereff_should", 400, -40.0, 40.0, 100, 0.0, 2.0);
@@ -221,31 +221,31 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
     c1->cd(4);
     th2_ngcerXaero->Draw();
     
-    TCanvas *c2 = new TCanvas (Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutTypes].c_str(), runNum), Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutTypes].c_str(), runNum), 2400, 2400);
+    TCanvas *c2 = new TCanvas (Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
     c2->Divide(1,3);
-    c2-cd(1);
-    th1_hgcer_eff->draw();
+    c2->cd(1);
+    th1_hgcer_eff->Draw();
     
-    c2-cd(2);
-    th1_ngcer_eff->draw();
+    c2->cd(2);
+    th1_ngcer_eff->Draw();
     
-    c2-cd(3);
-    th1_aero_eff->draw();
+    c2->cd(3);
+    th1_aero_eff->Draw();
     
-    TCanvas *c3 = new TCanvas (Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutTypes].c_str(), runNum), Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutTypes].c_str(), runNum), 2400, 2400);
+    TCanvas *c3 = new TCanvas (Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
     c3->Divide(1,3);
-    c3-cd(1);
+    c3->cd(1);
     th2_fpXhgcer_eff2D->Draw();
     
-    c3-cd(2);
+    c3-.cd(2);
     th2_fpXngcer_eff2D->Draw();
     
-    c3-cd(3);
+    c3->cd(3);
     th2_fpXaero_eff2D->Draw();
     
-    c1->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf(", runNum));
-    c2->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf", runNum));
-    c3->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf)", runNum));
+    c1->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf(", cutNames[cutType].c_str(), runNum));
+    c2->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf", cutNames[cutType].c_str(), runNum));
+    c3->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf)", cutNames[cutType].c_str(), runNum));
 
     return;
 }
