@@ -75,6 +75,8 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	th1_hgcerCut = new TH1D("hgcerDid", "hgcerDid", 120, 0.0, 30.0);
 	th1_aero = new TH1D("aeroShould", "aeroShould", 120, 0.0, 30.0);
 	th1_aeroCut = new TH1D("aeroDid", "aeroDid", 120, 0.0, 30.0);
+	th1_ngcer = new TH1D("aeroShould", "aeroShould", 120, 0.0, 30.0);
+	th1_ngcerCut = new TH1D("aeroDid", "aeroDid", 120, 0.0, 30.0);
 	
 	
 	th2_aeroXhgcer = new TH2D("aeroNpeSumVhgcerNpeSum","aeroNpeSumVhgcerNpeSum", 50, 0.0, 50, 50, 0.0, 50);
@@ -121,6 +123,8 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	for(Int_t iEntry = 0; iEntry < nEntries; iEntry++)
 	{
 		tree1->GetEntry(iEntry);
+		if (iEntry % 10000 == 0) cout << iEntry << endl;
+		
         if(true) //Acceptance cut
         {
             // Fill 2D PID plots
