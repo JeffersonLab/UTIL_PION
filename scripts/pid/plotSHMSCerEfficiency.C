@@ -222,9 +222,26 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	th1_ngcer_eff = new TH1D("ngcer_eff", "ngcer_eff", 120, -30.0, 30.0);
 	th1_ngcer_eff->GetXaxis()->SetNameTitle("#delta","#delta");
 	th1_ngcer_eff->GetYaxis()->SetNameTitle("Efficiency","Efficiency");
+	
 	junk = th1_hgcer_eff->Divide(th1_hgcerCut,th1_hgcer);
     junk = th1_ngcer_eff->Divide(th1_ngcerCut,th1_ngcer);
     junk = th1_aero_eff->Divide(th1_aeroCut,th1_aero);
+    
+    //calculate binamial errors manually
+    Int_t BINS = th1_hgcer_eff->GetNbinsX();
+    Double_t should, did, err;
+    for(int i = 0; i < BINS; i++)
+    {
+        should = th1_hgcer->GetBinContent(i);
+        did = th1_hgcerCut->GetBinContent(i);
+        
+        err = TMath::Sqrt(((did*should) - (did*did))/(should*should*should));
+        
+        cout << "Error in bin: " << th1_hgcer_eff->GetBinError(i) << ", Calculated Error: " << err << '\n';
+        
+        th1_hgcer_eff->setBinError(i , err);
+    }
+    
     
     th2_fpXhgcer_eff2D = new TH2D("fpVhgcereff_2Deff", "fpVhgcereff_2Deff", 80, -40.0, 40.0, 80, -40.0, 40.0);
     junk = th2_fpXhgcer_eff2D->Divide(th2_fpXhgcer_cut, th2_fpXhgcer);
