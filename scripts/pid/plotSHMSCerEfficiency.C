@@ -215,6 +215,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	th1_hgcer_eff = new TH1D("hgcer_eff", "hgcer_eff", 120, -30.0, 30.0);
 	th1_hgcer_eff->GetXaxix()->SetNameTitle("#delta");
 	th1_hgcer_eff->GetYaxix()->SetNameTitle("Efficiency");
+	
 	th1_aero_eff = new TH1D("aero_eff", "aero_eff", 120, -30.0, 30.0);
 	th1_aero_eff->GetXaxix()->SetNameTitle("#delta");
 	th1_aero_eff->GetYaxix()->SetNameTitle("Efficiency");
@@ -267,13 +268,13 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
     TCanvas *c2 = new TCanvas (Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
     c2->Divide(1,3);
     c2->cd(1);
-    th1_hgcer_eff->Draw();
+    th1_hgcer_eff->Draw("E0");
     
     c2->cd(2);
-    th1_ngcer_eff->Draw();
+    th1_ngcer_eff->Draw("E0E1");
     
     c2->cd(3);
-    th1_aero_eff->Draw();
+    th1_aero_eff->Draw("E0E2");
     
     TCanvas *c3 = new TCanvas (Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
     c3->Divide(1,3);
