@@ -51,7 +51,7 @@ TH3D *th3_fpXhgcer_eff, *th3_fpXngcer_eff, *th3_fpXaero_eff;
 TH2D *th2_fpXhgcer_eff2D, *th2_fpXngcer_eff2D, *th2_fpXaero_eff2D;
 
 //variables for cutting trees and plotting
-Double_t calEtot, hgcerNpeSum, aeroNpeSum, ngcerNpeSum;
+Double_t delta, calEtot, hgcerNpeSum, aeroNpeSum, ngcerNpeSum;
 Double_t xfp, yfp;
 
 //cuts
@@ -77,10 +77,10 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	th1_aeroCut = new TH1D("aeroDid", "aeroDid", 120, 0.0, 30.0);
 	
 	
-	th2_aeroXhgcer = new TH1D("aeroNpeSumVhgcerNpeSum","aeroNpeSumVhgcerNpeSum", 50, 0.0, 50, 50, 0.0, 50)
-	th2_ngcerXcal = new TH1D("ngcerNpeSumVP.cal.etottracknorm","ngcerNpeSumVP.cal.etottracknorm", 50, 0.0, 50, 100, 0.0, 1.6)
-	th2_ngcerXaero = new TH1D("ngcerNpeSumVaeroNpeSum","ngcerNpeSumVaeroNpeSum", 50, 0.0, 50, 50, 0.0, 50)
-	th2_ngcerXhgcer = new TH1D("ngcerNpeSumVhgcerNpeSum","ngcerNpeSumVhgcerNpeSum", 50, 0.0, 50, 50, 0.0, 50)
+	th2_aeroXhgcer = new TH2D("aeroNpeSumVhgcerNpeSum","aeroNpeSumVhgcerNpeSum", 50, 0.0, 50, 50, 0.0, 50)
+	th2_ngcerXcal = new TH2D("ngcerNpeSumVP.cal.etottracknorm","ngcerNpeSumVP.cal.etottracknorm", 50, 0.0, 50, 100, 0.0, 1.6)
+	th2_ngcerXaero = new TH2D("ngcerNpeSumVaeroNpeSum","ngcerNpeSumVaeroNpeSum", 50, 0.0, 50, 50, 0.0, 50)
+	th2_ngcerXhgcer = new TH2D("ngcerNpeSumVhgcerNpeSum","ngcerNpeSumVhgcerNpeSum", 50, 0.0, 50, 50, 0.0, 50)
 	
 	th2_fpXhgcer = new TH2D("fpVhgcereff_should", "fpVhgcereff_should", 400, -40.0, 40.0, 100, 0.0, 2.0);
     th2_fpXngcer = new TH2D("fpVngcereff_should", "fpVngcereff_should", 400, -40.0, 40.0, 100, 0.0, 2.0);
@@ -95,7 +95,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	
 	if(!input1)
 	{
-		cout << "File not open properly!\nTried to open:\n     " << rootFile1 << "\nand: " << rootFile2;
+		cout << "File not open properly!\nTried to open:\n     " << rootFile;
 		return;
 	}
 	
@@ -123,11 +123,11 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 		tree1->GetEntry(iEntry);
         if(true) //Acceptance cut
         {
-            // fill 2D PID plots
-            th2_aeroXhgcer->fill(aeroNpeSum, hgcerNpeSum);
-            th2_ngcerXcal->fill(ngcerNpeSum, calEtot);
-            th2_ngcerXaero->fill(ngcerNpeSum, aeroNpeSum);
-            th2_ngcerXhgcer->fill(ngcerNpeSum, hgcerNpeSum);
+            // Fill 2D PID plots
+            th2_aeroXhgcer->Fill(aeroNpeSum, hgcerNpeSum);
+            th2_ngcerXcal->Fill(ngcerNpeSum, calEtot);
+            th2_ngcerXaero->Fill(ngcerNpeSum, aeroNpeSum);
+            th2_ngcerXhgcer->Fill(ngcerNpeSum, hgcerNpeSum);
         
             if(cutType == 0) // electron
             {
@@ -206,22 +206,22 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
     junk = th2_fpXaero_eff2D->Divide(th2_fpXaero_cut, th2_fpXaero);
     
     //make and print canvas output to pdf
-    TCanvas *c1 = new TCanvas (Form("SHMS_%s_PID_Plots_%d", cutNames[cutType], runNum), Form("SHMS_%s_PID_Plots_%d", cutNames[cutType], runNum), 2400, 2400);
+    TCanvas *c1 = new TCanvas (Form("SHMS_%s_PID_Plots_%d", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_PID_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
     c1->Divide(2,2);
     
     c1->cd(1);
-    th2_aeroXhgcer-Draw();
+    th2_aeroXhgcer->Draw();
 
     c1->cd(2);
-    th2_ngcerXcal-Draw();
+    th2_ngcerXcal->Draw();
 
     c1->cd(3);
-    th2_ngcerXhgcer-Draw();
+    th2_ngcerXhgcer->Draw();
 
     c1->cd(4);
-    th2_ngcerXaero-Draw();
+    th2_ngcerXaero->Draw();
     
-    TCanvas *c2 = new TCanvas (Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutTypes], runNum), Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutTypes], runNum), 2400, 2400);
+    TCanvas *c2 = new TCanvas (Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutTypes].c_str(), runNum), Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutTypes].c_str(), runNum), 2400, 2400);
     c2->Divide(1,3);
     c2-cd(1);
     th1_hgcer_eff->draw();
@@ -232,7 +232,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
     c2-cd(3);
     th1_aero_eff->draw();
     
-    TCanvas *c3 = new TCanvas (Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutTypes], runNum), Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutTypes], runNum), 2400, 2400);
+    TCanvas *c3 = new TCanvas (Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutTypes].c_str(), runNum), Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutTypes].c_str(), runNum), 2400, 2400);
     c3->Divide(1,3);
     c3-cd(1);
     th2_fpXhgcer_eff2D->Draw();
