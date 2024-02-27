@@ -294,12 +294,12 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 
     //auto set axis ranges
     cout << "th1_hgcer_eff->GetBinContent(th1_hgcer_eff->GetMaximumBin())" << th1_hgcer_eff->GetBinContent(th1_hgcer_eff->GetMaximumBin()) << '\n';
-    th1_hgcer_eff->SetMinimum(0.8*(th1_hgcer_eff->GetBinContent(th1_hgcer_eff->GetMaximumBin())));
-	th1_hgcer_eff->SetMaximum(1.2*(th1_hgcer_eff->GetBinContent(th1_hgcer_eff->GetMinimumBin())));
-	th1_ngcer_eff->SetMinimum(0.8*(th1_ngcer_eff->GetBinContent(th1_ngcer_eff->GetMaximumBin())));
-	th1_ngcer_eff->SetMaximum(1.2*(th1_ngcer_eff->GetBinContent(th1_ngcer_eff->GetMinimumBin())));
-	th1_aero_eff->SetMinimum(0.8*(th1_aero_eff->GetBinContent(th1_aero_eff->GetMaximumBin())));
-	th1_aero_eff->SetMaximum(1.2*(th1_aero_eff->GetBinContent(th1_aero_eff->GetMinimumBin())));    
+    th1_hgcer_eff->SetMinimum(0.8*(th1_hgcer_eff->GetBinContent(th1_hgcer_eff->GetMinimumBin())));
+	th1_hgcer_eff->SetMaximum(1.2*(th1_hgcer_eff->GetBinContent(th1_hgcer_eff->GetMaximumBin())));
+	th1_ngcer_eff->SetMinimum(0.8*(th1_ngcer_eff->GetBinContent(th1_ngcer_eff->GetMinimumBin())));
+	th1_ngcer_eff->SetMaximum(1.2*(th1_ngcer_eff->GetBinContent(th1_ngcer_eff->GetMaximumBin())));
+	th1_aero_eff->SetMinimum(0.8*(th1_aero_eff->GetBinContent(th1_aero_eff->GetMinimumBin())));
+	th1_aero_eff->SetMaximum(1.2*(th1_aero_eff->GetBinContent(th1_aero_eff->GetMaximumBin())));    
     
     th2_fpXhgcer_eff2D = new TH2D("fpVhgcereff_2Deff", "fpVhgcereff_2Deff", 80, -40.0, 40.0, 80, -40.0, 40.0);
     junk = th2_fpXhgcer_eff2D->Divide(th2_fpXhgcer_cut, th2_fpXhgcer);
