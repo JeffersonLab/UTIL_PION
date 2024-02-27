@@ -320,50 +320,51 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
     
     cout << "Finished making plots, saving to pdf.\n";
     //make and print canvas output to pdf
-    TCanvas *c1 = new TCanvas (Form("SHMS_%s_PID_Plots_%d", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_PID_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
-    c1->Divide(2,2);
-    
-    c1->cd(1);
+    TCanvas *c1_1 = new TCanvas (Form("SHMS_%s_PID_Plots_%d_1", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_PID_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
     gPad->SetLogz();
     th2_aeroXhgcer->Draw("colz");
 
-    c1->cd(2);
+    TCanvas *c1_2 = new TCanvas (Form("SHMS_%s_PID_Plots_%d_2", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_PID_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
     gPad->SetLogz();
     th2_ngcerXcal->Draw("colz");
 
-    c1->cd(3);
+    TCanvas *c1_3 = new TCanvas (Form("SHMS_%s_PID_Plots_%d_3", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_PID_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
     gPad->SetLogz();
     th2_ngcerXhgcer->Draw("colz");
 
-    c1->cd(4);
+    TCanvas *c1_4 = new TCanvas (Form("SHMS_%s_PID_Plots_%d_4", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_PID_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
     gPad->SetLogz();
     th2_ngcerXaero->Draw("colz");
     
-    TCanvas *c2 = new TCanvas (Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
-    c2->Divide(1,3);
-    c2->cd(1);
+    TCanvas *c2_1 = new TCanvas (Form("SHMS_%s_EffvDelta_Plots_%d_1", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
     th1_hgcer_eff->Draw("E0");
     
-    c2->cd(2);
+    TCanvas *c2_2 = new TCanvas (Form("SHMS_%s_EffvDelta_Plots_%d_2", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
     th1_ngcer_eff->Draw("E0");
     
-    c2->cd(3);
+    TCanvas *c2_3 = new TCanvas (Form("SHMS_%s_EffvDelta_Plots_%d_3", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
     th1_aero_eff->Draw("E0");
     
-    TCanvas *c3 = new TCanvas (Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
-    c3->Divide(1,3);
-    c3->cd(1);
+    TCanvas *c3_1 = new TCanvas (Form("SHMS_%s_2DEff_Plots_%d_1", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
     th2_fpXhgcer_eff2D->Draw("colz");
     
-    c3->cd(2);
+    TCanvas *c3_2 = new TCanvas (Form("SHMS_%s_2DEff_Plots_%d_2", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
     th2_fpXngcer_eff2D->Draw("colz");
     
-    c3->cd(3);
+    TCanvas *c3_3 = new TCanvas (Form("SHMS_%s_2DEff_Plots_%d_3", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutType].c_str(), runNum), 2400, 2400);
     th2_fpXaero_eff2D->Draw("colz");
     
-    c1->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf(", cutNames[cutType].c_str(), runNum));
-    c2->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf", cutNames[cutType].c_str(), runNum));
-    c3->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf)", cutNames[cutType].c_str(), runNum));
+    c1_1->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf(", cutNames[cutType].c_str(), runNum));
+    c1_2->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf", cutNames[cutType].c_str(), runNum));
+    c1_3->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf", cutNames[cutType].c_str(), runNum));
+    c1_4->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf", cutNames[cutType].c_str(), runNum));
+    c2_1->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf", cutNames[cutType].c_str(), runNum));
+    c2_2->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf", cutNames[cutType].c_str(), runNum));
+    c2_3->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf", cutNames[cutType].c_str(), runNum));
+    c2_4->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf", cutNames[cutType].c_str(), runNum));
+    c3_1->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf", cutNames[cutType].c_str(), runNum));
+    c3_2->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf", cutNames[cutType].c_str(), runNum));
+    c3_3->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf)", cutNames[cutType].c_str(), runNum));
 
     return;
 }
