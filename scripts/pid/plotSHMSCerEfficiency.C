@@ -293,6 +293,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
     }
 
     //auto set axis ranges
+    cout << "th1_hgcer_eff->GetBinContent(th1_hgcer_eff->GetMaximumBin())" << th1_hgcer_eff->GetBinContent(th1_hgcer_eff->GetMaximumBin()) << '\n';
     th1_hgcer_eff->SetMinimum(0.8*(th1_hgcer_eff->GetBinContent(th1_hgcer_eff->GetMaximumBin())));
 	th1_hgcer_eff->SetMaximum(1.2*(th1_hgcer_eff->GetBinContent(th1_hgcer_eff->GetMinimumBin())));
 	th1_ngcer_eff->SetMinimum(0.8*(th1_ngcer_eff->GetBinContent(th1_ngcer_eff->GetMaximumBin())));
