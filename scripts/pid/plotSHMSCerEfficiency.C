@@ -69,9 +69,9 @@ Int_t NumEvents = -1;
 void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType ) 
 {
     gStyle->SetOptTitle(0);
-    gStyle->SetLabelSize(0.8,"X");
-    gStyle->SetLabelSize(0.8,"Y");
-    gStyle->SetLabelSize(0.8,"Z");
+    gStyle->SetLabelSize(0.08,"X");
+    gStyle->SetLabelSize(0.08,"Y");
+    gStyle->SetLabelSize(0.08,"Z");
     // make empty histograms	
 	th1_hgcer = new TH1D("hgcerShould", "hgcerShould", 120, -10.0, 20.0);
 	th1_hgcerCut = new TH1D("hgcerDid", "hgcerDid", 120, -10.0, 20.0);
@@ -293,12 +293,12 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
     }
 
     //auto set axis ranges
-    th1_hgcer_eff->SetMinimum(0.9*(th1_hgcer_eff->GetBinContent(th1_hgcer_eff->GetMaximumBin())-th1_hgcer_eff->GetBinError(th1_hgcer_eff->GetMaximumBin())));
-	th1_hgcer_eff->SetMaximum(1.1*(th1_hgcer_eff->GetBinContent(th1_hgcer_eff->GetMinimumBin())+th1_hgcer_eff->GetBinError(th1_hgcer_eff->GetMinimumBin())));
-	th1_ngcer_eff->SetMinimum(0.9*(th1_ngcer_eff->GetBinContent(th1_ngcer_eff->GetMaximumBin())-th1_ngcer_eff->GetBinError(th1_ngcer_eff->GetMaximumBin())));
-	th1_ngcer_eff->SetMaximum(1.1*(th1_ngcer_eff->GetBinContent(th1_ngcer_eff->GetMinimumBin())+th1_ngcer_eff->GetBinError(th1_ngcer_eff->GetMinimumBin())));
-	th1_aero_eff->SetMinimum(0.9*(th1_aero_eff->GetBinContent(th1_aero_eff->GetMaximumBin())-th1_aero_eff->GetBinError(th1_aero_eff->GetMaximumBin())));
-	th1_aero_eff->SetMaximum(1.1*(th1_aero_eff->GetBinContent(th1_aero_eff->GetMinimumBin())+th1_aero_eff->GetBinError(th1_aero_eff->GetMinimumBin())));    
+    th1_hgcer_eff->SetMinimum(0.8*(th1_hgcer_eff->GetBinContent(th1_hgcer_eff->GetMaximumBin())));
+	th1_hgcer_eff->SetMaximum(1.2*(th1_hgcer_eff->GetBinContent(th1_hgcer_eff->GetMinimumBin())));
+	th1_ngcer_eff->SetMinimum(0.8*(th1_ngcer_eff->GetBinContent(th1_ngcer_eff->GetMaximumBin())));
+	th1_ngcer_eff->SetMaximum(1.2*(th1_ngcer_eff->GetBinContent(th1_ngcer_eff->GetMinimumBin())));
+	th1_aero_eff->SetMinimum(0.8*(th1_aero_eff->GetBinContent(th1_aero_eff->GetMaximumBin())));
+	th1_aero_eff->SetMaximum(1.2*(th1_aero_eff->GetBinContent(th1_aero_eff->GetMinimumBin())));    
     
     th2_fpXhgcer_eff2D = new TH2D("fpVhgcereff_2Deff", "fpVhgcereff_2Deff", 80, -40.0, 40.0, 80, -40.0, 40.0);
     junk = th2_fpXhgcer_eff2D->Divide(th2_fpXhgcer_cut, th2_fpXhgcer);
