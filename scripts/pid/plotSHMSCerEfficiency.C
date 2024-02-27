@@ -68,14 +68,17 @@ Int_t NumEvents = -1;
 
 void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType ) 
 {
-
+    gStyle->SetOptTitle(0);
+    gStyle->SetLabelSize(0.8,"X");
+    gStyle->SetLabelSize(0.8,"Y");
+    gStyle->SetLabelSize(0.8,"Z");
     // make empty histograms	
-	th1_hgcer = new TH1D("hgcerShould", "hgcerShould", 120, -16.0, 26.0);
-	th1_hgcerCut = new TH1D("hgcerDid", "hgcerDid", 120, -16.0, 26.0);
-	th1_aero = new TH1D("aeroShould", "aeroShould", 120, -16.0, 26.0);
-	th1_aeroCut = new TH1D("aeroDid", "aeroDid", 120, -16.0, 26.0);
-	th1_ngcer = new TH1D("aeroShould", "aeroShould", 120, -16.0, 26.0);
-	th1_ngcerCut = new TH1D("aeroDid", "aeroDid", 120, -16.0, 26.0);
+	th1_hgcer = new TH1D("hgcerShould", "hgcerShould", 120, -10.0, 20.0);
+	th1_hgcerCut = new TH1D("hgcerDid", "hgcerDid", 120, -10.0, 20.0);
+	th1_aero = new TH1D("aeroShould", "aeroShould", 120, -10.0, 20.0);
+	th1_aeroCut = new TH1D("aeroDid", "aeroDid", 120, -10.0, 20.0);
+	th1_ngcer = new TH1D("aeroShould", "aeroShould", 120, -10.0, 20.0);
+	th1_ngcerCut = new TH1D("aeroDid", "aeroDid", 120, -10.0, 20.0);
 	
 	
 	th2_aeroXhgcer = new TH2D("aeroNpeSumVhgcerNpeSum","aeroNpeSumVhgcerNpeSum", 100, 0.0, 35, 100, 0.0, 35);
@@ -144,13 +147,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
         if((dc_ntrack > 0) & (InsideDipoleExit == 1) & (goodStartTime == 1) ) //basic Cuts
         {
             fpcut = (delta < 25.0) && (delta > -15.5);
-            // Fill 2D PID plots
-            if(fpcut){
-                th2_aeroXhgcer->Fill(aeroNpeSum, hgcerNpeSum);
-                th2_ngcerXcal->Fill(ngcerNpeSum, calEtot);
-                th2_ngcerXaero->Fill(ngcerNpeSum, aeroNpeSum);
-                th2_ngcerXhgcer->Fill(ngcerNpeSum, hgcerNpeSum);
-            }
+            
         
             if(cutType == 0) // electron
             {
@@ -177,6 +174,16 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
                 aeroCut = aeroNpeSumLow > aeroNpeSum;
                 ngcerCut = ngcerNpeSumLow > ngcerNpeSum;
             }
+            
+            // Fill 2D PID plots
+            if(fpcut){
+                th2_aeroXhgcer->Fill(aeroNpeSum, hgcerNpeSum);
+                th2_ngcerXaero->Fill(ngcerNpeSum, aeroNpeSum);
+                th2_ngcerXhgcer->Fill(ngcerNpeSum, hgcerNpeSum);
+            }
+            
+            if (fpcut & hgcerCut & aeroCut) th2_ngcerXcal->Fill(ngcerNpeSum, calEtot);
+            
             if (calCut & aeroCut & ngcerCut & fpcut) // should for hgcer
             {
                 th1_hgcer->Fill(delta);
@@ -212,17 +219,17 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	
 	// do division of plots to get efficiency plots
 	Bool_t junk; // for holding return of TH1->Divide() 
-	th1_hgcer_eff = new TH1D("hgcer_eff", "hgcer_eff", 120, -16.0, 26.0);
+	th1_hgcer_eff = new TH1D("hgcer_eff", "hgcer_eff", 120, -10.0, 20.0);
 	th1_hgcer_eff->GetXaxis()->SetNameTitle("#delta","#delta");
 	th1_hgcer_eff->GetYaxis()->SetNameTitle("Efficiency","Efficiency");
 	th1_hgcer_eff->SetStats(0);
 	
-	th1_aero_eff = new TH1D("aero_eff", "aero_eff", 120, -16.0, 26.0);
+	th1_aero_eff = new TH1D("aero_eff", "aero_eff", 120, -10.0, 20.0);
 	th1_aero_eff->GetXaxis()->SetNameTitle("#delta","#delta");
 	th1_aero_eff->GetYaxis()->SetNameTitle("Efficiency","Efficiency");
 	th1_aero_eff->SetStats(0);
 	
-	th1_ngcer_eff = new TH1D("ngcer_eff", "ngcer_eff", 120, -16.0, 26.0);
+	th1_ngcer_eff = new TH1D("ngcer_eff", "ngcer_eff", 120, -10.0, 20.0);
 	th1_ngcer_eff->GetXaxis()->SetNameTitle("#delta","#delta");
 	th1_ngcer_eff->GetYaxis()->SetNameTitle("Efficiency","Efficiency");
 	th1_ngcer_eff->SetStats(0);
@@ -285,13 +292,14 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
         th1_aero_eff->SetBinError(i , err);
     }
 
-    /*	th1_hgcer_eff->SetMinimum(0.6);
-	th1_hgcer_eff->SetMaximum(1.2);
-	th1_ngcer_eff->SetMinimum(0.6);
-	th1_ngcer_eff->SetMaximum(1.2);
-	th1_aero_eff->SetMinimum(0.6);
-	th1_aero_eff->SetMaximum(1.2);    
-    */
+    //auto set axis ranges
+    th1_hgcer_eff->SetMinimum(0.9*(th1_hgcer_eff->GetBinContent(th1_hgcer_eff->GetMaximumBin())-th1_hgcer_eff->GetBinError(th1_hgcer_eff->GetMaximumBin())));
+	th1_hgcer_eff->SetMaximum(1.1*(th1_hgcer_eff->GetBinContent(th1_hgcer_eff->GetMinimumBin())+th1_hgcer_eff->GetBinError(th1_hgcer_eff->GetMinimumBin())));
+	th1_ngcer_eff->SetMinimum(0.9*(th1_ngcer_eff->GetBinContent(th1_ngcer_eff->GetMaximumBin())-th1_ngcer_eff->GetBinError(th1_ngcer_eff->GetMaximumBin())));
+	th1_ngcer_eff->SetMaximum(1.1*(th1_ngcer_eff->GetBinContent(th1_ngcer_eff->GetMinimumBin())+th1_ngcer_eff->GetBinError(th1_ngcer_eff->GetMinimumBin())));
+	th1_aero_eff->SetMinimum(0.9*(th1_aero_eff->GetBinContent(th1_aero_eff->GetMaximumBin())-th1_aero_eff->GetBinError(th1_aero_eff->GetMaximumBin())));
+	th1_aero_eff->SetMaximum(1.1*(th1_aero_eff->GetBinContent(th1_aero_eff->GetMinimumBin())+th1_aero_eff->GetBinError(th1_aero_eff->GetMinimumBin())));    
+    
     th2_fpXhgcer_eff2D = new TH2D("fpVhgcereff_2Deff", "fpVhgcereff_2Deff", 80, -40.0, 40.0, 80, -40.0, 40.0);
     junk = th2_fpXhgcer_eff2D->Divide(th2_fpXhgcer_cut, th2_fpXhgcer);
     th2_fpXhgcer_eff2D->GetXaxis()->SetNameTitle("Focal Plane X","Focal Plane X");
