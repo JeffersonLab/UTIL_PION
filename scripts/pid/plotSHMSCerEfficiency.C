@@ -310,20 +310,20 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
     
     th2_fpXhgcer_eff2D = new TH2D("fpVhgcereff_2Deff", "fpVhgcereff_2Deff", 80, -40.0, 40.0, 80, -40.0, 40.0);
     junk = th2_fpXhgcer_eff2D->Divide(th2_fpXhgcer_cut, th2_fpXhgcer);
-    th2_fpXhgcer_eff2D->GetXaxis()->SetNameTitle("Focal Plane X","Focal Plane X");
-    th2_fpXhgcer_eff2D->GetYaxis()->SetNameTitle("Focal Plane Y","Focal Plane Y");
+    th2_fpXhgcer_eff2D->GetXaxis()->SetNameTitle("X at HGCER (cm)","X at HGCER (cm)");
+    th2_fpXhgcer_eff2D->GetYaxis()->SetNameTitle("Y at HGCER (cm)","Y at HGCER (cm)");
     th2_fpXhgcer_eff2D->SetStats(0);
     
     th2_fpXngcer_eff2D = new TH2D("fpVngcereff_2Deff", "fpVngcereff_2Deff", 80, -40.0, 40.0, 80, -40.0, 40.0);
     junk = th2_fpXngcer_eff2D->Divide(th2_fpXngcer_cut, th2_fpXngcer);
-    th2_fpXngcer_eff2D->GetXaxis()->SetNameTitle("Focal Plane X","Focal Plane X");
-    th2_fpXngcer_eff2D->GetYaxis()->SetNameTitle("Focal Plane Y","Focal Plane Y");
+    th2_fpXngcer_eff2D->GetXaxis()->SetNameTitle("X at NGCER (cm)","X at NGCER (cm)");
+    th2_fpXngcer_eff2D->GetYaxis()->SetNameTitle("Y at NGCER (cm)","Y at NGCER (cm)");
     th2_fpXngcer_eff2D->SetStats(0);
     
     th2_fpXaero_eff2D = new TH2D("fpVaeroeff_2Deff", "fpVaeroeff_2Deff", 80, -40.0, 40.0, 80, -40.0, 40.0);
     junk = th2_fpXaero_eff2D->Divide(th2_fpXaero_cut, th2_fpXaero);
-    th2_fpXaero_eff2D->GetXaxis()->SetNameTitle("Focal Plane X","Focal Plane X");
-    th2_fpXaero_eff2D->GetYaxis()->SetNameTitle("Focal Plane Y","Focal Plane Y");
+    th2_fpXaero_eff2D->GetXaxis()->SetNameTitle("X at Aerogel (cm)","X at Aerogel (cm)");
+    th2_fpXaero_eff2D->GetYaxis()->SetNameTitle("Y at Aerogel (cm)","Y at Aerogel (cm)");
     th2_fpXaero_eff2D->SetStats(0);
     
     cout << "Finished making plots, saving to pdf.\n";
