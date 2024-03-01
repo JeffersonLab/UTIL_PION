@@ -89,21 +89,29 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	th2_aeroXhgcer = new TH2D("aeroNpeSumVhgcerNpeSum","aeroNpeSumVhgcerNpeSum", 100, 0.0, 35, 100, 0.0, 35);
 	th2_aeroXhgcer->GetXaxis()->SetNameTitle("Aerogel NPE","Aerogel NPE");
 	th2_aeroXhgcer->GetYaxis()->SetNameTitle("HGC NPE","HGC NPE");
+	th2_aeroXhgcer->GetXaxis()->SetLabelSize(0.04);
+	th2_aeroXhgcer->GetYaxis()->SetLabelSize(0.04);
 	th2_aeroXhgcer->SetStats(0);
 	
 	th2_ngcerXcal = new TH2D("ngcerNpeSumVP.cal.etottracknorm","ngcerNpeSumVP.cal.etottracknorm", 100, 0.0, 35, 100, 0.0, 1.6);
 	th2_ngcerXcal->GetXaxis()->SetNameTitle("NGC NPE","NGC NPE");
 	th2_ngcerXcal->GetYaxis()->SetNameTitle("Normalized Calorimeter Energy","Normalized Calorimeter Energy");
+	th2_ngcerXcal->GetXaxis()->SetLabelSize(0.04);
+	th2_ngcerXcal->GetYaxis()->SetLabelSize(0.04);
 	th2_ngcerXcal->SetStats(0);
 	
 	th2_ngcerXaero = new TH2D("ngcerNpeSumVaeroNpeSum","ngcerNpeSumVaeroNpeSum", 100, 0.0, 35, 100, 0.0, 35);
 	th2_ngcerXaero->GetXaxis()->SetNameTitle("NGC NPE","NGC NPE");
 	th2_ngcerXaero->GetYaxis()->SetNameTitle("Aerogel NPE","Aerogel NPE");
+	th2_ngcerXaero->GetXaxis()->SetLabelSize(0.04);
+	th2_ngcerXaero->GetYaxis()->SetLabelSize(0.04);
 	th2_ngcerXaero->SetStats(0);
 	
 	th2_ngcerXhgcer = new TH2D("ngcerNpeSumVhgcerNpeSum","ngcerNpeSumVhgcerNpeSum", 100, 0.0, 35, 100, 0.0, 35);
 	th2_ngcerXhgcer->GetXaxis()->SetNameTitle("NGC NPE","NGC NPE");
 	th2_ngcerXhgcer->GetYaxis()->SetNameTitle("HGC NPE","HGC NPE");
+	th2_ngcerXhgcer->GetXaxis()->SetLabelSize(0.04);
+	th2_ngcerXhgcer->GetYaxis()->SetLabelSize(0.04);
 	th2_ngcerXhgcer->SetStats(0);
 	
 	th2_fpXhgcer = new TH2D("fpVhgcereff_should", "fpVhgcereff_should", 80, -40.0, 40.0, 80, -40.0, 40.0);
@@ -336,18 +344,22 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
     cout << "Finished making plots, saving to pdf.\n";
     //make and print canvas output to pdf
     TCanvas *c1_1 = new TCanvas (Form("SHMS_%s_PID_Plots_%d_1", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_PID_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
+    c1_1->SetMargin(0.3,0.3,0.3,0.3);
     gPad->SetLogz();
     th2_aeroXhgcer->Draw("colz");
 
     TCanvas *c1_2 = new TCanvas (Form("SHMS_%s_PID_Plots_%d_2", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_PID_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
+    c1_2->SetMargin(0.4,0.4,0.4,0.4);
     gPad->SetLogz();
     th2_ngcerXcal->Draw("colz");
 
     TCanvas *c1_3 = new TCanvas (Form("SHMS_%s_PID_Plots_%d_3", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_PID_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
+    c1_3->SetMargin(0.5,0.5,0.5,0.5);
     gPad->SetLogz();
     th2_ngcerXhgcer->Draw("colz");
 
     TCanvas *c1_4 = new TCanvas (Form("SHMS_%s_PID_Plots_%d_4", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_PID_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
+    c1_4->SetMargin(0.2,0.2,0.2,0.2);
     gPad->SetLogz();
     th2_ngcerXaero->Draw("colz");
     
