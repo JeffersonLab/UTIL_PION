@@ -349,47 +349,47 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
     cout << "Finished making plots, saving to pdf.\n";
     //make and print canvas output to pdf
     TCanvas *c1_1 = new TCanvas (Form("SHMS_%s_PID_Plots_%d_1", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_PID_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
-    c1_1->SetMargin(0.1,0.1,0.1,0.1);
+    c1_1->SetMargin(0.15,0.15,0.15,0.15);
     gPad->SetLogz();
     th2_aeroXhgcer->Draw("colz");
 
     TCanvas *c1_2 = new TCanvas (Form("SHMS_%s_PID_Plots_%d_2", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_PID_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
-    c1_2->SetMargin(0.1,0.1,0.1,0.1);
+    c1_2->SetMargin(0.15,0.15,0.15,0.15);
     gPad->SetLogz();
     th2_ngcerXcal->Draw("colz");
 
     TCanvas *c1_3 = new TCanvas (Form("SHMS_%s_PID_Plots_%d_3", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_PID_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
-    c1_3->SetMargin(0.1,0.1,0.1,0.1);
+    c1_3->SetMargin(0.15,0.15,0.15,0.15);
     gPad->SetLogz();
     th2_ngcerXhgcer->Draw("colz");
 
     TCanvas *c1_4 = new TCanvas (Form("SHMS_%s_PID_Plots_%d_4", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_PID_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
-    c1_4->SetMargin(0.1,0.1,0.1,0.1);
+    c1_4->SetMargin(0.15,0.15,0.15,0.15);
     gPad->SetLogz();
     th2_ngcerXaero->Draw("colz");
     
     TCanvas *c2_1 = new TCanvas (Form("SHMS_%s_EffvDelta_Plots_%d_1", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
-    c2_1->SetMargin(0.1,0.1,0.1,0.1);
+    c2_1->SetMargin(0.15,0.15,0.15,0.15);
     th1_hgcer_eff->Draw("E0");
     
     TCanvas *c2_2 = new TCanvas (Form("SHMS_%s_EffvDelta_Plots_%d_2", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
-    c12_2->SetMargin(0.1,0.1,0.1,0.1);
+    c2_2->SetMargin(0.15,0.15,0.15,0.15);
     th1_ngcer_eff->Draw("E0");
     
     TCanvas *c2_3 = new TCanvas (Form("SHMS_%s_EffvDelta_Plots_%d_3", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
-    c2_3->SetMargin(0.1,0.1,0.1,0.1);
+    c2_3->SetMargin(0.15,0.15,0.15,0.15);
     th1_aero_eff->Draw("E0");
     
     TCanvas *c3_1 = new TCanvas (Form("SHMS_%s_2DEff_Plots_%d_1", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
-    c2_1->SetMargin(0.1,0.1,0.1,0.1);
+    c2_1->SetMargin(0.15,0.15,0.15,0.15);
     th2_fpXhgcer_eff2D->Draw("colz");
     
     TCanvas *c3_2 = new TCanvas (Form("SHMS_%s_2DEff_Plots_%d_2", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
-    c3_2->SetMargin(0.1,0.1,0.1,0.1);
+    c3_2->SetMargin(0.15,0.15,0.15,0.15);
     th2_fpXngcer_eff2D->Draw("colz");
     
     TCanvas *c3_3 = new TCanvas (Form("SHMS_%s_2DEff_Plots_%d_3", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
-    c3_3->SetMargin(0.1,0.1,0.1,0.1);
+    c3_3->SetMargin(0.15,0.15,0.15,0.15);
     th2_fpXaero_eff2D->Draw("colz");
     
     c1_1->Print(Form("SHMS_%s_PIDeffPlots_%d.pdf(", cutNames[cutType].c_str(), runNum));
