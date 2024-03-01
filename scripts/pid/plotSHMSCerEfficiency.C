@@ -69,9 +69,9 @@ Int_t NumEvents = -1;
 void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType ) 
 {
     gStyle->SetOptTitle(0);
-    gStyle->SetLabelSize(0.08,"X");
-    gStyle->SetLabelSize(0.08,"Y");
-    gStyle->SetLabelSize(0.08,"Z");
+    gStyle->SetLabelSize(0.055,"X");
+    gStyle->SetLabelSize(0.055,"Y");
+    gStyle->SetLabelSize(0.055,"Z");
     // make empty histograms	
 	th1_hgcer = new TH1D("hgcerShould", "hgcerShould", 120, -10.0, 20.0);
 	th1_hgcerCut = new TH1D("hgcerDid", "hgcerDid", 120, -10.0, 20.0);
@@ -221,6 +221,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	Bool_t junk; // for holding return of TH1->Divide() 
 	th1_hgcer_eff = new TH1D("hgcer_eff", "hgcer_eff", 120, -10.0, 20.0);
 	th1_hgcer_eff->GetXaxis()->SetNameTitle("#delta","#delta");
+	th1_hgcer_eff->GetXaxis()->SetLabelSize(0.055);
 	th1_hgcer_eff->GetYaxis()->SetNameTitle("Efficiency","Efficiency");
 	th1_hgcer_eff->SetStats(0);
 	
