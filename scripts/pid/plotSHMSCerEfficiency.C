@@ -51,7 +51,7 @@ TH2D *th2_fpXhgcer_eff2D, *th2_fpXngcer_eff2D, *th2_fpXaero_eff2D;
 //variables for cutting trees and plotting
 Double_t delta, calEtot, hgcerNpeSum, aeroNpeSum, ngcerNpeSum;
 Double_t dc_ntrack, InsideDipoleExit, goodStartTime;
-Double_t xfp, yfp;
+Double_t xfp, yfp, xpfp, ypfp;
 
 //cuts
 const Double_t calEtotLowPi = 0.1; //normaized energy
@@ -59,6 +59,11 @@ const Double_t calEtotLowe = 0.7; //normaized energy
 const Double_t hgcerNpeSumLow = 1.5; //unit NPE
 const Double_t aeroNpeSumLow = 1.5; //unit NPE
 const Double_t ngcerNpeSumLow = 1.5; //unit NPE
+
+//z pos of cerenkovs - in cm
+const Double_t HGCER_z = 156.27;
+const Double_t NGCER_z = -89.1;
+const Double_t AERO_z = 231.0;
 
 Bool_t calCut, hgcerCut, aeroCut, ngcerCut, fpcut;
 
@@ -127,6 +132,8 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	tree1->SetBranchAddress("P.gtr.dp", &delta);
 	tree1->SetBranchAddress("P.dc.x_fp", &xfp);
 	tree1->SetBranchAddress("P.dc.y_fp", &yfp);
+	tree1->SetBranchAddress("P.dc.xp_fp", &xpfp);
+	tree1->SetBranchAddress("P.dc.yp_fp", &ypfp);
 	tree1->SetBranchAddress("P.dc.ntrack", &dc_ntrack); 
 	tree1->SetBranchAddress("P.dc.InsideDipoleExit", &InsideDipoleExit); 
 	tree1->SetBranchAddress("P.hod.goodstarttime", &goodStartTime);
@@ -191,7 +198,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
                 if (hgcerCut)
                 {
                     th1_hgcerCut->Fill(delta);
-                    th2_fpXhgcer_cut->Fill(xfp,yfp); // change to fpAthgcer
+                    th2_fpXhgcer_cut->Fill((xfp+xpfp*HGCER_z),(yfp+ypfp*HGCER_z)); // change to fpAthgcer
                 }
             }
             if (calCut & aeroCut & hgcerCut & fpcut) // should for ngcer
@@ -201,7 +208,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
                 if (ngcerCut)
                 {
                     th1_ngcerCut->Fill(delta);
-                    th2_fpXngcer_cut->Fill(xfp,yfp);
+                    th2_fpXngcer_cut->Fill((xfp+xpfp*NGCER_z),(yfp+ypfp*NGCER_z));
                 }
             }
             if(calCut & hgcerCut & ngcerCut & fpcut) // should for aero
@@ -211,7 +218,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
                 if(aeroCut)
                 {
                     th1_aeroCut->Fill(delta);
-                    th2_fpXaero_cut->Fill(xfp,yfp);
+                    th2_fpXaero_cut->Fill((xfp+xpfp*AERO_z),(yfp+ypfp*AERO_z));
                 }
             }   
         }	
@@ -304,20 +311,20 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
     
     th2_fpXhgcer_eff2D = new TH2D("fpVhgcereff_2Deff", "fpVhgcereff_2Deff", 80, -40.0, 40.0, 80, -40.0, 40.0);
     junk = th2_fpXhgcer_eff2D->Divide(th2_fpXhgcer_cut, th2_fpXhgcer);
-    th2_fpXhgcer_eff2D->GetXaxis()->SetNameTitle("Focal Plane X","Focal Plane X");
-    th2_fpXhgcer_eff2D->GetYaxis()->SetNameTitle("Focal Plane Y","Focal Plane Y");
+    th2_fpXhgcer_eff2D->GetXaxis()->SetNameTitle("X at HGCER (cm)","X at HGCER (cm)");
+    th2_fpXhgcer_eff2D->GetYaxis()->SetNameTitle("Y at HGCER (cm)","Y at HGCER (cm)");
     th2_fpXhgcer_eff2D->SetStats(0);
     
     th2_fpXngcer_eff2D = new TH2D("fpVngcereff_2Deff", "fpVngcereff_2Deff", 80, -40.0, 40.0, 80, -40.0, 40.0);
     junk = th2_fpXngcer_eff2D->Divide(th2_fpXngcer_cut, th2_fpXngcer);
-    th2_fpXngcer_eff2D->GetXaxis()->SetNameTitle("Focal Plane X","Focal Plane X");
-    th2_fpXngcer_eff2D->GetYaxis()->SetNameTitle("Focal Plane Y","Focal Plane Y");
+    th2_fpXngcer_eff2D->GetXaxis()->SetNameTitle("X at NGCER (cm)","X at NGCER (cm)");
+    th2_fpXngcer_eff2D->GetYaxis()->SetNameTitle("Y at NGCER (cm)","Y at NGCER (cm)");
     th2_fpXngcer_eff2D->SetStats(0);
     
     th2_fpXaero_eff2D = new TH2D("fpVaeroeff_2Deff", "fpVaeroeff_2Deff", 80, -40.0, 40.0, 80, -40.0, 40.0);
     junk = th2_fpXaero_eff2D->Divide(th2_fpXaero_cut, th2_fpXaero);
-    th2_fpXaero_eff2D->GetXaxis()->SetNameTitle("Focal Plane X","Focal Plane X");
-    th2_fpXaero_eff2D->GetYaxis()->SetNameTitle("Focal Plane Y","Focal Plane Y");
+    th2_fpXaero_eff2D->GetXaxis()->SetNameTitle("X at Aerogel (cm)","X at Aerogel (cm)");
+    th2_fpXaero_eff2D->GetYaxis()->SetNameTitle("Y at Aerogel (cm)","Y at Aerogel (cm)");
     th2_fpXaero_eff2D->SetStats(0);
     
     cout << "Finished making plots, saving to pdf.\n";
