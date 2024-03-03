@@ -63,7 +63,7 @@ if [[ $s_flag = "true" ]]; then
     COLUMN1=$4
 #    COLUMN1=Run_Number
     COLUMN2=$5
-    TIMESTMP="2024_02_15"
+    TIMESTMP="2024_02_25"
     if [[ $RUNTYPE = "HeePSing" ]]; then
 	ROOTPREFIX=PionLT_${SPEC}_HeePSing
     elif [[ $RUNTYPE = "LumiSing" ]]; then
@@ -77,7 +77,7 @@ else
     COLUMN1=$2
 #    COLUMN1=Run_Number
     COLUMN2=$3
-    TIMESTMP="2024_02_15"
+    TIMESTMP="2024_02_25"
     if [[ $RUNTYPE = "HeePCoin" ]]; then
         ROOTPREFIX=PionLT_HeeP_coin
     elif [[ $RUNTYPE = "LumiCoin" ]]; then

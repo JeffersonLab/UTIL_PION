@@ -6,9 +6,8 @@
 # Time-stamp: "2024-02-09 12:05:00 junaid"
 # ================================================================
 #
-# Copied: Richard L. Trotta III <trotta@cua.edu>
-# Author: Muhammad junaid  <mjo147@uregina.ca>
-# Copyright (c) junaid
+# Created: Muhammad junaid  <mjo147@uregina.ca>
+# Copyright (c) trottar & junaid
 #
 
 while getopts 'hrs' flag; do

@@ -6,7 +6,6 @@
 # Time-stamp: "2024-02-09 12:05:00 junaid"
 # ================================================================
 #
-# Copied: Richard L. Trotta III <trotta@cua.edu>
 # Created: Muhammad junaid  <mjo147@uregina.ca>
 # Copyright (c) trottar & junaid
 #

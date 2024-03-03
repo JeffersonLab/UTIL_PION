@@ -6,7 +6,6 @@
 # Time-stamp: "2024-02-09 12:05:00 junaid"
 # ================================================================
 #
-# Copied: Richard L. Trotta III <trotta@cua.edu>
 # Created: Muhammad junaid  <mjo147@uregina.ca>
 # Copyright (c) trottar & junaid
 #
@@ -20,9 +19,9 @@ def dictionary(UTILPATH,ROOTPrefix,runNum,MaxEvent, DEBUG=False):
 
     # Open report file to grab prescale values and tracking efficiency
 #    report = UTILPATH+"/REPORT_OUTPUT/Analysis/HeeP/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
-    report = UTILPATH+"/REPORT_OUTPUT/Analysis/Lumi/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
+#    report = UTILPATH+"/REPORT_OUTPUT/Analysis/Lumi/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
 #    report = UTILPATH+"/REPORT_OUTPUT/Analysis/pTRIG6/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
-#    report = UTILPATH+"/REPORT_OUTPUT/Analysis/PionLT/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
+    report = UTILPATH+"/REPORT_OUTPUT/Analysis/PionLT/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
 
     with open(report) as f:
         effDict = {
@@ -77,12 +76,10 @@ def dictionary(UTILPATH,ROOTPrefix,runNum,MaxEvent, DEBUG=False):
             'EDTM_Accepted_Triggers': None ,
             'HMS_EDTM_Accepted_Triggers': None ,
             'SHMS_EDTM_Accepted_Triggers': None ,
-            'HMS_EDTM_LT': None,
-            'HMS_EDTM_LT_ERROR': None,
-            'SHMS_EDTM_LT': None,
-            'SHMS_EDTM_LT_ERROR': None,
             'Non_Scaler_EDTM_Live_Time': None,
             'Non_Scaler_EDTM_Live_Time_ERROR': None,
+            'Non_Scaler_EDTM_Live_Time_Corr': None,
+            'Non_Scaler_EDTM_Live_Time_Corr_ERROR': None,
             # CPULT
             'HMS_CPULT': None,
             'HMS_CPULT_ERROR': None,
@@ -118,20 +115,43 @@ def dictionary(UTILPATH,ROOTPrefix,runNum,MaxEvent, DEBUG=False):
             "HMS_Elec_SING_TRACK_EFF" : None,
             "HMS_Elec_SING_TRACK_EFF_ERROR" : None,
             # HGC (useless without cuts)
-            'SHMS_HGC_Elec_Eff' : None,
-            'SHMS_HGC_Pion_Eff' : None,
-            'SHMS_HGC_Pion_Eff_ERROR' : None,
+            'SHMS_HGC_ALL_Elec_Eff': None,
+            'SHMS_HGC_ALL_Elec_Eff_ERROR': None,
+            'SHMS_HGC_COIN_Elec_Eff': None,
+            'SHMS_HGC_COIN_Elec_Eff_ERROR': None,
+            'SHMS_HGC_SING_Elec_Eff': None,
+            'SHMS_HGC_SING_Elec_Eff_ERROR': None,
+            'SHMS_HGC_ALL_Pion_Eff': None,
+            'SHMS_HGC_ALL_Pion_Eff_ERROR': None,
+            'SHMS_HGC_COIN_Pion_Eff': None,
+            'SHMS_HGC_COIN_Pion_Eff_ERROR': None,
+            'SHMS_HGC_SING_Pion_Eff': None,
+            'SHMS_HGC_SING_Pion_Eff_ERROR': None,
+            'SHMS_HGC_ALL_Prot_Eff': None,
+            'SHMS_HGC_ALL_Prot_Eff_ERROR': None,
+            'SHMS_HGC_COIN_Prot_Eff': None,
+            'SHMS_HGC_COIN_Prot_Eff_ERROR': None,
+            'SHMS_HGC_SING_Prot_Eff': None,
+            'SHMS_HGC_SING_Prot_Eff_ERROR': None,
             # Aerogel
-            'SHMS_Aero_Elec_Eff' : None,
-            'SHMS_Aero_Elec_Eff_ERROR' : None,
-            'SHMS_Aero_Prot_Eff' : None,
-            'SHMS_Aero_Prot_Eff_ERROR' : None,
+            'SHMS_Aero_ALL_Elec_Eff': None,
+            'SHMS_Aero_ALL_Elec_Eff_ERROR': None,
+            'SHMS_Aero_COIN_Elec_Eff': None,
+            'SHMS_Aero_COIN_Elec_Eff_ERROR': None,
+            'SHMS_Aero_SING_Elec_Eff': None,
+            'SHMS_Aero_SING_Elec_Eff_ERROR': None,
             'SHMS_Aero_ALL_Pion_Eff': None,
             'SHMS_Aero_ALL_Pion_Eff_ERROR': None,
             'SHMS_Aero_COIN_Pion_Eff': None,
             'SHMS_Aero_COIN_Pion_Eff_ERROR': None,
             'SHMS_Aero_SING_Pion_Eff': None,
             'SHMS_Aero_SING_Pion_Eff_ERROR': None,
+            'SHMS_Aero_ALL_Prot_Eff': None,
+            'SHMS_Aero_ALL_Prot_Eff_ERROR': None,
+            'SHMS_Aero_COIN_Prot_Eff': None,
+            'SHMS_Aero_COIN_Prot_Eff_ERROR': None,
+            'SHMS_Aero_SING_Prot_Eff': None,
+            'SHMS_Aero_SING_Prot_Eff_ERROR': None,
             # HMS Cer
             'HMS_Cer_ALL_Elec_Eff': None,
             'HMS_Cer_ALL_Elec_Eff_ERROR': None,

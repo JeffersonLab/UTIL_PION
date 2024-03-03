@@ -6,7 +6,6 @@
 # Time-stamp: "2024-02-09 12:05:00 junaid"
 # ================================================================
 #
-# Copied: Richard L. Trotta III <trotta@cua.edu>
 # Created: Muhammad junaid  <mjo147@uregina.ca>
 # Copyright (c) trottar & junaid
 #
@@ -56,372 +55,59 @@ except IOError:
 
 #############################################################################################################################################################################
 
-plt.figure(figsize=(14,10))
+plt.figure(figsize=(12,8))
 
-plt.subplot(141)
+plt.subplot(121)    
 plt.grid(zorder=1)
 #plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.errorbar(efficiency_data["SHMS_EL-REAL_Trigger_Rate"],efficiency_data["Non_Scaler_EDTM_Live_Time"],yerr=efficiency_data["Non_Scaler_EDTM_Live_Time_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["SHMS_EL-REAL_Trigger_Rate"],efficiency_data["Non_Scaler_EDTM_Live_Time"],color='blue',zorder=4)
-plt.ylabel('EDTM', fontsize=12)
-plt.xlabel('SHMS EL-REAL Trigger Rate [kHz]', fontsize=12)
-plt.title('SHMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(142)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.errorbar(efficiency_data["SHMS_EL-REAL_Trigger_Rate"],efficiency_data["SHMS_Elec_SING_TRACK_EFF"],yerr=efficiency_data["SHMS_Elec_SING_TRACK_EFF_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["SHMS_EL-REAL_Trigger_Rate"],efficiency_data["SHMS_Elec_SING_TRACK_EFF"],color='blue',zorder=4)
-plt.ylabel('SHMS_Elec_SING_TRACK_EFF', fontsize=12)
-plt.xlabel('SHMS EL-REAL Trigger Rate [kHz]', fontsize=12)
-plt.title('SHMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(143)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.errorbar(efficiency_data["SHMS_EL-REAL_Trigger_Rate"],efficiency_data["SHMS_Elec_ALL_TRACK_EFF"],yerr=efficiency_data["SHMS_Elec_ALL_TRACK_EFF_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["SHMS_EL-REAL_Trigger_Rate"],efficiency_data["SHMS_Elec_ALL_TRACK_EFF"],color='blue',zorder=4)
-plt.ylabel('SHMS_Elec_ALL_TRACK_EFF', fontsize=12)
-plt.xlabel('SHMS EL-REAL Trigger Rate [kHz]', fontsize=12)
-plt.title('SHMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(144)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.scatter(efficiency_data["SHMS_EL-REAL_Trigger_Rate"],efficiency_data["SHMS_Hodo_3_of_4_EFF"],color='blue',zorder=4)
-plt.ylabel('SHMS_Hodo_3_of_4_EFF', fontsize=12)
-plt.xlabel('SHMS EL-REAL Trigger Rate [kHz]', fontsize=12)
-plt.title('SHMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.tight_layout(rect=[0,0.03,1,0.95])
-plt.savefig(UTILPATH+'/scripts/efficiency/OUTPUTS/plots/SHMS_EL-REAL_%s.png' % (ROOTPrefix.replace("replay_","")))
-
-################################################################################################################################################################################################
-'''
-plt.figure(figsize=(10,14))
-
-#plt.subplot(141)
-plt.subplot(411)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.errorbar(efficiency_data["Run_Number"],efficiency_data["Non_Scaler_EDTM_Live_Time"],yerr=efficiency_data["Non_Scaler_EDTM_Live_Time_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["Run_Number"],efficiency_data["Non_Scaler_EDTM_Live_Time"],color='blue',zorder=4)
-plt.ylabel('EDTM', fontsize=12)
-plt.xlabel('Run Number (LumiCoin)', fontsize=12)
-plt.title('SHMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(412)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.errorbar(efficiency_data["Run_Number"],efficiency_data["SHMS_Pion_SING_TRACK_EFF"],yerr=efficiency_data["SHMS_Pion_SING_TRACK_EFF_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["Run_Number"],efficiency_data["SHMS_Pion_SING_TRACK_EFF"],color='blue',zorder=4)
+plt.ylim(0.9,1.02)
+plt.errorbar(efficiency_data["SHMS_3/4_Trigger_Rate"],efficiency_data["SHMS_Pion_SING_TRACK_EFF"],yerr=efficiency_data["SHMS_Pion_SING_TRACK_EFF_ERROR"],color='black',linestyle='None',zorder=3)
+plt.scatter(efficiency_data["SHMS_3/4_Trigger_Rate"],efficiency_data["SHMS_Pion_SING_TRACK_EFF"],color='blue',zorder=4)
 plt.ylabel('SHMS_Pion_SING_TRACK_EFF', fontsize=12)
-plt.xlabel('Run Number (LumiCoin)', fontsize=12)
+plt.xlabel('SHMS 3/4 Trigger Rate [kHz]', fontsize=12)
 plt.title('SHMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
 
-plt.subplot(413)
+plt.subplot(122)
 plt.grid(zorder=1)
 #plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.errorbar(efficiency_data["Run_Number"],efficiency_data["SHMS_Pion_COIN_TRACK_EFF"],yerr=efficiency_data["SHMS_Pion_COIN_TRACK_EFF_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["Run_Number"],efficiency_data["SHMS_Pion_COIN_TRACK_EFF"],color='blue',zorder=4)
-plt.ylabel('SHMS_Pion_COIN_TRACK_EFF', fontsize=12)
-plt.xlabel('Run Number (LumiCoin)', fontsize=12)
-plt.title('SHMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(414)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.scatter(efficiency_data["Run_Number"],efficiency_data["SHMS_Hodo_3_of_4_EFF"],color='blue',zorder=4)
-plt.ylabel('SHMS_Hodo_3_of_4_EFF', fontsize=12)
-plt.xlabel('Run Number (LumiCoin)', fontsize=12)
-plt.title('SHMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.tight_layout(rect=[0,0.03,1,0.95])
-plt.savefig(UTILPATH+'/scripts/efficiency/OUTPUTS/plots/Run_Number_SHMS_%s.png' % (ROOTPrefix.replace("replay_","")))
-'''
-#########################################################################################################################################################################################
-
-plt.figure(figsize=(14,10))
-
-plt.subplot(141)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.errorbar(efficiency_data["SHMS_Hodoscope_S1X_Rate"],efficiency_data["Non_Scaler_EDTM_Live_Time"],yerr=efficiency_data["Non_Scaler_EDTM_Live_Time_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["SHMS_Hodoscope_S1X_Rate"],efficiency_data["Non_Scaler_EDTM_Live_Time"],color='blue',zorder=4)
-plt.ylabel('EDTM', fontsize=12)
+plt.ylim(0.9,1.02)
+plt.errorbar(efficiency_data["SHMS_Hodoscope_S1X_Rate"],efficiency_data["SHMS_Pion_SING_TRACK_EFF"],yerr=efficiency_data["SHMS_Pion_SING_TRACK_EFF_ERROR"],color='black',linestyle='None',zorder=3)
+plt.scatter(efficiency_data["SHMS_Hodoscope_S1X_Rate"],efficiency_data["SHMS_Pion_SING_TRACK_EFF"],color='blue',zorder=4)
+plt.ylabel('SHMS_Pion_SING_TRACK_EFF', fontsize=12)
 plt.xlabel('SHMS S1X HODO Rate [kHz]', fontsize=12)
 plt.title('SHMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
 
-plt.subplot(142)
+plt.tight_layout(rect=[0,0.03,1,0.95])   
+plt.savefig(UTILPATH+'/scripts/efficiency/OUTPUTS/plots/SHMS_Pion_%s.png' % (ROOTPrefix.replace("replay_","")))
+
+########################################################################################################################################################################################
+
+plt.figure(figsize=(12,8))
+
+plt.subplot(121)    
 plt.grid(zorder=1)
 #plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.errorbar(efficiency_data["SHMS_Hodoscope_S1X_Rate"],efficiency_data["SHMS_Elec_SING_TRACK_EFF"],yerr=efficiency_data["SHMS_Elec_SING_TRACK_EFF_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["SHMS_Hodoscope_S1X_Rate"],efficiency_data["SHMS_Elec_SING_TRACK_EFF"],color='blue',zorder=4)
-plt.ylabel('SHMS_Elec_SING_TRACK_EFF', fontsize=12)
-plt.xlabel('SHMS S1X HODO Rate [kHz]', fontsize=12)
-plt.title('SHMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(143)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.errorbar(efficiency_data["SHMS_Hodoscope_S1X_Rate"],efficiency_data["SHMS_Elec_ALL_TRACK_EFF"],yerr=efficiency_data["SHMS_Elec_ALL_TRACK_EFF_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["SHMS_Hodoscope_S1X_Rate"],efficiency_data["SHMS_Elec_ALL_TRACK_EFF"],color='blue',zorder=4)
-plt.ylabel('SHMS_Elec_ALL_TRACK_EFF', fontsize=12)
-plt.xlabel('SHMS S1X HODO Rate [kHz]', fontsize=12)
-plt.title('SHMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(144)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.scatter(efficiency_data["SHMS_Hodoscope_S1X_Rate"],efficiency_data["SHMS_Hodo_3_of_4_EFF"],color='blue',zorder=4)
-plt.ylabel('SHMS_Hodo_3_of_4_EFF', fontsize=12)
-plt.xlabel('SHMS S1X HODO Rate [kHz]', fontsize=12)
-plt.title('SHMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.tight_layout(rect=[0,0.03,1,0.95])
-plt.savefig(UTILPATH+'/scripts/efficiency/OUTPUTS/plots/SHMS_S1X_%s.png' % (ROOTPrefix.replace("replay_","")))
-
-
-####################################################################################################################################################################################
-
-plt.figure(figsize=(14,10))
-
-plt.subplot(141)    
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.errorbar(efficiency_data["HMS_EL-REAL_Trigger_Rate"],efficiency_data["Non_Scaler_EDTM_Live_Time"],yerr=efficiency_data["Non_Scaler_EDTM_Live_Time_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["HMS_EL-REAL_Trigger_Rate"],efficiency_data["Non_Scaler_EDTM_Live_Time"],color='red',zorder=4)
-plt.ylabel('EDTM', fontsize=12)
-plt.xlabel('HMS EL-REAL Trigger Rate [kHz]', fontsize=12)
-plt.title('HMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(142)    
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
+plt.ylim(0.9,1.02)
 plt.errorbar(efficiency_data["HMS_EL-REAL_Trigger_Rate"],efficiency_data["HMS_Elec_SING_TRACK_EFF"],yerr=efficiency_data["HMS_Elec_SING_TRACK_EFF_ERROR"],color='black',linestyle='None',zorder=3)
 plt.scatter(efficiency_data["HMS_EL-REAL_Trigger_Rate"],efficiency_data["HMS_Elec_SING_TRACK_EFF"],color='red',zorder=4)
 plt.ylabel('HMS_Elec_SING_TRACK_EFF', fontsize=12)
 plt.xlabel('HMS EL-REAL Trigger Rate [kHz]', fontsize=12)
 plt.title('HMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
 
-plt.subplot(143)    
+plt.subplot(122)
 plt.grid(zorder=1)
 #plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.errorbar(efficiency_data["HMS_EL-REAL_Trigger_Rate"],efficiency_data["HMS_Elec_ALL_TRACK_EFF"],yerr=efficiency_data["HMS_Elec_ALL_TRACK_EFF_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["HMS_EL-REAL_Trigger_Rate"],efficiency_data["HMS_Elec_ALL_TRACK_EFF"],color='red',zorder=4)
-plt.ylabel('HMS_Elec_ALL_TRACK_EFF', fontsize=12)
-plt.xlabel('HMS EL-REAL Trigger Rate [kHz]', fontsize=12)
-plt.title('HMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(144)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.scatter(efficiency_data["HMS_EL-REAL_Trigger_Rate"],efficiency_data["HMS_Hodo_3_of_4_EFF"],color='red',zorder=4)
-plt.ylabel('HMS_Hodo_3_of_4_EFF', fontsize=12)
-plt.xlabel('HMS EL-REAL Trigger Rate [kHz]', fontsize=12)
-plt.title('HMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.tight_layout(rect=[0,0.03,1,0.95])   
-plt.savefig(UTILPATH+'/scripts/efficiency/OUTPUTS/plots/HMS_EL-REAL_%s.png' % (ROOTPrefix.replace("replay_","")))
-
-########################################################################################################################################################################################
-'''
-plt.figure(figsize=(10,14))
-
-plt.subplot(411)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.errorbar(efficiency_data["Run_Number"],efficiency_data["COIN_CPULT"],yerr=efficiency_data["COIN_CPULT_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["Run_Number"],efficiency_data["COIN_CPULT"],color='green',zorder=4)
-plt.ylabel('COIN_CPULT', fontsize=12)
-plt.xlabel('Run Number (LumiCoin)', fontsize=12)
-plt.title('HMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(412)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.errorbar(efficiency_data["Run_Number"],efficiency_data["HMS_Elec_SING_TRACK_EFF"],yerr=efficiency_data["HMS_Elec_SING_TRACK_EFF_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["Run_Number"],efficiency_data["HMS_Elec_SING_TRACK_EFF"],color='red',zorder=4)
-plt.ylabel('HMS_Elec_SING_TRACK_EFF', fontsize=12)
-plt.xlabel('Run Number (LumiCoin)', fontsize=12)
-plt.title('HMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(413)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.errorbar(efficiency_data["Run_Number"],efficiency_data["HMS_Elec_COIN_TRACK_EFF"],yerr=efficiency_data["HMS_Elec_COIN_TRACK_EFF_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["Run_Number"],efficiency_data["HMS_Elec_COIN_TRACK_EFF"],color='red',zorder=4)
-plt.ylabel('HMS_Elec_COIN_TRACK_EFF', fontsize=12)
-plt.xlabel('Run Number (LumiCoin)', fontsize=12)
-plt.title('HMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(414)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.scatter(efficiency_data["Run_Number"],efficiency_data["HMS_Hodo_3_of_4_EFF"],color='red',zorder=4)
-plt.ylabel('HMS_Hodo_3_of_4_EFF', fontsize=12)
-plt.xlabel('Run Number (LumiCoin)', fontsize=12)
-plt.title('HMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.tight_layout(rect=[0,0.03,1,0.95])
-plt.savefig(UTILPATH+'/scripts/efficiency/OUTPUTS/plots/Run_Number_HMS_%s.png' % (ROOTPrefix.replace("replay_","")))
-'''
-
-#########################################################################################################################################################################################
-
-plt.figure(figsize=(14,10))
-
-plt.subplot(141)    
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.errorbar(efficiency_data["HMS_Hodoscope_S1X_Rate"],efficiency_data["Non_Scaler_EDTM_Live_Time"],yerr=efficiency_data["Non_Scaler_EDTM_Live_Time_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["HMS_Hodoscope_S1X_Rate"],efficiency_data["Non_Scaler_EDTM_Live_Time"],color='red',zorder=4)
-plt.ylabel('EDTM', fontsize=12)
-plt.xlabel('HMS S1X HODO Rate [kHz]', fontsize=12)
-plt.title('HMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(142)    
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
+plt.ylim(0.9,1.02)
 plt.errorbar(efficiency_data["HMS_Hodoscope_S1X_Rate"],efficiency_data["HMS_Elec_SING_TRACK_EFF"],yerr=efficiency_data["HMS_Elec_SING_TRACK_EFF_ERROR"],color='black',linestyle='None',zorder=3)
 plt.scatter(efficiency_data["HMS_Hodoscope_S1X_Rate"],efficiency_data["HMS_Elec_SING_TRACK_EFF"],color='red',zorder=4)
 plt.ylabel('HMS_Elec_SING_TRACK_EFF', fontsize=12)
 plt.xlabel('HMS S1X HODO Rate [kHz]', fontsize=12)
 plt.title('HMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
 
-plt.subplot(143)    
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.errorbar(efficiency_data["HMS_Hodoscope_S1X_Rate"],efficiency_data["HMS_Elec_ALL_TRACK_EFF"],yerr=efficiency_data["HMS_Elec_ALL_TRACK_EFF_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["HMS_Hodoscope_S1X_Rate"],efficiency_data["HMS_Elec_ALL_TRACK_EFF"],color='red',zorder=4)
-plt.ylabel('HMS_Elec_ALL_TRACK_EFF', fontsize=12)
-plt.xlabel('HMS S1X HODO Rate [kHz]', fontsize=12)
-plt.title('HMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(144)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.scatter(efficiency_data["HMS_Hodoscope_S1X_Rate"],efficiency_data["HMS_Hodo_3_of_4_EFF"],color='red',zorder=4)
-plt.ylabel('HMS_Hodo_3_of_4_EFF', fontsize=12)
-plt.xlabel('HMS S1X HODO Rate [kHz]', fontsize=12)
-plt.title('HMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.tight_layout(rect=[0,0.03,1,0.95])
-plt.savefig(UTILPATH+'/scripts/efficiency/OUTPUTS/plots/HMS_S1X_%s.png' % (ROOTPrefix.replace("replay_","")))
+plt.tight_layout(rect=[0,0.03,1,0.95])   
+plt.savefig(UTILPATH+'/scripts/efficiency/OUTPUTS/plots/HMS_ELec_%s.png' % (ROOTPrefix.replace("replay_","")))
 
 ###################################################################################################################################################################################################
-'''
-plt.figure(figsize=(10,14))
-
-plt.subplot(411)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.scatter(efficiency_data["Run_Number"],efficiency_data["HMS_EL-REAL_Trigger_Rate"],color='red',zorder=4)
-plt.ylabel('HMS_EL-REAL_Trigger_Rate [kHz]', fontsize=12)
-plt.xlabel('Run Number (LumiCoin)', fontsize=12)
-plt.title('HMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(412)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.scatter(efficiency_data["Run_Number"],efficiency_data["HMS_Hodoscope_S1X_Rate"],color='red',zorder=4)
-plt.ylabel('HMS_Hodoscope_S1X_Rate [kHz]', fontsize=12)
-plt.xlabel('Run Number (LumiCoin)', fontsize=12)
-plt.title('HMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(413)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.scatter(efficiency_data["Run_Number"],efficiency_data["SHMS_3/4_Trigger_Rate"],color='blue',zorder=4)
-plt.ylabel('SHMS 3/4 Trigger Rate [kHz]', fontsize=12)
-plt.xlabel('Run Number (LumiCoin)', fontsize=12)
-plt.title('SHMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(414)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.scatter(efficiency_data["Run_Number"],efficiency_data["SHMS_Hodoscope_S1X_Rate"],color='blue',zorder=4)
-plt.ylabel('SHMS_Hodoscope_S1X_Rate [kHz]', fontsize=12)
-plt.xlabel('Run Number (LumiCoin)', fontsize=12)
-plt.title('SHMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.tight_layout(rect=[0,0.03,1,0.95])
-plt.savefig(UTILPATH+'/scripts/efficiency/OUTPUTS/plots/Run_Number_rates_%s.png' % (ROOTPrefix.replace("replay_","")))
-'''
-################################################################################################################################################################################################
-'''
-plt.figure(figsize=(14,10))
-
-plt.subplot(141)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.errorbar(efficiency_data["COIN_Trigger_Rate"],efficiency_data["Non_Scaler_EDTM_Live_Time"],yerr=efficiency_data["Non_Scaler_EDTM_Live_Time_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["COIN_Trigger_Rate"],efficiency_data["Non_Scaler_EDTM_Live_Time"],color='purple',zorder=4)
-plt.ylabel('EDTM', fontsize=12)
-plt.xlabel('COIN Trigger Rate [kHz]', fontsize=12)
-plt.title('COIN %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(142)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.errorbar(efficiency_data["COIN_Trigger_Rate"],efficiency_data["COIN_CPULT"],yerr=efficiency_data["COIN_CPULT_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["COIN_Trigger_Rate"],efficiency_data["COIN_CPULT"],color='blue',zorder=4)
-plt.ylabel('COIN CPULT', fontsize=12)
-plt.xlabel('COIN Trigger Rate [kHz]', fontsize=12)
-plt.title('COIN %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(143)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.scatter(efficiency_data["COIN_Trigger_Rate"],efficiency_data["SHMS_3/4_Trigger_Rate"],color='blue',zorder=4)
-plt.ylabel('SHMS 3/4 Trigger Rate [kHz]', fontsize=12)
-plt.xlabel('COIN Trigger Rate [kHz]', fontsize=12)
-plt.title('SHMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(144)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-#plt.ylim(0.9,1.1)
-plt.scatter(efficiency_data["COIN_Trigger_Rate"],efficiency_data["HMS_EL-REAL_Trigger_Rate"],color='red',zorder=4)
-plt.ylabel('HMS EL-REAL Trigger Rate [kHz]', fontsize=12)
-plt.xlabel('COIN Trigger Rate [kHz]', fontsize=12)
-plt.title('HMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.tight_layout(rect=[0,0.03,1,0.95])
-plt.savefig(UTILPATH+'/scripts/efficiency/OUTPUTS/plots/COIN_%s.png' % (ROOTPrefix.replace("replay_","")))
-'''
-#############################################################################################################################################################################################
 
 #plt.show()
 

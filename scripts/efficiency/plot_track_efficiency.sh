@@ -62,7 +62,7 @@ if [[ $s_flag = "true" ]]; then
     RUNTYPE=$2
     spec=$(echo "$3" | tr '[:upper:]' '[:lower:]')
     SPEC=$(echo "$spec" | tr '[:lower:]' '[:upper:]')
-    TIMESTMP="2024_02_15"
+    TIMESTMP="2024_03_02"
     if [[ $RUNTYPE = "HeePSing" ]]; then
 	ROOTPREFIX=PionLT_${SPEC}_HeePSing
         python3 plot/plot_heepsing_${SPEC}_efficiency.py ${ROOTPREFIX} ${RUNTYPE} ${TIMESTMP}
@@ -88,7 +88,7 @@ if [[ $s_flag = "true" ]]; then
 
 else
     RUNTYPE=$1
-    TIMESTMP="2024_02_15"
+    TIMESTMP="2024_03_02"
     if [[ $RUNTYPE = "HeePCoin" ]]; then
         ROOTPREFIX=PionLT_HeeP_coin
         python3 plot/plot_heepcoin_efficiency.py ${ROOTPREFIX} ${RUNTYPE} ${TIMESTMP}
