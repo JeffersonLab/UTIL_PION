@@ -235,21 +235,21 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	// do division of plots to get efficiency plots
 	Bool_t junk; // for holding return of TH1->Divide() 
 	th1_hgcer_eff = new TH1D("hgcer_eff", "hgcer_eff", 120, -10.0, 20.0);
-	th1_hgcer_eff->GetXaxis()->SetNameTitle("#delta (%)","#delta (%)");
+	th1_hgcer_eff->GetXaxis()->SetNameTitle("Delta (%)","Delta (%)");
 	th1_hgcer_eff->GetYaxis()->SetNameTitle("HGCER Efficiency","HGCER Efficiency");
 	th1_hgcer_eff->GetXaxis()->SetLabelSize(0.06);
 	th1_hgcer_eff->GetYaxis()->SetLabelSize(0.05);
 	th1_hgcer_eff->SetStats(0);
 	
 	th1_aero_eff = new TH1D("aero_eff", "aero_eff", 120, -10.0, 20.0);
-	th1_aero_eff->GetXaxis()->SetNameTitle("#delta (%)","#delta (%)");
+	th1_aero_eff->GetXaxis()->SetNameTitle("Delta (%)","Delta (%)");
 	th1_aero_eff->GetYaxis()->SetNameTitle("Aerogel Efficiency","Aerogel Efficiency");
 	th1_aero_eff->GetXaxis()->SetLabelSize(0.06);
 	th1_aero_eff->GetYaxis()->SetLabelSize(0.05);
 	th1_aero_eff->SetStats(0);
 	
 	th1_ngcer_eff = new TH1D("ngcer_eff", "ngcer_eff", 120, -10.0, 20.0);
-	th1_ngcer_eff->GetXaxis()->SetNameTitle("#delta (%)","#delta (%)");
+	th1_ngcer_eff->GetXaxis()->SetNameTitle("Delta (%)","Delta (%)");
 	th1_ngcer_eff->GetYaxis()->SetNameTitle("NGCER Efficiency","NGCER Efficiency");
 	th1_ngcer_eff->GetXaxis()->SetLabelSize(0.06);
 	th1_ngcer_eff->GetYaxis()->SetLabelSize(0.05);
