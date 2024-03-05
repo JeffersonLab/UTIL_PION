@@ -202,7 +202,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
             if (calCut & aeroCut & ngcerCut & fpcut) // should for hgcer
             {
                 th1_hgcer->Fill(delta);
-                th2_fpXhgcer->Fill(xfp,yfp);
+                th2_fpXhgcer->Fill((xfp+xpfp*HGCER_z),(yfp+ypfp*HGCER_z));
                 if (hgcerCut)
                 {
                     th1_hgcerCut->Fill(delta);
@@ -212,7 +212,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
             if (calCut & aeroCut & hgcerCut & fpcut) // should for ngcer
             {
                 th1_ngcer->Fill(delta);
-                th2_fpXngcer->Fill(xfp,yfp);
+                th2_fpXngcer->Fill((xfp+xpfp*NGCER_z),(yfp+ypfp*NGCER_z));
                 if (ngcerCut)
                 {
                     th1_ngcerCut->Fill(delta);
@@ -222,7 +222,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
             if(calCut & hgcerCut & ngcerCut & fpcut) // should for aero
             {
                 th1_aero->Fill(delta);
-                th2_fpXaero->Fill(xfp,yfp);
+                th2_fpXaero->Fill((xfp+xpfp*AERO_z),(yfp+ypfp*AERO_z));
                 if(aeroCut)
                 {
                     th1_aeroCut->Fill(delta);
@@ -235,30 +235,29 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	// do division of plots to get efficiency plots
 	Bool_t junk; // for holding return of TH1->Divide() 
 	th1_hgcer_eff = new TH1D("hgcer_eff", "hgcer_eff", 120, -10.0, 20.0);
-	th1_hgcer_eff->GetXaxis()->SetNameTitle("Delta (%)","Delta (%)");
+	junk = th1_hgcer_eff->Divide(th1_hgcerCut,th1_hgcer);
+	th1_hgcer_eff->GetXaxis()->SetNameTitle("#delta (%)","#delta (%)");
 	th1_hgcer_eff->GetYaxis()->SetNameTitle("HGCER Efficiency","HGCER Efficiency");
-	th1_hgcer_eff->GetXaxis()->SetLabelSize(0.06);
-	th1_hgcer_eff->GetYaxis()->SetLabelSize(0.05);
+	th1_hgcer_eff->GetXaxis()->SetLabelSize(0.04);
+	th1_hgcer_eff->GetYaxis()->SetLabelSize(0.04);
 	th1_hgcer_eff->SetStats(0);
 	
 	th1_aero_eff = new TH1D("aero_eff", "aero_eff", 120, -10.0, 20.0);
-	th1_aero_eff->GetXaxis()->SetNameTitle("Delta (%)","Delta (%)");
+	junk = th1_aero_eff->Divide(th1_aeroCut,th1_aero);
+	th1_aero_eff->GetXaxis()->SetNameTitle("#delta (%)","#delta (%)");
 	th1_aero_eff->GetYaxis()->SetNameTitle("Aerogel Efficiency","Aerogel Efficiency");
-	th1_aero_eff->GetXaxis()->SetLabelSize(0.06);
-	th1_aero_eff->GetYaxis()->SetLabelSize(0.05);
+	th1_aero_eff->GetXaxis()->SetLabelSize(0.04);
+	th1_aero_eff->GetYaxis()->SetLabelSize(0.04);
 	th1_aero_eff->SetStats(0);
 	
 	th1_ngcer_eff = new TH1D("ngcer_eff", "ngcer_eff", 120, -10.0, 20.0);
-	th1_ngcer_eff->GetXaxis()->SetNameTitle("Delta (%)","Delta (%)");
+	junk = th1_ngcer_eff->Divide(th1_ngcerCut,th1_ngcer);
+	th1_ngcer_eff->GetXaxis()->SetNameTitle("#delta (%)","#delta (%)");
 	th1_ngcer_eff->GetYaxis()->SetNameTitle("NGCER Efficiency","NGCER Efficiency");
-	th1_ngcer_eff->GetXaxis()->SetLabelSize(0.06);
-	th1_ngcer_eff->GetYaxis()->SetLabelSize(0.05);
+	th1_ngcer_eff->GetXaxis()->SetLabelSize(0.04);
+	th1_ngcer_eff->GetYaxis()->SetLabelSize(0.04);
 	th1_ngcer_eff->SetStats(0);
 	
-	junk = th1_hgcer_eff->Divide(th1_hgcerCut,th1_hgcer);
-    junk = th1_ngcer_eff->Divide(th1_ngcerCut,th1_ngcer);
-    junk = th1_aero_eff->Divide(th1_aeroCut,th1_aero);
-
     
     //calculate binamial errors manually
     Int_t BINS = th1_hgcer_eff->GetNbinsX();
@@ -368,15 +367,15 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
     gPad->SetLogz();
     th2_ngcerXaero->Draw("colz");
     
-    TCanvas *c2_1 = new TCanvas (Form("SHMS_%s_EffvDelta_Plots_%d_1", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
+    TCanvas *c2_1 = new TCanvas (Form("SHMS_%s_Effv#delta_Plots_%d_1", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_Effv#delta_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
     c2_1->SetMargin(0.15,0.15,0.15,0.15);
     th1_hgcer_eff->Draw("E0");
     
-    TCanvas *c2_2 = new TCanvas (Form("SHMS_%s_EffvDelta_Plots_%d_2", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
+    TCanvas *c2_2 = new TCanvas (Form("SHMS_%s_Effv#delta_Plots_%d_2", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_Effv#delta_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
     c2_2->SetMargin(0.15,0.15,0.15,0.15);
     th1_ngcer_eff->Draw("E0");
     
-    TCanvas *c2_3 = new TCanvas (Form("SHMS_%s_EffvDelta_Plots_%d_3", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_EffvDelta_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
+    TCanvas *c2_3 = new TCanvas (Form("SHMS_%s_Effv#delta_Plots_%d_3", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_Effv#delta_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
     c2_3->SetMargin(0.15,0.15,0.15,0.15);
     th1_aero_eff->Draw("E0");
     
