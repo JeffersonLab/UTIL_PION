@@ -114,12 +114,12 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	th2_ngcerXhgcer->GetYaxis()->SetLabelSize(0.04);
 	th2_ngcerXhgcer->SetStats(0);
 	
-	th2_fpXhgcer = new TH2D("fpVhgcereff_should", "fpVhgcereff_should", 80, -40.0, 40.0, 80, -40.0, 40.0);
+	th2_fpXhgcer = new TH2D("fpVhgcereff_should", "fpVhgcereff_should", 110, -55.0, 55.0, 110, -55.0, 55.0);
     th2_fpXngcer = new TH2D("fpVngcereff_should", "fpVngcereff_should", 80, -40.0, 40.0, 80, -40.0, 40.0);
-    th2_fpXaero = new TH2D( "fpVaeroeff_should", "fpVaeroeff_should",   80, -40.0, 40.0, 80, -40.0, 40.0);
-    th2_fpXhgcer_cut = new TH2D("fpVhgcereff_did", "fpVhgcereff_did",   80, -40.0, 40.0, 80, -40.0, 40.0);
+    th2_fpXaero = new TH2D( "fpVaeroeff_should", "fpVaeroeff_should",   120, -60.0, 60.0, 120, -60.0, 60.0);
+    th2_fpXhgcer_cut = new TH2D("fpVhgcereff_did", "fpVhgcereff_did",   110, -55.0, 55.0, 110, -55.0, 55.0);
     th2_fpXngcer_cut = new TH2D("fpVngcereff_did", "fpVngcereff_did",   80, -40.0, 40.0, 80, -40.0, 40.0);
-    th2_fpXaero_cut = new TH2D( "fpVaeroeff_did", "fpVaeroeff_did",     80, -40.0, 40.0, 80, -40.0, 40.0);
+    th2_fpXaero_cut = new TH2D( "fpVaeroeff_did", "fpVaeroeff_did",     120, -60.0, 60.0, 120, -60.0, 60.0);
 
 	
 	input1 = new TFile(rootFile, "READ");
@@ -321,7 +321,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 	th1_aero_eff->SetMinimum(0.8*(th1_aero_eff->GetBinContent(th1_aero_eff->GetMinimumBin())));
 	th1_aero_eff->SetMaximum(1.2*(th1_aero_eff->GetBinContent(th1_aero_eff->GetMaximumBin())));    
     
-    th2_fpXhgcer_eff2D = new TH2D("fpVhgcereff_2Deff", "fpVhgcereff_2Deff", 80, -40.0, 40.0, 80, -40.0, 40.0);
+    th2_fpXhgcer_eff2D = new TH2D("fpVhgcereff_2Deff", "fpVhgcereff_2Deff", 110, -55.0, 55.0, 110, -55.0, 55.0);
     junk = th2_fpXhgcer_eff2D->Divide(th2_fpXhgcer_cut, th2_fpXhgcer);
     th2_fpXhgcer_eff2D->GetXaxis()->SetNameTitle("X at HGCER (cm)","X at HGCER (cm)");
     th2_fpXhgcer_eff2D->GetYaxis()->SetNameTitle("Y at HGCER (cm)","Y at HGCER (cm)");
@@ -337,7 +337,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
     th2_fpXngcer_eff2D->GetXaxis()->SetLabelSize(0.04);
     th2_fpXngcer_eff2D->SetStats(0);
     
-    th2_fpXaero_eff2D = new TH2D("fpVaeroeff_2Deff", "fpVaeroeff_2Deff", 80, -40.0, 40.0, 80, -40.0, 40.0);
+    th2_fpXaero_eff2D = new TH2D("fpVaeroeff_2Deff", "fpVaeroeff_2Deff", 120, -60.0, 60.0, 120, -60.0, 60.0);
     junk = th2_fpXaero_eff2D->Divide(th2_fpXaero_cut, th2_fpXaero);
     th2_fpXaero_eff2D->GetXaxis()->SetNameTitle("X at Aerogel (cm)","X at Aerogel (cm)");
     th2_fpXaero_eff2D->GetYaxis()->SetNameTitle("Y at Aerogel (cm)","Y at Aerogel (cm)");
