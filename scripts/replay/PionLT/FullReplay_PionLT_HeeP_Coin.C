@@ -37,7 +37,9 @@ void FullReplay_PionLT_HeeP_Coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
 //  pathList.push_back("./cache_pionlt");
 
   //Output file name
-  const char* ROOTFileNamePattern = "/cache/hallc/c-pionlt/analysis/PionLT_Fullreplay_Analysis_Files_Pass1_2021/Analysis/HeeP/PionLT_HeePCoin_replay_production_%d_%d.root";
+  
+  const char* ROOTFileNamePattern = "/volatile/hallc/c-pionlt/junaid/ROOTfiles/Analysis/HeeP/PionLT_HeePCoin_replay_production_%d_%d.root";
+  //const char* ROOTFileNamePattern = "/cache/hallc/c-pionlt/analysis/PionLT_Fullreplay_Analysis_Files_Pass1_2021/Analysis/HeeP/PionLT_HeePCoin_replay_production_%d_%d.root";
   //const char* ROOTFileNamePattern = "/cache/hallc/c-pionlt/analysis/PionLT_Fullreplay_Analysis_Files_Pass1_2022/Analysis/HeeP/PionLT_HeePCoin_replay_production_%d_%d.root";
 
   // Load global parameters
@@ -313,6 +315,21 @@ void FullReplay_PionLT_HeeP_Coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   }
 
 
+  // File to record accounting information for cuts
+  analyzer->SetSummaryFile(Form("/volatile/hallc/c-pionlt/junaid/REPORT_OUTPUT/SUMMARY_OUTPUT/HeeP/PionLT_HeePCoin_summary_production_%d_%d.report", RunNumber, MaxEvent));  // optional
+  // Start the actual analysis.
+  analyzer->Process(run);
+  // Create report file from template
+  //  analyzer->PrintReport("TEMPLATES/COIN/PRODUCTION/COIN_PROD.template",
+  analyzer->PrintReport("TEMPLATES/COIN/PRODUCTION/PionLT_TEMP/PionLT_Offline_HEEP_Coin.template",
+  Form("/volatile/hallc/c-pionlt/junaid/REPORT_OUTPUT/Analysis/HeeP/PionLT_replay_HeeP_coin_%d_%d.report", RunNumber, MaxEvent));  // optional
+  // Helicity scalers output
+  analyzer->PrintReport("TEMPLATES/HMS/SCALERS/hhelscalers.template",
+                        Form("/volatile/hallc/c-pionlt/junaid/REPORT_OUTPUT/Scalers/HeeP/PionLT_replay_hms_helicity_scalers_%d_%d.report", RunNumber, MaxEvent));  // optional  
+  analyzer->PrintReport("TEMPLATES/SHMS/SCALERS/phelscalers.template",
+                        Form("/volatile/hallc/c-pionlt/junaid/REPORT_OUTPUT/Scalers/HeeP/PionLT_replay_shms_helicity_scalers_%d_%d.report", RunNumber, MaxEvent));  // optional  
+
+/*
   if (RunNumber >= 11700 && RunNumber <= 14900){
   // File to record accounting information for cuts
   analyzer->SetSummaryFile(Form("/cache/hallc/c-pionlt/analysis/PionLT_Fullreplay_Analysis_Files_Pass1_2021/SUMMARY_OUTPUT/HeeP/PionLT_HeePCoin_summary_production_%d_%d.report", RunNumber, MaxEvent));  // optional
@@ -344,5 +361,6 @@ void FullReplay_PionLT_HeeP_Coin (Int_t RunNumber = 0, Int_t MaxEvent = 0) {
   analyzer->PrintReport("TEMPLATES/SHMS/SCALERS/phelscalers.template",
                         Form("/cache/hallc/c-pionlt/analysis/PionLT_Fullreplay_Analysis_Files_Pass1_2022/Scalers/HeeP/PionLT_replay_shms_helicity_scalers_%d_%d.report", RunNumber, MaxEvent));  // optional
   }
+*/
 
 }

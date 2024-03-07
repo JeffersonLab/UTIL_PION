@@ -3,7 +3,7 @@
 #
 # Description:
 # ================================================================
-# Time-stamp: "2021-11-05 00:31:39 trottar"
+# Time-stamp: "2023-09-11 23:23:03 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -15,7 +15,7 @@ from .cut import SetCuts
 from .pathing import SetPath
 from .help import Help
 
-__version__ = '2.0.0'
+__version__ = '3.3.5'
 __author__ = 'trottar'
 __license__ = 'trottar'
-__copyright__ = 'Copyright 2020-2021 trottar'
+__copyright__ = 'Copyright 2020-2023 trottar'
