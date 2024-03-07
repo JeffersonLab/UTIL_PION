@@ -1,56 +1,22 @@
 #!/bin/bash
 
-# Flags for plotting yield or reanalyzing all data
-while getopts 'ht' flag; do
-    case "${flag}" in
-	h)
-	    echo "The following flags can be called for the luminosity analysis..."
-	    echo "    -h, help"
-	    echo "    -t, reproduce trigger windows"
-	    echo "        RUNNUMBER=arg1, MAXEVENTS=arg2"
-	    exit 0 ;;
-	t) t_flag='true' ;;
-	*) print_usage
-	exit 1 ;;
-    esac
-done
+echo
+echo "Starting Luminosity Script"
+echo "I take as arguments the Run Number and max number of events!"
+RUNNUMBER=$1
+MAXEVENTS=$2
+#MAXEVENTS=12500
 
-
-if [[ $t_flag = "true" ]]; then
-    echo
-    echo "Starting Luminosity Script"
-    echo "I take as arguments the Run Number and max number of events!"
-    RUNNUMBER=$2
-    MAXEVENTS=$3
-    #MAXEVENTS=12500
-
-    if [[ $2 -eq "" ]]; then
-	echo "I need a Run Number!"
-	exit 2
-    fi
-
-    if [[ $3 -eq "" ]]; then
-	echo "Only Run Number entered...I'll assume -1 events!" 
-	MAXEVENTS=-1 
-    fi
-else
-    echo
-    echo "Starting Luminosity Script"
-    echo "I take as arguments the Run Number and max number of events!"
-    RUNNUMBER=$1
-    MAXEVENTS=$2
-    #MAXEVENTS=12500
-
-    if [[ $1 -eq "" ]]; then
-	echo "I need a Run Number!"
-	exit 2
-    fi
-
-    if [[ $2 -eq "" ]]; then
-	echo "Only Run Number entered...I'll assume -1 events!" 
-	MAXEVENTS=-1 
-    fi
+if [[ $1 -eq "" ]]; then
+    echo "I need a Run Number!"
+    exit 2
 fi
+
+if [[ $2 -eq "" ]]; then
+    echo "Only Run Number entered...I'll assume -1 events!" 
+    MAXEVENTS=-1 
+fi
+
 
 # Runs script in the ltsep python package that grabs current path enviroment
 if [[ ${HOSTNAME} = *"cdaq"* ]]; then
@@ -79,7 +45,6 @@ HOST=`echo ${PATHFILE_INFO} | cut -d ','  -f15`
 # Source stuff depending upon hostname. Change or add more as needed  
 if [[ "${HOST}" = *"farm"* ]]; then
     if [[ "${HOST}" != *"ifarm"* ]]; then
-	source /site/12gev_phys/softenv.sh 2.3
 	source /apps/root/6.18.04/setroot_CUE.bash
     fi
     cd "$HCANAPATH"
@@ -97,11 +62,11 @@ if [ ! -f "$UTILPATH/ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMBER}_${MAXEVE
     eval "$REPLAYPATH/hcana -l -q -b \"SCRIPTS/COIN/SCALERS/replay_coin_scalers.C($RUNNUMBER,${MAXEVENTS})\""
     cd "$REPLAYPATH/CALIBRATION/bcm_current_map"
     root -b -l<<EOF 
-.L ScalerCalib.C
+.L ScalerCalib.C+
 .x run.C("${UTILPATH}/ROOTfiles/Scalers/coin_replay_scalers_${RUNNUMBER}_${MAXEVENTS}.root")
 .q  
 EOF
-    mv bcmcurrent_${RUNNUMBER}_.param $REPLAYPATH/PARAM/HMS/BCM/CALIB/bcmcurrent_$RUNNUMBER.param
+    mv bcmcurrent_$RUNNUMBER.param $REPLAYPATH/PARAM/HMS/BCM/CALIB/bcmcurrent_$RUNNUMBER.param
     cd $REPLAYPATH
 else echo "Scaler replayfile already found for this run in $REPLAYPATH/ROOTfiles/Scalers - Skipping scaler replay step"
 fi
@@ -111,36 +76,28 @@ sleep 3
 if [ ! -f "$UTILPATH/ROOTfiles/Analysis/Lumi/${ANATYPE}_replay_luminosity_${RUNNUMBER}_${MAXEVENTS}.root" ]; then
     if [[ "${HOSTNAME}" != *"ifarm"* ]]; then
 	if [[ "${HOSTNAME}" == *"cdaq"* ]]; then
-	    eval "$REPLAYPATH/hcana -l -q -b \"SCRIPTS/COIN/PRODUCTION/FullReplay_KaonLT_Luminosity.C($RUNNUMBER,$MAXEVENTS)\""| tee $UTILPATH/REPORT_OUTPUT/Analysis/Lumi/${ANATYPE}_output_coin_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
+	    eval "$REPLAYPATH/hcana -l -q -b \"$UTILPATH/scripts/replay/${ANATYPE}LT/replay_luminosity.C($RUNNUMBER,$MAXEVENTS)\""| tee $UTILPATH/REPORT_OUTPUT/Analysis/Lumi/${ANATYPE}_output_coin_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
 	else	
-	    eval "$REPLAYPATH/hcana -l -q -b \"SCRIPTS/COIN/PRODUCTION/FullReplay_KaonLT_Luminosity.C($RUNNUMBER,$MAXEVENTS)\"" 
+	    eval "$REPLAYPATH/hcana -l -q -b \"$UTILPATH/scripts/replay/${ANATYPE}LT/replay_luminosity.C($RUNNUMBER,$MAXEVENTS)\"" 
 	fi
     elif [[ "${HOSTNAME}" == *"ifarm"* ]]; then
-	eval "$REPLAYPATH/hcana -l -q -b \"SCRIPTS/COIN/PRODUCTION/FullReplay_KaonLT_Luminosity.C($RUNNUMBER,$MAXEVENTS)\""| tee $UTILPATH/REPORT_OUTPUT/Analysis/Lumi/${ANATYPE}_output_coin_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
+	eval "$REPLAYPATH/hcana -l -q -b \"$UTILPATH/scripts/replay/${ANATYPE}LT/replay_luminosity.C($RUNNUMBER,$MAXEVENTS)\""| tee $UTILPATH/REPORT_OUTPUT/Analysis/Lumi/${ANATYPE}_output_coin_production_Summary_${RUNNUMBER}_${MAXEVENTS}.report
     fi
 else echo "Replayfile already found for this run in $UTILPATH/ROOTfiles/Analysis/Lumi/ - Skipping replay step"
 fi
 
-sleep 3
+#sleep 3
 
-if [[ $t_flag = "true" ]]; then
-    # Sets trigger windows
-    echo
-    echo "Running trigWindows.sh ${RUNNUMBER}..."
-    echo
-    cd ${UTILPATH}/scripts/trig_windows/src/
-    #source trigWindows.sh ${RUNNUMBER}
-    python3 trigcuts.py Lumi ${ANATYPE}_replay_luminosity ${RUNNUMBER} ${MAXEVENTS}
-    echo
-    echo "Plotting trigWindows for ${RUNNUMBER}..."
-    echo
-    cd ${UTILPATH}/scripts/trig_windows/src
-    #source trigWindows.sh -p ${RUNNUMBER}
-    python3 plot_trig.py Lumi ${ANATYPE}_replay_luminosity ${RUNNUMBER} ${MAXEVENTS}
-fi
+# Sets trigger windows
+#echo
+#echo "Running trigWindows.sh ${RUNNUMBER}..."
+#cd ${UTILPATH}/scripts/trig_windows/
+#source trigWindows.sh ${RUNNUMBER}
+#cd ${UTILPATH}/scripts/trig_windows/
+#source trigWindows.sh -p ${RUNNUMBER}
 
 # Analyzes lumi runs
-echo
-echo "Running lumiyield.py ${RUNNUMBER} ${MAXEVENTS}..."
-cd ${UTILPATH}/scripts/luminosity/src/
-python3 lumiyield.py ${ANATYPE}_replay_luminosity ${RUNNUMBER} ${MAXEVENTS}
+#echo
+#echo "Running lumiyield.py ${RUNNUMBER} ${MAXEVENTS}..."
+#cd ${UTILPATH}/scripts/luminosity/src/
+#python3 lumiyield.py ${ANATYPE}_replay_luminosity ${RUNNUMBER} ${MAXEVENTS}

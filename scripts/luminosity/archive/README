@@ -26,11 +26,13 @@ plot_yield.py                     : Reads in the values of OUTPUTS/lumi_data.csv
 How to run: 
 =================================
 
-replay_lumi.sh <runNumber> <numEvents>  : Calls scaler replay SCRIPTS/COIN/SCALERS/replay_coin_scalers.C, 
-	       		   		  full replay ../scripts/replay/${ANATYPE}LT/replay_luminosity.C, 
-					  the trigger windows script ../scripts/trig_windows/trigWindows.sh 
-					  and lumi analysis script src/lumiyield.py
-reana_Lumi.sh -y <lumi_setting>         : Plots yields when using the -y flag with src/plot_yield.py
+replay_lumi.sh <runNumber> <numEvents>  : Calls scaler replay
+                                          SCRIPTS/COIN/SCALERS/replay_coin_scalers.C, full replay
+                                          ../scripts/replay/replay_luminosity.C, the trigger windows script 
+					  ../scripts/trig_windows/trigWindows.sh and lumi analysis
+					  script src/lumiyield.py
+reana_Lumi.sh -p <lumi_setting>         : Plots yields when using the -p flag with src/plot_yield.py
+	      	 			  using the -r flag will perform a full reanalyzes of the data
 
 
 

@@ -2,7 +2,7 @@
 #
 # Description: Plots the PID cuts
 # ================================================================
-# Time-stamp: "2022-06-30 02:04:03 trottar"
+# Time-stamp: "2021-11-08 15:11:25 trottar"
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -34,20 +34,18 @@ ltsep package import and pathing definitions
 # Import package for cuts
 import ltsep as lt 
 
-lt.Help.info(lt.Root)
+lt.Help.info(lt.SetPath)
 lt.Help.info(lt.SetCuts.importDict)
 lt.Help.path_setup()
 lt.Help.cut_setup()
 lt.Help.searchPathFile(os.path.realpath(__file__))
 
-p=lt.SetPath(os.path.realpath(__file__))
-
 # Add this to all files for more dynamic pathing
-USER=p.getPath("USER") # Grab user info for file finding
-HOST=p.getPath("HOST")
-REPLAYPATH=p.getPath("REPLAYPATH")
-UTILPATH=p.getPath("UTILPATH")
-ANATYPE=p.getPath("ANATYPE")
+USER =  lt.SetPath(os.path.realpath(__file__)).getPath("USER") # Grab user info for file finding
+HOST = lt.SetPath(os.path.realpath(__file__)).getPath("HOST")
+REPLAYPATH = lt.SetPath(os.path.realpath(__file__)).getPath("REPLAYPATH")
+UTILPATH = lt.SetPath(os.path.realpath(__file__)).getPath("UTILPATH")
+ANATYPE=lt.SetPath(os.path.realpath(__file__)).getPath("ANATYPE")
 
 ################################################################################################################################################
 '''
