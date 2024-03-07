@@ -191,7 +191,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
             }
             
             // Fill 2D PID plots
-            if(fpcut){
+            if(fpcut & (hgcerNpeSum > 0.01)){
                 th2_aeroXhgcer->Fill(aeroNpeSum, hgcerNpeSum);
                 th2_ngcerXaero->Fill(ngcerNpeSum, aeroNpeSum);
                 th2_ngcerXhgcer->Fill(ngcerNpeSum, hgcerNpeSum);
@@ -199,7 +199,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
             
             if (fpcut & hgcerCut & aeroCut) th2_ngcerXcal->Fill(ngcerNpeSum, calEtot);
             
-            if (calCut & aeroCut & ngcerCut & fpcut) // should for hgcer
+            if (calCut & aeroCut & ngcerCut & fpcut & hgcerNpeSum > 0.01) // should for hgcer
             {
                 th1_hgcer->Fill(delta);
                 th2_fpXhgcer->Fill((xfp+xpfp*HGCER_z),(yfp+ypfp*HGCER_z));
@@ -314,12 +314,12 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
 
     //auto set axis ranges
     cout << "th1_hgcer_eff->GetBinContent(th1_hgcer_eff->GetMaximumBin())" << th1_hgcer_eff->GetBinContent(th1_hgcer_eff->GetMaximumBin()) << '\n';
-    th1_hgcer_eff->SetMinimum(0.8*(th1_hgcer_eff->GetBinContent(th1_hgcer_eff->GetMinimumBin())));
-	th1_hgcer_eff->SetMaximum(1.2*(th1_hgcer_eff->GetBinContent(th1_hgcer_eff->GetMaximumBin())));
-	th1_ngcer_eff->SetMinimum(0.8*(th1_ngcer_eff->GetBinContent(th1_ngcer_eff->GetMinimumBin())));
-	th1_ngcer_eff->SetMaximum(1.2*(th1_ngcer_eff->GetBinContent(th1_ngcer_eff->GetMaximumBin())));
-	th1_aero_eff->SetMinimum(0.8*(th1_aero_eff->GetBinContent(th1_aero_eff->GetMinimumBin())));
-	th1_aero_eff->SetMaximum(1.2*(th1_aero_eff->GetBinContent(th1_aero_eff->GetMaximumBin())));    
+    th1_hgcer_eff->SetMinimum(0.0);
+	th1_hgcer_eff->SetMaximum(1.1);
+	th1_ngcer_eff->SetMinimum(0.6);
+	th1_ngcer_eff->SetMaximum(1.1);
+	th1_aero_eff->SetMinimum(0.8);
+	th1_aero_eff->SetMaximum(1.1);    
     
     th2_fpXhgcer_eff2D = new TH2D("fpVhgcereff_2Deff", "fpVhgcereff_2Deff", 110, -55.0, 55.0, 110, -55.0, 55.0);
     junk = th2_fpXhgcer_eff2D->Divide(th2_fpXhgcer_cut, th2_fpXhgcer);
@@ -380,7 +380,7 @@ void makePlots ( TString rootFile, Int_t runNum, int NumEvents, int cutType )
     th1_aero_eff->Draw("E0");
     
     TCanvas *c3_1 = new TCanvas (Form("SHMS_%s_2DEff_Plots_%d_1", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
-    c2_1->SetMargin(0.15,0.15,0.15,0.15);
+    c3_1->SetMargin(0.15,0.15,0.15,0.15);
     th2_fpXhgcer_eff2D->Draw("colz");
     
     TCanvas *c3_2 = new TCanvas (Form("SHMS_%s_2DEff_Plots_%d_2", cutNames[cutType].c_str(), runNum), Form("SHMS_%s_2DEff_Plots_%d", cutNames[cutType].c_str(), runNum), 600, 600);
