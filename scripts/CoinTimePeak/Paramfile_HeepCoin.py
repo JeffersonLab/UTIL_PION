@@ -15,7 +15,6 @@ import matplotlib.pyplot as plt
 import sys, math, os, subprocess
 from os import path
 
-sys.path.insert(0, 'python/')
 if len(sys.argv)-1!=2:
     print("!!!!! ERROR !!!!!\n Expected 2 arguments\n Usage is with - InputKinList OldParamFile \n!!!!! ERROR !!!!!")
     sys.exit(1)
@@ -23,22 +22,28 @@ if len(sys.argv)-1!=2:
 InputList = sys.argv[1]
 OldParam = sys.argv[2]
 
-USER = subprocess.getstatusoutput("whoami") # Grab user info for file finding
-HOST = subprocess.getstatusoutput("hostname")
-if ("farm" in HOST[1]):
-    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
-elif ("qcd" in HOST[1]):
-    REPLAYPATH = "/group/c-pionlt/USERS/%s/hallc_replay_lt" % USER[1]
-elif ("lark.phys.uregina" in HOST[1]):
-    REPLAYPATH = "/home/%s/work/JLab/hallc_replay_lt" % USER[1]
+################################################################################################################################################
+'''
+ltsep package import and pathing definitions
+'''
+
+# Import package for cuts
+import ltsep as lt 
+
+# Add this to all files for more dynamic pathing
+USER =  lt.SetPath(os.path.realpath(__file__)).getPath("USER") # Grab user info for file finding
+HOST = lt.SetPath(os.path.realpath(__file__)).getPath("HOST")
+REPLAYPATH = lt.SetPath(os.path.realpath(__file__)).getPath("REPLAYPATH")
+UTILPATH = lt.SetPath(os.path.realpath(__file__)).getPath("UTILPATH")
+ANATYPE=lt.SetPath(os.path.realpath(__file__)).getPath("ANATYPE")
 
 # Add more path setting as needed in a similar manner
-OUTPATH = "%s/UTIL_PION/OUTPUT/Analysis/PionLT" % REPLAYPATH
-PARAMPATH = "%s/UTIL_PION/DB/PARAM" % REPLAYPATH
-CUTPATH = "%s/UTIL_PION/DB/CUTS" % REPLAYPATH
+OUTPATH = "%s/OUTPUT/Analysis/%sLT" % (UTILPATH,ANATYPE)
+PARAMPATH = "%s/DB/PARAM" % UTILPATH
+CUTPATH = "%s/DB/CUTS" % UTILPATH
 
-print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER[1], HOST[1], REPLAYPATH))
-KinList = "%s/UTIL_PION/scripts/CoinTimePeak/Kinematics/%s" % (REPLAYPATH,InputList)
+print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, UTILPATH))
+KinList = "%s/scripts/CoinTimePeak/Kinematics/%s" % (UTILPATH,InputList)
 TimingCutFile = "%s/%s.csv" % (PARAMPATH,OldParam)
 if (path.exists(KinList) == False or path.isfile(KinList) == False):
     print("!!!!! ERROR !!!!!\n %s does not exist or is not a valid file - check 1st input arg and try again \n!!!!! ERROR !!!!!" % KinList)

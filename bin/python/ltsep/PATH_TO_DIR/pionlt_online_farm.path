@@ -1,0 +1,16 @@
+VOLATILEPATH=/volatile/hallc/c-pionlt
+ANALYSISPATH=/group/c-pionlt
+HCANAPATH=/group/c-pionlt/hcana
+REPLAYPATH=/group/c-pionlt/online_analysis/hallc_replay_lt
+UTILPATH=/group/c-pionlt/online_analysis/hallc_replay_lt/UTIL_PION
+PACKAGEPATH=/home/${USER}/.local/lib/python3.4/site-packages/ltsep
+OUTPATH=/group/c-pionlt/online_analysis/hallc_replay_lt/UTIL_PION/OUTPUT/Analysis
+ROOTPATH=/group/c-pionlt/online_analysis/hallc_replay_lt/UTIL_PION/ROOTfiles/Analysis
+REPORTPATH=/group/c-pionlt/online_analysis/hallc_replay_lt/UTIL_PION/REPORT_OUTPUT/Analysis
+CUTPATH=/group/c-pionlt/online_analysis/hallc_replay_lt/UTIL_PION/DB/CUTS
+PARAMPATH=/group/c-pionlt/online_analysis/hallc_replay_lt/UTIL_PION/DB/PARAM
+SCRIPTPATH=/group/c-pionlt/online_analysis/hallc_replay_lt/UTIL_PION/scripts
+SIMCPATH=/group/c-pionlt/simc_gfortran
+LTANAPATH=/group/c-pionlt/lt_analysis
+CACHEPATH=/lustre19/expphy/cache/hallc/c-pionlt
+ANATYPE=Pion

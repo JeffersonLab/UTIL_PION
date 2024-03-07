@@ -15,13 +15,36 @@ if [[ $prompt == "y" || $prompt == "Y" || $prompt == "yes" || $prompt == "Yes" ]
 else echo "Will not submit any batch jobs, please check input lists manually and submit if needed"
 fi
 
+# Runs script in the ltsep python package that grabs current path enviroment
+if [[ ${HOSTNAME} = *"cdaq"* ]]; then
+    PATHFILE_INFO=`python3 /home/cdaq/pionLT-2021/hallc_replay_lt/UTIL_PION/bin/python/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
+elif [[ "${HOSTNAME}" = *"farm"* ]]; then
+    PATHFILE_INFO=`python3 /u/home/${USER}/.local/lib/python3.4/site-packages/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
+fi
+
+# Split the string we get to individual variables, easier for printing and use later
+VOLATILEPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f1` # Cut the string on , delimitter, select field (f) 1, set variable to output of command
+ANALYSISPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f2`
+HCANAPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f3`
+REPLAYPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f4`
+UTILPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f5`
+PACKAGEPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f6`
+OUTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f7`
+ROOTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f8`
+REPORTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f9`
+CUTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f10`
+PARAMPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f11`
+SCRIPTPATH=`echo ${PATHFILE_INFO} | cut -d ','  -f12`
+ANATYPE=`echo ${PATHFILE_INFO} | cut -d ','  -f13`
+USER=`echo ${PATHFILE_INFO} | cut -d ','  -f14`
+HOST=`echo ${PATHFILE_INFO} | cut -d ','  -f15`
+
 echo "######################################################"
 echo "### Processing kinematic ${KINEMATIC} ###"
 echo "######################################################"
 
 # Set path depending upon hostname. Change or add more as needed  
 if [[ "${HOSTNAME}" = *"farm"* ]]; then  
-    REPLAYPATH="/group/c-pionlt/USERS/${USER}/hallc_replay_lt"
     if [[ "${HOSTNAME}" != *"ifarm"* ]]; then
 	source /site/12gev_phys/softenv.sh 2.3
 	source /apps/root/6.18.04/setroot_CUE.bash
@@ -29,17 +52,11 @@ if [[ "${HOSTNAME}" = *"farm"* ]]; then
     cd "$REPLAYPATH"
     source "$REPLAYPATH/setup.sh"
 elif [[ "${HOSTNAME}" = *"qcd"* ]]; then
-    REPLAYPATH="/group/c-pionlt/USERS/${USER}/hallc_replay_lt"
     source /site/12gev_phys/softenv.sh 2.3
     source /apps/root/6.18.04/setroot_CUE.bash
     cd "$REPLAYPATH"
     source "$REPLAYPATH/setup.sh" 
-elif [[ "${HOSTNAME}" = *"cdaq"* ]]; then
-    REPLAYPATH="/home/cdaq/hallc-online/hallc_replay_lt"
-elif [[ "${HOSTNAME}" = *"phys.uregina.ca"* ]]; then
-    REPLAYPATH="/home/${USER}/work/JLab/hallc_replay_lt"
 fi
-UTILPATH="${REPLAYPATH}/UTIL_PION"
 RunListFile="${UTILPATH}/scripts/CoinTimePeak/Kinematics/${KINEMATIC}"
 if [ ! -f "${RunListFile}" ]; then
     echo "Error, ${RunListFile} not found, exiting"
@@ -55,7 +72,7 @@ fi
 TestingVar=$((1))
 while IFS='' read -r line || [[ -n "$line" ]]; do
     runNum=$line
-    if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${runNum}_-1_CTPeak_Data.root" ]; then
+    if [ ! -f "${UTILPATH}/OUTPUT/Analysis/${ANATYPE}LT/${runNum}_-1_CTPeak_Data.root" ]; then
 	echo "CTPeak analysis not found for run $runNum in ${UTILPATH}/scripts/CoinTimePeak/OUTPUT/"
 	echo "${runNum}" >> "${UTILPATH}/scripts/CoinTimePeak/Kinematics/${KINEMATIC}_MissingCTAnalysis"
 	TestingVar=$((TestingVar+1))
@@ -70,11 +87,11 @@ elif [ $TestingVar != 1 ]; then
     if [ $Autosub == 1 ]; then
 	while IFS='' read -r line || [[ -n "$line" ]]; do
 	    runNum=$line
-	    if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${runNum}_-1_CTPeak_Data.root" ]; then
-		rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${runNum}_-1_CTPeak_Data.root"
+	    if [ -f "${UTILPATH}/OUTPUT/Analysis/${ANATYPE}LT/${runNum}_-1_CTPeak_Data.root" ]; then
+		rm "${UTILPATH}/OUTPUT/Analysis/${ANATYPE}LT/${runNum}_-1_CTPeak_Data.root"
 	    fi
-	    if [ -f "${UTILPATH}/ROOTfiles/Analysis/PionLT/Pion_coin_replay_production_${runNum}_-1.root" ]; then
-		rm "${UTILPATH}/ROOTfiles/Analysis/PionLT/Pion_coin_replay_production_${runNum}_-1.root"
+	    if [ -f "${UTILPATH}/ROOTfiles/Analysis/${ANATYPE}LT/${ANATYPE}_coin_replay_production_${runNum}_-1.root" ]; then
+		rm "${UTILPATH}/ROOTfiles/Analysis/${ANATYPE}LT/${ANATYPE}_coin_replay_production_${runNum}_-1.root"
 	    fi
 	done < "${UTILPATH}/scripts/CoinTimePeak/Kinematics/${KINEMATIC}_MissingCTAnalysis"
 	yes y | eval "$REPLAYPATH/UTIL_BATCH/batch_scripts/run_batch_CTPeak_Analysis.sh ${KINEMATIC}_MissingCTAnalysis"
@@ -84,8 +101,8 @@ elif [ $TestingVar != 1 ]; then
 	if [[ $prompt2 == "y" || $prompt2 == "Y" || $prompt2 == "yes" || $prompt2 == "Yes" ]]; then
 	    while IFS='' read -r line || [[ -n "$line" ]]; do
 		runNum=$line
-		if [ ! -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${runNum}_-1_CTPeak_Data.root" ]; then
-		    python3 $UTILPATH/scripts/CoinTimePeak/src/CoinTimePeak.py "Pion_coin_replay_production" ${runNum} "-1" 
+		if [ ! -f "${UTILPATH}/OUTPUT/Analysis/${ANATYPE}LT/${runNum}_-1_CTPeak_Data.root" ]; then
+		    python3 $UTILPATH/scripts/CoinTimePeak/src/CoinTimePeak.py "${ANATYPE}_coin_replay_production" ${runNum} "-1" 
 		fi
 	    done < "$RunListFile"
 	    else echo "Not processing python script interactively"
@@ -94,13 +111,13 @@ elif [ $TestingVar != 1 ]; then
 fi
 
 if [ $TestingVar == 1 ]; then
-    if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Output.csv" ]; then
-	rm "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Output.csv"
-    else touch "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Output.csv"
+    if [ -f "${UTILPATH}/OUTPUT/Analysis/${ANATYPE}LT/${KINEMATIC}_Output.csv" ]; then
+	rm "${UTILPATH}/OUTPUT/Analysis/${ANATYPE}LT/${KINEMATIC}_Output.csv"
+    else touch "${UTILPATH}/OUTPUT/Analysis/${ANATYPE}LT/${KINEMATIC}_Output.csv"
     fi
     while IFS='' read -r line || [[ -n "$line" ]]; do
 	runNum=$line
-	OutputFile="${UTILPATH}/OUTPUT/Analysis/PionLT/${runNum}_Out_tmp"
+	OutputFile="${UTILPATH}/OUTPUT/Analysis/${ANATYPE}LT/${runNum}_Out_tmp"
 	if [ -f ${OutputFile} ]; then
 	    rm ${OutputFile}
 	else touch ${OutputFile}
@@ -108,13 +125,13 @@ if [ $TestingVar == 1 ]; then
 	root -b -l -q "${UTILPATH}/scripts/CoinTimePeak/PlotCoinPeak.C(\"${runNum}_-1_CTPeak_Data.root\", \"${runNum}_CTOut\")" >> ${OutputFile}
 	sleep 1
 	Data=$(sed -n "/${runNum},/p" $OutputFile)
-	echo ${Data} >> "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Output.csv"
+	echo ${Data} >> "${UTILPATH}/OUTPUT/Analysis/${ANATYPE}LT/${KINEMATIC}_Output.csv"
 	sleep 1
 	rm ${OutputFile}
     done < "$RunListFile"
 fi
 
-if [ -f "${UTILPATH}/OUTPUT/Analysis/PionLT/${KINEMATIC}_Output.csv" ]; then
+if [ -f "${UTILPATH}/OUTPUT/Analysis/${ANATYPE}LT/${KINEMATIC}_Output.csv" ]; then
     root -b -l -q "${UTILPATH}/scripts/CoinTimePeak/PlotKinematic.C(\"${KINEMATIC}\")" 
 fi
 

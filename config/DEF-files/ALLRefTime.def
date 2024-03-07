@@ -1,0 +1,98 @@
+block CTime.*     
+block RFTime.*
+block P.gtr.*
+block H.gtr.*
+block H.cer.*
+block P.aero.*
+block P.hgcer.*
+block P.ngcer.*
+block P.hod.1x.*
+block P.hod.1y.*
+block P.hod.2x.*
+block P.hod.2y.*
+block P.cal.etotnorm
+block P.dc.1u1.rawtdc
+block P.dc.1u1.nhit
+block P.dc.1u2.rawtdc
+block P.dc.1u2.nhit
+block P.dc.1x1.rawtdc
+block P.dc.1x1.nhit
+block P.dc.1x2.rawtdc
+block P.dc.1x2.nhit
+block P.dc.1v1.rawtdc
+block P.dc.1v1.nhit
+block P.dc.1v2.rawtdc
+block P.dc.1v2.nhit
+block P.dc.2u1.rawtdc
+block P.dc.2u1.nhit
+block P.dc.2u2.rawtdc
+block P.dc.2u2.nhit
+block P.dc.2x1.rawtdc
+block P.dc.2x1.nhit
+block P.dc.2x2.rawtdc
+block P.dc.2x2.nhit
+block P.dc.2v1.rawtdc
+block P.dc.2v1.nhit
+block P.dc.2v2.rawtdc
+block P.dc.2v2.nhit
+block P.dc.x_fp
+block P.dc.xp_fp
+block P.dc.y_fp
+block P.dc.yp_fp
+block P.cal.fly.*
+block P.cal.pr.*
+block P.cal.etotnorm
+block H.cal.etotnorm
+block H.cal.1pr.*
+block H.cal.2ta.*
+block H.cal.3ta.*
+block H.cal.4ta.*
+block H.hod.1x.*
+block H.hod.1y.*
+block H.hod.2x.*
+block H.hod.2y.*
+block H.dc.x_fp
+block H.dc.xp_fp
+block H.dc.y_fp
+block H.dc.yp_fp
+block H.dc.1u1.rawtdc
+block H.dc.1u1.nhit
+block H.dc.1u2.rawtdc
+block H.dc.1u2.nhit
+block H.dc.1x1.rawtdc
+block H.dc.1x1.nhit
+block H.dc.1x2.rawtdc
+block H.dc.1x2.nhit
+block H.dc.1v1.rawtdc
+block H.dc.1v1.nhit
+block H.dc.1v2.rawtdc
+block H.dc.1v2.nhit
+block H.dc.2u1.rawtdc
+block H.dc.2u1.nhit
+block H.dc.2u2.rawtdc
+block H.dc.2u2.nhit
+block H.dc.2x1.rawtdc
+block H.dc.2x1.nhit
+block H.dc.2x2.rawtdc
+block H.dc.2x2.nhit
+block H.dc.2v1.rawtdc
+block H.dc.2v1.nhit
+block H.dc.2v2.rawtdc
+block H.dc.2v2.nhit
+block H.kin.primary.*
+block P.kin.secondary.*
+block T.coin.*
+block T.coin.pTRIG5_ROC2_tdcTime
+block T.coin.pEDTM_tdcTime
+
+begin epics
+IBC3H00CRCUR4
+hac_bcm_average
+ibcm1
+ibcm2
+iunser
+itov3out
+itov4out
+MOFC1DELTA
+MOFC1FREQ
+end epics

@@ -1,0 +1,39 @@
+=================================
+= Luminosity Analysis Directory =
+=================================
+
+
+Archive scripts:
+=================================
+Located in archive directory...
+
+Contains online scripts and c++ versions
+
+Source code: 
+=================================
+Located in src directory...
+
+lumiyield.py                      : which applies cuts to various ROOT leaves and calculates things
+                                    like tracking, HMS events, etc. This will output a csv file to
+				    OUTPUTS/lumi_data.csv which can be imported to an excel sheet or
+				    used as an input for the second Python script (plot_yield.py)
+plot_yield.py                     : Reads in the values of OUTPUTS/lumi_data.csv and plots yields
+                                    with uncertainty. These yield values, along with the values of
+				    OUTPUTS/lumi_data.csv, are printed to an output csv file
+				    OUTPUTS/yield_data.csv.
+
+
+How to run: 
+=================================
+
+replay_lumi.sh <runNumber> <numEvents>  : Calls scaler replay
+                                          SCRIPTS/COIN/SCALERS/replay_coin_scalers.C, full replay
+                                          ../scripts/replay/replay_luminosity.C, the trigger windows script 
+					  ../scripts/trig_windows/trigWindows.sh and lumi analysis
+					  script src/lumiyield.py
+reana_Lumi.sh -p <lumi_setting>         : Plots yields when using the -p flag with src/plot_yield.py
+	      	 			  using the -r flag will perform a full reanalyzes of the data
+
+
+
+Any questions or concerns please contact Richard Trotta, trotta@cua.edu

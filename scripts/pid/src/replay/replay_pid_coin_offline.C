@@ -1,5 +1,11 @@
 void replay_pid_coin_offline(Int_t RunNumber = 0, Int_t MaxEvent = 0) {
 
+  // WARNING
+  // SJDK - 20/05/22
+  // This script uses a highly outdated database file
+  // If this script is not in use or edited soon, it will be deleted
+  // WARNING
+
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
     cout << "Enter a Run Number (-1 to exit): ";

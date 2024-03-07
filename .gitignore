@@ -8,6 +8,8 @@
 *.pdf
 *.nfs*
 OUTPUT
+*MissingAnalyses*
+*Bkup*
 
 ROOTfiles
 ROOTfiles*

@@ -1,20 +1,17 @@
 Stephen Kay - University of Regina
 09/10/20
+# RLT 12/15/21, Updated with new ltsep module info
+# SJDK 10/10/222 - Removed reference to using software environment.
 
 A selection of demo python scripts that carry out some simple processes using the new analysis framework.
 
 ### IMPORTANT - SETUP INFO ###
 
-Make sure you are using JLab software environment 2.3, you should source this in your .login
-
-source /site/12gev_phys/softenv.csh 2.3
-
-Unfortunately, this uses an incompatible ROOT version so you also need to source a new ROOT version too.
 Before running ensure you are using ROOT 6.18.04 -
 
 source /apps/root/6.18.04/setroot_CUE.csh
 
-(assuming you're running this on the JLab iFarm, also this assumes you are using softenv v2.3)
+(assuming you're running this on the JLab iFarm)
 
 You should also make sure you have the relevant packages, in particular, execute -
 
@@ -28,6 +25,10 @@ Ensure that these are installed with ROOT 6.18.04 active or the scripts will not
 
 If you get errors complaining that root_numpy was installed with ROOT 6.14.04 (or ANY errors like this), you either didn't install the packages (or run the script) with 6.18.04 active. 
 Uninstall any problematic packages and reinstall them with the correct ROOT version active.
+
+The final setup you will need to do is copying the ltsep python module into your local python packages. Here is an example for PionLT...
+
+cp -r UTIL_PION/bin/python/ltsep ~/.local/lib/python3.4/site-packages/
 
 ### IMPORTANT - SYM LINKS/PATHING ###
 
@@ -48,12 +49,12 @@ Further (less shouty explanation) follows -
 The scripts will look for an input ROOTFILE in the directory specified on line 49. Modify this as you please, but it is set up to avoid hard coding a path to a single file.
 This directory is constructed based on some pre-set environments - PLEASE CHECK THIS PATH AND THAT YOUR RELEVANT ENVIRONMENT IS LISTED
 
-By default, it is assumed that you have a sym link (or folder) called ROOTfiles in the first level of the UTIL_PION directory
+By default, it is assumed that you have a sym link (or folder) called ROOTfiles in the first level of the UTIL directory
 A sym link is preferable as the (assumed default) /group/ path is not intended for large file storage.
 
 The output of the script will go to a sym link (or folder) in the same directory as this README.
 
-Example - You are running on the JLab ifarm,
+Example - You are running PionLT on the JLab ifarm,
 the script will look for your speicified ROOTfile in 
 /group/c-pionlt/USERS/{USERNAME}/hallc_replay_lt/UTIL_PION/ROOTfiles/Analysis/General
 and output to
@@ -86,6 +87,8 @@ This script opens a root file and grabs some branches from it, but this time, it
 We provide a cuts file with 3 cuts in it, we create a dictionary of cuts and add *2* of the three defined cuts to our dict. We then use these cuts on our SHMS data selection. Our cuts are just simple acceptance cuts
 
 The cuts will get their required ranges from a database file. The relevant data file depends upon the cuts being used and the values taken will depend upon the run number.
+
+There is also a few introductions to the help class of the ltsep python module. These will output to your terminal upon running the script. 
 
 SUGGESTED TASKS
 

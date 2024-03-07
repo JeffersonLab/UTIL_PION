@@ -1,0 +1,24 @@
+##############
+# SING picut #
+##############
+sing_epi_cut_all_noRF = pid.h_ecut+accept.delta-accept.delta.P_gtr_dp+accept.h_ptar-pid.h_ecut.H_cal_etotnorm
+#
+sing_epi_cut_all_RF = pid.h_ecut+accept.delta-accept.delta.P_gtr_dp+accept.h_ptar-pid.h_ecut.H_cal_etotnorm+coin_time.SHMS_Pi_RF
+##############
+# SING kcut  #
+##############
+sing_ek_cut_all_noRF = pid.h_ecut+accept.delta-accept.delta.P_gtr_dp+accept.h_ptar-pid.h_ecut.H_cal_etotnorm
+#
+sing_ek_cut_all_RF = pid.h_ecut+accept.delta-accept.delta.P_gtr_dp+accept.h_ptar-pid.h_ecut.H_cal_etotnorm+coin_time.SHMS_K_RF
+##############
+# SING pcut  #
+##############
+sing_ep_cut_all_noRF = pid.h_ecut+accept.delta-accept.delta.P_gtr_dp+accept.h_ptar-pid.h_ecut.H_cal_etotnorm
+#
+sing_ep_cut_all_RF = pid.h_ecut+accept.delta-accept.delta.P_gtr_dp+accept.h_ptar-pid.h_ecut.H_cal_etotnorm+coin_time.SHMS_h_RF
+##############
+# SING ecut  #
+##############
+sing_ee_cut_all_noRF = pid.h_ecut+accept.delta-accept.delta.P_gtr_dp+accept.h_ptar-pid.h_ecut.H_cal_etotnorm
+#
+sing_ee_cut_all_RF = pid.h_ecut+accept.delta-accept.delta.P_gtr_dp+accept.h_ptar-pid.h_ecut.H_cal_etotnorm+coin_time.SHMS_h_RF
