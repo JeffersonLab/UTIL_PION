@@ -55,7 +55,7 @@ Grab prescale values and tracking efficiencies from report file
 # Open report file to grab prescale values and tracking efficiency
 report = UTILPATH+"/REPORT_OUTPUT/Analysis/Lumi/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
 f = open(report)
-psList = ['KLT_Ps1_factor','KLT_Ps2_factor','KLT_Ps3_factor','KLT_Ps4_factor','KLT_Ps5_factor','KLT_Ps6_factor']
+psList = ['PLT_Ps1_factor','PLT_Ps2_factor','PLT_Ps3_factor','PLT_Ps4_factor','PLT_Ps5_factor','PLT_Ps6_factor']
     
 # Prescale input value (psValue) to its actual DAQ understanding (psActual)
 psActual = [-1,1,2,3,5,9,17,33,65,129,257,513,1025,2049,4097,8193,16385,32769]
@@ -66,13 +66,13 @@ for line in f:
     data = line.split(':')
     track_data = line.split(':')
     if (5149 <= int(runNum) <= 5303):
-        if ('KLT_SHMS_Pion_SING_TRACK_EFF' in track_data[0]):
+        if ('PLT_SHMS_Pion_SING_TRACK_EFF' in track_data[0]):
             SHMS_track_info = track_data[1].split("+-")
     else:
-        #if ('KLT_SHMS_Elec_SING_TRACK_EFF' in track_data[0]):
-        if ('KLT_SHMS_Elec_ALL_TRACK_EFF' in track_data[0]):
+        #if ('PLT_SHMS_Elec_SING_TRACK_EFF' in track_data[0]):
+        if ('PLT_SHMS_Elec_ALL_TRACK_EFF' in track_data[0]):
             SHMS_track_info = track_data[1].split("+-")
-    if ('KLT_HMS_Elec_SING_TRACK_EFF' in track_data[0]):
+    if ('PLT_HMS_Elec_SING_TRACK_EFF' in track_data[0]):
         HMS_track_info = track_data[1].split("+-")
     for i, obj in enumerate(psList) :
         if (psList[i] in data[0]) : 
