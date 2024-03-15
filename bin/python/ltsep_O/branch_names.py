@@ -68,6 +68,12 @@ branch_dict = {
     "P_hgcer_npeSum" : "P.hgcer.npeSum",
     "P_hgcer_xAtCer" : "P.hgcer.xAtCer",
     "P_hgcer_yAtCer" : "P.hgcer.yAtCer",
+<<<<<<< HEAD
+    "P_ngcer_npeSum" : "P.ngcer.npeSum",
+    "P_ngcer_xAtCer" : "P.ngcer.xAtCer",
+    "P_ngcer_yAtCer" : "P.ngcer.yAtCer",
+=======
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
     "P_aero_xAtCer" : "P.aero.xAtAero",
     "P_aero_yAtCer" : "P.aero.yAtAero",
     "P_dc_InsideDipoleExit" : "P.dc.InsideDipoleExit",
@@ -96,8 +102,17 @@ branch_dict = {
     "P_hgcer_npeSum" : "P.hgcer.npeSum",
     "P_hgcer_xAtCer" : "P.hgcer.xAtCer",
     "P_hgcer_yAtCer" : "P.hgcer.yAtCer",
+<<<<<<< HEAD
+    "P_ngcer_npeSum" : "P.ngcer.npeSum",
+    "P_ngcer_xAtCer" : "P.ngcer.xAtCer",
+    "P_ngcer_yAtCer" : "P.ngcer.yAtCer",
     "P_cal_etotnorm" : "P.cal.etotnorm",
     "P_hgcer_npeSum" : "P.hgcer.npeSum",
+    "P_ngcer_npeSum" : "P.ngcer.npeSum",
+=======
+    "P_cal_etotnorm" : "P.cal.etotnorm",
+    "P_hgcer_npeSum" : "P.hgcer.npeSum",
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
     "P_aero_npeSum" : "P.aero.npeSum",
     "P_gtr_dp" : "P.gtr.dp",
     "P_gtr_th" : "P.gtr.th",
