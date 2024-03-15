@@ -2,7 +2,11 @@
 #
 # Description:
 # ================================================================
+<<<<<<< HEAD
+# Time-stamp: "2024-02-24 15:22:54 trottar"
+=======
 # Time-stamp: "2024-01-09 12:16:35 trottar"
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -278,6 +282,11 @@ class Root():
             self.OUTPATH = "%s/OUTPUT/Analysis/HeeP" % self.UTILPATH      # Output folder location
         elif "Simc" in self.runType:
             self.OUTPATH = "%s/OUTPUT/Analysis/HeeP" % self.LTANAPATH      # Output folder location
+<<<<<<< HEAD
+        elif "LTSep" in self.runType:
+            self.OUTPATH = "%s/OUTPUT/Analysis/%sLT" % (self.LTANAPATH,self.ANATYPE)      # Output folder location            
+=======
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
         elif "Prod" in self.runType:
             self.OUTPATH = "%s/OUTPUT/Analysis/%sLT" % (self.UTILPATH,self.ANATYPE)      # Output folder location
         elif "HGCer" in self.runType:
@@ -298,6 +307,11 @@ class Root():
                 # Construct the name of the rootfile based upon the info we provided
                 if "Prod" in self.runType:
                     self.rootName = "%s/OUTPUT/Analysis/%sLT/%s_%s_%s.root" % (self.UTILPATH, self.ANATYPE, self.runNum, self.MaxEvent, self.ROOTPrefix,)     # Input file location and variables taking
+<<<<<<< HEAD
+                elif "LTSep" in self.runType:
+                    self.rootName = "%s/OUTPUT/Analysis/%sLT/%s_%s_%s.root" % (self.LTANAPATH, self.ANATYPE, self.runNum, self.MaxEvent, self.ROOTPrefix,)     # Input file location and variables taking                    
+=======
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
                 elif "HGCer" in self.runType:
                     self.rootName = "%s/OUTPUT/Analysis/%sLT/%s_%s_%s.root" % (self.UTILPATH, self.ANATYPE, self.runNum, self.MaxEvent, self.ROOTPrefix,)     # Input file location and variables taking
                 elif "HeeP" in self.runType:
@@ -314,6 +328,11 @@ class Root():
                 # Construct the name of the rootfile based upon the info we provided
                 if "Prod" in self.runType:
                     self.rootName = "%s/ROOTfiles/Analysis/%sLT/%s_%s_%s.root" % (self.UTILPATH, self.ANATYPE, self.ROOTPrefix, self.runNum, self.MaxEvent)     # Input file location and variables taking
+<<<<<<< HEAD
+                elif "LTSep" in self.runType:
+                    self.rootName = "%s/ROOTfiles/Analysis/%sLT/%s_%s_%s.root" % (self.UTILPATH, self.ANATYPE, self.ROOTPrefix, self.runNum, self.MaxEvent)     # Input file location and variables taking                    
+=======
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
                 elif "HGCer" in self.runType:
                     self.rootName = "%s/ROOTfiles/Analysis/%sLT/%s_%s_%s.root" % (self.UTILPATH, self.ANATYPE, self.ROOTPrefix, self.runNum, self.MaxEvent)     # Input file location and variables taking
                 elif "Hodo" in self.runType:
@@ -549,6 +568,18 @@ class Root():
             if branch == "P_hgcer_yAtCer":
                 P_hgcer_yAtCer = e_tree.array("P.hgcer.yAtCer")
                 treeDict.update({"P_hgcer_yAtCer" : P_hgcer_yAtCer})
+<<<<<<< HEAD
+            if branch == "P_ngcer_npeSum": # Added NGC variables
+                P_ngcer_npeSum = e_tree.array("P.ngcer.npeSum")
+                treeDict.update({"P_ngcer_npeSum" : P_ngcer_npeSum})
+            if branch == "P_ngcer_xAtCer":
+                P_ngcer_xAtCer = e_tree.array("P.ngcer.xAtCer")
+                treeDict.update({"P_ngcer_xAtCer" : P_ngcer_xAtCer})
+            if branch == "P_ngcer_yAtCer":
+                P_ngcer_yAtCer = e_tree.array("P.ngcer.yAtCer")
+                treeDict.update({"P_ngcer_yAtCer" : P_ngcer_yAtCer})
+=======
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
             if branch == "P_aero_xAtCer":
                 P_aero_xAtCer = e_tree.array("P.aero.xAtAero")
                 treeDict.update({"P_aero_xAtCer" : P_aero_xAtCer})
@@ -621,12 +652,30 @@ class Root():
             if branch == "P_hgcer_yAtCer":
                 P_hgcer_yAtCer = e_tree.array("P.hgcer.yAtCer")  
                 treeDict.update({"P_hgcer_yAtCer" : P_hgcer_yAtCer})
+<<<<<<< HEAD
+            if branch == "P_ngcer_npeSum": # Added NGC variables
+                P_ngcer_npeSum = e_tree.array("P.ngcer.npeSum")
+                treeDict.update({"P_ngcer_npeSum" : P_ngcer_npeSum})
+            if branch == "P_ngcer_xAtCer":
+                P_ngcer_xAtCer = e_tree.array("P.ngcer.xAtCer")
+                treeDict.update({"P_ngcer_xAtCer" : P_ngcer_xAtCer})
+            if branch == "P_ngcer_yAtCer":
+                P_ngcer_yAtCer = e_tree.array("P.ngcer.yAtCer")
+                treeDict.update({"P_ngcer_yAtCer" : P_ngcer_yAtCer})
+=======
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
             if branch == "P_cal_etotnorm":
                 P_cal_etotnorm = e_tree.array("P.cal.etotnorm")
                 treeDict.update({"P_cal_etotnorm" : P_cal_etotnorm})
             if branch == "P_hgcer_npeSum":
                 P_hgcer_npeSum = e_tree.array("P.hgcer.npeSum")
                 treeDict.update({"P_hgcer_npeSum" : P_hgcer_npeSum})
+<<<<<<< HEAD
+            if branch == "P_ngcer_npeSum":
+                P_ngcer_npeSum = e_tree.array("P.ngcer.npeSum")
+                treeDict.update({"P_ngcer_npeSum" : P_ngcer_npeSum})
+=======
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
             if branch == "P_aero_npeSum":
                 P_aero_npeSum = e_tree.array("P.aero.npeSum")
                 treeDict.update({"P_aero_npeSum" : P_aero_npeSum})
@@ -965,6 +1014,11 @@ class Root():
                             err_dir = self.UTILPATH+"/DB/PARAM/Acceptance_Parameters.csv"
                         if "coin_time" in x[j]:
                             err_dir = self.UTILPATH+"/DB/PARAM/Timing_Parameters.csv"
+<<<<<<< HEAD
+                        if "CT" in x[j]:
+                            err_dir = self.UTILPATH+"/DB/PARAM/Timing_Parameters.csv"                            
+=======
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
                         if "current" in x[j]:
                             err_dir = self.UTILPATH+"/DB/PARAM/Current_Parameters.csv"
                         if "misc" in x[j]:

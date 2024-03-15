@@ -1,1 +1,1 @@
-coin_heepYield_v2.sh
+coin_heepYield_runlist.sh

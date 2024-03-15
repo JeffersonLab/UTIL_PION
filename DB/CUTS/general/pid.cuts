@@ -36,4 +36,10 @@ p_coin_picut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_picut_P_beta)}, {"P_
 #
 p_coin_kcut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_kcut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum < pid.P_kcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_kcut_P_aero)}, {"H_cal_etotnorm" : (H_cal_etotnorm > pid.H_hadcut_H_cal) & (H_cal_etotnorm < 1.5)}, {"H_cer_npeSum" : (H_cer_npeSum > pid.H_ecut_H_cer)}, {"P_cal_etotnorm" : (P_cal_etotnorm < pid.P_kcut_P_cal) & (P_cal_etotnorm > 0.0)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum < pid.P_hadcut_P_ngcer)}
 #
+<<<<<<< HEAD
+#p_coin_pcut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_pcut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum < pid.P_pcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum < pid.P_pcut_P_aero)},  {"H_cal_etotnorm" : (H_cal_etotnorm > pid.H_hadcut_H_cal) & (H_cal_etotnorm < 1.5)}, {"H_cer_npeSum" : (H_cer_npeSum > pid.H_ecut_H_cer)}, {"P_cal_etotnorm" : (P_cal_etotnorm < pid.P_pcut_P_cal) & (P_cal_etotnorm > 0.0)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum < pid.P_hadcut_P_ngcer)}
+#
+p_coin_pcut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_pcut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum < pid.P_pcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum < pid.P_pcut_P_aero)},  {"H_cal_etotnorm" : (H_cal_etotnorm > pid.H_hadcut_H_cal) & (H_cal_etotnorm < 1.5)}, {"H_cer_npeSum" : (H_cer_npeSum > pid.H_ecut_H_cer)}, {"P_cal_etotnorm" : (P_cal_etotnorm < pid.P_pcut_P_cal) & (P_cal_etotnorm > 0.0)}
+=======
 p_coin_pcut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_pcut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum < pid.P_pcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum < pid.P_pcut_P_aero)},  {"H_cal_etotnorm" : (H_cal_etotnorm > pid.H_hadcut_H_cal) & (H_cal_etotnorm < 1.5)}, {"H_cer_npeSum" : (H_cer_npeSum > pid.H_ecut_H_cer)}, {"P_cal_etotnorm" : (P_cal_etotnorm < pid.P_pcut_P_cal) & (P_cal_etotnorm > 0.0)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum < pid.P_hadcut_P_ngcer)}
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
