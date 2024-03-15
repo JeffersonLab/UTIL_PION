@@ -57,7 +57,6 @@ except IOError:
 
 plt.figure(figsize=(12,8))
 
-<<<<<<< HEAD
 plt.subplot(111)    
 plt.grid(zorder=1)
 #plt.xlim(0,100)
@@ -80,40 +79,16 @@ plt.ylim(0.8,1.02)
 plt.errorbar(efficiency_data["SHMS_Hodoscope_S1X_Rate"],efficiency_data["SHMS_Pion_SING_TRACK_EFF"],yerr=efficiency_data["SHMS_Pion_SING_TRACK_EFF_ERROR"],color='black',linestyle='None',zorder=3)
 plt.scatter(efficiency_data["SHMS_Hodoscope_S1X_Rate"],efficiency_data["SHMS_Pion_SING_TRACK_EFF"],color='blue',zorder=4)
 plt.ylabel('Pion Efficiency (%)', fontsize=12)
-=======
-plt.subplot(121)    
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-plt.ylim(0.9,1.02)
-plt.errorbar(efficiency_data["SHMS_3/4_Trigger_Rate"],efficiency_data["SHMS_Pion_SING_TRACK_EFF"],yerr=efficiency_data["SHMS_Pion_SING_TRACK_EFF_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["SHMS_3/4_Trigger_Rate"],efficiency_data["SHMS_Pion_SING_TRACK_EFF"],color='blue',zorder=4)
-plt.ylabel('SHMS_Pion_SING_TRACK_EFF', fontsize=12)
-plt.xlabel('SHMS 3/4 Trigger Rate [kHz]', fontsize=12)
-plt.title('SHMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(122)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-plt.ylim(0.9,1.02)
-plt.errorbar(efficiency_data["SHMS_Hodoscope_S1X_Rate"],efficiency_data["SHMS_Pion_SING_TRACK_EFF"],yerr=efficiency_data["SHMS_Pion_SING_TRACK_EFF_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["SHMS_Hodoscope_S1X_Rate"],efficiency_data["SHMS_Pion_SING_TRACK_EFF"],color='blue',zorder=4)
-plt.ylabel('SHMS_Pion_SING_TRACK_EFF', fontsize=12)
->>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
 plt.xlabel('SHMS S1X HODO Rate [kHz]', fontsize=12)
 plt.title('SHMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
 
 plt.tight_layout(rect=[0,0.03,1,0.95])   
-<<<<<<< HEAD
 plt.savefig(UTILPATH+'/scripts/efficiency/OUTPUTS/plots/SHMS_Pion2_%s.png' % (ROOTPrefix.replace("replay_","")))
-=======
-plt.savefig(UTILPATH+'/scripts/efficiency/OUTPUTS/plots/SHMS_Pion_%s.png' % (ROOTPrefix.replace("replay_","")))
->>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
 
 ########################################################################################################################################################################################
 
 plt.figure(figsize=(12,8))
 
-<<<<<<< HEAD
 plt.subplot(111)
 plt.grid(zorder=1)
 #plt.xlim(0,100)
@@ -142,30 +117,6 @@ plt.title('HMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficie
 
 plt.tight_layout(rect=[0,0.03,1,0.95])   
 plt.savefig(UTILPATH+'/scripts/efficiency/OUTPUTS/plots/SHMS_Had2_%s.png' % (ROOTPrefix.replace("replay_","")))
-=======
-plt.subplot(121)    
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-plt.ylim(0.9,1.02)
-plt.errorbar(efficiency_data["HMS_EL-REAL_Trigger_Rate"],efficiency_data["HMS_Elec_SING_TRACK_EFF"],yerr=efficiency_data["HMS_Elec_SING_TRACK_EFF_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["HMS_EL-REAL_Trigger_Rate"],efficiency_data["HMS_Elec_SING_TRACK_EFF"],color='red',zorder=4)
-plt.ylabel('HMS_Elec_SING_TRACK_EFF', fontsize=12)
-plt.xlabel('HMS EL-REAL Trigger Rate [kHz]', fontsize=12)
-plt.title('HMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.subplot(122)
-plt.grid(zorder=1)
-#plt.xlim(0,100)
-plt.ylim(0.9,1.02)
-plt.errorbar(efficiency_data["HMS_Hodoscope_S1X_Rate"],efficiency_data["HMS_Elec_SING_TRACK_EFF"],yerr=efficiency_data["HMS_Elec_SING_TRACK_EFF_ERROR"],color='black',linestyle='None',zorder=3)
-plt.scatter(efficiency_data["HMS_Hodoscope_S1X_Rate"],efficiency_data["HMS_Elec_SING_TRACK_EFF"],color='red',zorder=4)
-plt.ylabel('HMS_Elec_SING_TRACK_EFF', fontsize=12)
-plt.xlabel('HMS S1X HODO Rate [kHz]', fontsize=12)
-plt.title('HMS %s-%s' % (int(min(efficiency_data["Run_Number"])),int(max(efficiency_data["Run_Number"]))), fontsize=12)
-
-plt.tight_layout(rect=[0,0.03,1,0.95])   
-plt.savefig(UTILPATH+'/scripts/efficiency/OUTPUTS/plots/HMS_ELec_%s.png' % (ROOTPrefix.replace("replay_","")))
->>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
 
 ###################################################################################################################################################################################################
 
