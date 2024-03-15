@@ -10,11 +10,6 @@ Coin_Kaon_Rand = {"CTime_eKCoinTime_ROC1" : (((CTime_eKCoinTime_ROC1 > ((CT.Kaon
 Coin_Proton_Prompt = {"CTime_epCoinTime_ROC1" : (CTime_epCoinTime_ROC1 > ((CT.Proton_Prompt_Peak)-((CT.Bunch_Spacing)/2.0)-(CT.Coin_Offset))) & (CTime_epCoinTime_ROC1 < ((CT.Proton_Prompt_Peak)+((CT.Bunch_Spacing)/2.0)+(CT.Coin_Offset)))}
 Coin_Proton_Rand = {"CTime_epCoinTime_ROC1" : (((CTime_epCoinTime_ROC1 > ((CT.Proton_Prompt_Peak)-((CT.Bunch_Spacing)/2.0)-(CT.Coin_Offset)-((CT.nSkip)*(CT.Bunch_Spacing))-(((CT.nWindows)/2.0)*(CT.Bunch_Spacing)))) & (CTime_epCoinTime_ROC1 < ((CT.Proton_Prompt_Peak)-((CT.Bunch_Spacing)/2.0)-(CT.Coin_Offset)-((CT.nSkip)*(CT.Bunch_Spacing)))))|((CTime_epCoinTime_ROC1 > ((CT.Proton_Prompt_Peak)+((CT.Bunch_Spacing)/2.0)+(CT.Coin_Offset)+((CT.nSkip)*(CT.Bunch_Spacing)))) & (CTime_epCoinTime_ROC1 < ((CT.Proton_Prompt_Peak)+((CT.Bunch_Spacing)/2.0)+(CT.Coin_Offset)+((CT.nSkip)*(CT.Bunch_Spacing))+(((CT.nWindows)/2.0)*(CT.Bunch_Spacing))))))}
 #
-# Raw CT Cuts
-Coin_Raw_Prompt = {"CTime_CoinTime_RAW_ROC1" : (CTime_CoinTime_RAW_ROC1 > ((CT.Raw_Prompt_Peak)-((CT.Bunch_Spacing)/2.0)-(CT.Coin_Offset))) & (CTime_CoinTime_RAW_ROC1 < ((CT.Raw_Prompt_Peak)+((CT.Bunch_Spacing)/2.0)+(CT.Coin_Offset)))}
-#
-Coin_Raw_Rand = {"CTime_CoinTime_RAW_ROC1" : (((CTime_CoinTime_RAW_ROC1 > ((CT.Raw_Prompt_Peak)-((CT.Bunch_Spacing)/2.0)-(CT.Coin_Offset)-((CT.nSkip)*(CT.Bunch_Spacing))-(((CT.nWindows)/2.0)*(CT.Bunch_Spacing)))) & (CTime_CoinTime_RAW_ROC1 < ((CT.Raw_Prompt_Peak)-((CT.Bunch_Spacing)/2.0)-(CT.Coin_Offset)-((CT.nSkip)*(CT.Bunch_Spacing)))))|((CTime_CoinTime_RAW_ROC1 > ((CT.Raw_Prompt_Peak)+((CT.Bunch_Spacing)/2.0)+(CT.Coin_Offset)+((CT.nSkip)*(CT.Bunch_Spacing)))) & (CTime_CoinTime_RAW_ROC1 < ((CT.Raw_Prompt_Peak)+((CT.Bunch_Spacing)/2.0)+(CT.Coin_Offset)+((CT.nSkip)*(CT.Bunch_Spacing))+(((CT.nWindows)/2.0)*(CT.Bunch_Spacing))))))}
-#
 # SHMS RF Cuts
 SHMS_Pi_RF = {"P_RF_Dist" : (P_RF_Dist > (CT.PiRFLow) ) & (P_RF_Dist < (CT.PiRFHigh) )}
 SHMS_K_RF = {"P_RF_Dist" : (P_RF_Dist > (CT.KRFLow) ) & (P_RF_Dist < (CT.KRFHigh) )}
