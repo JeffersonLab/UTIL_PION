@@ -7,8 +7,20 @@ coin_ep_cut_prompt_noRF = coin_time.Coin_Proton_Prompt+accept.delta+pid.p_coin_p
 #
 coin_ep_cut_rand_noRF = coin_time.Coin_Proton_Rand+accept.delta+pid.p_coin_pcut
 #
+<<<<<<< HEAD
+#coin_ep_cut_all_RF = coin_time.SHMS_p_RF+accept.delta+pid.p_coin_pcut
+coin_ep_cut_all_RF = accept.delta
+#
+#coin_ep_cut_prompt_RF = coin_time.Coin_Proton_Prompt+coin_time.SHMS_p_RF+accept.delta+pid.p_coin_pcut
+coin_ep_cut_prompt_RF = accept.delta+coin_time.Coin_Proton_Prompt
+#
+#coin_ep_cut_rand_RF = coin_time.Coin_Proton_Rand+coin_time.SHMS_p_RF+accept.delta+pid.p_coin_pcut
+coin_ep_cut_rand_RF = accept.delta+coin_time.Coin_Proton_Rand
+#coin_ep_cut_rand_RF = coin_time.SHMS_p_RF
+=======
 coin_ep_cut_all_RF = coin_time.SHMS_p_RF+accept.delta+pid.p_coin_pcut
 #
 coin_ep_cut_prompt_RF = coin_time.Coin_Proton_Prompt+coin_time.SHMS_p_RF+accept.delta+pid.p_coin_pcut
 #
 coin_ep_cut_rand_RF = coin_time.Coin_Proton_Rand+coin_time.SHMS_p_RF+accept.delta+pid.p_coin_pcut
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562

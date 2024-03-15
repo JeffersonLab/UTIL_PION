@@ -2,7 +2,11 @@
 #
 # Description:
 # ================================================================
+<<<<<<< HEAD
+# Time-stamp: "2024-02-24 15:22:54 trottar"
+=======
 # Time-stamp: "2023-09-11 23:28:12 trottar"
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
 # ================================================================
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
@@ -278,10 +282,19 @@ class Root():
             self.OUTPATH = "%s/OUTPUT/Analysis/HeeP" % self.UTILPATH      # Output folder location
         elif "Simc" in self.runType:
             self.OUTPATH = "%s/OUTPUT/Analysis/HeeP" % self.LTANAPATH      # Output folder location
+<<<<<<< HEAD
+        elif "LTSep" in self.runType:
+            self.OUTPATH = "%s/OUTPUT/Analysis/%sLT" % (self.LTANAPATH,self.ANATYPE)      # Output folder location            
+        elif "Prod" in self.runType:
+            self.OUTPATH = "%s/OUTPUT/Analysis/%sLT" % (self.UTILPATH,self.ANATYPE)      # Output folder location
+        elif "HGCer" in self.runType:
+            self.OUTPATH = "%s/OUTPUT/Analysis/%sLT" % (self.UTILPATH,self.ANATYPE)      # Output folder location
+=======
         elif "Prod" in self.runType:
             self.OUTPATH = "%s/OUTPUT/Analysis/%sLT" % (self.UTILPATH,self.ANATYPE)      # Output folder location
         elif "HGCer" in self.runType:
             self.OUTPATH = "%s/OUTPUT/Analysis/%sLT" % (self.UTILPATH,self.ANATYPE)      # Output folder location            
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
         elif "Hodo" in self.runType:
             self.OUTPATH = "%s/OUTPUT/Calib/Hodo" % self.UTILPATH      # Output folder location
         else:
@@ -298,6 +311,11 @@ class Root():
                 # Construct the name of the rootfile based upon the info we provided
                 if "Prod" in self.runType:
                     self.rootName = "%s/OUTPUT/Analysis/%sLT/%s_%s_%s.root" % (self.UTILPATH, self.ANATYPE, self.runNum, self.MaxEvent, self.ROOTPrefix,)     # Input file location and variables taking
+<<<<<<< HEAD
+                elif "LTSep" in self.runType:
+                    self.rootName = "%s/OUTPUT/Analysis/%sLT/%s_%s_%s.root" % (self.LTANAPATH, self.ANATYPE, self.runNum, self.MaxEvent, self.ROOTPrefix,)     # Input file location and variables taking                    
+=======
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
                 elif "HGCer" in self.runType:
                     self.rootName = "%s/OUTPUT/Analysis/%sLT/%s_%s_%s.root" % (self.UTILPATH, self.ANATYPE, self.runNum, self.MaxEvent, self.ROOTPrefix,)     # Input file location and variables taking
                 elif "HeeP" in self.runType:
@@ -314,6 +332,11 @@ class Root():
                 # Construct the name of the rootfile based upon the info we provided
                 if "Prod" in self.runType:
                     self.rootName = "%s/ROOTfiles/Analysis/%sLT/%s_%s_%s.root" % (self.UTILPATH, self.ANATYPE, self.ROOTPrefix, self.runNum, self.MaxEvent)     # Input file location and variables taking
+<<<<<<< HEAD
+                elif "LTSep" in self.runType:
+                    self.rootName = "%s/ROOTfiles/Analysis/%sLT/%s_%s_%s.root" % (self.UTILPATH, self.ANATYPE, self.ROOTPrefix, self.runNum, self.MaxEvent)     # Input file location and variables taking                    
+=======
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
                 elif "HGCer" in self.runType:
                     self.rootName = "%s/ROOTfiles/Analysis/%sLT/%s_%s_%s.root" % (self.UTILPATH, self.ANATYPE, self.ROOTPrefix, self.runNum, self.MaxEvent)     # Input file location and variables taking
                 elif "Hodo" in self.runType:
@@ -391,15 +414,28 @@ class Root():
         '''
 
         # Grab tree from root file
+<<<<<<< HEAD
+        print("\n\nGrabbing branches from {}...".format(self.rootName))
+        with up.open(self.rootName) as root_file:        
+            e_tree = root_file["T"]
+=======
         e_tree = up.open(self.rootName)["T"]
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
 
         # Initiate dictionary of root branches
         treeDict = {}
 
         # 1) Loops over the root branches of a specific run type (defined in UTILPATH/DB/BRANCH_DEF/<RunTypeFile>)
         # 2) Grabs the branch from the root tree (defined above) and defines as array
+<<<<<<< HEAD
+        # 3) Adds branch to dictionary
+        runType = self.check_runType()
+        for b, branch in enumerate(runType):
+            Misc.progressBar(b, len(runType)-1,bar_length=25)
+=======
         # 3) Adds branch to dictionary 
         for branch in self.check_runType():
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
 
             # HMS info
             if branch == "H_dc_InsideDipoleExit":
@@ -545,6 +581,18 @@ class Root():
             if branch == "P_hgcer_yAtCer":
                 P_hgcer_yAtCer = e_tree.array("P.hgcer.yAtCer")
                 treeDict.update({"P_hgcer_yAtCer" : P_hgcer_yAtCer})
+<<<<<<< HEAD
+            if branch == "P_ngcer_npeSum": # Added NGC variables
+                P_ngcer_npeSum = e_tree.array("P.ngcer.npeSum")
+                treeDict.update({"P_ngcer_npeSum" : P_ngcer_npeSum})
+            if branch == "P_ngcer_xAtCer":
+                P_ngcer_xAtCer = e_tree.array("P.ngcer.xAtCer")
+                treeDict.update({"P_ngcer_xAtCer" : P_ngcer_xAtCer})
+            if branch == "P_ngcer_yAtCer":
+                P_ngcer_yAtCer = e_tree.array("P.ngcer.yAtCer")
+                treeDict.update({"P_ngcer_yAtCer" : P_ngcer_yAtCer})
+=======
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
             if branch == "P_aero_xAtCer":
                 P_aero_xAtCer = e_tree.array("P.aero.xAtAero")
                 treeDict.update({"P_aero_xAtCer" : P_aero_xAtCer})
@@ -617,12 +665,30 @@ class Root():
             if branch == "P_hgcer_yAtCer":
                 P_hgcer_yAtCer = e_tree.array("P.hgcer.yAtCer")  
                 treeDict.update({"P_hgcer_yAtCer" : P_hgcer_yAtCer})
+<<<<<<< HEAD
+            if branch == "P_ngcer_npeSum": # Added NGC variables
+                P_ngcer_npeSum = e_tree.array("P.ngcer.npeSum")
+                treeDict.update({"P_ngcer_npeSum" : P_ngcer_npeSum})
+            if branch == "P_ngcer_xAtCer":
+                P_ngcer_xAtCer = e_tree.array("P.ngcer.xAtCer")
+                treeDict.update({"P_ngcer_xAtCer" : P_ngcer_xAtCer})
+            if branch == "P_ngcer_yAtCer":
+                P_ngcer_yAtCer = e_tree.array("P.ngcer.yAtCer")
+                treeDict.update({"P_ngcer_yAtCer" : P_ngcer_yAtCer})
+=======
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
             if branch == "P_cal_etotnorm":
                 P_cal_etotnorm = e_tree.array("P.cal.etotnorm")
                 treeDict.update({"P_cal_etotnorm" : P_cal_etotnorm})
             if branch == "P_hgcer_npeSum":
                 P_hgcer_npeSum = e_tree.array("P.hgcer.npeSum")
                 treeDict.update({"P_hgcer_npeSum" : P_hgcer_npeSum})
+<<<<<<< HEAD
+            if branch == "P_ngcer_npeSum":
+                P_ngcer_npeSum = e_tree.array("P.ngcer.npeSum")
+                treeDict.update({"P_ngcer_npeSum" : P_ngcer_npeSum})
+=======
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
             if branch == "P_aero_npeSum":
                 P_aero_npeSum = e_tree.array("P.aero.npeSum")
                 treeDict.update({"P_aero_npeSum" : P_aero_npeSum})
@@ -814,7 +880,10 @@ class Root():
             if branch == "P_RF_Dist":
                 P_RF_Dist = e_tree.array("RFTime.SHMS_RFtimeDist")  
                 treeDict.update({"P_RF_Dist" : P_RF_Dist})
+<<<<<<< HEAD
+=======
 
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
                 
             if branch == "T_coin_pTRIG1_ROC1_tdcTimeRaw":
                 T_coin_pTRIG1_ROC1_tdcTimeRaw = e_tree.array("T.coin.pTRIG1_ROC1_tdcTimeRaw")
@@ -962,6 +1031,11 @@ class Root():
                             err_dir = self.UTILPATH+"/DB/PARAM/Acceptance_Parameters.csv"
                         if "coin_time" in x[j]:
                             err_dir = self.UTILPATH+"/DB/PARAM/Timing_Parameters.csv"
+<<<<<<< HEAD
+                        if "CT" in x[j]:
+                            err_dir = self.UTILPATH+"/DB/PARAM/Timing_Parameters.csv"                            
+=======
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
                         if "current" in x[j]:
                             err_dir = self.UTILPATH+"/DB/PARAM/Current_Parameters.csv"
                         if "misc" in x[j]:
@@ -1091,3 +1165,9 @@ class Misc():
 
     def test_cpp():
         print('')
+<<<<<<< HEAD
+
+
+
+=======
+>>>>>>> 495ad4bd6f78e938385e3af19859dcef04f1d562
