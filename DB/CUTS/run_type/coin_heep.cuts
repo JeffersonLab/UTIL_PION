@@ -1,15 +1,18 @@
 ##############
 # COIN pcut  #
 ##############
-# RLT (12/18/2023): Removed HGCer cut. Testing no HGCer cut
-coin_ep_cut_all_noRF = accept.delta+pid.p_coin_pcut-pid.p_coin_pcut.P_hgcer_npeSum
+coin_ep_cut_all_noRF = accept.delta+pid.p_coin_pcut
 #
-coin_ep_cut_prompt_noRF = coin_time.Coin_Proton_Prompt+accept.delta+pid.p_coin_pcut-pid.p_coin_pcut.P_hgcer_npeSum
+coin_ep_cut_prompt_noRF = coin_time.Coin_Proton_Prompt+accept.delta+pid.p_coin_pcut
 #
-coin_ep_cut_rand_noRF = coin_time.Coin_Proton_Rand+accept.delta+pid.p_coin_pcut-pid.p_coin_pcut.P_hgcer_npeSum
+coin_ep_cut_rand_noRF = coin_time.Coin_Proton_Rand+accept.delta+pid.p_coin_pcut
 #
-coin_ep_cut_all_RF = coin_time.SHMS_p_RF+accept.delta+pid.p_coin_pcut-pid.p_coin_pcut.P_hgcer_npeSum
+#coin_ep_cut_all_RF = coin_time.SHMS_p_RF+accept.delta+pid.p_coin_pcut
+coin_ep_cut_all_RF = accept.delta
 #
-coin_ep_cut_prompt_RF = coin_time.Coin_Proton_Prompt+coin_time.SHMS_p_RF+accept.delta+pid.p_coin_pcut-pid.p_coin_pcut.P_hgcer_npeSum
+#coin_ep_cut_prompt_RF = coin_time.Coin_Proton_Prompt+coin_time.SHMS_p_RF+accept.delta+pid.p_coin_pcut
+coin_ep_cut_prompt_RF = accept.delta+coin_time.Coin_Proton_Prompt
 #
-coin_ep_cut_rand_RF = coin_time.Coin_Proton_Rand+coin_time.SHMS_p_RF+accept.delta+pid.p_coin_pcut-pid.p_coin_pcut.P_hgcer_npeSum
+#coin_ep_cut_rand_RF = coin_time.Coin_Proton_Rand+coin_time.SHMS_p_RF+accept.delta+pid.p_coin_pcut
+coin_ep_cut_rand_RF = accept.delta+coin_time.Coin_Proton_Rand
+#coin_ep_cut_rand_RF = coin_time.SHMS_p_RF
