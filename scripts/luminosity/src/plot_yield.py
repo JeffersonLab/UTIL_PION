@@ -69,7 +69,8 @@ except IOError:
 # Remove runs that have zero beam on time to avoid error
 lumi_data = lumi_data[lumi_data["time"] > 0.0].reset_index(drop=True)
 # Removing runs that are less than a minute
-lumi_data = lumi_data[ (lumi_data['time'] >= 60.0) ].reset_index(drop=True)
+# Why? - NH
+#lumi_data = lumi_data[ (lumi_data['time'] >= 60.0) ].reset_index(drop=True)
 
 def removeRun(runNum):
     '''
