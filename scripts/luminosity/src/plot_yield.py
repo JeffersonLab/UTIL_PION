@@ -212,7 +212,7 @@ def calc_yield():
     curr_tmp_shms = 0
     curr_tmp_hms = 0
     for i,curr in enumerate(yield_dict["current"]):
-        if makeList("time")[i] > 60:
+        if makeList("tot_events")[i] >= 10000:
             if makeList("SHMS_PS")[i] > 0.0:
                 if len(yield_dict["current"]) <= 1:
                     min_curr_shms = yield_dict["current"][i]
