@@ -85,13 +85,8 @@ def removeRun(runNum):
     
 # Remove runs, removeRun(runNumber)
 # Carbon
-removeRun(5301) # 10p6 l2, bad TLT (<20%)
-# LH2
-removeRun(5165) # 10p6 l1, really bad scalers
-removeRun(5303) # 10p6 l2, not sure but off by a bit, only ~4 minutes of good beam on time
-# Remove all of 10p6 l3 (besides 5342?), all runs have terrible TLT (probably because singles?) and low beam on time
-removeRun(5366) # 10p6 l3, not sure but off by a bit, only ~4 minutes of good beam on time
-#removeRun(7960) # 8p2 l1, 5 uA, not sure but messes up normalization (maybe singles?)
+# removeRun(5301) # 10p6 l2, bad TLT (<20%)
+
 
 ################################################################################################################################################
 
