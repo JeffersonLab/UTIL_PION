@@ -354,26 +354,26 @@ def plot_yield():
     yield_data = mergeDicts()
 
     # Remove runs with bad TLT, print statement only
-    for i,row in yield_data.iterrows():
-        if row['TLT'] <= 0.75 or row['TLT'] > 1.02:
-            '''
-            print(''
-            Removing {0:.0f} because TLT is low...
-            TLT={1:0.2f} %
-            CPULT={2:0.2f} %
-            ''.format(row["run number"],row["TLT"]*100,row["CPULT_phys"]*100))
-            '''
-            print('''
-            Bad TLT...
-            TLT={0:0.2f} %
-            CPULT={1:0.2f} %
-            '''.format(row["TLT"]*100,row["CPULT_phys"]*100))
-
-        if row['time'] < 60.0:
-            print('''
-            Removing {0:.0f} because beam on time is short...
-            time={1:0.1f} s
-            '''.format(row["run number"],row["time"]))
+    #for i,row in yield_data.iterrows():
+    #    if row['TLT'] <= 0.75 or row['TLT'] > 1.02:
+    #        '''
+    #        print(''
+    #        Removing {0:.0f} because TLT is low...
+    #        TLT={1:0.2f} %
+    #        CPULT={2:0.2f} %
+    #        ''.format(row["run number"],row["TLT"]*100,row["CPULT_phys"]*100))
+    #        '''
+    #        print('''
+    #        Bad TLT...
+    #        TLT={0:0.2f} %
+    #        CPULT={1:0.2f} %
+    #        '''.format(row["TLT"]*100,row["CPULT_phys"]*100))
+    #
+    #    if row['time'] < 60.0:
+    #        print('''
+    #        Removing {0:.0f} because beam on time is short...
+    #        time={1:0.1f} s
+    #        '''.format(row["run number"],row["time"]))
 
     # Remove runs with bad TLT or short on beam time
     #yield_data = yield_data[ (yield_data['TLT'] >= 0.75) & (yield_data['CPULT_phys'] >= 0.75) ].reset_index(drop=True)
