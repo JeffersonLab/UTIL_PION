@@ -378,7 +378,7 @@ def plot_yield():
     # Remove runs with bad TLT or short on beam time
     #yield_data = yield_data[ (yield_data['TLT'] >= 0.75) & (yield_data['CPULT_phys'] >= 0.75) ].reset_index(drop=True)
     #yield_data = yield_data[ (yield_data['TLT'] < 1.02) & (yield_data['CPULT_phys] < 1.02)].reset_index(drop=True)
-    yield_data = yield_data[ (yield_data['time'] >= 60.0) ].reset_index(drop=True)
+    #yield_data = yield_data[ (yield_data['time'] >= 60.0) ].reset_index(drop=True)
 
     for i, val in enumerate(yield_data["run number"]):
         print("Run numbers:",yield_data["run number"][i],"Current Values:",yield_data["current"][i])
