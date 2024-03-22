@@ -812,7 +812,7 @@ def analysis():
         if ps == "PS1" or ps == "PS2":
             print("Number of SHMSTRIG Events: %.0f" % (SHMS_PS*track_info['SHMSTRIG_cut']))
             print("Number of SHMS EDTM  Events: %.0f" % (track_info['paccp_edtm']))
-            print("Number of SHMS good events: %.0f +/- %.0f " % ((SHMS_PS*track_info['h_int_etottracknorm_evts']), math.sqrt(SHMS_PS*track_info['h_int_etottracknorm_evts'])))
+            print("Number of SHMS good events: %.0f +/- %.0f " % ((SHMS_PS*track_info['p_int_etottracknorm_evts']), math.sqrt(SHMS_PS*track_info['p_int_etottracknorm_evts'])))
             print("Calculated SHMS tracking efficiency: %f +/- %f\n" % ((track_info['SHMS_track']), (track_info['SHMS_track_uncern'])))            
         if ps == "PS3" or ps == "PS4":
             print("Number of HMSTRIG Events: %.0f" % (HMS_PS*track_info['HMSTRIG_cut']))
