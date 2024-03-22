@@ -591,7 +591,7 @@ def track_pid_cuts():
     if (not SHMS_PS == None) or (not COIN_PS == None):
         ax = f.add_subplot(243)
         ax.hist(tree['P_gtr_beta'],bins=c.setbin(tree['P_gtr_beta'],200,-2.0,2.0),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(tree['P_gtr_beta'],"h_cal"),bins=c.setbin(tree['P_gtr_beta'],200,-2.0,2.0),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(tree['P_gtr_beta'],"p_cal"),bins=c.setbin(tree['P_gtr_beta'],200,-2.0,2.0),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('P_gtr_beta')
         plt.ylabel('Count')
