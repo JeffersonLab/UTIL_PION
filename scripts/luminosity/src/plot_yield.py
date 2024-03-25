@@ -216,6 +216,8 @@ def calc_yield():
                 if curr_tmp_shms >= curr or curr_tmp_shms == 0:
                     min_curr_shms = yield_dict["current"][i]
                     curr_tmp_shms = curr
+            else:
+                min_curr_shms = -1
             if makeList("HMS_PS")[i] > 0.0:
                 if len(yield_dict["current"]) <= 1:
                     min_curr_hms = yield_dict["current"][i]
@@ -223,7 +225,9 @@ def calc_yield():
                 if curr_tmp_hms >= curr or curr_tmp_hms == 0:
                     min_curr_hms = yield_dict["current"][i]
                     curr_tmp_hms = curr
-
+            else:
+                min_curr_hms = -1
+                
     for i,curr in enumerate(yield_dict["current"]):
         if curr == min_curr_shms:
             min_yield_SHMS_scaler = yield_dict["yield_SHMS_scaler"][i]
