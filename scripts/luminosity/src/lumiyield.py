@@ -55,7 +55,7 @@ Grab prescale values and tracking efficiencies from report file
 # Open report file to grab prescale values and tracking efficiency
 report = UTILPATH+"/REPORT_OUTPUT/Analysis/Lumi/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
 f = open(report)
-psList = ['KLT_Ps1_factor','KLT_Ps2_factor','KLT_Ps3_factor','KLT_Ps4_factor','KLT_Ps5_factor','KLT_Ps6_factor']
+psList = ['PLT_Ps1_factor','PLT_Ps2_factor','PLT_Ps3_factor','PLT_Ps4_factor','PLT_Ps5_factor','PLT_Ps6_factor']
     
 # Prescale input value (psValue) to its actual DAQ understanding (psActual)
 psActual = [-1,1,2,3,5,9,17,33,65,129,257,513,1025,2049,4097,8193,16385,32769]
@@ -66,13 +66,13 @@ for line in f:
     data = line.split(':')
     track_data = line.split(':')
     if (5149 <= int(runNum) <= 5303):
-        if ('KLT_SHMS_Pion_SING_TRACK_EFF' in track_data[0]):
+        if ('PLT_SHMS_Pion_SING_TRACK_EFF' in track_data[0]):
             SHMS_track_info = track_data[1].split("+-")
     else:
-        #if ('KLT_SHMS_Elec_SING_TRACK_EFF' in track_data[0]):
-        if ('KLT_SHMS_Elec_ALL_TRACK_EFF' in track_data[0]):
+        #if ('PLT_SHMS_Elec_SING_TRACK_EFF' in track_data[0]):
+        if ('PLT_SHMS_Elec_ALL_TRACK_EFF' in track_data[0]):
             SHMS_track_info = track_data[1].split("+-")
-    if ('KLT_HMS_Elec_SING_TRACK_EFF' in track_data[0]):
+    if ('PLT_HMS_Elec_SING_TRACK_EFF' in track_data[0]):
         HMS_track_info = track_data[1].split("+-")
     for i, obj in enumerate(psList) :
         if (psList[i] in data[0]) : 
@@ -209,11 +209,17 @@ SHMS_PID = pid[1]
 
 cut_f = '/DB/CUTS/run_type/lumi.cuts'
 
-if ANATYPE == "Pion":
-    cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","h_cal","h_cer","p_cal","p_hgcer","p_aero","p_ngcer_nt","p_%scut_lumi_nt" % SHMS_PID,"h_%scut_lumi_nt" % HMS_PID,"p_%scut_lumi" % SHMS_PID,"h_%scut_lumi" % HMS_PID,"c_noedtm","c_edtm","c_edtmHMS","c_edtmSHMS","c_curr","h_%strack_lumi_before" % HMS_PID,"h_%strack_lumi_after" % HMS_PID,"p_%strack_lumi_before" % SHMS_PID,"p_%strack_lumi_after" % SHMS_PID]
+if ((not HMS_PS == None) and (not SHMS_PS == None)) or (not COIN_PS == None): #normal case for kaonLT and most of PionLT - heinricn 2024/03/22
+    if ANATYPE == "Pion":
+        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_ngcer_nt","p_aero_nt","h_cal","h_cer","p_cal","p_hgcer","p_ngcer","p_aero","p_ngcer_nt","p_%scut_lumi_nt" % SHMS_PID,"h_%scut_lumi_nt" % HMS_PID,"p_%scut_lumi" % SHMS_PID,"h_%scut_lumi" % HMS_PID,"c_noedtm","c_edtm","c_edtmHMS","c_edtmSHMS","c_curr","h_%strack_lumi_before" % HMS_PID,"h_%strack_lumi_after" % HMS_PID,"p_%strack_lumi_before" % SHMS_PID,"p_%strack_lumi_after" % SHMS_PID]
+    else:
+        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","h_cal","h_cer","p_cal","p_hgcer","p_aero","p_%scut_lumi_nt" % SHMS_PID,"h_%scut_lumi_nt" % HMS_PID,"p_%scut_lumi" % SHMS_PID,"h_%scut_lumi" % HMS_PID,"c_noedtm","c_edtm","c_edtmHMS","c_edtmSHMS","c_curr","h_%strack_lumi_before" % HMS_PID,"h_%strack_lumi_after" % HMS_PID,"p_%strack_lumi_before" % SHMS_PID,"p_%strack_lumi_after" % SHMS_PID]
 else:
-    cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","h_cal","h_cer","p_cal","p_hgcer","p_aero","p_%scut_lumi_nt" % SHMS_PID,"h_%scut_lumi_nt" % HMS_PID,"p_%scut_lumi" % SHMS_PID,"h_%scut_lumi" % HMS_PID,"c_noedtm","c_edtm","c_edtmHMS","c_edtmSHMS","c_curr","h_%strack_lumi_before" % HMS_PID,"h_%strack_lumi_after" % HMS_PID,"p_%strack_lumi_before" % SHMS_PID,"p_%strack_lumi_after" % SHMS_PID]
-    
+    if HMS_PS == None: #if only SHMS
+        cuts = ["p_cal_nt","p_hgcer_nt","p_ngcer_nt","p_aero_nt","p_cal","p_hgcer","p_ngcer","p_aero","p_ngcer_nt","p_%scut_lumi_nt" % SHMS_PID,"p_%scut_lumi" % SHMS_PID,"c_noedtm","c_edtm","c_edtmSHMS","c_curr","p_%strack_lumi_before" % SHMS_PID,"p_%strack_lumi_after" % SHMS_PID]
+    else: # only HMS
+        cuts = ["h_cal_nt","h_cer_nt","h_cal","h_cer","h_%scut_lumi_nt" % HMS_PID,"h_%scut_lumi" % HMS_PID,"c_noedtm","c_edtm","c_edtmHMS","c_curr","h_%strack_lumi_before" % HMS_PID,"h_%strack_lumi_after" % HMS_PID]
+
 for ps in PS_names:
     if ps == "PS1" or ps == "PS2":
         cuts+=["c_ptrigSHMS%s" % ps.replace("PS","")]        
@@ -292,48 +298,50 @@ def pid_cuts():
     f = plt.figure(figsize=(11.69,8.27))
     f.suptitle("Run %s" % runNum)
 
-    ax = f.add_subplot(231)
-    ax.hist(tree['H_cal_etotnorm'],bins=c.setbin(tree['H_cal_etotnorm'],200,0,2.0),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(tree['H_cal_etotnorm'],"h_cal_nt"),bins=c.setbin(tree['H_cal_etotnorm'],200,0,2.0),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('H_cal_etotnorm')
-    plt.ylabel('Count')
-
-    ax = f.add_subplot(232)
-    ax.hist(tree['H_cer_npeSum'],bins=c.setbin(tree['H_cer_npeSum'],200,0,60),label='no cut',histtype='step', alpha=0.5,stacked=True, fill=True)
-    ax.hist(c.add_cut(tree['H_cer_npeSum'],"h_cer_nt"),bins=c.setbin(tree['H_cer_npeSum'],200,0,60),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('H_cer_npeSum')
-    plt.ylabel('Count')
-
-    ax = f.add_subplot(233)
-    ax.hist(tree['P_cal_etotnorm'],bins=c.setbin(tree['P_cal_etotnorm'],200,0,4),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(tree['P_cal_etotnorm'],"p_cal_nt"),bins=c.setbin(tree['P_cal_etotnorm'],200,0,4),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('P_cal_etotnorm')
-    plt.ylabel('Count')
-
-    ax = f.add_subplot(234)
-    ax.hist(tree['P_hgcer_npeSum'],bins=c.setbin(tree['P_hgcer_npeSum'],200,0,200),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(tree['P_hgcer_npeSum'],"p_hgcer_nt"),bins=c.setbin(tree['P_hgcer_npeSum'],200,0,200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('P_hgcer_npeSum')
-    plt.ylabel('Count')
-
-    ax = f.add_subplot(235)
-    ax.hist(tree['P_aero_npeSum'],bins=c.setbin(tree['P_aero_npeSum'],200,0,400),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(tree['P_aero_npeSum'],"p_aero_nt"),bins=c.setbin(tree['P_aero_npeSum'],200,0,400),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('P_aero_npeSum')
-    plt.ylabel('Count')   
-
-    if ANATYPE == "Pion":
-        ax = f.add_subplot(236)
-        ax.hist(tree['P_ngcer_npeSum'],bins=c.setbin(tree['P_ngcer_npeSum'],200,0,250),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(tree['P_ngcer_npeSum'],"p_ngcer_nt"), bins=c.setbin(tree['P_ngcer_npeSum'],200,0,250),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+    if (not HMS_PS == None) or (not COIN_PS == None):
+        ax = f.add_subplot(231)
+        ax.hist(tree['H_cal_etotnorm'],bins=c.setbin(tree['H_cal_etotnorm'],200,0,2.0),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(tree['H_cal_etotnorm'],"h_cal_nt"),bins=c.setbin(tree['H_cal_etotnorm'],200,0,2.0),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
-        plt.xlabel('P_ngcer_npeSum')
+        plt.xlabel('H_cal_etotnorm')
         plt.ylabel('Count')
+
+        ax = f.add_subplot(232)
+        ax.hist(tree['H_cer_npeSum'],bins=c.setbin(tree['H_cer_npeSum'],200,0,60),label='no cut',histtype='step', alpha=0.5,stacked=True, fill=True)
+        ax.hist(c.add_cut(tree['H_cer_npeSum'],"h_cer_nt"),bins=c.setbin(tree['H_cer_npeSum'],200,0,60),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        plt.yscale('log')
+        plt.xlabel('H_cer_npeSum')
+        plt.ylabel('Count')
+
+    if (not SHMS_PS == None) or (not COIN_PS == None):
+        ax = f.add_subplot(233)
+        ax.hist(tree['P_cal_etotnorm'],bins=c.setbin(tree['P_cal_etotnorm'],200,0,4),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(tree['P_cal_etotnorm'],"p_cal_nt"),bins=c.setbin(tree['P_cal_etotnorm'],200,0,4),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        plt.yscale('log')
+        plt.xlabel('P_cal_etotnorm')
+        plt.ylabel('Count')
+
+        ax = f.add_subplot(234)
+        ax.hist(tree['P_hgcer_npeSum'],bins=c.setbin(tree['P_hgcer_npeSum'],200,0,200),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(tree['P_hgcer_npeSum'],"p_hgcer_nt"),bins=c.setbin(tree['P_hgcer_npeSum'],200,0,200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        plt.yscale('log')
+        plt.xlabel('P_hgcer_npeSum')
+        plt.ylabel('Count')
+
+        ax = f.add_subplot(235)
+        ax.hist(tree['P_aero_npeSum'],bins=c.setbin(tree['P_aero_npeSum'],200,0,400),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(tree['P_aero_npeSum'],"p_aero_nt"),bins=c.setbin(tree['P_aero_npeSum'],200,0,400),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        plt.yscale('log')
+        plt.xlabel('P_aero_npeSum')
+        plt.ylabel('Count')   
+    
+        if ANATYPE == "Pion":
+            ax = f.add_subplot(236)
+            ax.hist(tree['P_ngcer_npeSum'],bins=c.setbin(tree['P_ngcer_npeSum'],200,0,250),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+            ax.hist(c.add_cut(tree['P_ngcer_npeSum'],"p_ngcer_nt"), bins=c.setbin(tree['P_ngcer_npeSum'],200,0,250),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+            plt.yscale('log')
+            plt.xlabel('P_ngcer_npeSum')
+            plt.ylabel('Count')
 
     plt.legend(loc="upper right")
 
@@ -347,49 +355,51 @@ def pid_cuts():
     f = plt.figure(figsize=(19.20,8.00))
     f.suptitle("Run %s" % runNum)
 
-    ax = f.add_subplot(241)
-    ax.hist2d(tree['H_cal_etotnorm'],tree['H_cer_npeSum'],bins=[c.setbin(tree['H_cal_etotnorm'],400,0,2.0),c.setbin(tree['H_cer_npeSum'],400,0,30)],cmin=1,label='no cut',alpha=0.5)
-    ax.hist2d(c.add_cut(tree['H_cal_etotnorm'],"h_%scut_lumi_nt" % HMS_PID), c.add_cut(tree['H_cer_npeSum'],"h_%scut_lumi_nt" % HMS_PID), bins=[c.setbin(tree['H_cal_etotnorm'],400,0,2.0),c.setbin(tree['H_cer_npeSum'],400,0,30)],cmin=1,label='cut', alpha=1.0)
-    plt.xlabel('H_cal_etotnorm')
-    plt.ylabel('H_cer_npeSum')
+    if (not HMS_PS == None) or (not COIN_PS == None):
+        ax = f.add_subplot(241)
+        ax.hist2d(tree['H_cal_etotnorm'],tree['H_cer_npeSum'],bins=[c.setbin(tree['H_cal_etotnorm'],400,0,2.0),c.setbin(tree['H_cer_npeSum'],400,0,30)],cmin=1,label='no cut',alpha=0.5)
+        ax.hist2d(c.add_cut(tree['H_cal_etotnorm'],"h_%scut_lumi_nt" % HMS_PID), c.add_cut(tree['H_cer_npeSum'],"h_%scut_lumi_nt" % HMS_PID), bins=[c.setbin(tree['H_cal_etotnorm'],400,0,2.0),c.setbin(tree['H_cer_npeSum'],400,0,30)],cmin=1,label='cut', alpha=1.0)
+        plt.xlabel('H_cal_etotnorm')
+        plt.ylabel('H_cer_npeSum')
 
-    ax = f.add_subplot(242)
-    ax.hist2d(tree['P_cal_etotnorm'],tree['P_hgcer_npeSum'],bins=[c.setbin(tree['P_cal_etotnorm'],400,0,4),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='no cut',alpha=0.5)
-    ax.hist2d(c.add_cut(tree['P_cal_etotnorm'],"p_%scut_lumi_nt" % SHMS_PID),c.add_cut(tree['P_hgcer_npeSum'],"p_%scut_lumi_nt" % SHMS_PID),bins=[c.setbin(tree['P_cal_etotnorm'],400,0,4),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='cut', alpha=1.0)
-    plt.xlabel('P_cal_etotnorm')
-    plt.ylabel('P_hgcer_npeSum')
-
-    ax = f.add_subplot(243)
-    ax.hist2d(tree['P_cal_etotnorm'],tree['P_aero_npeSum'],bins=[c.setbin(tree['P_cal_etotnorm'],400,0,4),c.setbin(tree['P_aero_npeSum'],400,0,100)],cmin=1,label='no cut',alpha=0.5)
-    ax.hist2d(c.add_cut(tree['P_cal_etotnorm'],"p_%scut_lumi_nt" % SHMS_PID),c.add_cut(tree['P_aero_npeSum'],"p_%scut_lumi_nt" % SHMS_PID),bins=[c.setbin(tree['P_cal_etotnorm'],400,0,4),c.setbin(tree['P_aero_npeSum'],400,0,100)],cmin=1,label='cut', alpha=1.0)
-    plt.xlabel('P_cal_etotnorm')
-    plt.ylabel('P_aero_npeSum')
-
-    if ANATYPE == "Pion":
-        ax = f.add_subplot(244)
-        ax.hist2d(tree['P_cal_etotnorm'],tree['P_ngcer_npeSum'],bins=[c.setbin(tree['P_cal_etotnorm'],400,0,4),c.setbin(tree['P_ngcer_npeSum'],400,0,80)],cmin=1,label='no cut',alpha=0.5)
-        ax.hist2d(c.add_cut(tree['P_cal_etotnorm'],"p_%scut_lumi_nt" % SHMS_PID),c.add_cut(tree['P_ngcer_npeSum'],"p_%scut_lumi_nt" % SHMS_PID),bins=[c.setbin(tree['P_cal_etotnorm'],400,0,4),c.setbin(tree['P_ngcer_npeSum'],400,0,80)],cmin=1,label='cut', alpha=1.0)
+    if (not SHMS_PS == None) or (not COIN_PS == None):
+        ax = f.add_subplot(242)
+        ax.hist2d(tree['P_cal_etotnorm'],tree['P_hgcer_npeSum'],bins=[c.setbin(tree['P_cal_etotnorm'],400,0,4),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='no cut',alpha=0.5)
+        ax.hist2d(c.add_cut(tree['P_cal_etotnorm'],"p_%scut_lumi_nt" % SHMS_PID),c.add_cut(tree['P_hgcer_npeSum'],"p_%scut_lumi_nt" % SHMS_PID),bins=[c.setbin(tree['P_cal_etotnorm'],400,0,4),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='cut', alpha=1.0)
         plt.xlabel('P_cal_etotnorm')
-        plt.ylabel('P_ngcer_npeSum')
-
-    ax = f.add_subplot(245)
-    ax.hist2d(tree['P_aero_npeSum'],tree['P_hgcer_npeSum'],bins=[c.setbin(tree['P_aero_npeSum'],400,0,100),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='no cut',alpha=0.5)
-    ax.hist2d(c.add_cut(tree['P_aero_npeSum'],"p_%scut_lumi_nt" % SHMS_PID),c.add_cut(tree['P_hgcer_npeSum'],"p_%scut_lumi_nt" % SHMS_PID),bins=[c.setbin(tree['P_aero_npeSum'],400,0,100),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='cut', alpha=1.0)
-    plt.xlabel('P_aero_npeSum')
-    plt.ylabel('P_hgcer_npeSum')
-
-    if ANATYPE == "Pion":
-        ax = f.add_subplot(246)
-        ax.hist2d(tree['P_ngcer_npeSum'],tree['P_hgcer_npeSum'],bins=[c.setbin(tree['P_ngcer_npeSum'],400,0,80),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='no cut',alpha=0.5)
-        ax.hist2d(c.add_cut(tree['P_ngcer_npeSum'],"p_%scut_lumi_nt" % SHMS_PID),c.add_cut(tree['P_hgcer_npeSum'],"p_%scut_lumi_nt" % SHMS_PID),bins=[c.setbin(tree['P_ngcer_npeSum'],400,0,80),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='cut', alpha=1.0)
-        plt.xlabel('P_ngcer_npeSum')
         plt.ylabel('P_hgcer_npeSum')
 
-        ax = f.add_subplot(247)
-        ax.hist2d(tree['P_aero_npeSum'],tree['P_ngcer_npeSum'],bins=[c.setbin(tree['P_aero_npeSum'],400,0,100),c.setbin(tree['P_ngcer_npeSum'],400,0,80)],cmin=1,label='no cut',alpha=0.5)
-        ax.hist2d(c.add_cut(tree['P_aero_npeSum'],"p_%scut_lumi_nt" % SHMS_PID),c.add_cut(tree['P_ngcer_npeSum'],"p_%scut_lumi_nt" % SHMS_PID),bins=[c.setbin(tree['P_aero_npeSum'],400,0,100),c.setbin(tree['P_ngcer_npeSum'],400,0,80)],cmin=1,label='cut', alpha=1.0)
+        ax = f.add_subplot(243)
+        ax.hist2d(tree['P_cal_etotnorm'],tree['P_aero_npeSum'],bins=[c.setbin(tree['P_cal_etotnorm'],400,0,4),c.setbin(tree['P_aero_npeSum'],400,0,100)],cmin=1,label='no cut',alpha=0.5)
+        ax.hist2d(c.add_cut(tree['P_cal_etotnorm'],"p_%scut_lumi_nt" % SHMS_PID),c.add_cut(tree['P_aero_npeSum'],"p_%scut_lumi_nt" % SHMS_PID),bins=[c.setbin(tree['P_cal_etotnorm'],400,0,4),c.setbin(tree['P_aero_npeSum'],400,0,100)],cmin=1,label='cut', alpha=1.0)
+        plt.xlabel('P_cal_etotnorm')
+        plt.ylabel('P_aero_npeSum')
+
+        if ANATYPE == "Pion":
+            ax = f.add_subplot(244)
+            ax.hist2d(tree['P_cal_etotnorm'],tree['P_ngcer_npeSum'],bins=[c.setbin(tree['P_cal_etotnorm'],400,0,4),c.setbin(tree['P_ngcer_npeSum'],400,0,80)],cmin=1,label='no cut',alpha=0.5)
+            ax.hist2d(c.add_cut(tree['P_cal_etotnorm'],"p_%scut_lumi_nt" % SHMS_PID),c.add_cut(tree['P_ngcer_npeSum'],"p_%scut_lumi_nt" % SHMS_PID),bins=[c.setbin(tree['P_cal_etotnorm'],400,0,4),c.setbin(tree['P_ngcer_npeSum'],400,0,80)],cmin=1,label='cut', alpha=1.0)
+            plt.xlabel('P_cal_etotnorm')
+            plt.ylabel('P_ngcer_npeSum')
+
+        ax = f.add_subplot(245)
+        ax.hist2d(tree['P_aero_npeSum'],tree['P_hgcer_npeSum'],bins=[c.setbin(tree['P_aero_npeSum'],400,0,100),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='no cut',alpha=0.5)
+        ax.hist2d(c.add_cut(tree['P_aero_npeSum'],"p_%scut_lumi_nt" % SHMS_PID),c.add_cut(tree['P_hgcer_npeSum'],"p_%scut_lumi_nt" % SHMS_PID),bins=[c.setbin(tree['P_aero_npeSum'],400,0,100),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='cut', alpha=1.0)
         plt.xlabel('P_aero_npeSum')
-        plt.ylabel('P_ngcer_npeSum')
+        plt.ylabel('P_hgcer_npeSum')
+
+        if ANATYPE == "Pion":
+            ax = f.add_subplot(246)
+            ax.hist2d(tree['P_ngcer_npeSum'],tree['P_hgcer_npeSum'],bins=[c.setbin(tree['P_ngcer_npeSum'],400,0,80),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='no cut',alpha=0.5)
+            ax.hist2d(c.add_cut(tree['P_ngcer_npeSum'],"p_%scut_lumi_nt" % SHMS_PID),c.add_cut(tree['P_hgcer_npeSum'],"p_%scut_lumi_nt" % SHMS_PID),bins=[c.setbin(tree['P_ngcer_npeSum'],400,0,80),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='cut', alpha=1.0)
+            plt.xlabel('P_ngcer_npeSum')
+            plt.ylabel('P_hgcer_npeSum')
+
+            ax = f.add_subplot(247)
+            ax.hist2d(tree['P_aero_npeSum'],tree['P_ngcer_npeSum'],bins=[c.setbin(tree['P_aero_npeSum'],400,0,100),c.setbin(tree['P_ngcer_npeSum'],400,0,80)],cmin=1,label='no cut',alpha=0.5)
+            ax.hist2d(c.add_cut(tree['P_aero_npeSum'],"p_%scut_lumi_nt" % SHMS_PID),c.add_cut(tree['P_ngcer_npeSum'],"p_%scut_lumi_nt" % SHMS_PID),bins=[c.setbin(tree['P_aero_npeSum'],400,0,100),c.setbin(tree['P_ngcer_npeSum'],400,0,80)],cmin=1,label='cut', alpha=1.0)
+            plt.xlabel('P_aero_npeSum')
+            plt.ylabel('P_ngcer_npeSum')
 
     ax = f.add_subplot(248)
     plt.axis('off')
@@ -428,48 +438,50 @@ def track_pid_cuts():
     f = plt.figure(figsize=(11.69,8.27))
     f.suptitle("Run %s" % runNum)
 
-    ax = f.add_subplot(231)
-    ax.hist(tree['H_cal_etottracknorm'],bins=c.setbin(tree['H_cal_etottracknorm'],200,0,2.0),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(tree['H_cal_etottracknorm'],"h_cal"),bins=c.setbin(tree['H_cal_etottracknorm'],200,0,2.0),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('H_cal_etottracknorm')
-    plt.ylabel('Count')
-
-    ax = f.add_subplot(232)
-    ax.hist(tree['H_cer_npeSum'],bins=c.setbin(tree['H_cer_npeSum'],200,0,60),label='no cut',histtype='step', alpha=0.5,stacked=True, fill=True)
-    ax.hist(c.add_cut(tree['H_cer_npeSum'],"h_cer"),bins=c.setbin(tree['H_cer_npeSum'],200,0,60),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('H_cer_npeSum')
-    plt.ylabel('Count')
-
-    ax = f.add_subplot(233)
-    ax.hist(tree['P_cal_etottracknorm'],bins=c.setbin(tree['P_cal_etottracknorm'],200,0,4),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(tree['P_cal_etottracknorm'],"p_cal"),bins=c.setbin(tree['P_cal_etottracknorm'],200,0,4),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('P_cal_etottracknorm')
-    plt.ylabel('Count')
-
-    ax = f.add_subplot(234)
-    ax.hist(tree['P_hgcer_npeSum'],bins=c.setbin(tree['P_hgcer_npeSum'],200,0,200),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(tree['P_hgcer_npeSum'],"p_hgcer"),bins=c.setbin(tree['P_hgcer_npeSum'],200,0,200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('P_hgcer_npeSum')
-    plt.ylabel('Count')
-
-    ax = f.add_subplot(235)
-    ax.hist(tree['P_aero_npeSum'],bins=c.setbin(tree['P_aero_npeSum'],200,0,400),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(tree['P_aero_npeSum'],"p_aero"),bins=c.setbin(tree['P_aero_npeSum'],200,0,400),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('P_aero_npeSum')
-    plt.ylabel('Count')   
-
-    if ANATYPE == "Pion":
-        ax = f.add_subplot(236)
-        ax.hist(tree['P_ngcer_npeSum'],bins=c.setbin(tree['P_ngcer_npeSum'],200,0,250),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(tree['P_ngcer_npeSum'],"p_ngcer"), bins=c.setbin(tree['P_ngcer_npeSum'],200,0,250),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+    if (not HMS_PS == None) or (not COIN_PS == None):
+        ax = f.add_subplot(231)
+        ax.hist(tree['H_cal_etottracknorm'],bins=c.setbin(tree['H_cal_etottracknorm'],200,0,2.0),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(tree['H_cal_etottracknorm'],"h_cal"),bins=c.setbin(tree['H_cal_etottracknorm'],200,0,2.0),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
-        plt.xlabel('P_ngcer_npeSum')
+        plt.xlabel('H_cal_etottracknorm')
         plt.ylabel('Count')
+
+        ax = f.add_subplot(232)
+        ax.hist(tree['H_cer_npeSum'],bins=c.setbin(tree['H_cer_npeSum'],200,0,60),label='no cut',histtype='step', alpha=0.5,stacked=True, fill=True)
+        ax.hist(c.add_cut(tree['H_cer_npeSum'],"h_cer"),bins=c.setbin(tree['H_cer_npeSum'],200,0,60),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        plt.yscale('log')
+        plt.xlabel('H_cer_npeSum')
+        plt.ylabel('Count')
+
+    if (not SHMS_PS == None) or (not COIN_PS == None):
+        ax = f.add_subplot(233)
+        ax.hist(tree['P_cal_etottracknorm'],bins=c.setbin(tree['P_cal_etottracknorm'],200,0,4),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(tree['P_cal_etottracknorm'],"p_cal"),bins=c.setbin(tree['P_cal_etottracknorm'],200,0,4),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        plt.yscale('log')
+        plt.xlabel('P_cal_etottracknorm')
+        plt.ylabel('Count')
+    
+        ax = f.add_subplot(234)
+        ax.hist(tree['P_hgcer_npeSum'],bins=c.setbin(tree['P_hgcer_npeSum'],200,0,200),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(tree['P_hgcer_npeSum'],"p_hgcer"),bins=c.setbin(tree['P_hgcer_npeSum'],200,0,200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        plt.yscale('log')
+        plt.xlabel('P_hgcer_npeSum')
+        plt.ylabel('Count')
+
+        ax = f.add_subplot(235)
+        ax.hist(tree['P_aero_npeSum'],bins=c.setbin(tree['P_aero_npeSum'],200,0,400),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(tree['P_aero_npeSum'],"p_aero"),bins=c.setbin(tree['P_aero_npeSum'],200,0,400),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        plt.yscale('log')
+        plt.xlabel('P_aero_npeSum')
+        plt.ylabel('Count')   
+
+        if ANATYPE == "Pion":
+            ax = f.add_subplot(236)
+            ax.hist(tree['P_ngcer_npeSum'],bins=c.setbin(tree['P_ngcer_npeSum'],200,0,250),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+            ax.hist(c.add_cut(tree['P_ngcer_npeSum'],"p_ngcer"), bins=c.setbin(tree['P_ngcer_npeSum'],200,0,250),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+            plt.yscale('log')
+            plt.xlabel('P_ngcer_npeSum')
+            plt.ylabel('Count')
 
     plt.legend(loc="upper right")
 
@@ -483,49 +495,51 @@ def track_pid_cuts():
     f = plt.figure(figsize=(19.20,8.00))
     f.suptitle("Run %s" % runNum)
 
-    ax = f.add_subplot(241)
-    ax.hist2d(tree['H_cal_etottracknorm'],tree['H_cer_npeSum'],bins=[c.setbin(tree['H_cal_etottracknorm'],400,0,2.0),c.setbin(tree['H_cer_npeSum'],400,0,30)],cmin=1,label='no cut',alpha=0.5)
-    ax.hist2d(c.add_cut(tree['H_cal_etottracknorm'],"h_%scut_lumi" % HMS_PID), c.add_cut(tree['H_cer_npeSum'],"h_%scut_lumi" % HMS_PID), bins=[c.setbin(tree['H_cal_etottracknorm'],400,0,2.0),c.setbin(tree['H_cer_npeSum'],400,0,30)],cmin=1,label='cut', alpha=1.0)
-    plt.xlabel('H_cal_etottracknorm')
-    plt.ylabel('H_cer_npeSum')
+    if (not HMS_PS == None) or (not COIN_PS == None):
+        ax = f.add_subplot(241)
+        ax.hist2d(tree['H_cal_etottracknorm'],tree['H_cer_npeSum'],bins=[c.setbin(tree['H_cal_etottracknorm'],400,0,2.0),c.setbin(tree['H_cer_npeSum'],400,0,30)],cmin=1,label='no cut',alpha=0.5)
+        ax.hist2d(c.add_cut(tree['H_cal_etottracknorm'],"h_%scut_lumi" % HMS_PID), c.add_cut(tree['H_cer_npeSum'],"h_%scut_lumi" % HMS_PID), bins=[c.setbin(tree['H_cal_etottracknorm'],400,0,2.0),c.setbin(tree['H_cer_npeSum'],400,0,30)],cmin=1,label='cut', alpha=1.0)
+        plt.xlabel('H_cal_etottracknorm')
+        plt.ylabel('H_cer_npeSum')
 
-    ax = f.add_subplot(242)
-    ax.hist2d(tree['P_cal_etottracknorm'],tree['P_hgcer_npeSum'],bins=[c.setbin(tree['P_cal_etottracknorm'],400,0,4),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='no cut',alpha=0.5)
-    ax.hist2d(c.add_cut(tree['P_cal_etottracknorm'],"p_%scut_lumi" % SHMS_PID),c.add_cut(tree['P_hgcer_npeSum'],"p_%scut_lumi" % SHMS_PID),bins=[c.setbin(tree['P_cal_etottracknorm'],400,0,4),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='cut', alpha=1.0)
-    plt.xlabel('P_cal_etottracknorm')
-    plt.ylabel('P_hgcer_npeSum')
-
-    ax = f.add_subplot(243)
-    ax.hist2d(tree['P_cal_etottracknorm'],tree['P_aero_npeSum'],bins=[c.setbin(tree['P_cal_etottracknorm'],400,0,4),c.setbin(tree['P_aero_npeSum'],400,0,100)],cmin=1,label='no cut',alpha=0.5)
-    ax.hist2d(c.add_cut(tree['P_cal_etottracknorm'],"p_%scut_lumi" % SHMS_PID),c.add_cut(tree['P_aero_npeSum'],"p_%scut_lumi" % SHMS_PID),bins=[c.setbin(tree['P_cal_etottracknorm'],400,0,4),c.setbin(tree['P_aero_npeSum'],400,0,100)],cmin=1,label='cut', alpha=1.0)
-    plt.xlabel('P_cal_etottracknorm')
-    plt.ylabel('P_aero_npeSum')
-
-    if ANATYPE == "Pion":
-        ax = f.add_subplot(244)
-        ax.hist2d(tree['P_cal_etottracknorm'],tree['P_ngcer_npeSum'],bins=[c.setbin(tree['P_cal_etottracknorm'],400,0,4),c.setbin(tree['P_ngcer_npeSum'],400,0,80)],cmin=1,label='no cut',alpha=0.5)
-        ax.hist2d(c.add_cut(tree['P_cal_etottracknorm'],"p_%scut_lumi" % SHMS_PID),c.add_cut(tree['P_ngcer_npeSum'],"p_%scut_lumi" % SHMS_PID),bins=[c.setbin(tree['P_cal_etottracknorm'],400,0,4),c.setbin(tree['P_ngcer_npeSum'],400,0,80)],cmin=1,label='cut', alpha=1.0)
+    if (not SHMS_PS == None) or (not COIN_PS == None):
+        ax = f.add_subplot(242)
+        ax.hist2d(tree['P_cal_etottracknorm'],tree['P_hgcer_npeSum'],bins=[c.setbin(tree['P_cal_etottracknorm'],400,0,4),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='no cut',alpha=0.5)
+        ax.hist2d(c.add_cut(tree['P_cal_etottracknorm'],"p_%scut_lumi" % SHMS_PID),c.add_cut(tree['P_hgcer_npeSum'],"p_%scut_lumi" % SHMS_PID),bins=[c.setbin(tree['P_cal_etottracknorm'],400,0,4),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='cut', alpha=1.0)
         plt.xlabel('P_cal_etottracknorm')
-        plt.ylabel('P_ngcer_npeSum')
-
-    ax = f.add_subplot(245)
-    ax.hist2d(tree['P_aero_npeSum'],tree['P_hgcer_npeSum'],bins=[c.setbin(tree['P_aero_npeSum'],400,0,100),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='no cut',alpha=0.5)
-    ax.hist2d(c.add_cut(tree['P_aero_npeSum'],"p_%scut_lumi" % SHMS_PID),c.add_cut(tree['P_hgcer_npeSum'],"p_%scut_lumi" % SHMS_PID),bins=[c.setbin(tree['P_aero_npeSum'],400,0,100),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='cut', alpha=1.0)
-    plt.xlabel('P_aero_npeSum')
-    plt.ylabel('P_hgcer_npeSum')
-
-    if ANATYPE == "Pion":
-        ax = f.add_subplot(246)
-        ax.hist2d(tree['P_ngcer_npeSum'],tree['P_hgcer_npeSum'],bins=[c.setbin(tree['P_ngcer_npeSum'],400,0,80),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='no cut',alpha=0.5)
-        ax.hist2d(c.add_cut(tree['P_ngcer_npeSum'],"p_%scut_lumi" % SHMS_PID),c.add_cut(tree['P_hgcer_npeSum'],"p_%scut_lumi" % SHMS_PID),bins=[c.setbin(tree['P_ngcer_npeSum'],400,0,80),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='cut', alpha=1.0)
-        plt.xlabel('P_ngcer_npeSum')
         plt.ylabel('P_hgcer_npeSum')
 
-        ax = f.add_subplot(247)
-        ax.hist2d(tree['P_aero_npeSum'],tree['P_ngcer_npeSum'],bins=[c.setbin(tree['P_aero_npeSum'],400,0,100),c.setbin(tree['P_ngcer_npeSum'],400,0,80)],cmin=1,label='no cut',alpha=0.5)
-        ax.hist2d(c.add_cut(tree['P_aero_npeSum'],"p_%scut_lumi" % SHMS_PID),c.add_cut(tree['P_ngcer_npeSum'],"p_%scut_lumi" % SHMS_PID),bins=[c.setbin(tree['P_aero_npeSum'],400,0,100),c.setbin(tree['P_ngcer_npeSum'],400,0,80)],cmin=1,label='cut', alpha=1.0)
+        ax = f.add_subplot(243)
+        ax.hist2d(tree['P_cal_etottracknorm'],tree['P_aero_npeSum'],bins=[c.setbin(tree['P_cal_etottracknorm'],400,0,4),c.setbin(tree['P_aero_npeSum'],400,0,100)],cmin=1,label='no cut',alpha=0.5)
+        ax.hist2d(c.add_cut(tree['P_cal_etottracknorm'],"p_%scut_lumi" % SHMS_PID),c.add_cut(tree['P_aero_npeSum'],"p_%scut_lumi" % SHMS_PID),bins=[c.setbin(tree['P_cal_etottracknorm'],400,0,4),c.setbin(tree['P_aero_npeSum'],400,0,100)],cmin=1,label='cut', alpha=1.0)
+        plt.xlabel('P_cal_etottracknorm')
+        plt.ylabel('P_aero_npeSum')
+
+        if ANATYPE == "Pion":
+            ax = f.add_subplot(244)
+            ax.hist2d(tree['P_cal_etottracknorm'],tree['P_ngcer_npeSum'],bins=[c.setbin(tree['P_cal_etottracknorm'],400,0,4),c.setbin(tree['P_ngcer_npeSum'],400,0,80)],cmin=1,label='no cut',alpha=0.5)
+            ax.hist2d(c.add_cut(tree['P_cal_etottracknorm'],"p_%scut_lumi" % SHMS_PID),c.add_cut(tree['P_ngcer_npeSum'],"p_%scut_lumi" % SHMS_PID),bins=[c.setbin(tree['P_cal_etottracknorm'],400,0,4),c.setbin(tree['P_ngcer_npeSum'],400,0,80)],cmin=1,label='cut', alpha=1.0)
+            plt.xlabel('P_cal_etottracknorm')
+            plt.ylabel('P_ngcer_npeSum')
+
+        ax = f.add_subplot(245)
+        ax.hist2d(tree['P_aero_npeSum'],tree['P_hgcer_npeSum'],bins=[c.setbin(tree['P_aero_npeSum'],400,0,100),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='no cut',alpha=0.5)
+        ax.hist2d(c.add_cut(tree['P_aero_npeSum'],"p_%scut_lumi" % SHMS_PID),c.add_cut(tree['P_hgcer_npeSum'],"p_%scut_lumi" % SHMS_PID),bins=[c.setbin(tree['P_aero_npeSum'],400,0,100),c.setbin(tree['P_hgcer_npeSum'],400,   0,80)],cmin=1,label='cut', alpha=1.0)
         plt.xlabel('P_aero_npeSum')
-        plt.ylabel('P_ngcer_npeSum')
+        plt.ylabel('P_hgcer_npeSum')
+
+        if ANATYPE == "Pion":
+            ax = f.add_subplot(246)
+            ax.hist2d(tree['P_ngcer_npeSum'],tree['P_hgcer_npeSum'],bins=[c.setbin(tree['P_ngcer_npeSum'],400,0,80),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='no cut',alpha=0.5)
+            ax.hist2d(c.add_cut(tree['P_ngcer_npeSum'],"p_%scut_lumi" % SHMS_PID),c.add_cut(tree['P_hgcer_npeSum'],"p_%scut_lumi" % SHMS_PID),bins=[c.setbin(tree['P_ngcer_npeSum'],400,0,80),c.setbin(tree['P_hgcer_npeSum'],400,0,80)],cmin=1,label='cut', alpha=1.0)
+            plt.xlabel('P_ngcer_npeSum')
+            plt.ylabel('P_hgcer_npeSum')
+
+            ax = f.add_subplot(247)
+            ax.hist2d(tree['P_aero_npeSum'],tree['P_ngcer_npeSum'],bins=[c.setbin(tree['P_aero_npeSum'],400,0,100),c.setbin(tree['P_ngcer_npeSum'],400,0,80)],cmin=1,label='no cut',alpha=0.5)
+            ax.hist2d(c.add_cut(tree['P_aero_npeSum'],"p_%scut_lumi" % SHMS_PID),c.add_cut(tree['P_ngcer_npeSum'],"p_%scut_lumi" % SHMS_PID),bins=[c.setbin(tree['P_aero_npeSum'],400,0,100),c.setbin(tree['P_ngcer_npeSum'],400,0,80)],cmin=1,label='cut', alpha=1.0)
+            plt.xlabel('P_aero_npeSum')
+            plt.ylabel('P_ngcer_npeSum')
 
 
     ax = f.add_subplot(248)
@@ -561,42 +575,44 @@ def track_pid_cuts():
     f = plt.figure(figsize=(19.20,8.00))
     f.suptitle("Run %s" % runNum)
 
-    ax = f.add_subplot(241)
-    ax.hist2d(tree['H_cer_npeSum'],tree['P_gtr_beta'],bins=[c.setbin(tree['H_cer_npeSum'],400,0,80),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='no cut',alpha=0.5)
-    ax.hist2d(c.add_cut(tree['H_cer_npeSum'],"p_%scut_lumi" % SHMS_PID),c.add_cut(tree['P_gtr_beta'],"p_%scut_lumi" % SHMS_PID),bins=[c.setbin(tree['H_cer_npeSum'],400,0,80),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='cut', alpha=1.0)
-    plt.xlabel('H_cer_npeSum')
-    plt.ylabel('P_gtr_beta')
+    if (not HMS_PS == None) or (not COIN_PS == None):
+        ax = f.add_subplot(241)
+        ax.hist2d(tree['H_cer_npeSum'],tree['H_gtr_beta'],bins=[c.setbin(tree['H_cer_npeSum'],400,0,80),c.setbin(tree['H_gtr_beta'],400,-2.0,2.0)],cmin=1,label='no cut',alpha=0.5)
+        ax.hist2d(c.add_cut(tree['H_cer_npeSum'],"h_%scut_lumi" % HMS_PID),c.add_cut(tree['H_gtr_beta'],"h_%scut_lumi" % HMS_PID),bins=[c.setbin(tree['H_cer_npeSum'],400,0,80),c.setbin(tree['H_gtr_beta'],400,-2.0,2.0)],cmin=1,label='cut', alpha=1.0)
+        plt.xlabel('H_cer_npeSum')
+        plt.ylabel('H_gtr_beta')
 
-    ax = f.add_subplot(242)
-    ax.hist2d(tree['H_cal_etottracknorm'],tree['P_gtr_beta'],bins=[c.setbin(tree['H_cal_etottracknorm'],400,0,4),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='no cut',alpha=0.5)
-    ax.hist2d(c.add_cut(tree['H_cal_etottracknorm'],"p_%scut_lumi" % SHMS_PID),c.add_cut(tree['P_gtr_beta'],"p_%scut_lumi" % SHMS_PID),bins=[c.setbin(tree['H_cal_etottracknorm'],400,0,4),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='cut', alpha=1.0)
-    plt.xlabel('H_cal_etottracknorm')
-    plt.ylabel('P_gtr_beta')
+        ax = f.add_subplot(242)
+        ax.hist2d(tree['H_cal_etottracknorm'],tree['H_gtr_beta'],bins=[c.setbin(tree['H_cal_etottracknorm'],400,0,4),c.setbin(tree['H_gtr_beta'],400,-2.0,2.0)],cmin=1,label='no cut',alpha=0.5)
+        ax.hist2d(c.add_cut(tree['H_cal_etottracknorm'],"H_%scut_lumi" % SHMS_PID),c.add_cut(tree['H_gtr_beta'],"h_%scut_lumi" % HMS_PID),bins=[c.setbin(tree['H_cal_etottracknorm'],400,0,4),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='cut', alpha=1.0)
+        plt.xlabel('H_cal_etottracknorm')
+        plt.ylabel('H_gtr_beta')
 
-    ax = f.add_subplot(243)
-    ax.hist(tree['P_gtr_beta'],bins=c.setbin(tree['P_gtr_beta'],200,-2.0,2.0),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(tree['P_gtr_beta'],"h_cal"),bins=c.setbin(tree['P_gtr_beta'],200,-2.0,2.0),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
-    plt.yscale('log')
-    plt.xlabel('P_gtr_beta')
-    plt.ylabel('Count')
+    if (not SHMS_PS == None) or (not COIN_PS == None):
+        ax = f.add_subplot(243)
+        ax.hist(tree['P_gtr_beta'],bins=c.setbin(tree['P_gtr_beta'],200,-2.0,2.0),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(tree['P_gtr_beta'],"p_cal"),bins=c.setbin(tree['P_gtr_beta'],200,-2.0,2.0),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        plt.yscale('log')
+        plt.xlabel('P_gtr_beta')
+        plt.ylabel('Count')
 
-    ax = f.add_subplot(244)
-    ax.hist2d(tree['P_cal_etottracknorm'],tree['P_gtr_beta'],bins=[c.setbin(tree['P_cal_etottracknorm'],400,0,4),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='no cut',alpha=0.5)
-    ax.hist2d(c.add_cut(tree['P_cal_etottracknorm'],"p_%scut_lumi" % SHMS_PID),c.add_cut(tree['P_gtr_beta'],"p_%scut_lumi" % SHMS_PID),bins=[c.setbin(tree['P_cal_etottracknorm'],400,0,4),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='cut', alpha=1.0)
-    plt.xlabel('P_cal_etottracknorm')
-    plt.ylabel('P_gtr_beta')
+        ax = f.add_subplot(244)
+        ax.hist2d(tree['P_cal_etottracknorm'],tree['P_gtr_beta'],bins=[c.setbin(tree['P_cal_etottracknorm'],400,0,4),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='no cut',alpha=0.5)
+        ax.hist2d(c.add_cut(tree['P_cal_etottracknorm'],"p_%scut_lumi" % SHMS_PID),c.add_cut(tree['P_gtr_beta'],"p_%scut_lumi" % SHMS_PID),bins=[c.setbin(tree['P_cal_etottracknorm'],400,0,4),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='cut', alpha=1.0)
+        plt.xlabel('P_cal_etottracknorm')
+        plt.ylabel('P_gtr_beta')
 
-    ax = f.add_subplot(245)
-    ax.hist2d(tree['P_hgcer_npeSum'],tree['P_gtr_beta'],bins=[c.setbin(tree['P_hgcer_npeSum'],400,0,80),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='no cut',alpha=0.5)
-    ax.hist2d(c.add_cut(tree['P_hgcer_npeSum'],"p_%scut_lumi" % SHMS_PID),c.add_cut(tree['P_gtr_beta'],"p_%scut_lumi" % SHMS_PID),bins=[c.setbin(tree['P_hgcer_npeSum'],400,0,80),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='cut', alpha=1.0)
-    plt.xlabel('P_hgcer_npeSum')
-    plt.ylabel('P_gtr_beta')
+        ax = f.add_subplot(245)
+        ax.hist2d(tree['P_hgcer_npeSum'],tree['P_gtr_beta'],bins=[c.setbin(tree['P_hgcer_npeSum'],400,0,80),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='no cut',alpha=0.5)
+        ax.hist2d(c.add_cut(tree['P_hgcer_npeSum'],"p_%scut_lumi" % SHMS_PID),c.add_cut(tree['P_gtr_beta'],"p_%scut_lumi" % SHMS_PID),bins=[c.setbin(tree['P_hgcer_npeSum'],400,0,80),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='cut', alpha=1.0)
+        plt.xlabel('P_hgcer_npeSum')
+        plt.ylabel('P_gtr_beta')
 
-    ax = f.add_subplot(246)
-    ax.hist2d(tree['P_aero_npeSum'],tree['P_gtr_beta'],bins=[c.setbin(tree['P_aero_npeSum'],400,0,100),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='no cut',alpha=0.5)
-    ax.hist2d(c.add_cut(tree['P_aero_npeSum'],"p_%scut_lumi" % SHMS_PID),c.add_cut(tree['P_gtr_beta'],"p_%scut_lumi" % SHMS_PID),bins=[c.setbin(tree['P_aero_npeSum'],400,0,100),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='cut', alpha=1.0)
-    plt.xlabel('P_aero_npeSum')
-    plt.ylabel('P_gtr_beta')
+        ax = f.add_subplot(246)
+        ax.hist2d(tree['P_aero_npeSum'],tree['P_gtr_beta'],bins=[c.setbin(tree['P_aero_npeSum'],400,0,100),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='no cut',alpha=0.5)
+        ax.hist2d(c.add_cut(tree['P_aero_npeSum'],"p_%scut_lumi" % SHMS_PID),c.add_cut(tree['P_gtr_beta'],"p_%scut_lumi" % SHMS_PID),bins=[c.setbin(tree['P_aero_npeSum'],400,0,100),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='cut', alpha=1.0)
+        plt.xlabel('P_aero_npeSum')
+        plt.ylabel('P_gtr_beta')
 
     ax = f.add_subplot(248)
     plt.axis('off')
@@ -712,38 +728,74 @@ def analysis():
     except NameError:
         COINTRIG_cut = []
 
-    h_et_should = len(c.add_cut(tree["H_cal_etotnorm"],"h_%strack_lumi_before" % HMS_PID))
-    h_et_did = len(c.add_cut(tree["H_cal_etotnorm"],"h_%strack_lumi_after" % HMS_PID))
-    #HMS_track_eff = h_et_did/h_et_should
+    # Seperated these to check that the detector was online - NH
+    if (not HMS_PS == None) or (not COIN_PS == None):
+        h_et_should = len(c.add_cut(tree["H_cal_etotnorm"],"h_%strack_lumi_before" % HMS_PID))
+        h_et_did = len(c.add_cut(tree["H_cal_etotnorm"],"h_%strack_lumi_after" % HMS_PID))
+        #HMS_track_eff = h_et_did/h_et_should
 
-    p_et_should = len(c.add_cut(tree["P_cal_etotnorm"],"p_%strack_lumi_before" % SHMS_PID))
-    p_et_did = len(c.add_cut(tree["P_cal_etotnorm"],"p_%strack_lumi_after" % SHMS_PID))
-    #SHMS_track_eff = p_et_did/p_et_should
+        # Applies PID cuts, once integrated this will give the events (track)
+        #h_goodscinhit = c.add_cut(tree["H_hod_goodscinhit"],"h_%scut_lumi" % HMS_PID)
+        h_etotnorm = c.add_cut(tree["H_cal_etotnorm"],"h_%scut_lumi_nt" % HMS_PID) 
+        h_etottracknorm = c.add_cut(tree["H_cal_etottracknorm"],"h_%scut_lumi" % HMS_PID)
+    
+        
+    if (not SHMS_PS == None) or (not COIN_PS == None):
+        p_et_should = len(c.add_cut(tree["P_cal_etotnorm"],"p_%strack_lumi_before" % SHMS_PID))
+        p_et_did = len(c.add_cut(tree["P_cal_etotnorm"],"p_%strack_lumi_after" % SHMS_PID))
+        #SHMS_track_eff = p_et_did/p_et_should
 
-    # Applies PID cuts, once integrated this will give the events (no track)
-    h_etotnorm = c.add_cut(tree["H_cal_etotnorm"],"h_%scut_lumi_nt" % HMS_PID) 
-    p_etotnorm = c.add_cut(tree["P_cal_etotnorm"],"p_%scut_lumi_nt" % SHMS_PID)
+        # Applies PID cuts, once integrated this will give the events (no track)
+        p_etotnorm = c.add_cut(tree["P_cal_etotnorm"],"p_%scut_lumi_nt" % SHMS_PID)
 
-    # Applies PID cuts, once integrated this will give the events (track)
-    #h_goodscinhit = c.add_cut(tree["H_hod_goodscinhit"],"h_%scut_lumi" % HMS_PID)
-    #p_goodscinhit = c.add_cut(tree["P_hod_goodscinhit"],"p_%scut_lumi" % SHMS_PID)
-    h_etottracknorm = c.add_cut(tree["H_cal_etottracknorm"],"h_%scut_lumi" % HMS_PID)
-    p_etottracknorm = c.add_cut(tree["P_cal_etottracknorm"],"p_%scut_lumi" % SHMS_PID)    
+        # Applies PID cuts, once integrated this will give the events (track)
+        #p_goodscinhit = c.add_cut(tree["P_hod_goodscinhit"],"p_%scut_lumi" % SHMS_PID)
+        p_etottracknorm = c.add_cut(tree["P_cal_etottracknorm"],"p_%scut_lumi" % SHMS_PID)    
+    
     
     # Creates a dictionary for the calculated luminosity values 
-    track_info = {
-
-        "tot_events" : len(EventType),
-        "h_int_etotnorm_evts" : scipy.integrate.simps(h_etotnorm),
-        "p_int_etotnorm_evts" : scipy.integrate.simps(p_etotnorm),
-        "h_int_etottracknorm_evts" : scipy.integrate.simps(h_etottracknorm),
-        "p_int_etottracknorm_evts" : scipy.integrate.simps(p_etottracknorm),                
-        "accp_edtm" : (len(EDTM)),
-        "paccp_edtm" : (len(EDTM_SHMS)),
-        "haccp_edtm" : (len(EDTM_HMS)),
-
-    }
-
+    # Seperated this into cases where PS are on
+    if ((not HMS_PS == None) and (not SHMS_PS == None)) or (not COIN_PS == None):
+        track_info = {
+    
+            "tot_events" : len(EventType),
+            "h_int_etotnorm_evts" : scipy.integrate.simps(h_etotnorm),
+            "p_int_etotnorm_evts" : scipy.integrate.simps(p_etotnorm),
+            "h_int_etottracknorm_evts" : scipy.integrate.simps(h_etottracknorm),
+            "p_int_etottracknorm_evts" : scipy.integrate.simps(p_etottracknorm),                
+            "accp_edtm" : (len(EDTM)),
+            "paccp_edtm" : (len(EDTM_SHMS)),
+            "haccp_edtm" : (len(EDTM_HMS)),
+    
+        }
+    else: 
+        if (not HMS_PS == None):
+            track_info = {
+        
+                "tot_events" : len(EventType),
+                "h_int_etotnorm_evts" : scipy.integrate.simps(h_etotnorm),
+                "p_int_etotnorm_evts" : -1,
+                "h_int_etottracknorm_evts" : scipy.integrate.simps(h_etottracknorm),
+                "p_int_etottracknorm_evts" : -1,                
+                "accp_edtm" : (len(EDTM)),
+                "paccp_edtm" : -1,
+                "haccp_edtm" : (len(EDTM_HMS)),
+        
+            }
+        else:
+            track_info = {
+        
+                "tot_events" : len(EventType),
+                "h_int_etotnorm_evts" : -1,
+                "p_int_etotnorm_evts" : scipy.integrate.simps(p_etotnorm),
+                "h_int_etottracknorm_evts" : -1,
+                "p_int_etottracknorm_evts" : scipy.integrate.simps(p_etottracknorm),                
+                "accp_edtm" : (len(EDTM)),
+                "paccp_edtm" : (len(EDTM_SHMS)),
+                "haccp_edtm" : -1,
+        
+            }
+    
     track_info.update(PSDict)
     track_info.update({"SHMSTRIG_cut" : len(SHMSTRIG_cut)})
     track_info.update({"SHMS_track" : SHMS_track_eff})
@@ -760,7 +812,7 @@ def analysis():
         if ps == "PS1" or ps == "PS2":
             print("Number of SHMSTRIG Events: %.0f" % (SHMS_PS*track_info['SHMSTRIG_cut']))
             print("Number of SHMS EDTM  Events: %.0f" % (track_info['paccp_edtm']))
-            print("Number of SHMS good events: %.0f +/- %.0f " % ((SHMS_PS*track_info['h_int_etottracknorm_evts']), math.sqrt(SHMS_PS*track_info['h_int_etottracknorm_evts'])))
+            print("Number of SHMS good events: %.0f +/- %.0f " % ((SHMS_PS*track_info['p_int_etottracknorm_evts']), math.sqrt(SHMS_PS*track_info['p_int_etottracknorm_evts'])))
             print("Calculated SHMS tracking efficiency: %f +/- %f\n" % ((track_info['SHMS_track']), (track_info['SHMS_track_uncern'])))            
         if ps == "PS3" or ps == "PS4":
             print("Number of HMSTRIG Events: %.0f" % (HMS_PS*track_info['HMSTRIG_cut']))

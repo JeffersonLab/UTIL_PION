@@ -45,6 +45,6 @@ def check_pid(runNum,ANATYPE):
     For run {0}...
     HMS_PID = {1}
     SHMS_PID = {2}
-    '''.format(runNum,pid_data_runNum['HMS_PID'].values[0],pid_data_runNum['SHMS_PID'].values[0]))
+    '''.format(runNum,HMS_PID,SHMS_PID))
 
     return [HMS_PID,SHMS_PID]

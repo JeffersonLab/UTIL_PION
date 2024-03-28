@@ -69,7 +69,8 @@ except IOError:
 # Remove runs that have zero beam on time to avoid error
 lumi_data = lumi_data[lumi_data["time"] > 0.0].reset_index(drop=True)
 # Removing runs that are less than a minute
-lumi_data = lumi_data[ (lumi_data['time'] >= 60.0) ].reset_index(drop=True)
+# Why? - NH
+#lumi_data = lumi_data[ (lumi_data['time'] >= 60.0) ].reset_index(drop=True)
 
 def removeRun(runNum):
     '''
@@ -84,13 +85,8 @@ def removeRun(runNum):
     
 # Remove runs, removeRun(runNumber)
 # Carbon
-removeRun(5301) # 10p6 l2, bad TLT (<20%)
-# LH2
-removeRun(5165) # 10p6 l1, really bad scalers
-removeRun(5303) # 10p6 l2, not sure but off by a bit, only ~4 minutes of good beam on time
-# Remove all of 10p6 l3 (besides 5342?), all runs have terrible TLT (probably because singles?) and low beam on time
-removeRun(5366) # 10p6 l3, not sure but off by a bit, only ~4 minutes of good beam on time
-#removeRun(7960) # 8p2 l1, 5 uA, not sure but messes up normalization (maybe singles?)
+# removeRun(5301) # 10p6 l2, bad TLT (<20%)
+
 
 ################################################################################################################################################
 
@@ -212,7 +208,7 @@ def calc_yield():
     curr_tmp_shms = 0
     curr_tmp_hms = 0
     for i,curr in enumerate(yield_dict["current"]):
-        if makeList("time")[i] > 60:
+        if makeList("tot_events")[i] >= 10000:
             if makeList("SHMS_PS")[i] > 0.0:
                 if len(yield_dict["current"]) <= 1:
                     min_curr_shms = yield_dict["current"][i]
@@ -220,6 +216,13 @@ def calc_yield():
                 if curr_tmp_shms >= curr or curr_tmp_shms == 0:
                     min_curr_shms = yield_dict["current"][i]
                     curr_tmp_shms = curr
+            else: # edge case for if SHMS not used in run
+                min_curr_shms = -1
+                min_yield_SHMS_scaler = -1
+                min_yield_SHMS_notrack = -1
+                min_yield_SHMS_track = -1
+                min_yield_SHMS_CPULT_notrack = -1
+                min_yield_SHMS_CPULT_track = -1
             if makeList("HMS_PS")[i] > 0.0:
                 if len(yield_dict["current"]) <= 1:
                     min_curr_hms = yield_dict["current"][i]
@@ -227,7 +230,14 @@ def calc_yield():
                 if curr_tmp_hms >= curr or curr_tmp_hms == 0:
                     min_curr_hms = yield_dict["current"][i]
                     curr_tmp_hms = curr
-
+            else: # edge case for if HMS not used in run
+                min_curr_hms = -1
+                min_yield_HMS_scaler = -1
+                min_yield_HMS_notrack = -1
+                min_yield_HMS_track = -1
+                min_yield_HMS_CPULT_notrack = -1
+                min_yield_HMS_CPULT_track = -1
+                
     for i,curr in enumerate(yield_dict["current"]):
         if curr == min_curr_shms:
             min_yield_SHMS_scaler = yield_dict["yield_SHMS_scaler"][i]
@@ -358,31 +368,31 @@ def plot_yield():
     yield_data = mergeDicts()
 
     # Remove runs with bad TLT, print statement only
-    for i,row in yield_data.iterrows():
-        if row['TLT'] <= 0.75 or row['TLT'] > 1.02:
-            '''
-            print(''
-            Removing {0:.0f} because TLT is low...
-            TLT={1:0.2f} %
-            CPULT={2:0.2f} %
-            ''.format(row["run number"],row["TLT"]*100,row["CPULT_phys"]*100))
-            '''
-            print('''
-            Bad TLT...
-            TLT={0:0.2f} %
-            CPULT={1:0.2f} %
-            '''.format(row["TLT"]*100,row["CPULT_phys"]*100))
-
-        if row['time'] < 60.0:
-            print('''
-            Removing {0:.0f} because beam on time is short...
-            time={1:0.1f} s
-            '''.format(row["run number"],row["time"]))
+    #for i,row in yield_data.iterrows():
+    #    if row['TLT'] <= 0.75 or row['TLT'] > 1.02:
+    #        '''
+    #        print(''
+    #        Removing {0:.0f} because TLT is low...
+    #        TLT={1:0.2f} %
+    #        CPULT={2:0.2f} %
+    #        ''.format(row["run number"],row["TLT"]*100,row["CPULT_phys"]*100))
+    #        '''
+    #        print('''
+    #        Bad TLT...
+    #        TLT={0:0.2f} %
+    #        CPULT={1:0.2f} %
+    #        '''.format(row["TLT"]*100,row["CPULT_phys"]*100))
+    #
+    #    if row['time'] < 60.0:
+    #        print('''
+    #        Removing {0:.0f} because beam on time is short...
+    #        time={1:0.1f} s
+    #        '''.format(row["run number"],row["time"]))
 
     # Remove runs with bad TLT or short on beam time
     #yield_data = yield_data[ (yield_data['TLT'] >= 0.75) & (yield_data['CPULT_phys'] >= 0.75) ].reset_index(drop=True)
     #yield_data = yield_data[ (yield_data['TLT'] < 1.02) & (yield_data['CPULT_phys] < 1.02)].reset_index(drop=True)
-    yield_data = yield_data[ (yield_data['time'] >= 60.0) ].reset_index(drop=True)
+    #yield_data = yield_data[ (yield_data['time'] >= 60.0) ].reset_index(drop=True)
 
     for i, val in enumerate(yield_data["run number"]):
         print("Run numbers:",yield_data["run number"][i],"Current Values:",yield_data["current"][i])

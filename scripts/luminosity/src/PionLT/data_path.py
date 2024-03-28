@@ -8,9 +8,9 @@
 #
 # Author:  Richard L. Trotta III <trotta@cua.edu>
 #
-# Copyright (c) trottar
+# Update - Nathan Heinrich (heinricn)
+# Reworked Paths so that Data for PionLT experiment would be read in instead
 #
-
 
 def get_file(inp_name,SCRIPTPATH):
     '''
@@ -18,57 +18,56 @@ def get_file(inp_name,SCRIPTPATH):
     '''
 
     # Depending on input, the corresponding data setting csv data will be grabbed
-    if "1" in inp_name:
+    if "9-2" in inp_name:
         if "LH2" in inp_name.upper():
             target = "LH2"
-            inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_1/LH2/lumi_data_l1_lh2.csv"
-            out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_1/LH2/yield_data_l1_lh2.csv"
+            inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi9-2/lumi_data_LH2.csv"
+            out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi9-2/yield_data_LH2.csv"
             print("\nGrabbing input...\n\n%s" % str(inp_f))
         if "LD2" in inp_name.upper():
             target = "LD2"
-            inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_1/LD2/lumi_data_l1_ld2.csv"
-            out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_1/LD2/yield_data_l1_ld2.csv"
+            inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi9-2/lumi_data_LD2.csv"
+            out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi9-2/yield_data_LD2.csv"
             print("\nGrabbing input...\n\n%s" % str(inp_f))
         if "C" in inp_name.upper():
             target = "carbon"
-            inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_1/Carbon0p5/lumi_data_l1_c0p5.csv"
-            out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_1/Carbon0p5/yield_data_l1_c0p5.csv"
+            inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi9-2/lumi_data_Carbon.csv"
+            out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi9-2/yield_data_Carbon.csv"
             print("\nGrabbing input...\n\n%s" % str(inp_f))
-
-    elif "2" in inp_name:
-        if "LH2" in inp_name.upper():
-            target = "LH2"
-            inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_2/LH2/lumi_data_l2_lh2.csv"
-            out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_2/LH2/yield_data_l2_lh2.csv"
-            print("\nGrabbing input...\n\n%s" % str(inp_f))
-        if "LD2" in inp_name.upper():
-            target = "LD2"
-            inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_2/LD2/lumi_data_l2_ld2.csv"
-            out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_2/LD2/yield_data_l2_ld2.csv"
-            print("\nGrabbing input...\n\n%s" % str(inp_f))
-        if "C" in inp_name.upper():
-            target = "carbon"
-            inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_2/Carbon0p5/lumi_data_l2_c0p5.csv"
-            out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_2/Carbon0p5/yield_data_l2_c0p5.csv"
-            print("\nGrabbing input...\n\n%s" % str(inp_f))
-
-    elif "3" in inp_name:
-        if "LH2" in inp_name.upper():
-            target = "LH2"
-            inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/LH2/lumi_data_l3_lh2.csv"
-            out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/LH2/yield_data_l3_lh2.csv"
-            print("\nGrabbing input...\n\n%s" % str(inp_f))
-        if "LD2" in inp_name.upper():
-            target = "LD2"
-            inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/LD2/lumi_data_l3_ld2.csv"
-            out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/LD2/yield_data_l3_ld2.csv"
-            print("\nGrabbing input...\n\n%s" % str(inp_f))
-        if "C" in inp_name.upper():
-            target = "carbon"
-            inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/Carbon0p5/lumi_data_l3_c0p5.csv"
-            out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi_3/Carbon0p5/yield_data_l3_c0p5.csv"
-            print("\nGrabbing input...\n\n%s" % str(inp_f))
-
+    elif "6-4" in inp_name:
+        if "SHMS" in inp_name.upper():
+            if "LH2" in inp_name.upper():
+                target = "LH2"
+                inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi6-4/SHMS/lumi_data_LH2.csv"
+                out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi6-4/SHMS/yield_data_LH2.csv"
+                print("\nGrabbing input...\n\n%s" % str(inp_f))
+            if "LD2" in inp_name.upper():
+                target = "LD2"
+                inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi6-4/SHMS/lumi_data_LD2.csv"
+                out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi6-4/SHMS/yield_data_LD2.csv"
+                print("\nGrabbing input...\n\n%s" % str(inp_f))
+            if "C" in inp_name.upper():
+                target = "carbon"
+                inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi6-4/SHMS/lumi_data_Carbon.csv"
+                out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi6-4/SHMS/yield_data_Carbon.csv"
+                print("\nGrabbing input...\n\n%s" % str(inp_f))
+        else:
+            if "LH2" in inp_name.upper():
+                target = "LH2"
+                inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi6-4/HMS/lumi_data_LH2.csv"
+                out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi6-4/HMS/yield_data_LH2.csv"
+                print("\nGrabbing input...\n\n%s" % str(inp_f))
+            if "LD2" in inp_name.upper():
+                target = "LD2"
+                inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi6-4/HMS/lumi_data_LD2.csv"
+                out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi6-4/HMS/yield_data_LD2.csv"
+                print("\nGrabbing input...\n\n%s" % str(inp_f))
+            if "C" in inp_name.upper():
+                target = "carbon"
+                inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi6-4/HMS/lumi_data_Carbon.csv"
+                out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi6-4/HMS/yield_data_Carbon.csv"
+                print("\nGrabbing input...\n\n%s" % str(inp_f))
+        
     else:
         target = "carbon"
         inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/lumi_data.csv"

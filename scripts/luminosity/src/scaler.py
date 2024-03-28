@@ -216,7 +216,7 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
     previous_EDTM = 0
     
     # Set bcm to use (0-bcm1, 1-bcm2, 2-bcm4A, 3-bcm4B, 4-bcm4C)
-    bcm_ix = 0
+    bcm_ix = 1
     
     for ibcm in range(0, 5):
         previous_acctrig = (acctrig_value[0] - EDTM_current)
@@ -321,6 +321,7 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
     except NameError:
         coin_ps_ix = 4
         
+    print("Debug: time: ", time_sum[bcm_ix], ", charge: ", charge_sum[bcm_ix])    
     # Creates a dictionary for the calculated luminosity values 
     scalers = {
         "run number" : runNum,

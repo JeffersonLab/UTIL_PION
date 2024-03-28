@@ -2,70 +2,108 @@
 # HMS track cuts #
 ##################
 # before
-h_track_lumi_before = current.bcm4a+track.h_track_before+misc.c_noedtm
-h_etrack_lumi_before = current.bcm4a+track.h_track_before+pid.h_ecut_nt+misc.c_noedt
-h_pitrack_lumi_before = current.bcm4a+track.h_track_before+pid.h_picut+misc.c_noedtm
-h_hadtrack_lumi_before = current.bcm4a+track.h_track_before+pid.h_hadcut+misc.c_noedtm
+h_track_lumi_before = current.bcm2+track.h_track_before+misc.c_noedtm+misc.h_starttime
+h_etrack_lumi_before = current.bcm2+track.h_track_before+pid.h_ecut+misc.c_noedtm+misc.h_starttime
+h_pitrack_lumi_before = current.bcm2+track.h_track_before+pid.h_picut+misc.c_noedtm+misc.h_starttime
+h_hadtrack_lumi_before = current.bcm2+track.h_track_before+pid.h_hadcut+misc.c_noedtm+misc.h_starttime
 # after
-h_track_lumi_after = current.bcm4a+track.h_track_after+misc.c_noedtm
-h_etrack_lumi_after = current.bcm4a+track.h_track_after+pid.h_ecut_nt+misc.c_noedtm
-h_pitrack_lumi_after = current.bcm4a+track.h_track_after+pid.h_picut+misc.c_noedtm
-h_hadtrack_lumi_after = current.bcm4a+track.h_track_after+pid.h_hadcut+misc.c_noedtm
+h_track_lumi_after = current.bcm2+track.h_track_after+misc.c_noedtm+misc.h_starttime
+h_etrack_lumi_after = current.bcm2+track.h_track_after+pid.h_ecut+misc.c_noedtm+misc.h_starttime
+h_pitrack_lumi_after = current.bcm2+track.h_track_after+pid.h_picut+misc.c_noedtm+misc.h_starttime
+h_hadtrack_lumi_after = current.bcm2+track.h_track_after+pid.h_hadcut+misc.c_noedtm+misc.h_starttime
 # eff cut
-h_ecut_lumi_eff = current.bcm4a+accept.delta+pid.h_ecut-pid.h_ecut.H_gtr_beta
-h_picut_lumi_eff = current.bcm4a+accept.delta+pid.h_picut-pid.h_picut.H_gtr_beta
-h_hadcut_lumi_eff = current.bcm4a+accept.delta+pid.h_hadcut-pid.h_hadcut.H_gtr_beta
-# pid cut
-h_cal = current.bcm4a+pid.h_ecut-pid.h_ecut.H_gtr_beta-pid.h_ecut.H_cer_npeSum
-h_cal_nt = current.bcm4a+pid.h_ecut_nt-pid.h_ecut_nt.H_cer_npeSum
-h_cer = current.bcm4a+pid.h_ecut-pid.h_ecut.H_gtr_beta-pid.h_ecut.H_cal_etotnorm
-h_cer_nt = current.bcm4a+pid.h_ecut_nt-pid.h_ecut_nt.H_cal_etotnorm
-# no-track cut
-h_ecut_lumi_nt = current.bcm4a+pid.h_ecut_nt
+h_ecut_lumi_eff = current.bcm2+accept.delta+pid.h_ecut-pid.h_ecut.H_gtr_beta+misc.h_starttime
+h_picut_lumi_eff = current.bcm2+accept.delta+pid.h_picut-pid.h_picut.H_gtr_beta+misc.h_starttime
+h_hadcut_lumi_eff = current.bcm2+accept.delta+pid.h_hadcut-pid.h_hadcut.H_gtr_beta+misc.h_starttime
 ###################
- # SHMS track cuts #
+# SHMS track cuts #
 ###################
 # before
-p_track_lumi_before = current.bcm4a+track.p_track_before+misc.c_noedtm
-p_etrack_lumi_before = current.bcm4a+track.p_track_before+pid.p_ecut_nt+misc.c_noedtm
-p_pitrack_lumi_before = current.bcm4a+track.p_track_before+pid.p_picut+misc.c_noedtm
-p_ktrack_lumi_before = current.bcm4a+track.p_track_before+pid.p_kcut+misc.c_noedtm
-p_ptrack_lumi_before = current.bcm4a+track.p_track_before+pid.p_pcut+misc.c_noedtm
-p_hadtrack_lumi_before = current.bcm4a+track.p_track_before+pid.p_hadcut+misc.c_noedtm
+p_track_lumi_before = current.bcm2+track.p_track_before+misc.c_noedtm+misc.p_starttime
+p_etrack_lumi_before = current.bcm2+track.p_track_before+pid.p_ecut+misc.c_noedtm+misc.p_starttime
+p_pitrack_lumi_before = current.bcm2+track.p_track_before+pid.p_picut+misc.c_noedtm+misc.p_starttime
+p_ktrack_lumi_before = current.bcm2+track.p_track_before+pid.p_kcut+misc.c_noedtm+misc.p_starttime
+p_ptrack_lumi_before = current.bcm2+track.p_track_before+pid.p_pcut+misc.c_noedtm+misc.p_starttime
+p_hadtrack_lumi_before = current.bcm2+track.p_track_before+pid.p_hadcut+misc.c_noedtm+misc.p_starttime
 # after
-p_track_lumi_after = current.bcm4a+track.p_track_after+misc.c_noedtm
-p_etrack_lumi_after = current.bcm4a+track.p_track_after+pid.p_ecut_nt+misc.c_noedtm
-p_pitrack_lumi_after = current.bcm4a+track.p_track_after+pid.p_picut+misc.c_noedtm
-p_ktrack_lumi_after = current.bcm4a+track.p_track_after+pid.p_kcut+misc.c_noedtm
-p_ptrack_lumi_after = current.bcm4a+track.p_track_after+pid.p_pcut+misc.c_noedtm
-p_hadtrack_lumi_after = current.bcm4a+track.p_track_after+pid.p_hadcut+misc.c_noedtm
+p_track_lumi_after = current.bcm2+track.p_track_after+misc.c_noedtm+misc.p_starttime
+p_etrack_lumi_after = current.bcm2+track.p_track_after+pid.p_ecut+misc.c_noedtm+misc.p_starttime
+p_pitrack_lumi_after = current.bcm2+track.p_track_after+pid.p_picut+misc.c_noedtm+misc.p_starttime
+p_ktrack_lumi_after = current.bcm2+track.p_track_after+pid.p_kcut+misc.c_noedtm+misc.p_starttime
+p_ptrack_lumi_after = current.bcm2+track.p_track_after+pid.p_pcut+misc.c_noedtm+misc.p_starttime
+p_hadtrack_lumi_after = current.bcm2+track.p_track_after+pid.p_hadcut+misc.c_noedtm+misc.p_starttime
 # eff cut
-p_ecut_lumi_eff = current.bcm4a+accept.delta+pid.p_ecut-pid.p_ecut.P_gtr_beta
-p_picut_lumi_eff = current.bcm4a+accept.delta+pid.p_picut-pid.p_picut.P_gtr_beta
-p_kcut_lumi_eff = current.bcm4a+accept.delta+pid.p_kcut-pid.p_kcut.P_gtr_beta
-p_pcut_lumi_eff = current.bcm4a+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta
-p_hadcut_lumi_eff = current.bcm4a+accept.delta+pid.p_hadcut-pid.p_hadcut.P_gtr_beta
+p_ecut_lumi_eff = current.bcm2+accept.delta+pid.p_ecut-pid.p_ecut.P_gtr_beta+misc.p_starttime
+p_picut_lumi_eff = current.bcm2+accept.delta+pid.p_picut-pid.p_picut.P_gtr_beta+misc.p_starttime
+p_kcut_lumi_eff = current.bcm2+accept.delta+pid.p_kcut-pid.p_kcut.P_gtr_beta+misc.p_starttime
+p_pcut_lumi_eff = current.bcm2+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta+misc.p_starttime
+p_hadcut_lumi_eff = current.bcm2+accept.delta+pid.p_hadcut-pid.p_hadcut.P_gtr_beta+misc.p_starttime
+############
+# PID cuts #
+############
 # no-track cut
-p_ecut_lumi_nt = current.bcm4a+pid.p_ecut_nt
-###################
+h_ecut_lumi_nt = current.bcm2+pid.h_ecut_nt+misc.h_starttime
+h_picut_lumi_nt = current.bcm2+pid.h_picut_nt+misc.h_starttime
+h_pcut_lumi_nt = current.bcm2+pid.h_pcut_nt+misc.h_starttime
+h_hadcut_lumi_nt = current.bcm2+pid.h_hadcut_nt+misc.h_starttime
+# track cut
+#h_ecut_lumi = current.bcm2+pid.h_ecut+track.h_goodscinhit+misc.h_starttime
+#h_picut_lumi = current.bcm2+pid.h_picut+track.h_goodscinhit+misc.h_starttime
+#h_pcut_lumi = current.bcm2+pid.h_pcut+track.h_goodscinhit+misc.h_starttime
+#h_hadcut_lumi = current.bcm2+pid.h_hadcut+track.h_goodscinhit+misc.h_starttime
+h_ecut_lumi = current.bcm2+pid.h_ecut+misc.h_starttime
+h_picut_lumi = current.bcm2+pid.h_picut+misc.h_starttime
+h_pcut_lumi = current.bcm2+pid.h_pcut+misc.h_starttime
+h_hadcut_lumi = current.bcm2+pid.h_hadcut+misc.h_starttime
+# no-track cut
+p_ecut_lumi_nt = current.bcm2+pid.p_ecut_nt+misc.p_starttime
+p_picut_lumi_nt = current.bcm2+pid.p_picut_nt+misc.p_starttime
+p_pcut_lumi_nt = current.bcm2+pid.p_pcut_nt+misc.p_starttime
+p_hadcut_lumi_nt = current.bcm2+pid.p_hadcut_nt+misc.p_starttime
+# track cut
+#p_ecut_lumi = current.bcm2+pid.p_ecut+track.p_goodscinhit+misc.p_starttime
+#p_picut_lumi = current.bcm2+pid.p_picut+track.p_goodscinhit+misc.p_starttime
+#p_pcut_lumi = current.bcm2+pid.p_pcut+track.p_goodscinhit+misc.p_starttime
+#p_hadcut_lumi = current.bcm2+pid.p_hadcut+track.p_goodscinhit+misc.p_starttime
+p_ecut_lumi = current.bcm2+pid.p_ecut+misc.p_starttime
+p_picut_lumi = current.bcm2+pid.p_picut+misc.p_starttime
+p_pcut_lumi = current.bcm2+pid.p_pcut+misc.p_starttime
+p_hadcut_lumi = current.bcm2+pid.p_hadcut+misc.p_starttime
 # pid cut
-p_cal = current.bcm4a+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_hgcer_npeSum-pid.p_pcut.P_aero_npeSum-pid.p_pcut.P_ngcer_npeSum
-p_hgcer = current.bcm4a+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_cal_etotnorm-pid.p_pcut.P_aero_npeSum-pid.p_pcut.P_ngcer_npeSum
-p_ngcer = current.bcm4a+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_cal_etotnorm-pid.p_pcut.P_aero_npeSum-pid.p_pcut.P_hgcer_npeSum
-p_aero = current.bcm4a+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_cal_etotnorm-pid.p_pcut.P_hgcer_npeSum-pid.p_pcut.P_ngcer_npeSum
-p_cal_nt = current.bcm4a+pid.p_ecut_nt-pid.p_ecut_nt.P_hgcer_npeSum-pid.p_ecut_nt.P_aero_npeSum-pid.p_ecut_nt.P_ngcer_npeSum
-p_hgcer_nt = current.bcm4a+pid.p_ecut_nt-pid.p_ecut_nt.P_cal_etotnorm-pid.p_ecut_nt.P_aero_npeSum-pid.p_ecut_nt.P_ngcer_npeSum
-p_ngcer_nt = current.bcm4a+pid.p_ecut_nt-pid.p_ecut_nt.P_cal_etotnorm-pid.p_ecut_nt.P_aero_npeSum-pid.p_ecut_nt.P_hgcer_npeSum
-p_aero_nt = current.bcm4a+pid.p_ecut_nt-pid.p_ecut_nt.P_cal_etotnorm-pid.p_ecut_nt.P_hgcer_npeSum-pid.p_ecut_nt.P_ngcer_npeSum
+h_cal = current.bcm2+pid.h_ecut-pid.h_ecut.H_cer_npeSum+misc.h_starttime
+h_cal_nt = current.bcm2+pid.h_ecut_nt-pid.h_ecut_nt.H_cer_npeSum+misc.h_starttime
+h_cer = current.bcm2+pid.h_ecut-pid.h_ecut.H_cal_etottracknorm+misc.h_starttime
+h_cer_nt = current.bcm2+pid.h_ecut_nt-pid.h_ecut_nt.H_cal_etotnorm+misc.h_starttime
+# pid cut
+p_cal = current.bcm2+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_hgcer_npeSum-pid.p_pcut.P_aero_npeSum-pid.p_pcut.P_ngcer_npeSum+misc.p_starttime
+p_hgcer = current.bcm2+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_cal_etottracknorm-pid.p_pcut.P_aero_npeSum-pid.p_pcut.P_ngcer_npeSum+misc.p_starttime
+p_ngcer = current.bcm2+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_cal_etottracknorm-pid.p_pcut.P_aero_npeSum-pid.p_pcut.P_hgcer_npeSum+misc.p_starttime
+p_aero = current.bcm2+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_cal_etottracknorm-pid.p_pcut.P_hgcer_npeSum-pid.p_pcut.P_ngcer_npeSum+misc.p_starttime
+# pid no-track cut
+p_cal_nt = current.bcm2+pid.p_ecut_nt-pid.p_ecut_nt.P_hgcer_npeSum-pid.p_ecut_nt.P_aero_npeSum-pid.p_ecut_nt.P_ngcer_npeSum+misc.p_starttime
+p_hgcer_nt = current.bcm2+pid.p_ecut_nt-pid.p_ecut_nt.P_cal_etotnorm-pid.p_ecut_nt.P_aero_npeSum-pid.p_ecut_nt.P_ngcer_npeSum+misc.p_starttime
+p_ngcer_nt = current.bcm2+pid.p_ecut_nt-pid.p_ecut_nt.P_cal_etotnorm-pid.p_ecut_nt.P_aero_npeSum-pid.p_ecut_nt.P_hgcer_npeSum+misc.p_starttime
+p_aero_nt = current.bcm2+pid.p_ecut_nt-pid.p_ecut_nt.P_cal_etotnorm-pid.p_ecut_nt.P_hgcer_npeSum-pid.p_ecut_nt.P_ngcer_npeSum+misc.p_starttime
+#########################
+# EDTM and Trigger cuts #
+#########################
 # EDTM
-c_noedtm = current.bcm4a+misc.c_noedtm
-c_edtm = current.bcm4a+misc.c_edtm
-c_ptrigHMS = current.bcm4a+misc.c_ptrigHMS+misc.c_noedtm
-c_ptrigSHMS = current.bcm4a+misc.c_ptrigSHMS+misc.c_noedtm
-c_ptrigCOIN = current.bcm4a+misc.c_ptrigCOIN+misc.c_noedtm
+c_noedtm = current.bcm2+misc.c_noedtm+misc.cal_edtm
+c_edtm = current.bcm2+misc.c_edtm+misc.cal_edtm
+c_edtmHMS = current.bcm2+misc.c_edtm+misc.cal_edtm+misc.cal_edtm+misc.evt_type_2
+c_edtmSHMS = current.bcm2+misc.c_edtm+misc.cal_edtm+misc.cal_edtm+misc.evt_type_1+misc.evt_type_3
+c_ptrigSHMS1 = current.bcm2+misc.c_ptrigSHMS1+misc.cal_edtm+misc.evt_type_1+misc.evt_type_3
+c_ptrigSHMS2 = current.bcm2+misc.c_ptrigSHMS2+misc.cal_edtm+misc.evt_type_1+misc.evt_type_3
+c_ptrigHMS3 = current.bcm2+misc.c_ptrigHMS3+misc.cal_edtm+misc.evt_type_2
+c_ptrigHMS4 = current.bcm2+misc.c_ptrigHMS4+misc.cal_edtm+misc.evt_type_2
+c_ptrigCOIN5 = current.bcm2+misc.c_ptrigCOIN5+misc.cal_edtm
+c_ptrigCOIN6 = current.bcm2+misc.c_ptrigCOIN6+misc.cal_edtm
 # Current only (note: there is a threshold cut in the scalers that is seprate from this!)
-c_curr = current.bcm4a
-c_nozero_edtm = current.bcm4a+misc.c_nozero_edtm
-c_nozero_ptrigHMS = current.bcm4a+misc.c_nozero_ptrigHMS
-c_nozero_ptrigSHMS = current.bcm4a+misc.c_nozero_ptrigSHMS
-c_nozero_ptrigCOIN = current.bcm4a+misc.c_nozero_ptrigCOIN
+c_curr = current.bcm2
+c_nozero_edtm = current.bcm2+misc.c_nozero_edtm
+c_nozero_ptrigSHMS1 = current.bcm2+misc.c_nozero_ptrigSHMS1+misc.evt_type_1+misc.evt_type_3
+c_nozero_ptrigSHMS2 = current.bcm2+misc.c_nozero_ptrigSHMS2+misc.evt_type_1+misc.evt_type_3
+c_nozero_ptrigHMS3 = current.bcm2+misc.c_nozero_ptrigHMS3+misc.evt_type_2
+c_nozero_ptrigHMS4 = current.bcm2+misc.c_nozero_ptrigHMS4+misc.evt_type_2
+c_nozero_ptrigCOIN5 = current.bcm2+misc.c_nozero_ptrigCOIN5
+c_nozero_ptrigCOIN6 = current.bcm2+misc.c_nozero_ptrigCOIN6

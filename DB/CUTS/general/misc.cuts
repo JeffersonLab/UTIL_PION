@@ -1,29 +1,38 @@
 ########
 # EDTM #
 ########
-c_noedtm = {"pEDTM_tdcTimeRaw" : (T_coin_pEDTM_tdcTimeRaw == misc.noedtm)}
-c_edtm = {"pEDTM_tdcTimeRaw" : (T_coin_pEDTM_tdcTimeRaw > misc.edtmLow) & (T_coin_pEDTM_tdcTimeRaw < misc.edtmHigh)}
-c_edtmT = {"pEDTM_tdcTime" : (T_coin_pEDTM_tdcTime > misc.edtmTLow) & (T_coin_pEDTM_tdcTime < misc.edtmTHigh)}
+c_noedtm = {"pEDTM_tdcTime" : (T_coin_pEDTM_tdcTimeRaw == misc.noedtm)}
+c_edtm = {"pEDTM_tdcTime" : (T_coin_pEDTM_tdcTimeRaw > misc.edtmLow) & (T_coin_pEDTM_tdcTimeRaw < misc.edtmHigh)}
 # remove zeros
 c_nozero_edtm = {"nozeros_edtm" : (T_coin_pEDTM_tdcTimeRaw > misc.noedtm)}
-c_nozero_ptrigHMS = {"nozeros_ptrigHMS" : (T_coin_pTRIG_HMS_ROC1_tdcTimeRaw > misc.noedtm)}
-c_nozero_ptrigSHMS = {"nozeros_ptrigSHMS" : (T_coin_pTRIG_SHMS_ROC1_tdcTimeRaw > misc.noedtm)}
-c_nozero_ptrigCOIN = {"nozeros_ptrigCOIN" : (T_coin_pTRIG_COIN_ROC1_tdcTimeRaw > misc.noedtm)}
+c_nozero_ptrigSHMS1 = {"nozeros_ptrigSHMS1" : (T_coin_pTRIG1_ROC1_tdcTimeRaw > misc.noedtm)}
+c_nozero_ptrigSHMS2 = {"nozeros_ptrigSHMS2" : (T_coin_pTRIG2_ROC1_tdcTimeRaw > misc.noedtm)}
+c_nozero_ptrigHMS3 = {"nozeros_ptrigHM3" : (T_coin_pTRIG3_ROC1_tdcTimeRaw > misc.noedtm)}
+c_nozero_ptrigHMS4 = {"nozeros_ptrigHMS4" : (T_coin_pTRIG4_ROC1_tdcTimeRaw > misc.noedtm)}
+c_nozero_ptrigCOIN5 = {"nozeros_ptrigCOIN5" : (T_coin_pTRIG5_ROC1_tdcTimeRaw > misc.noedtm)}
+c_nozero_ptrigCOIN6 = {"nozeros_ptrigCOIN6" : (T_coin_pTRIG6_ROC1_tdcTimeRaw > misc.noedtm)}
 # Timing windows
-c_ptrigHMS = {"pTRIG_HMS_tdcTimeRaw" : (T_coin_pTRIG_HMS_ROC1_tdcTimeRaw > misc.ptrigHMSLow) & (T_coin_pTRIG_HMS_ROC1_tdcTimeRaw < misc.ptrigHMSHigh)}
-c_ptrigSHMS = {"pTRIG_SHMS_tdcTimeRaw" : (T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw > misc.ptrigSHMSLow) & (T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw < misc.ptrigSHMSHigh)}
-c_ptrigCOIN = {"pTRIG_COIN_tdcTimeRaw" : (T_coin_pTRIG_COIN_ROC1_tdcTimeRaw > misc.ptrigCOINLow) & (T_coin_pTRIG_COIN_ROC1_tdcTimeRaw < misc.ptrigCOINHigh)}
-c_ptrigHMST = {"pTRIG_HMS_tdcTime" : (T_coin_pTRIG_HMS_ROC1_tdcTime > misc.ptrigHMSTLow) & (T_coin_pTRIG_HMS_ROC1_tdcTime < misc.ptrigHMSTHigh)}
-c_ptrigSHMST = {"pTRIG_SHMS_tdcTime" : (T_coin_pTRIG_SHMS_ROC2_tdcTime > misc.ptrigSHMSTLow) & (T_coin_pTRIG_SHMS_ROC2_tdcTime < misc.ptrigSHMSTHigh)}
-c_ptrigCOINT = {"pTRIG_COIN_tdcTime" : (T_coin_pTRIG_COIN_ROC1_tdcTime > misc.ptrigCOINTLow) & (T_coin_pTRIG_COIN_ROC1_tdcTime < misc.ptrigCOINTHigh)}
-# Select Singles
-c_HMS_noCOIN  = {"pTRIG_HMS_tdcTimeRaw"  : (T_coin_pTRIG_HMS_ROC1_tdcTimeRaw > 0)},  {"pTRIG_COIN_tdcTime" : (T_coin_pTRIG_COIN_ROC1_tdcTimeRaw < 0.5)}
-c_SHMS_noCOIN = {"pTRIG_SHMS_tdcTimeRaw" : (T_coin_pTRIG_SHMS_ROC2_tdcTimeRaw > 0)}, {"pTRIG_COIN_tdcTime" : (T_coin_pTRIG_COIN_ROC1_tdcTimeRaw < 0.5)}
-c_COIN_only  = {"pTRIG_COIN_tdcTimeRaw" : (T_coin_pTRIG_COIN_ROC1_tdcTimeRaw > 0)}
+c_ptrigSHMS1 = {"pTRIG_SHMS1_tdcTime" : (T_coin_pTRIG1_ROC2_tdcTimeRaw > misc.ptrigSHMSLow) & (T_coin_pTRIG1_ROC2_tdcTimeRaw < misc.ptrigSHMSHigh)}
+c_ptrigSHMS2 = {"pTRIG_SHMS2_tdcTime" : (T_coin_pTRIG2_ROC2_tdcTimeRaw > misc.ptrigSHMSLow) & (T_coin_pTRIG2_ROC2_tdcTimeRaw < misc.ptrigSHMSHigh)}
+c_ptrigHMS3 = {"pTRIG_HMS3_tdcTime" : (T_coin_pTRIG3_ROC1_tdcTimeRaw > misc.ptrigHMSLow) & (T_coin_pTRIG3_ROC1_tdcTimeRaw < misc.ptrigHMSHigh)}
+c_ptrigHMS4 = {"pTRIG_HMS4_tdcTime" : (T_coin_pTRIG4_ROC1_tdcTimeRaw > misc.ptrigHMSLow) & (T_coin_pTRIG4_ROC1_tdcTimeRaw < misc.ptrigHMSHigh)}
+c_ptrigCOIN5 = {"pTRIG_COIN5_tdcTime" : (T_coin_pTRIG5_ROC1_tdcTimeRaw > misc.ptrigCOINLow) & (T_coin_pTRIG5_ROC1_tdcTimeRaw < misc.ptrigCOINHigh)}
+c_ptrigCOIN6 = {"pTRIG_COIN6_tdcTime" : (T_coin_pTRIG6_ROC1_tdcTimeRaw > misc.ptrigCOINLow) & (T_coin_pTRIG6_ROC1_tdcTimeRaw < misc.ptrigCOINHigh)}
 # Scin hits
+h_starttime = {"H_hod_goodstarttime" : (H_hod_goodstarttime == misc.goodstarttime)}
+p_starttime = {"P_hod_goodstarttime" : (P_hod_goodstarttime == misc.goodstarttime)}
 starttime = {"P_hod_goodstarttime" : (P_hod_goodstarttime == misc.goodstarttime)}, {"H_hod_goodstarttime" : (H_hod_goodstarttime == misc.goodstarttime)}
 goodscinhit = {"P_hod_goodscinhit" : (P_hod_goodscinhit == misc.goodscinhit)}, {"H_hod_goodscinhit" : (H_hod_goodscinhit == misc.goodscinhit)}
 # cal cut
-#cal_edtm = {"P_cal_ped" : (P_cal_etottracknorm == 0)}, {"H_cal_ped" : (H_cal_etottracknorm == 0)}
+cal_edtm = {"P_cal_ped" : (P_cal_etottracknorm == 0)}, {"H_cal_ped" : (H_cal_etottracknorm == 0)}
 # cer cut
 #cer_edtm = {"P_hgcer_ped" : (P_hgcer_npeSum == 0)}, {"P_ngcer_ped" : (P_ngcer_npeSum == 0)},{"P_aero_ped" : (P_aero_npeSum == 0)},{"H_cer_ped" : (H_cer_npeSum == 0)}
+##############
+# Event Type #
+##############
+evt_type_1 = {"EvtType" : (EvtType == 1)}
+evt_type_2 = {"EvtType" : (EvtType == 2)}
+evt_type_3 = {"EvtType" : (EvtType == 3)}
+evt_type_4 = {"EvtType" : (EvtType == 4)}
+evt_type_5 = {"EvtType" : (EvtType == 5)}
+evt_type_6 = {"EvtType" : (EvtType == 6)}
