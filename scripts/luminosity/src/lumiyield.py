@@ -584,7 +584,7 @@ def track_pid_cuts():
 
         ax = f.add_subplot(242)
         ax.hist2d(tree['H_cal_etottracknorm'],tree['H_gtr_beta'],bins=[c.setbin(tree['H_cal_etottracknorm'],400,0,4),c.setbin(tree['H_gtr_beta'],400,-2.0,2.0)],cmin=1,label='no cut',alpha=0.5)
-        ax.hist2d(c.add_cut(tree['H_cal_etottracknorm'],"H_%scut_lumi" % SHMS_PID),c.add_cut(tree['H_gtr_beta'],"h_%scut_lumi" % HMS_PID),bins=[c.setbin(tree['H_cal_etottracknorm'],400,0,4),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='cut', alpha=1.0)
+        ax.hist2d(c.add_cut(tree['H_cal_etottracknorm'],"H_%scut_lumi" % HMS_PID),c.add_cut(tree['H_gtr_beta'],"h_%scut_lumi" % HMS_PID),bins=[c.setbin(tree['H_cal_etottracknorm'],400,0,4),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='cut', alpha=1.0)
         plt.xlabel('H_cal_etottracknorm')
         plt.ylabel('H_gtr_beta')
 
