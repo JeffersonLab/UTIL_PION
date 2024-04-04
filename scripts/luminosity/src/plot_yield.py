@@ -380,17 +380,17 @@ def plot_yield():
     SHMSscaler = "OFF"
     COINscaler = "OFF"
     
-    if (not (prescales[PS1][1] == None)):
+    if (not (prescales['PS1'][1] == None)):
          SHMSscaler = "3/4 (PS1)"
-    if (not (prescales[PS2][1] == None)):
+    if (not (prescales['PS2'][1] == None)):
          SHMSscaler = "ElReal (PS2)"
-    if (not (prescales[PS3][1] == None)):
+    if (not (prescales['PS3'][1] == None)):
          HMSscaler = "3/4 (PS3)"
-    if (not (prescales[PS4][1] == None)):
+    if (not (prescales['PS4'][1] == None)):
          HMSscaler = "ElReal (PS4)"
-    if (not (prescales[PS5][1] == None)):
+    if (not (prescales['PS5'][1] == None)):
          COINscaler = "3/4xElReal (PS5)"
-    if (not (prescales[PS6][1] == None)):
+    if (not (prescales['PS6'][1] == None)):
          COINscaler = "3/4x3/4 (PS6)"
     
     yield_data = mergeDicts()
