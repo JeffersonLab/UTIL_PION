@@ -365,6 +365,34 @@ def plot_yield():
     '''
     Plot yields and various other analysis plots
     '''
+    
+    # determine which scaler is being used by pulling out the prescales
+    prescales = {
+        "PS1" : makeList("PS1"),
+        "PS2" : makeList("PS2"),
+        "PS3" : makeList("PS3"),
+        "PS4" : makeList("PS4"),
+        "PS5" : makeList("PS5"),
+        "PS6" : makeList("PS6"),
+    }
+    
+    HMSscaler = "OFF"
+    SHMSscaler = "OFF"
+    COINscaler = "OFF"
+    
+    if (not (prescales[PS1][1] == None)):
+         SHMSscaler = "3/4 (PS1)"
+    if (not (prescales[PS2][1] == None)):
+         SHMSscaler = "ElReal (PS2)"
+    if (not (prescales[PS3][1] == None)):
+         HMSscaler = "3/4 (PS3)"
+    if (not (prescales[PS4][1] == None)):
+         HMSscaler = "ElReal (PS4)"
+    if (not (prescales[PS5][1] == None)):
+         COINscaler = "3/4xElReal (PS5)"
+    if (not (prescales[PS6][1] == None)):
+         COINscaler = "3/4x3/4 (PS6)"
+    
     yield_data = mergeDicts()
 
     # Remove runs with bad TLT, print statement only
@@ -467,7 +495,7 @@ def plot_yield():
     plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_scaler"],color='blue',zorder=4,label="_nolegend_")
     #    yield_data["m0_curr_HMS_scaler"] = linear_plot(yield_data["current"],yield_data["yieldRel_HMS_scaler"],None,yield_data["uncern_yieldRel_HMS_scaler"])
 
-    plt.ylabel('Rel. Yield Scaler', fontsize=16)
+    plt.ylabel('Rel. Yield %s' % (str(HMSscaler)), fontsize=16)
     plt.xlabel('Current [uA]', fontsize =16)
     plt.legend()
     if target == 'LD2' :
@@ -529,7 +557,7 @@ def plot_yield():
     plt.scatter(yield_data["current"],yield_data["yieldRel_SHMS_scaler"],color='blue',zorder=4,label="_nolegend_")
     #    yield_data["m0_curr_SHMS_scaler"] = linear_plot(yield_data["current"],yield_data["yieldRel_SHMS_scaler"],None,yield_data["uncern_yieldRel_SHMS_scaler"])
 
-    plt.ylabel('Rel. Yield Scaler', fontsize=16)
+    plt.ylabel(''Rel. Yield %s' % (str(SHMSscaler))', fontsize=16)
     plt.xlabel('Current [uA]', fontsize =16)
     plt.legend()
     if target == 'LD2' :
@@ -598,7 +626,7 @@ def plot_yield():
     plt.scatter(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_scaler"],color='blue',zorder=4,label="_nolegend_")
     #yield_data["m0_rate_HMS_scaler"] = linear_plot(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_scaler"],None,yield_data["uncern_yieldRel_HMS_scaler"],xvalmax=max((yield_data["rate_HMS"])/1000)+5)
 
-    plt.ylabel('Rel. Yield Scaler', fontsize=16)
+    plt.ylabel(''Rel. Yield %s' % (str(HMSscaler))', fontsize=16)
     plt.xlabel('HMS Rate [kHz]', fontsize =16)
     plt.legend()
     if target == 'LD2' :
@@ -660,7 +688,7 @@ def plot_yield():
     plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_scaler"],color='blue',zorder=4,label="_nolegend_")
     #yield_data["m0_rate_SHMS_scaler"] = linear_plot(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_scaler"],None,yield_data["uncern_yieldRel_SHMS_scaler"],xvalmax=max((yield_data["rate_SHMS"])/1000)+5)
 
-    plt.ylabel('Rel. Yield Scaler', fontsize=16)
+    plt.ylabel(''Rel. Yield %s' % (str(SHMSscaler))', fontsize=16)
     plt.xlabel('SHMS Rate [kHz]', fontsize =16)
     plt.legend()
     if target == 'LD2' :
@@ -822,7 +850,7 @@ def plot_yield():
     plt.plot([0,70], [1,1], 'r-',zorder=2)
     plt.errorbar(yield_data["current"],yield_data["yieldRel_HMS_scaler"],yerr=yield_data["yieldRel_HMS_scaler"]*yield_data["uncern_yieldRel_HMS_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
     plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_scaler"],color='blue',zorder=4,label="_nolegend_")
-    plt.ylabel('Rel. Yield Scaler', fontsize=16)
+    plt.ylabel(''Rel. Yield %s' % (str(HMSscaler))', fontsize=16)
     plt.xlabel('Current [uA]', fontsize =12)
     if target == 'LD2' :
         plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
@@ -901,7 +929,7 @@ def plot_yield():
     plt.plot([0,70], [1,1], 'r-',zorder=2)
     plt.errorbar(yield_data["current"],yield_data["yieldRel_SHMS_scaler"],yerr=yield_data["yieldRel_SHMS_scaler"]*yield_data["uncern_yieldRel_SHMS_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
     plt.scatter(yield_data["current"],yield_data["yieldRel_SHMS_scaler"],color='blue',zorder=4,label="_nolegend_")
-    plt.ylabel('Rel. Yield Scaler', fontsize=16)
+    plt.ylabel(''Rel. Yield %s' % (str(SHMSscaler))', fontsize=16)
     plt.xlabel('Current [uA]', fontsize =12)
     if target == 'LD2' :
         plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
