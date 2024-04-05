@@ -327,7 +327,7 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
         "run number" : runNum,
         "time": time_sum[bcm_ix],
         "charge": charge_sum[bcm_ix],
-        "curr_corr" : (charge_sum[bcm_ix]/time_sum[bcm_ix]-0.10)/(charge_sum[bcm_ix]/time_sum[bcm_ix]), # 10 uA? current offset
+        "curr_corr" : (charge_sum[bcm_ix]/time_sum[bcm_ix]-0.10)/(charge_sum[bcm_ix]/time_sum[bcm_ix]), # 0.10 uA? current offset
         # "CPULT_scaler": acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS)), # GOOD
         #"CPULT_scaler": acctrig_sum/((trig_sum[shms_ps_ix]) + (trig_sum[hms_ps_ix]) - EDTM_sum),
         #"CPULT_scaler_uncern": (acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS)))*np.sqrt((1/(trig_sum[shms_ps_ix]/SHMS_PS))+(1/(trig_sum[hms_ps_ix]/HMS_PS))+(1/acctrig_sum)), # GOOD
