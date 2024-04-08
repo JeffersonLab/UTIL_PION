@@ -234,12 +234,12 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
         previous_charge[ibcm] = bcm_value[ibcm][0]
         # Iterate over all scaler events to get various scaler values
         for i, evt in enumerate(s_evts):
-            # Correction to bcm1 from Peter Bosted
-            if (current[ibcm][i] < 60):
-                bcmcorr = 1.00+0.045*(math.log(60)-math.log(abs(current[ibcm][i]))/(math.log(60)-math.log(2)))
-            else:
-                bcmcorr = 1.00+0.010*(current[ibcm][i]-60)/25
-            current[ibcm][i] = current[ibcm][i] * bcmcorr            
+            # Correction to bcm1 from Peter Bosted - removed this, b/c it's not for our data - NH 2024/04/08
+            #if (current[ibcm][i] < 60):
+            #    bcmcorr = 1.00+0.045*(math.log(60)-math.log(abs(current[ibcm][i]))/(math.log(60)-math.log(2)))
+            #else:
+            #    bcmcorr = 1.00+0.010*(current[ibcm][i]-60)/25
+            #current[ibcm][i] = current[ibcm][i] * bcmcorr            
             if (time_value[i] != previous_time[ibcm]):
                 # Current calculation using iterative charge and time values.
                 # Iterate over current value then subtracting previous so that there is no double counting. Subtracted values are uncut.
