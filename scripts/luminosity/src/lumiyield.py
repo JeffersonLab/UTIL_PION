@@ -300,7 +300,7 @@ def pid_cuts():
 
     ax = f.add_subplot(331)
     ax.hist(tree["T_coin_pEDTM_tdcTimeRaw"],bins=c.setbin(tree["T_coin_pEDTM_tdcTimeRaw"],10000,-1000,9000),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-    ax.hist(c.add_cut(tree["T_coin_pEDTM_tdcTimeRaw"],"c_edtm"),bins=c.bins(tree["T_coin_pEDTM_tdcTimeRaw"],10000,-1000,9000),label='cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+    ax.hist(c.add_cut(tree["T_coin_pEDTM_tdcTimeRaw"],"c_edtm"),bins=c.setbin(tree["T_coin_pEDTM_tdcTimeRaw"],10000,-1000,9000),label='cut',histtype='step',alpha=0.5, stacked=True, fill=True)
     plt.yscale('log')
     plt.xlabel('pEDTM_tdcTimeRaw')
     plt.ylabel('Count')
