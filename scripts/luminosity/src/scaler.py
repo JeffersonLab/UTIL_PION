@@ -365,12 +365,15 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
     print("\n\n\n",trig_sum,"\n\n\n")
 
     if ("PS1" in PS_names or "PS2" in PS_names) and ("PS3" in PS_names or "PS4" in PS_names):
+        print("Debug: in HMS + SHMS")
         scalers.update({"CPULT_scaler": acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS))})
         scalers.update({"CPULT_scaler_uncern": (acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS)))*np.sqrt((1/(trig_sum[shms_ps_ix]/SHMS_PS))+(1/(trig_sum[hms_ps_ix]/HMS_PS))+(1/acctrig_sum))})
     elif ("PS1" in PS_names or "PS2" in PS_names) and ("PS3" not in PS_names and "PS4" not in PS_names):
+        print("Debug: in SHMS")
         scalers.update({"CPULT_scaler": acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS))})
         scalers.update({"CPULT_scaler_uncern": (acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS)))*np.sqrt((1/(trig_sum[shms_ps_ix]/SHMS_PS))+(1/acctrig_sum))})
     elif ("PS3" in PS_names or "PS4" in PS_names) and ("PS1" not in PS_names and "PS2" not in PS_names):
+        print("Debug: in HMS")
         scalers.update({"CPULT_scaler": acctrig_sum/((trig_sum[hms_ps_ix]/HMS_PS))})
         scalers.update({"CPULT_scaler_uncern": (acctrig_sum/((trig_sum[hms_ps_ix]/HMS_PS)))*np.sqrt((1/(trig_sum[hms_ps_ix]/HMS_PS))+(1/acctrig_sum))})
         scalers.update({})
