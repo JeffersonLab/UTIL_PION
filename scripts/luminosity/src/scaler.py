@@ -328,7 +328,7 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
         "run number" : runNum,
         "time": time_sum[bcm_ix],
         "charge": charge_sum[bcm_ix],
-        "curr_corr" : (charge_sum[bcm_ix]/time_sum[bcm_ix]-0.17)/(charge_sum[bcm_ix]/time_sum[bcm_ix]), # 17 uA? current offset - NH 2024/05/04
+        "curr_corr" : (charge_sum[bcm_ix]/time_sum[bcm_ix]-0.17)/(charge_sum[bcm_ix]/time_sum[bcm_ix]), # 0.17 uA current offset - NH 2024/05/04
         # "CPULT_scaler": acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS)), # GOOD
         #"CPULT_scaler": acctrig_sum/((trig_sum[shms_ps_ix]) + (trig_sum[hms_ps_ix]) - EDTM_sum),
         #"CPULT_scaler_uncern": (acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS)))*np.sqrt((1/(trig_sum[shms_ps_ix]/SHMS_PS))+(1/(trig_sum[hms_ps_ix]/HMS_PS))+(1/acctrig_sum)), # GOOD
@@ -365,8 +365,8 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
     elif ("PS3" in PS_names or "PS4" in PS_names) and ("PS1" not in PS_names and "PS2" not in PS_names):
         print("Debug: in HMS")
         print("Debug: hms_ps_ix", hms_ps_ix, " trig_sum[hms_ps_ix] ", trig_sum[hms_ps_ix], " HMS_PS", HMS_PS)
-        scalers.update({"CPULT_scaler": acctrig_sum/((trig_sum[hms_ps_ix]/HMS_PS))})
-        scalers.update({"CPULT_scaler_uncern": (acctrig_sum/((trig_sum[hms_ps_ix]/HMS_PS)))*np.sqrt((1/(trig_sum[hms_ps_ix]/HMS_PS))+(1/acctrig_sum))})
+        scalers.update({"CPULT_scaler": acctrig_sum/((trig_sum[2]/HMS_PS))})
+        scalers.update({"CPULT_scaler_uncern": (acctrig_sum/((trig_sum[2]/HMS_PS)))*np.sqrt((1/(trig_sum[2]/HMS_PS))+(1/acctrig_sum))}) # this has sum bug that trig_sum[3] isn't being filled, don't know why - heinricn 2024/04/12
         scalers.update({})
 
     print("\nPre-scale values...")
