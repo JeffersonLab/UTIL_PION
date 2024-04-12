@@ -321,7 +321,7 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
     except NameError:
         coin_ps_ix = 4
         
-    print("Debug: trig_sum", trig_sum[itrig])
+    print("Debug: trig_sum", trig_sum)
     print("Debug: time: ", time_sum[bcm_ix], ", charge: ", charge_sum[bcm_ix], "\n\n")
     # Creates a dictionary for the calculated luminosity values 
     scalers = {
