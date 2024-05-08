@@ -663,7 +663,9 @@ def plot_yield():
         plt.errorbar(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_scaler"],yerr=yield_data["yieldRel_HMS_scaler"]*yield_data["uncern_yieldRel_HMS_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
         plt.scatter(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_scaler"],color='blue',zorder=4,label="_nolegend_")
         #yield_data["m0_rate_HMS_scaler"] = linear_plot(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_scaler"],None,yield_data["uncern_yieldRel_HMS_scaler"],xvalmax=max((yield_data["rate_HMS"])/1000)+5)
-    
+        print("debug HMS rate ploting:")
+        print(yield_data["rate_HMS"]/1000)
+        print(yield_data["yieldRel_HMS_scaler"])
         plt.ylabel('Rel. Yield %s' % (str(HMSscaler)), fontsize=16)
         plt.xlabel('HMS %s Rate [kHz]' % (str(HMSscaler)), fontsize =16)
         plt.legend()
