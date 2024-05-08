@@ -130,7 +130,7 @@ def calc_yield():
         
         "uncern_SHMS_evts_scaler" : np.sqrt(makeList("SHMSTRIG_scaler"))/makeList("SHMSTRIG_scaler"),
 
-        "uncern_COIN_evts_scaler" : makeList("COINTRIG_scaler"),#np.sqrt(makeList("COINTRIG_scaler"))/makeList("COINTRIG_scaler"),
+        "uncern_COIN_evts_scaler" : np.sqrt(makeList("COINTRIG_scaler"))/makeList("COINTRIG_scaler"),
 
         "uncern_HMS_evts_notrack" : np.sqrt(makeList("h_int_etotnorm_evts"))/makeList("h_int_etotnorm_evts"),
 
