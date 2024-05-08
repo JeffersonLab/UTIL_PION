@@ -235,6 +235,8 @@ def calc_yield():
     # Define relative yield relative to minimum current
     curr_tmp_shms = 0
     curr_tmp_hms = 0
+    min_curr_shms = -1
+    min_curr_hms = -1
     for i,curr in enumerate(yield_dict["current"]):
         if makeList("tot_events")[i] >= 10000:
             if makeList("SHMS_PS")[i] > 0.0:
