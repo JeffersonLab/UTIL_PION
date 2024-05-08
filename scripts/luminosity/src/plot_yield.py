@@ -520,7 +520,7 @@ def plot_yield():
     #########################################################################################################################################################
 
     relYieldPlot = plt.figure(figsize=(12,8))
-    if(!NO_HMS)
+    if(not NO_HMS)
         #HMS plot scaler
         plt.subplot(2,3,1)    
         plt.grid(zorder=1)
@@ -583,7 +583,7 @@ def plot_yield():
         else :
             plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
     
-    if(!NO_SHMS)    
+    if(not NO_SHMS)    
         #SHMS plot scaler
         plt.subplot(2,3,4)    
         plt.grid(zorder=1)
@@ -653,7 +653,7 @@ def plot_yield():
 
     raterelYieldPlot = plt.figure(figsize=(12,8))
 
-    if(!NO_HMS)
+    if(not NO_HMS)
         #HMS plot scaler
         plt.subplot(2,3,1)    
         plt.grid(zorder=1)
@@ -716,7 +716,7 @@ def plot_yield():
         else :
             plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
 
-    if(!NO_SHMS)
+    if(not NO_SHMS)
         #SHMS plot scaler
         plt.subplot(2,3,4)    
         plt.grid(zorder=1)
@@ -881,7 +881,7 @@ def plot_yield():
 
     logPlot = plt.figure(figsize=(12,8))
 
-    if(!NO_HMS)
+    if(not NO_HMS)
         #HMS plot scaler
         plt.subplot(2,4,1)    
         plt.grid(zorder=1)
@@ -961,7 +961,7 @@ def plot_yield():
     else :
         plt.title('Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
 
-    if(!NO_SHMS)
+    if(not NO_SHMS)
         #SHMS plot scaler
         plt.subplot(2,4,5)    
         plt.grid(zorder=1)
