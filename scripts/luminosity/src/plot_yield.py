@@ -176,11 +176,11 @@ def calc_yield():
         yield_SHMS_CPULT_notrack = []
         yield_SHMS_CPULT_track = []
         for i,curr in enumerate(yield_dict["current"]):
-            yield_SHMS_scaler.append(-1)
-            yield_SHMS_notrack.append(-1)
-            yield_SHMS_track.append(-1)
-            yield_SHMS_CPULT_notrack.append(-1)
-            yield_SHMS_CPULT_track.append(-1)
+            yield_SHMS_scaler.append(1)
+            yield_SHMS_notrack.append(1)
+            yield_SHMS_track.append(1)
+            yield_SHMS_CPULT_notrack.append(1)
+            yield_SHMS_CPULT_track.append(1)
     else:        
         yield_SHMS_scaler = (yield_dict["SHMS_scaler_accp"])/(makeList("charge")*makeList("curr_corr"))
         yield_SHMS_notrack = (makeList("p_int_etotnorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"])
@@ -219,11 +219,11 @@ def calc_yield():
         yield_HMS_CPULT_notrack = []
         yield_HMS_CPULT_track = []
         for i,curr in enumerate(yield_dict["current"]):
-            yield_HMS_scaler.append(-1)
-            yield_HMS_notrack.append(-1)
-            yield_HMS_track.append(-1)
-            yield_HMS_CPULT_notrack.append(-1)
-            yield_HMS_CPULT_track.append(-1)
+            yield_HMS_scaler.append(1)
+            yield_HMS_notrack.append(1)
+            yield_HMS_track.append(1)
+            yield_HMS_CPULT_notrack.append(1)
+            yield_HMS_CPULT_track.append(1)
     else:
         yield_HMS_scaler = (yield_dict["HMS_scaler_accp"])/(makeList("charge")*makeList("curr_corr"))
         yield_HMS_notrack = (makeList("h_int_etotnorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"])
@@ -253,12 +253,12 @@ def calc_yield():
                     min_curr_shms = yield_dict["current"][i]
                     curr_tmp_shms = curr
             else: # edge case for if SHMS not used in run
-                min_curr_shms = -1
-                min_yield_SHMS_scaler = -1
-                min_yield_SHMS_notrack = -1
-                min_yield_SHMS_track = -1
-                min_yield_SHMS_CPULT_notrack = -1
-                min_yield_SHMS_CPULT_track = -1
+                min_curr_shms = 1
+                min_yield_SHMS_scaler = 1
+                min_yield_SHMS_notrack = 1
+                min_yield_SHMS_track = 1
+                min_yield_SHMS_CPULT_notrack = 1
+                min_yield_SHMS_CPULT_track = 1
             if makeList("HMS_PS")[i] > 0.0:
                 if len(yield_dict["current"]) <= 1:
                     min_curr_hms = yield_dict["current"][i]
@@ -267,12 +267,12 @@ def calc_yield():
                     min_curr_hms = yield_dict["current"][i]
                     curr_tmp_hms = curr
             else: # edge case for if HMS not used in run
-                min_curr_hms = -1
-                min_yield_HMS_scaler = -1
-                min_yield_HMS_notrack = -1
-                min_yield_HMS_track = -1
-                min_yield_HMS_CPULT_notrack = -1
-                min_yield_HMS_CPULT_track = -1
+                min_curr_hms = 1
+                min_yield_HMS_scaler = 1
+                min_yield_HMS_notrack = 1
+                min_yield_HMS_track = 1
+                min_yield_HMS_CPULT_notrack = 1
+                min_yield_HMS_CPULT_track = 1
                 
     for i,curr in enumerate(yield_dict["current"]):
         if curr == min_curr_shms:
