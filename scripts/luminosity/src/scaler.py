@@ -40,12 +40,12 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
 
         P_1Mhz_scalerTime = s_tree.array("H.1MHz.scalerTime")
 
-        P_pTRIG1_scaler = s_tree.array("H.hTRIG1.scaler")
-        P_pTRIG2_scaler = s_tree.array("H.hTRIG2.scaler")
-        P_pTRIG3_scaler = s_tree.array("H.hTRIG3.scaler")
-        P_pTRIG4_scaler = s_tree.array("H.hTRIG4.scaler")
-        P_pTRIG5_scaler = s_tree.array("H.hTRIG5.scaler")
-        P_pTRIG6_scaler = s_tree.array("H.hTRIG6.scaler")
+        P_pTRIG1_scaler = s_tree.array("H.pTRIG1.scaler") #heinricn - changed from hTRIG to pTRIG because hTRIG isn't filled for some reason!
+        P_pTRIG2_scaler = s_tree.array("H.pTRIG2.scaler")
+        P_pTRIG3_scaler = s_tree.array("H.pTRIG3.scaler")
+        P_pTRIG4_scaler = s_tree.array("H.pTRIG4.scaler")
+        P_pTRIG5_scaler = s_tree.array("H.pTRIG5.scaler")
+        P_pTRIG6_scaler = s_tree.array("H.pTRIG6.scaler")
 
         P_pL1ACCP_scaler = s_tree.array("H.hL1ACCP.scaler")
         P_pPRE40_scaler = s_tree.array("H.hPRE40.scaler")
