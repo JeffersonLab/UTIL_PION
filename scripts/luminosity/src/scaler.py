@@ -328,7 +328,7 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
         "run number" : runNum,
         "time": time_sum[bcm_ix],
         "charge": charge_sum[bcm_ix],
-        "curr_corr" : (charge_sum[bcm_ix]/time_sum[bcm_ix]-0.17)/(charge_sum[bcm_ix]/time_sum[bcm_ix]), # 0.17 uA current offset - NH 2024/05/04
+        #"curr_corr" : (charge_sum[bcm_ix]/time_sum[bcm_ix])/(charge_sum[bcm_ix]/time_sum[bcm_ix]), # 0.17 uA current offset - NH 2024/05/04
         # "CPULT_scaler": acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS)), # GOOD
         #"CPULT_scaler": acctrig_sum/((trig_sum[shms_ps_ix]) + (trig_sum[hms_ps_ix]) - EDTM_sum),
         #"CPULT_scaler_uncern": (acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS)))*np.sqrt((1/(trig_sum[shms_ps_ix]/SHMS_PS))+(1/(trig_sum[hms_ps_ix]/HMS_PS))+(1/acctrig_sum)), # GOOD
@@ -339,6 +339,18 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
         "SHMS_PS" : SHMS_PS,
         "COIN_PS" : COIN_PS
             
+    }
+    
+    #Nathan Heinrich - broke the current correction into 3 parts to reflect BCM calibrations
+    # Corrections only valid when using BMC2
+    if(runNum > 14777)
+    {
+        scalers.update({"curr_corr" : ((charge_sum[bcm_ix]/time_sum[bcm_ix])-0.03)/(charge_sum[bcm_ix]/time_sum[bcm_ix])})
+    }else if (runNum > 12004)
+    {
+        scalers.update({"curr_corr" : ((charge_sum[bcm_ix]/time_sum[bcm_ix])-0.15)/(charge_sum[bcm_ix]/time_sum[bcm_ix])})
+    }else{ # I have not data for this period, so I'm leaving the offset zero.
+        scalers.update({"curr_corr" : (0+(charge_sum[bcm_ix]/time_sum[bcm_ix]))/(charge_sum[bcm_ix]/time_sum[bcm_ix])})
     }
 
     if COIN_PS == None:
