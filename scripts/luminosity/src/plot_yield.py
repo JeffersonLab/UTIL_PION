@@ -51,6 +51,10 @@ target = data_path[0]
 inp_f = data_path[1]
 out_f = data_path[2]
 
+#assume both HMS and SHMS data in file
+NO_HMS = False
+NO_SHMS = False
+
 ################################################################################################################################################
 
 print("\nRunning as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, REPLAYPATH))
@@ -164,12 +168,26 @@ def calc_yield():
     #SHMS_scaler_accp = makeList("SHMSTRIG_scaler")-yield_dict["sent_edtm_SHMS"]
     SHMS_scaler_accp = makeList("SHMSTRIG_scaler")-makeList("sent_edtm") # Returns reasonable yields
     yield_dict.update({"SHMS_scaler_accp" : SHMS_scaler_accp})
-
-    yield_SHMS_scaler = (yield_dict["SHMS_scaler_accp"])/(makeList("charge"))
-    yield_SHMS_notrack = (makeList("p_int_etotnorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"])
-    yield_SHMS_track = (makeList("p_int_etottracknorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*makeList("SHMS_track"))
-    yield_SHMS_CPULT_notrack = (makeList("p_int_etotnorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"])
-    yield_SHMS_CPULT_track = (makeList("p_int_etottracknorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"]*makeList("SHMS_track"))
+    if(makeList("SHMS_PS")[0] == None or makeList("SHMS_PS")[0] == -1):
+        NO_SHMS = True
+        yield_SHMS_scaler = []
+        yield_SHMS_notrack = []
+        yield_SHMS_track = []
+        yield_SHMS_CPULT_notrack = []
+        yield_SHMS_CPULT_track = []
+        for i,curr in enumerate(yield_dict["current"]):
+            yield_SHMS_scaler.append(1)
+            yield_SHMS_notrack.append(1)
+            yield_SHMS_track.append(1)
+            yield_SHMS_CPULT_notrack.append(1)
+            yield_SHMS_CPULT_track.append(1)
+    else:        
+        yield_SHMS_scaler = (yield_dict["SHMS_scaler_accp"])/(makeList("charge")*makeList("curr_corr"))
+        yield_SHMS_notrack = (makeList("p_int_etotnorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"])
+        yield_SHMS_track = (makeList("p_int_etottracknorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*makeList("SHMS_track"))
+        yield_SHMS_CPULT_notrack = (makeList("p_int_etotnorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"])
+        yield_SHMS_CPULT_track = (makeList("p_int_etottracknorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"]*makeList("SHMS_track"))
+    
     yield_dict.update({"yield_SHMS_scaler" : yield_SHMS_scaler})
     yield_dict.update({"yield_SHMS_notrack" : yield_SHMS_notrack})
     yield_dict.update({"yield_SHMS_track" : yield_SHMS_track})
@@ -193,11 +211,27 @@ def calc_yield():
     yield_dict.update({"HMS_scaler_accp" : HMS_scaler_accp})
 
     # Calculate yield values
-    yield_HMS_scaler = (yield_dict["HMS_scaler_accp"])/(makeList("charge"))
-    yield_HMS_notrack = (makeList("h_int_etotnorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"])
-    yield_HMS_track = (makeList("h_int_etottracknorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*makeList("HMS_track"))
-    yield_HMS_CPULT_notrack = (makeList("h_int_etotnorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"])
-    yield_HMS_CPULT_track = (makeList("h_int_etottracknorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"]*makeList("HMS_track"))
+    if(makeList("HMS_PS")[0] == None or makeList("HMS_PS")[0] == -1):
+        NO_HMS = True
+        yield_HMS_scaler = []
+        yield_HMS_notrack = []
+        yield_HMS_track = []
+        yield_HMS_CPULT_notrack = []
+        yield_HMS_CPULT_track = []
+        for i,curr in enumerate(yield_dict["current"]):
+            yield_HMS_scaler.append(1)
+            yield_HMS_notrack.append(1)
+            yield_HMS_track.append(1)
+            yield_HMS_CPULT_notrack.append(1)
+            yield_HMS_CPULT_track.append(1)
+    else:
+        yield_HMS_scaler = (yield_dict["HMS_scaler_accp"])/(makeList("charge")*makeList("curr_corr"))
+        yield_HMS_notrack = (makeList("h_int_etotnorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"])
+        yield_HMS_track = (makeList("h_int_etottracknorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*makeList("HMS_track"))
+        yield_HMS_CPULT_notrack = (makeList("h_int_etotnorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"])
+        yield_HMS_CPULT_track = (makeList("h_int_etottracknorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"]*makeList("HMS_track"))
+    
+        
     yield_dict.update({"yield_HMS_scaler" : yield_HMS_scaler})
     yield_dict.update({"yield_HMS_notrack" : yield_HMS_notrack})
     yield_dict.update({"yield_HMS_track" : yield_HMS_track})
@@ -207,6 +241,8 @@ def calc_yield():
     # Define relative yield relative to minimum current
     curr_tmp_shms = 0
     curr_tmp_hms = 0
+    min_curr_shms = -1
+    min_curr_hms = -1
     for i,curr in enumerate(yield_dict["current"]):
         if makeList("tot_events")[i] >= 10000:
             if makeList("SHMS_PS")[i] > 0.0:
@@ -217,12 +253,12 @@ def calc_yield():
                     min_curr_shms = yield_dict["current"][i]
                     curr_tmp_shms = curr
             else: # edge case for if SHMS not used in run
-                min_curr_shms = -1
-                min_yield_SHMS_scaler = -1
-                min_yield_SHMS_notrack = -1
-                min_yield_SHMS_track = -1
-                min_yield_SHMS_CPULT_notrack = -1
-                min_yield_SHMS_CPULT_track = -1
+                min_curr_shms = 1
+                min_yield_SHMS_scaler = 1
+                min_yield_SHMS_notrack = 1
+                min_yield_SHMS_track = 1
+                min_yield_SHMS_CPULT_notrack = 1
+                min_yield_SHMS_CPULT_track = 1
             if makeList("HMS_PS")[i] > 0.0:
                 if len(yield_dict["current"]) <= 1:
                     min_curr_hms = yield_dict["current"][i]
@@ -231,12 +267,12 @@ def calc_yield():
                     min_curr_hms = yield_dict["current"][i]
                     curr_tmp_hms = curr
             else: # edge case for if HMS not used in run
-                min_curr_hms = -1
-                min_yield_HMS_scaler = -1
-                min_yield_HMS_notrack = -1
-                min_yield_HMS_track = -1
-                min_yield_HMS_CPULT_notrack = -1
-                min_yield_HMS_CPULT_track = -1
+                min_curr_hms = 1
+                min_yield_HMS_scaler = 1
+                min_yield_HMS_notrack = 1
+                min_yield_HMS_track = 1
+                min_yield_HMS_CPULT_notrack = 1
+                min_yield_HMS_CPULT_track = 1
                 
     for i,curr in enumerate(yield_dict["current"]):
         if curr == min_curr_shms:
@@ -365,6 +401,34 @@ def plot_yield():
     '''
     Plot yields and various other analysis plots
     '''
+    
+    # determine which scaler is being used by pulling out the prescales
+    prescales = {
+        "PS1" : makeList("PS1"),
+        "PS2" : makeList("PS2"),
+        "PS3" : makeList("PS3"),
+        "PS4" : makeList("PS4"),
+        "PS5" : makeList("PS5"),
+        "PS6" : makeList("PS6"),
+    }
+    
+    HMSscaler = "OFF"
+    SHMSscaler = "OFF"
+    COINscaler = "OFF"
+    
+    if (not (prescales['PS1'][1] == None)):
+         SHMSscaler = "3/4 (PS1)"
+    if (not (prescales['PS2'][1] == None)):
+         SHMSscaler = "ElReal (PS2)"
+    if (not (prescales['PS3'][1] == None)):
+         HMSscaler = "3/4 (PS3)"
+    if (not (prescales['PS4'][1] == None)):
+         HMSscaler = "ElReal (PS4)"
+    if (not (prescales['PS5'][1] == None)):
+         COINscaler = "3/4xElReal (PS5)"
+    if (not (prescales['PS6'][1] == None)):
+         COINscaler = "3/4x3/4 (PS6)"
+    
     yield_data = mergeDicts()
 
     # Remove runs with bad TLT, print statement only
@@ -456,261 +520,266 @@ def plot_yield():
     #########################################################################################################################################################
 
     relYieldPlot = plt.figure(figsize=(12,8))
-
-    #HMS plot scaler
-    plt.subplot(2,3,1)    
-    plt.grid(zorder=1)
-    plt.xlim(0,70)
-    plt.ylim(0.925,1.075)
-    plt.plot([0,70], [1,1], 'r-',zorder=2)
-    plt.errorbar(yield_data["current"],yield_data["yieldRel_HMS_scaler"],yerr=yield_data["yieldRel_HMS_scaler"]*yield_data["uncern_yieldRel_HMS_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_scaler"],color='blue',zorder=4,label="_nolegend_")
-    #    yield_data["m0_curr_HMS_scaler"] = linear_plot(yield_data["current"],yield_data["yieldRel_HMS_scaler"],None,yield_data["uncern_yieldRel_HMS_scaler"])
-
-    plt.ylabel('Rel. Yield Scaler', fontsize=16)
-    plt.xlabel('Current [uA]', fontsize =16)
-    plt.legend()
-    if target == 'LD2' :
-        plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    elif target == 'LH2' :
-        plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    else :
-        plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-
-    #HMS plot no track
-    plt.subplot(2,3,2)    
-    plt.grid(zorder=1)
-    plt.xlim(0,70)
-    plt.ylim(0.925,1.075)
-    plt.plot([0,70], [1,1], 'r-',zorder=2)
-    plt.errorbar(yield_data["current"],yield_data["yieldRel_HMS_notrack"],yerr=yield_data["yieldRel_HMS_notrack"]*yield_data["uncern_yieldRel_HMS_notrack"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_notrack"],color='blue',zorder=4,label="_nolegend_")
-    #    yield_data["m0_curr_HMS_notrack"] = linear_plot(yield_data["current"],yield_data["yieldRel_HMS_notrack"],None,yield_data["uncern_yieldRel_HMS_notrack"])
-    #plt.errorbar(yield_data["current"],yield_data["yieldRel_HMS_CPULT_notrack"],yerr=yield_data["yieldRel_HMS_CPULT_notrack"]*yield_data["uncern_yieldRel_HMS_CPULT_notrack"],color='black',linestyle='None',zorder=5)
-    #plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_CPULT_notrack"],color='red',zorder=6)
-    plt.ylabel('Rel. Yield no track', fontsize=16)
-    plt.xlabel('Current [uA]', fontsize =16)
-    plt.legend()
-    if target == 'LD2' :
-        plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    elif target == 'LH2' :
-        plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    else :
-        plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+    if(not NO_HMS):
+        #HMS plot scaler
+        plt.subplot(2,3,1)    
+        plt.grid(zorder=1)
+        plt.xlim(0,70)
+        plt.ylim(0.925,1.075)
+        plt.plot([0,70], [1,1], 'r-',zorder=2)
+        plt.errorbar(yield_data["current"],yield_data["yieldRel_HMS_scaler"],yerr=yield_data["yieldRel_HMS_scaler"]*yield_data["uncern_yieldRel_HMS_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_scaler"],color='blue',zorder=4,label="_nolegend_")
+        #    yield_data["m0_curr_HMS_scaler"] = linear_plot(yield_data["current"],yield_data["yieldRel_HMS_scaler"],None,yield_data["uncern_yieldRel_HMS_scaler"])
+    
+        plt.ylabel('Rel. Yield %s' % (str(HMSscaler)), fontsize=16)
+        plt.xlabel('Current [uA]', fontsize =16)
+        plt.legend()
+        if target == 'LD2' :
+            plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        elif target == 'LH2' :
+            plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        else :
+            plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+    
+        #HMS plot no track
+        plt.subplot(2,3,2)    
+        plt.grid(zorder=1)
+        plt.xlim(0,70)
+        plt.ylim(0.925,1.075)
+        plt.plot([0,70], [1,1], 'r-',zorder=2)
+        plt.errorbar(yield_data["current"], yield_data["yieldRel_HMS_notrack"], yerr=yield_data["yieldRel_HMS_notrack"]*yield_data["uncern_yieldRel_HMS_notrack"], color='black', linestyle='None', zorder=3, label="_nolegend_")
+        plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_notrack"],color='blue',zorder=4,label="_nolegend_")
+        #    yield_data["m0_curr_HMS_notrack"] = linear_plot(yield_data["current"],yield_data["yieldRel_HMS_CPULT_notrack"],None,yield_data["uncern_yieldRel_HMS_CPULT_notrack"])
+        #plt.errorbar(yield_data["current"],yield_data["yieldRel_HMS_CPULT_notrack"],yerr=yield_data["yieldRel_HMS_CPULT_notrack"]*yield_data["uncern_yieldRel_HMS_CPULT_notrack"],color='black',linestyle='None',zorder=5)
+        #plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_CPULT_notrack"],color='red',zorder=6)
+        plt.ylabel('Rel. Yield no track', fontsize=16)
+        plt.xlabel('Current [uA]', fontsize =16)
+        plt.legend()
+        if target == 'LD2' :
+            plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        elif target == 'LH2' :
+            plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        else :
+            plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
         
-    #HMS plot track
-    plt.subplot(2,3,3)    
-    plt.grid(zorder=1)
-    plt.xlim(0,70)
-    plt.ylim(0.925,1.075)
-    plt.plot([0,70], [1,1], 'r-',zorder=2)
-    plt.errorbar(yield_data["current"],yield_data["yieldRel_HMS_track"],yerr=yield_data["yieldRel_HMS_track"]*yield_data["uncern_yieldRel_HMS_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_track"],color='blue',zorder=4,label="_nolegend_")
-    #    yield_data["m0_curr_HMS_track"] = linear_plot(yield_data["current"],yield_data["yieldRel_HMS_track"],None,yield_data["uncern_yieldRel_HMS_track"])
-    #plt.errorbar(yield_data["current"],yield_data["yieldRel_HMS_CPULT_track"],yerr=yield_data["yieldRel_HMS_CPULT_track"]*yield_data["uncern_yieldRel_HMS_CPULT_track"],color='black',linestyle='None',zorder=5)
-    #plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_CPULT_track"],color='red',zorder=6)
-    plt.ylabel('Rel. Yield track', fontsize=16)
-    plt.xlabel('Current [uA]', fontsize =16)
-    plt.legend()
-    if target == 'LD2' :
-        plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    elif target == 'LH2' :
-        plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    else :
-        plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-        
-    #SHMS plot scaler
-    plt.subplot(2,3,4)    
-    plt.grid(zorder=1)
-    plt.xlim(0,70)
-    plt.ylim(0.925,1.075)
-    plt.plot([0,70], [1,1], 'r-',zorder=2)
-    plt.errorbar(yield_data["current"],yield_data["yieldRel_SHMS_scaler"],yerr=yield_data["yieldRel_SHMS_scaler"]*yield_data["uncern_yieldRel_SHMS_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["current"],yield_data["yieldRel_SHMS_scaler"],color='blue',zorder=4,label="_nolegend_")
-    #    yield_data["m0_curr_SHMS_scaler"] = linear_plot(yield_data["current"],yield_data["yieldRel_SHMS_scaler"],None,yield_data["uncern_yieldRel_SHMS_scaler"])
+        #HMS plot track
+        plt.subplot(2,3,3)    
+        plt.grid(zorder=1)
+        plt.xlim(0,70)
+        plt.ylim(0.925,1.075)
+        plt.plot([0,70], [1,1], 'r-',zorder=2)
+        plt.errorbar(yield_data["current"],yield_data["yieldRel_HMS_track"],yerr=yield_data["yieldRel_HMS_track"]*yield_data["uncern_yieldRel_HMS_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_track"],color='blue',zorder=4,label="_nolegend_")
+        #    yield_data["m0_curr_HMS_track"] = linear_plot(yield_data["current"],yield_data["yieldRel_HMS_track"],None,yield_data["uncern_yieldRel_HMS_track"])
+        #plt.errorbar(yield_data["current"],yield_data["yieldRel_HMS_CPULT_track"],yerr=yield_data["yieldRel_HMS_CPULT_track"]*yield_data["uncern_yieldRel_HMS_CPULT_track"],color='black',linestyle='None',zorder=5)
+        #plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_CPULT_track"],color='red',zorder=6)
+        plt.ylabel('Rel. Yield track', fontsize=16)
+        plt.xlabel('Current [uA]', fontsize =16)
+        plt.legend()
+        if target == 'LD2' :
+            plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        elif target == 'LH2' :
+            plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        else :
+            plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+    
+    if(not NO_SHMS):    
+        #SHMS plot scaler
+        plt.subplot(2,3,4)    
+        plt.grid(zorder=1)
+        plt.xlim(0,70)
+        plt.ylim(0.925,1.075)
+        plt.plot([0,70], [1,1], 'r-',zorder=2)
+        plt.errorbar(yield_data["current"],yield_data["yieldRel_SHMS_scaler"],yerr=yield_data["yieldRel_SHMS_scaler"]*yield_data["uncern_yieldRel_SHMS_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["current"],yield_data["yieldRel_SHMS_scaler"],color='blue',zorder=4,label="_nolegend_")
+        #    yield_data["m0_curr_SHMS_scaler"] = linear_plot(yield_data["current"],yield_data["yieldRel_SHMS_scaler"],None,yield_data["uncern_yieldRel_SHMS_scaler"])
 
-    plt.ylabel('Rel. Yield Scaler', fontsize=16)
-    plt.xlabel('Current [uA]', fontsize =16)
-    plt.legend()
-    if target == 'LD2' :
-        plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    elif target == 'LH2' :
-        plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    else :
-        plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-
-    #SHMS plot no track
-    plt.subplot(2,3,5)    
-    plt.grid(zorder=1)
-    plt.xlim(0,70)
-    plt.ylim(0.925,1.075)
-    plt.plot([0,70], [1,1], 'r-',zorder=2)
-    plt.errorbar(yield_data["current"],yield_data["yieldRel_SHMS_notrack"],yerr=yield_data["yieldRel_SHMS_notrack"]*yield_data["uncern_yieldRel_SHMS_notrack"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["current"],yield_data["yieldRel_SHMS_notrack"],color='blue',zorder=4,label="_nolegend_")
-    #    yield_data["m0_curr_SHMS_notrack"] = linear_plot(yield_data["current"],yield_data["yieldRel_SHMS_notrack"],None,yield_data["uncern_yieldRel_SHMS_notrack"])
-    #plt.errorbar(yield_data["current"],yield_data["yieldRel_SHMS_CPULT_notrack"],yerr=yield_data["yieldRel_SHMS_CPULT_notrack"]*yield_data["uncern_yieldRel_SHMS_CPULT_notrack"],color='black',linestyle='None',zorder=5)
-    #plt.scatter(yield_data["current"],yield_data["yieldRel_SHMS_CPULT_notrack"],color='red',zorder=6)
-    plt.ylabel('Rel. Yield no track', fontsize=16)
-    plt.xlabel('Current [uA]', fontsize =16)
-    plt.legend()
-    if target == 'LD2' :
-        plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    elif target == 'LH2' :
-        plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    else :
-        plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-        
-    #SHMS plot track
-    plt.subplot(2,3,6)    
-    plt.grid(zorder=1)
-    plt.xlim(0,70)
-    plt.ylim(0.925,1.075)
-    plt.plot([0,70], [1,1], 'r-',zorder=2)
-    plt.errorbar(yield_data["current"],yield_data["yieldRel_SHMS_track"],yerr=yield_data["yieldRel_SHMS_track"]*yield_data["uncern_yieldRel_SHMS_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["current"],yield_data["yieldRel_SHMS_track"],color='blue',zorder=4,label="_nolegend_")
-    #    yield_data["m0_curr_SHMS_track"] = linear_plot(yield_data["current"],yield_data["yieldRel_SHMS_track"]0,None,yield_data["uncern_yieldRel_SHMS_track"])
-    #plt.errorbar(yield_data["current"],yield_data["yieldRel_SHMS_CPULT_track"],yerr=yield_data["yieldRel_SHMS_CPULT_track"]*yield_data["uncern_yieldRel_SHMS_CPULT_track"],color='black',linestyle='None',zorder=5)
-    #plt.scatter(yield_data["current"],yield_data["yieldRel_SHMS_CPULT_track"],color='red',zorder=6)
-    plt.ylabel('Rel. Yield track', fontsize=16)
-    plt.xlabel('Current [uA]', fontsize =16)
-    plt.legend()
-    if target == 'LD2' :
-        plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    elif target == 'LH2' :
-        plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    else :
-        plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-
+        plt.ylabel('Rel. Yield %s' % (str(SHMSscaler)), fontsize=16)
+        plt.xlabel('Current [uA]', fontsize =16)
+        plt.legend()
+        if target == 'LD2' :
+            plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        elif target == 'LH2' :
+            plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        else :
+            plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+    
+        #SHMS plot no track
+        plt.subplot(2,3,5)    
+        plt.grid(zorder=1)
+        plt.xlim(0,70)
+        plt.ylim(0.925,1.075)
+        plt.plot([0,70], [1,1], 'r-',zorder=2)
+        plt.errorbar(yield_data["current"],yield_data["yieldRel_SHMS_notrack"],yerr=yield_data["yieldRel_SHMS_notrack"]*yield_data["uncern_yieldRel_SHMS_notrack"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["current"],yield_data["yieldRel_SHMS_notrack"],color='blue',zorder=4,label="_nolegend_")
+        #    yield_data["m0_curr_SHMS_notrack"] = linear_plot(yield_data["current"],yield_data["yieldRel_SHMS_notrack"],None,yield_data["uncern_yieldRel_SHMS_notrack"])
+        #plt.errorbar(yield_data["current"],yield_data["yieldRel_SHMS_CPULT_notrack"],yerr=yield_data["yieldRel_SHMS_CPULT_notrack"]*yield_data["uncern_yieldRel_SHMS_CPULT_notrack"],color='black',linestyle='None',zorder=5)
+        #plt.scatter(yield_data["current"],yield_data["yieldRel_SHMS_CPULT_notrack"],color='red',zorder=6)
+        plt.ylabel('Rel. Yield no track', fontsize=16)
+        plt.xlabel('Current [uA]', fontsize =16)
+        plt.legend()
+        if target == 'LD2' :
+            plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        elif target == 'LH2' :
+            plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        else :
+            plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+            
+        #SHMS plot track
+        plt.subplot(2,3,6)    
+        plt.grid(zorder=1)
+        plt.xlim(0,70)
+        plt.ylim(0.925,1.075)
+        plt.plot([0,70], [1,1], 'r-',zorder=2)
+        plt.errorbar(yield_data["current"],yield_data["yieldRel_SHMS_track"],yerr=yield_data["yieldRel_SHMS_track"]*yield_data["uncern_yieldRel_SHMS_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["current"],yield_data["yieldRel_SHMS_track"],color='blue',zorder=4,label="_nolegend_")
+        #    yield_data["m0_curr_SHMS_track"] = linear_plot(yield_data["current"],yield_data["yieldRel_SHMS_track"]0,None,yield_data["uncern_yieldRel_SHMS_track"])
+        #plt.errorbar(yield_data["current"],yield_data["yieldRel_SHMS_CPULT_track"],yerr=yield_data["yieldRel_SHMS_CPULT_track"]*yield_data["uncern_yieldRel_SHMS_CPULT_track"],color='black',linestyle='None',zorder=5)
+        #plt.scatter(yield_data["current"],yield_data["yieldRel_SHMS_CPULT_track"],color='red',zorder=6)
+        plt.ylabel('Rel. Yield track', fontsize=16)
+        plt.xlabel('Current [uA]', fontsize =16)
+        plt.legend()
+        if target == 'LD2' :
+            plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        elif target == 'LH2' :
+            plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        else :
+            plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+    
     plt.tight_layout()
     plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Yield_%s_%s.png' % (out_f.split("yield_data_")[1].replace(".csv",""),"relYieldPlot"))
-    
+        
     #########################################################################################################################################################
 
     raterelYieldPlot = plt.figure(figsize=(12,8))
 
-    #HMS plot scaler
-    plt.subplot(2,3,1)    
-    plt.grid(zorder=1)
-    plt.xlim(0,(max(yield_data["rate_HMS"])/1000)+5)
-    plt.ylim(0.925,1.075)
-    plt.plot([0,(max(yield_data["rate_HMS"])/1000)+5], [1,1], 'r-',zorder=2)
-    plt.errorbar(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_scaler"],yerr=yield_data["yieldRel_HMS_scaler"]*yield_data["uncern_yieldRel_HMS_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_scaler"],color='blue',zorder=4,label="_nolegend_")
-    #yield_data["m0_rate_HMS_scaler"] = linear_plot(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_scaler"],None,yield_data["uncern_yieldRel_HMS_scaler"],xvalmax=max((yield_data["rate_HMS"])/1000)+5)
+    if(not NO_HMS):
+        #HMS plot scaler
+        plt.subplot(2,3,1)    
+        plt.grid(zorder=1)
+        plt.xlim(0,(max(yield_data["rate_HMS"])/1000)+5)
+        plt.ylim(0.925,1.075)
+        plt.plot([0,(max(yield_data["rate_HMS"])/1000)+5], [1,1], 'r-',zorder=2)
+        plt.errorbar(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_scaler"],yerr=yield_data["yieldRel_HMS_scaler"]*yield_data["uncern_yieldRel_HMS_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_scaler"],color='blue',zorder=4,label="_nolegend_")
+        #yield_data["m0_rate_HMS_scaler"] = linear_plot(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_scaler"],None,yield_data["uncern_yieldRel_HMS_scaler"],xvalmax=max((yield_data["rate_HMS"])/1000)+5)
+        print("debug HMS rate ploting:")
+        print(yield_data["rate_HMS"]/1000)
+        print(yield_data["yieldRel_HMS_scaler"])
+        plt.ylabel('Rel. Yield %s' % (str(HMSscaler)), fontsize=16)
+        plt.xlabel('HMS %s Rate [kHz]' % (str(HMSscaler)), fontsize =16)
+        plt.legend()
+        if target == 'LD2' :
+            plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        elif target == 'LH2' :
+            plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        else :
+            plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+    
+        #HMS plot no track
+        plt.subplot(2,3,2)    
+        plt.grid(zorder=1)
+        plt.xlim(0,(max(yield_data["rate_HMS"])/1000)+5)
+        plt.ylim(0.925,1.075)
+        plt.plot([0,(max(yield_data["rate_HMS"])/1000)+5], [1,1], 'r-',zorder=2)
+        plt.errorbar(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_notrack"],yerr=yield_data["yieldRel_HMS_notrack"]*yield_data["uncern_yieldRel_HMS_notrack"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_notrack"],color='blue',zorder=4,label="_nolegend_")
+        #yield_data["m0_rate_HMS_notrack"] = linear_plot(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_notrack"],None,yield_data["uncern_yieldRel_HMS_notrack"],xvalmax=max((yield_data["rate_HMS"])/1000)+5)
+        #plt.errorbar(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_CPULT_notrack"],yerr=yield_data["yieldRel_HMS_CPULT_notrack"]*yield_data["uncern_yieldRel_HMS_CPULT_notrack"],color='black',linestyle='None',zorder=5)
+        #plt.scatter(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_CPULT_notrack"],color='red',zorder=6)
+        plt.ylabel('Rel. Yield no track', fontsize=16)
+        plt.xlabel('HMS %s Rate [kHz]' % (str(HMSscaler)), fontsize =16)
+        plt.legend()
+        if target == 'LD2' :
+            plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        elif target == 'LH2' :
+            plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        else :
+            plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+    
+        #HMS plot track
+        plt.subplot(2,3,3)    
+        plt.grid(zorder=1)
+        plt.xlim(0,(max(yield_data["rate_HMS"])/1000)+5)
+        plt.ylim(0.925,1.075)
+        plt.plot([0,(max(yield_data["rate_HMS"])/1000)+5], [1,1], 'r-',zorder=2)
+        plt.errorbar(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_track"],yerr=yield_data["yieldRel_HMS_track"]*yield_data["uncern_yieldRel_HMS_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_track"],color='blue',zorder=4,label="_nolegend_")
+        #yield_data["m0_rate_HMS_track"] = linear_plot(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_track"],None,yield_data["uncern_yieldRel_HMS_track"],xvalmax=max((yield_data["rate_HMS"])/1000)+5)
+        #plt.errorbar(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_CPULT_track"],yerr=yield_data["yieldRel_HMS_CPULT_track"]*yield_data["uncern_yieldRel_HMS_CPULT_track"],color='black',linestyle='None',zorder=5)
+        #plt.scatter(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_CPULT_track"],color='red',zorder=6)
+        plt.ylabel('Rel. Yield track', fontsize=16)
+        plt.xlabel('HMS %s Rate [kHz]' % (str(HMSscaler)), fontsize =16)
+        plt.legend()
+        if target == 'LD2' :
+            plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        elif target == 'LH2' :
+            plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        else :
+            plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
 
-    plt.ylabel('Rel. Yield Scaler', fontsize=16)
-    plt.xlabel('HMS Rate [kHz]', fontsize =16)
-    plt.legend()
-    if target == 'LD2' :
-        plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    elif target == 'LH2' :
-        plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    else :
-        plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+    if(not NO_SHMS):
+        #SHMS plot scaler
+        plt.subplot(2,3,4)    
+        plt.grid(zorder=1)
+        plt.xlim(0,(max(yield_data["rate_SHMS"])/1000)+5)
+        plt.ylim(0.925,1.075)
+        plt.plot([0,(max(yield_data["rate_SHMS"])/1000)+5], [1,1], 'r-',zorder=2)
+        plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_scaler"],yerr=yield_data["yieldRel_SHMS_scaler"]*yield_data["uncern_yieldRel_SHMS_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_scaler"],color='blue',zorder=4,label="_nolegend_")
+        #yield_data["m0_rate_SHMS_scaler"] = linear_plot(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_scaler"],None,yield_data["uncern_yieldRel_SHMS_scaler"],xvalmax=max((yield_data["rate_SHMS"])/1000)+5)
+    
+        plt.ylabel('Rel. Yield %s' % (str(SHMSscaler)), fontsize=16)
+        plt.xlabel('SHMS %s Rate [kHz]' % (str(SHMSscaler)), fontsize =16)
+        plt.legend()
+        if target == 'LD2' :
+            plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        elif target == 'LH2' :
+            plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        else :
+            plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+    
+        #SHMS plot no track
+        plt.subplot(2,3,5)    
+        plt.grid(zorder=1)
+        plt.xlim(0,(max(yield_data["rate_SHMS"])/1000)+5)
+        plt.ylim(0.925,1.075)
+        plt.plot([0,(max(yield_data["rate_SHMS"])/1000)+5], [1,1], 'r-',zorder=2)
+        plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_notrack"],yerr=yield_data["yieldRel_SHMS_notrack"]*yield_data["uncern_yieldRel_SHMS_notrack"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_notrack"],color='blue',zorder=4,label="_nolegend_")
+        #yield_data["m0_rate_SHMS_notrack"] = linear_plot(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_notrack"],None,yield_data["uncern_yieldRel_SHMS_notrack"],xvalmax=max((yield_data["rate_SHMS"])/1000)+5)
+        #plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_CPULT_notrack"],yerr=yield_data["yieldRel_SHMS_CPULT_notrack"]*yield_data["uncern_yieldRel_SHMS_CPULT_notrack"],color='black',linestyle='None',zorder=5)
+        #plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_CPULT_notrack"],color='red',zorder=6)
+        plt.ylabel('Rel. Yield no track', fontsize=16)
+        plt.xlabel('SHMS %s Rate [kHz]' % (str(SHMSscaler)), fontsize =16)
+        plt.legend()
+        if target == 'LD2' :
+            plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        elif target == 'LH2' :
+            plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        else :
+            plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
 
-    #HMS plot no track
-    plt.subplot(2,3,2)    
-    plt.grid(zorder=1)
-    plt.xlim(0,(max(yield_data["rate_HMS"])/1000)+5)
-    plt.ylim(0.925,1.075)
-    plt.plot([0,(max(yield_data["rate_HMS"])/1000)+5], [1,1], 'r-',zorder=2)
-    plt.errorbar(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_notrack"],yerr=yield_data["yieldRel_HMS_notrack"]*yield_data["uncern_yieldRel_HMS_notrack"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_notrack"],color='blue',zorder=4,label="_nolegend_")
-    #yield_data["m0_rate_HMS_notrack"] = linear_plot(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_notrack"],None,yield_data["uncern_yieldRel_HMS_notrack"],xvalmax=max((yield_data["rate_HMS"])/1000)+5)
-    #plt.errorbar(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_CPULT_notrack"],yerr=yield_data["yieldRel_HMS_CPULT_notrack"]*yield_data["uncern_yieldRel_HMS_CPULT_notrack"],color='black',linestyle='None',zorder=5)
-    #plt.scatter(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_CPULT_notrack"],color='red',zorder=6)
-    plt.ylabel('Rel. Yield no track', fontsize=16)
-    plt.xlabel('HMS Rate [kHz]', fontsize =16)
-    plt.legend()
-    if target == 'LD2' :
-        plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    elif target == 'LH2' :
-        plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    else :
-        plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-
-    #HMS plot track
-    plt.subplot(2,3,3)    
-    plt.grid(zorder=1)
-    plt.xlim(0,(max(yield_data["rate_HMS"])/1000)+5)
-    plt.ylim(0.925,1.075)
-    plt.plot([0,(max(yield_data["rate_HMS"])/1000)+5], [1,1], 'r-',zorder=2)
-    plt.errorbar(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_track"],yerr=yield_data["yieldRel_HMS_track"]*yield_data["uncern_yieldRel_HMS_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_track"],color='blue',zorder=4,label="_nolegend_")
-    #yield_data["m0_rate_HMS_track"] = linear_plot(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_track"],None,yield_data["uncern_yieldRel_HMS_track"],xvalmax=max((yield_data["rate_HMS"])/1000)+5)
-    #plt.errorbar(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_CPULT_track"],yerr=yield_data["yieldRel_HMS_CPULT_track"]*yield_data["uncern_yieldRel_HMS_CPULT_track"],color='black',linestyle='None',zorder=5)
-    #plt.scatter(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_CPULT_track"],color='red',zorder=6)
-    plt.ylabel('Rel. Yield track', fontsize=16)
-    plt.xlabel('HMS Rate [kHz]', fontsize =16)
-    plt.legend()
-    if target == 'LD2' :
-        plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    elif target == 'LH2' :
-        plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    else :
-        plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-
-    #SHMS plot scaler
-    plt.subplot(2,3,4)    
-    plt.grid(zorder=1)
-    plt.xlim(0,(max(yield_data["rate_SHMS"])/1000)+5)
-    plt.ylim(0.925,1.075)
-    plt.plot([0,(max(yield_data["rate_SHMS"])/1000)+5], [1,1], 'r-',zorder=2)
-    plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_scaler"],yerr=yield_data["yieldRel_SHMS_scaler"]*yield_data["uncern_yieldRel_SHMS_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_scaler"],color='blue',zorder=4,label="_nolegend_")
-    #yield_data["m0_rate_SHMS_scaler"] = linear_plot(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_scaler"],None,yield_data["uncern_yieldRel_SHMS_scaler"],xvalmax=max((yield_data["rate_SHMS"])/1000)+5)
-
-    plt.ylabel('Rel. Yield Scaler', fontsize=16)
-    plt.xlabel('SHMS Rate [kHz]', fontsize =16)
-    plt.legend()
-    if target == 'LD2' :
-        plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    elif target == 'LH2' :
-        plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    else :
-        plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-
-    #SHMS plot no track
-    plt.subplot(2,3,5)    
-    plt.grid(zorder=1)
-    plt.xlim(0,(max(yield_data["rate_SHMS"])/1000)+5)
-    plt.ylim(0.925,1.075)
-    plt.plot([0,(max(yield_data["rate_SHMS"])/1000)+5], [1,1], 'r-',zorder=2)
-    plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_notrack"],yerr=yield_data["yieldRel_SHMS_notrack"]*yield_data["uncern_yieldRel_SHMS_notrack"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_notrack"],color='blue',zorder=4,label="_nolegend_")
-    #yield_data["m0_rate_SHMS_notrack"] = linear_plot(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_notrack"],None,yield_data["uncern_yieldRel_SHMS_notrack"],xvalmax=max((yield_data["rate_SHMS"])/1000)+5)
-    #plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_CPULT_notrack"],yerr=yield_data["yieldRel_SHMS_CPULT_notrack"]*yield_data["uncern_yieldRel_SHMS_CPULT_notrack"],color='black',linestyle='None',zorder=5)
-    #plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_CPULT_notrack"],color='red',zorder=6)
-    plt.ylabel('Rel. Yield no track', fontsize=16)
-    plt.xlabel('SHMS Rate [kHz]', fontsize =16)
-    plt.legend()
-    if target == 'LD2' :
-        plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    elif target == 'LH2' :
-        plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    else :
-        plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-
-    #SHMS plot track
-    plt.subplot(2,3,6)    
-    plt.grid(zorder=1)
-    plt.xlim(0,(max(yield_data["rate_SHMS"])/1000)+5)
-    plt.ylim(0.925,1.075)
-    plt.plot([0,(max(yield_data["rate_SHMS"])/1000)+5], [1,1], 'r-',zorder=2)
-    plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_track"],yerr=yield_data["yieldRel_SHMS_track"]*yield_data["uncern_yieldRel_SHMS_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_track"],color='blue',zorder=4,label="_nolegend_")
-    #yield_data["m0_rate_SHMS_track"] = linear_plot(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_track"],None,yield_data["uncern_yieldRel_SHMS_track"],xvalmax=max((yield_data["rate_SHMS"])/1000)+5)
-    #plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_CPULT_track"],yerr=yield_data["yieldRel_SHMS_CPULT_track"]*yield_data["uncern_yieldRel_SHMS_CPULT_track"],color='black',linestyle='None',zorder=5)
-    #plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_CPULT_track"],color='red',zorder=6)
-    plt.ylabel('Rel. Yield track', fontsize=16)
-    plt.xlabel('SHMS Rate [kHz]', fontsize =16)
-    plt.legend()
-    if target == 'LD2' :
-        plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    elif target == 'LH2' :
-        plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
-    else :
-        plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        #SHMS plot track
+        plt.subplot(2,3,6)    
+        plt.grid(zorder=1)
+        plt.xlim(0,(max(yield_data["rate_SHMS"])/1000)+5)
+        plt.ylim(0.925,1.075)
+        plt.plot([0,(max(yield_data["rate_SHMS"])/1000)+5], [1,1], 'r-',zorder=2)
+        plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_track"],yerr=yield_data["yieldRel_SHMS_track"]*yield_data["uncern_yieldRel_SHMS_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_track"],color='blue',zorder=4,label="_nolegend_")
+        #yield_data["m0_rate_SHMS_track"] = linear_plot(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_track"],None,yield_data["uncern_yieldRel_SHMS_track"],xvalmax=max((yield_data["rate_SHMS"])/1000)+5)
+        #plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_CPULT_track"],yerr=yield_data["yieldRel_SHMS_CPULT_track"]*yield_data["uncern_yieldRel_SHMS_CPULT_track"],color='black',linestyle='None',zorder=5)
+        #plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_CPULT_track"],color='red',zorder=6)
+        plt.ylabel('Rel. Yield track', fontsize=16)
+        plt.xlabel('SHMS %s Rate [kHz]' % (str(SHMSscaler)), fontsize =16)
+        plt.legend()
+        if target == 'LD2' :
+            plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        elif target == 'LH2' :
+            plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        else :
+            plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
 
     plt.tight_layout()
     plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Yield_%s_%s.png' % (out_f.split("yield_data_")[1].replace(".csv",""),"raterelYieldPlot"))
@@ -755,7 +824,7 @@ def plot_yield():
     #plt.xlim(0,70)
     plt.scatter(yield_data["rate_HMS"]/1000,yield_data["accp_edtm"]/(yield_data["time"]*1000),color='blue',zorder=4,label="_nolegend_")
     plt.ylabel('EDTM Rate [kHz]', fontsize=16)
-    plt.xlabel('HMS Rate [kHz]', fontsize =16)
+    plt.xlabel('HMS %s Rate [kHz]' % (str(HMSscaler)), fontsize =16)
     if target == 'LD2' :
         plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
     elif target == 'LH2' :
@@ -799,7 +868,7 @@ def plot_yield():
     #plt.xlim(0,70)
     plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["accp_edtm"]/(yield_data["time"]*1000),color='blue',zorder=4,label="_nolegend_")
     plt.ylabel('EDTM Rate [kHz]', fontsize=16)
-    plt.xlabel('SHMS Rate [kHz]', fontsize =16)
+    plt.xlabel('SHMS %s Rate [kHz]' % (str(SHMSscaler)), fontsize =16)
     if target == 'LD2' :
         plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
     elif target == 'LH2' :
@@ -814,54 +883,55 @@ def plot_yield():
 
     logPlot = plt.figure(figsize=(12,8))
 
-    #HMS plot scaler
-    plt.subplot(2,4,1)    
-    plt.grid(zorder=1)
-    plt.xlim(0,70)
-    plt.ylim(0.925,1.075)
-    plt.plot([0,70], [1,1], 'r-',zorder=2)
-    plt.errorbar(yield_data["current"],yield_data["yieldRel_HMS_scaler"],yerr=yield_data["yieldRel_HMS_scaler"]*yield_data["uncern_yieldRel_HMS_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_scaler"],color='blue',zorder=4,label="_nolegend_")
-    plt.ylabel('Rel. Yield Scaler', fontsize=16)
-    plt.xlabel('Current [uA]', fontsize =12)
-    if target == 'LD2' :
-        plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
-    elif target == 'LH2' :
-        plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
-    else :
-        plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
-
-    #HMS plot track
-    plt.subplot(2,4,2)    
-    plt.grid(zorder=1)
-    #plt.xlim(0,70)
-    plt.ylim(0.925,1.075)
-    plt.plot([0,70], [1,1], 'r-',zorder=2)
-    plt.errorbar(yield_data["current"],yield_data["yieldRel_HMS_track"],yerr=yield_data["yieldRel_HMS_track"]*yield_data["uncern_yieldRel_HMS_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_track"],color='blue',zorder=4,label="_nolegend_")
-    plt.ylabel('Rel. Yield track', fontsize=16)
-    plt.xlabel('Current [uA]', fontsize =12)
-    if target == 'LD2' :
-        plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
-    elif target == 'LH2' :
-        plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
-    else :
-        plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
-
-    #HMS track eff vs HMS Rate
-    plt.subplot(2,4,3)    
-    plt.grid(zorder=1)
-    #plt.xlim(0,70)
-    plt.errorbar(yield_data["rate_HMS"]/1000,yield_data["HMS_track"],yerr=yield_data["HMS_track"]*yield_data["HMS_track_uncern"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["rate_HMS"]/1000,yield_data["HMS_track"],color='blue',zorder=4,label="_nolegend_")
-    plt.ylabel('HMS track eff', fontsize=16)
-    plt.xlabel('HMS Rate [kHz]', fontsize =12)
-    if target == 'LD2' :
-        plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
-    elif target == 'LH2' :
-        plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
-    else :
-        plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
+    if(not NO_HMS):
+        #HMS plot scaler
+        plt.subplot(2,4,1)    
+        plt.grid(zorder=1)
+        plt.xlim(0,70)
+        plt.ylim(0.925,1.075)
+        plt.plot([0,70], [1,1], 'r-',zorder=2)
+        plt.errorbar(yield_data["current"],yield_data["yieldRel_HMS_scaler"],yerr=yield_data["yieldRel_HMS_scaler"]*yield_data["uncern_yieldRel_HMS_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_scaler"],color='blue',zorder=4,label="_nolegend_")
+        plt.ylabel('Rel. Yield %s' % (str(HMSscaler)), fontsize=16)
+        plt.xlabel('Current [uA]', fontsize =12)
+        if target == 'LD2' :
+            plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
+        elif target == 'LH2' :
+            plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
+        else :
+            plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
+    
+        #HMS plot track
+        plt.subplot(2,4,2)    
+        plt.grid(zorder=1)
+        #plt.xlim(0,70)
+        plt.ylim(0.925,1.075)
+        plt.plot([0,70], [1,1], 'r-',zorder=2)
+        plt.errorbar(yield_data["current"],yield_data["yieldRel_HMS_track"],yerr=yield_data["yieldRel_HMS_track"]*yield_data["uncern_yieldRel_HMS_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_track"],color='blue',zorder=4,label="_nolegend_")
+        plt.ylabel('Rel. Yield track', fontsize=16)
+        plt.xlabel('Current [uA]', fontsize =12)
+        if target == 'LD2' :
+            plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
+        elif target == 'LH2' :
+            plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
+        else :
+            plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
+    
+        #HMS track eff vs HMS Rate
+        plt.subplot(2,4,3)    
+        plt.grid(zorder=1)
+        #plt.xlim(0,70)
+        plt.errorbar(yield_data["rate_HMS"]/1000,yield_data["HMS_track"],yerr=yield_data["HMS_track"]*yield_data["HMS_track_uncern"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["rate_HMS"]/1000,yield_data["HMS_track"],color='blue',zorder=4,label="_nolegend_")
+        plt.ylabel('HMS track eff', fontsize=16)
+        plt.xlabel('HMS %s Rate [kHz]' % (str(HMSscaler)), fontsize =12)
+        if target == 'LD2' :
+            plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
+        elif target == 'LH2' :
+            plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
+        else :
+            plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
 
     #TLT vs Current
     plt.subplot(2,4,4)    
@@ -893,55 +963,56 @@ def plot_yield():
     else :
         plt.title('Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
 
-    #SHMS plot scaler
-    plt.subplot(2,4,5)    
-    plt.grid(zorder=1)
-    plt.xlim(0,70)
-    plt.ylim(0.925,1.075)
-    plt.plot([0,70], [1,1], 'r-',zorder=2)
-    plt.errorbar(yield_data["current"],yield_data["yieldRel_SHMS_scaler"],yerr=yield_data["yieldRel_SHMS_scaler"]*yield_data["uncern_yieldRel_SHMS_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["current"],yield_data["yieldRel_SHMS_scaler"],color='blue',zorder=4,label="_nolegend_")
-    plt.ylabel('Rel. Yield Scaler', fontsize=16)
-    plt.xlabel('Current [uA]', fontsize =12)
-    if target == 'LD2' :
-        plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
-    elif target == 'LH2' :
-        plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
-    else :
-        plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
-
-    #SHMS plot track
-    plt.subplot(2,4,6)    
-    plt.grid(zorder=1)
-    #plt.xlim(0,70)
-    plt.ylim(0.925,1.075)
-    plt.plot([0,70], [1,1], 'r-',zorder=2)
-    plt.errorbar(yield_data["current"],yield_data["yieldRel_SHMS_track"],yerr=yield_data["yieldRel_SHMS_track"]*yield_data["uncern_yieldRel_SHMS_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["current"],yield_data["yieldRel_SHMS_track"],color='blue',zorder=4,label="_nolegend_")
-    plt.ylabel('Rel. Yield track', fontsize=16)
-    plt.xlabel('Current [uA]', fontsize =12)
-    if target == 'LD2' :
-        plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
-    elif target == 'LH2' :
-        plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
-    else :
-        plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
-
-    #SHMS track vs SHMS Rate
-    plt.subplot(2,4,7)    
-    plt.grid(zorder=1)
-    #plt.xlim(0,70)
-    plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["SHMS_track"],yerr=yield_data["SHMS_track"]*yield_data["SHMS_track_uncern"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["SHMS_track"],color='blue',zorder=4,label="_nolegend_")
-    plt.ylabel('SHMS track eff', fontsize=16)
-    plt.xlabel('SHMS Rate [kHz]', fontsize =12)
-    if target == 'LD2' :
-        plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
-    elif target == 'LH2' :
-        plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
-    else :
-        plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
-
+    if(not NO_SHMS):
+        #SHMS plot scaler
+        plt.subplot(2,4,5)    
+        plt.grid(zorder=1)
+        plt.xlim(0,70)
+        plt.ylim(0.925,1.075)
+        plt.plot([0,70], [1,1], 'r-',zorder=2)
+        plt.errorbar(yield_data["current"],yield_data["yieldRel_SHMS_scaler"],yerr=yield_data["yieldRel_SHMS_scaler"]*yield_data["uncern_yieldRel_SHMS_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["current"],yield_data["yieldRel_SHMS_scaler"],color='blue',zorder=4,label="_nolegend_")
+        plt.ylabel('Rel. Yield %s' % (str(SHMSscaler)), fontsize=16)
+        plt.xlabel('Current [uA]', fontsize =12)
+        if target == 'LD2' :
+            plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
+        elif target == 'LH2' :
+            plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
+        else :
+            plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
+    
+        #SHMS plot track
+        plt.subplot(2,4,6)    
+        plt.grid(zorder=1)
+        #plt.xlim(0,70)
+        plt.ylim(0.925,1.075)
+        plt.plot([0,70], [1,1], 'r-',zorder=2)
+        plt.errorbar(yield_data["current"],yield_data["yieldRel_SHMS_track"],yerr=yield_data["yieldRel_SHMS_track"]*yield_data["uncern_yieldRel_SHMS_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["current"],yield_data["yieldRel_SHMS_track"],color='blue',zorder=4,label="_nolegend_")
+        plt.ylabel('Rel. Yield track', fontsize=16)
+        plt.xlabel('Current [uA]', fontsize =12)
+        if target == 'LD2' :
+            plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
+        elif target == 'LH2' :
+            plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
+        else :
+            plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
+    
+        #SHMS track vs SHMS Rate
+        plt.subplot(2,4,7)    
+        plt.grid(zorder=1)
+        #plt.xlim(0,70)
+        plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["SHMS_track"],yerr=yield_data["SHMS_track"]*yield_data["SHMS_track_uncern"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["SHMS_track"],color='blue',zorder=4,label="_nolegend_")
+        plt.ylabel('SHMS track eff', fontsize=16)
+        plt.xlabel('SHMS %s Rate [kHz]' % (str(SHMSscaler)), fontsize =12)
+        if target == 'LD2' :
+            plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
+        elif target == 'LH2' :
+            plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
+        else :
+            plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
+    
     plt.tight_layout()
     plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Yield_%s_%s.png' % (out_f.split("yield_data_")[1].replace(".csv",""),"logPlot"))
             

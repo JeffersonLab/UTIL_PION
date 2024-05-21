@@ -40,12 +40,12 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
 
         P_1Mhz_scalerTime = s_tree.array("H.1MHz.scalerTime")
 
-        P_pTRIG1_scaler = s_tree.array("H.hTRIG1.scaler")
-        P_pTRIG2_scaler = s_tree.array("H.hTRIG2.scaler")
-        P_pTRIG3_scaler = s_tree.array("H.hTRIG3.scaler")
-        P_pTRIG4_scaler = s_tree.array("H.hTRIG4.scaler")
-        P_pTRIG5_scaler = s_tree.array("H.hTRIG5.scaler")
-        P_pTRIG6_scaler = s_tree.array("H.hTRIG6.scaler")
+        P_pTRIG1_scaler = s_tree.array("H.pTRIG1.scaler") #heinricn - changed from hTRIG to pTRIG because hTRIG isn't filled for some reason!
+        P_pTRIG2_scaler = s_tree.array("H.pTRIG2.scaler")
+        P_pTRIG3_scaler = s_tree.array("H.pTRIG3.scaler")
+        P_pTRIG4_scaler = s_tree.array("H.pTRIG4.scaler")
+        P_pTRIG5_scaler = s_tree.array("H.pTRIG5.scaler")
+        P_pTRIG6_scaler = s_tree.array("H.pTRIG6.scaler")
 
         P_pL1ACCP_scaler = s_tree.array("H.hL1ACCP.scaler")
         P_pPRE40_scaler = s_tree.array("H.hPRE40.scaler")
@@ -234,12 +234,12 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
         previous_charge[ibcm] = bcm_value[ibcm][0]
         # Iterate over all scaler events to get various scaler values
         for i, evt in enumerate(s_evts):
-            # Correction to bcm1 from Peter Bosted
-            if (current[ibcm][i] < 60):
-                bcmcorr = 1.00+0.045*(math.log(60)-math.log(abs(current[ibcm][i]))/(math.log(60)-math.log(2)))
-            else:
-                bcmcorr = 1.00+0.010*(current[ibcm][i]-60)/25
-            current[ibcm][i] = current[ibcm][i] * bcmcorr            
+            # Correction to bcm1 from Peter Bosted - removed this, b/c it's not for our data - NH 2024/04/08
+            #if (current[ibcm][i] < 60):
+            #    bcmcorr = 1.00+0.045*(math.log(60)-math.log(abs(current[ibcm][i]))/(math.log(60)-math.log(2)))
+            #else:
+            #    bcmcorr = 1.00+0.010*(current[ibcm][i]-60)/25
+            #current[ibcm][i] = current[ibcm][i] * bcmcorr            
             if (time_value[i] != previous_time[ibcm]):
                 # Current calculation using iterative charge and time values.
                 # Iterate over current value then subtracting previous so that there is no double counting. Subtracted values are uncut.
@@ -321,13 +321,14 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
     except NameError:
         coin_ps_ix = 4
         
-    print("Debug: time: ", time_sum[bcm_ix], ", charge: ", charge_sum[bcm_ix])    
+    print("Debug: trig_sum", trig_sum)
+    print("Debug: time: ", time_sum[bcm_ix], ", charge: ", charge_sum[bcm_ix], "\n\n")
     # Creates a dictionary for the calculated luminosity values 
     scalers = {
         "run number" : runNum,
         "time": time_sum[bcm_ix],
         "charge": charge_sum[bcm_ix],
-        "curr_corr" : (charge_sum[bcm_ix]/time_sum[bcm_ix]+0.05)/(charge_sum[bcm_ix]/time_sum[bcm_ix]), # 50 uA current offset
+        #"curr_corr" : (charge_sum[bcm_ix]/time_sum[bcm_ix] - 0.17)/(charge_sum[bcm_ix]/time_sum[bcm_ix]), # 0.17 uA current offset - NH 2024/05/04
         # "CPULT_scaler": acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS)), # GOOD
         #"CPULT_scaler": acctrig_sum/((trig_sum[shms_ps_ix]) + (trig_sum[hms_ps_ix]) - EDTM_sum),
         #"CPULT_scaler_uncern": (acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS)))*np.sqrt((1/(trig_sum[shms_ps_ix]/SHMS_PS))+(1/(trig_sum[hms_ps_ix]/HMS_PS))+(1/acctrig_sum)), # GOOD
@@ -339,6 +340,16 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
         "COIN_PS" : COIN_PS
             
     }
+    
+    #Nathan Heinrich - broke the current correction into 3 parts to reflect BCM calibrations
+    # Corrections only valid when using BMC2
+    if(int(runNum) > 14777):
+        scalers.update({"curr_corr" : ((charge_sum[bcm_ix]/time_sum[bcm_ix])-0.025)/(charge_sum[bcm_ix]/time_sum[bcm_ix])})
+    elif (int(runNum) > 12004):
+        scalers.update({"curr_corr" : ((charge_sum[bcm_ix]/time_sum[bcm_ix])-0.155)/(charge_sum[bcm_ix]/time_sum[bcm_ix])})
+    else: # I have not data for this period, so I'm leaving the offset zero.
+        scalers.update({"curr_corr" : (0+(charge_sum[bcm_ix]/time_sum[bcm_ix]))/(charge_sum[bcm_ix]/time_sum[bcm_ix])})
+    
 
     if COIN_PS == None:
         if SHMS_PS == None:
@@ -354,14 +365,18 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
     print("\n\n\n",trig_sum,"\n\n\n")
 
     if ("PS1" in PS_names or "PS2" in PS_names) and ("PS3" in PS_names or "PS4" in PS_names):
+        print("Debug: in HMS + SHMS")
         scalers.update({"CPULT_scaler": acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS))})
         scalers.update({"CPULT_scaler_uncern": (acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS)))*np.sqrt((1/(trig_sum[shms_ps_ix]/SHMS_PS))+(1/(trig_sum[hms_ps_ix]/HMS_PS))+(1/acctrig_sum))})
     elif ("PS1" in PS_names or "PS2" in PS_names) and ("PS3" not in PS_names and "PS4" not in PS_names):
+        print("Debug: in SHMS")
         scalers.update({"CPULT_scaler": acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS))})
         scalers.update({"CPULT_scaler_uncern": (acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS)))*np.sqrt((1/(trig_sum[shms_ps_ix]/SHMS_PS))+(1/acctrig_sum))})
     elif ("PS3" in PS_names or "PS4" in PS_names) and ("PS1" not in PS_names and "PS2" not in PS_names):
-        scalers.update({"CPULT_scaler": acctrig_sum/((trig_sum[hms_ps_ix]/HMS_PS))})
-        scalers.update({"CPULT_scaler_uncern": (acctrig_sum/((trig_sum[hms_ps_ix]/HMS_PS)))*np.sqrt((1/(trig_sum[hms_ps_ix]/HMS_PS))+(1/acctrig_sum))})
+        print("Debug: in HMS")
+        print("Debug: hms_ps_ix", hms_ps_ix, " trig_sum[hms_ps_ix] ", trig_sum[hms_ps_ix], " HMS_PS", HMS_PS)
+        scalers.update({"CPULT_scaler": acctrig_sum/((trig_sum[2]/HMS_PS))})
+        scalers.update({"CPULT_scaler_uncern": (acctrig_sum/((trig_sum[2]/HMS_PS)))*np.sqrt((1/(trig_sum[2]/HMS_PS))+(1/acctrig_sum))}) # this has sum bug that trig_sum[3] isn't being filled, don't know why - heinricn 2024/04/12
         scalers.update({})
 
     print("\nPre-scale values...")

@@ -1,0 +1,16 @@
+VOLATILEPATH=/d8tb3/${USER}/volitile
+ANALYSISPATH=/home/${USER}/work/JLab
+HCANAPATH=/home/hcana
+REPLAYPATH=/home/${USER}/work/JLab/hallc_replay_lt
+UTILPATH=/home/${USER}/work/JLab/hallc_replay_lt/UTIL_PION
+PACKAGEPATH=/home/${USER}/.local/lib/python3.4/site-packages/ltsep
+OUTPATH=/home/${USER}/work/JLab/hallc_replay_lt/UTIL_PION/OUTPUT/Analysis
+ROOTPATH=/d8tb3/heinricn/ROOTfiles
+REPORTPATH=/d8tb3/heinricn/REPORT_OUTPUT/COIN
+CUTPATH=/home/${USER}/work/JLab/hallc_replay_lt/UTIL_PION/DB/CUTS
+PARAMPATH=/home/${USER}/work/JLab/hallc_replay_lt/UTIL_PION/DB/PARAM
+SCRIPTPATH=/home/${USER}/work/JLab/hallc_replay_lt/UTIL_PION/scripts
+SIMCPATH=/home/${USER}/work/JLab/simc_gfortran
+LTANAPATH=/home/${USER}/work/JLab/lt_analysis
+CACHEPATH=/d8tb3/${USER}/cache
+ANATYPE=Pion

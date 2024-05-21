@@ -298,15 +298,22 @@ def pid_cuts():
     f = plt.figure(figsize=(11.69,8.27))
     f.suptitle("Run %s" % runNum)
 
+    ax = f.add_subplot(331)
+    ax.hist(tree["T_coin_pEDTM_tdcTimeRaw"],bins=c.setbin(tree["T_coin_pEDTM_tdcTimeRaw"],10000,-1000,9000),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+    ax.hist(c.add_cut(tree["T_coin_pEDTM_tdcTimeRaw"],"c_edtm"),bins=c.setbin(tree["T_coin_pEDTM_tdcTimeRaw"],10000,-1000,9000),label='cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+    plt.yscale('log')
+    plt.xlabel('pEDTM_tdcTimeRaw')
+    plt.ylabel('Count')
+
     if (not HMS_PS == None) or (not COIN_PS == None):
-        ax = f.add_subplot(231)
+        ax = f.add_subplot(332)
         ax.hist(tree['H_cal_etotnorm'],bins=c.setbin(tree['H_cal_etotnorm'],200,0,2.0),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
         ax.hist(c.add_cut(tree['H_cal_etotnorm'],"h_cal_nt"),bins=c.setbin(tree['H_cal_etotnorm'],200,0,2.0),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('H_cal_etotnorm')
         plt.ylabel('Count')
 
-        ax = f.add_subplot(232)
+        ax = f.add_subplot(333)
         ax.hist(tree['H_cer_npeSum'],bins=c.setbin(tree['H_cer_npeSum'],200,0,60),label='no cut',histtype='step', alpha=0.5,stacked=True, fill=True)
         ax.hist(c.add_cut(tree['H_cer_npeSum'],"h_cer_nt"),bins=c.setbin(tree['H_cer_npeSum'],200,0,60),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
@@ -314,21 +321,21 @@ def pid_cuts():
         plt.ylabel('Count')
 
     if (not SHMS_PS == None) or (not COIN_PS == None):
-        ax = f.add_subplot(233)
+        ax = f.add_subplot(334)
         ax.hist(tree['P_cal_etotnorm'],bins=c.setbin(tree['P_cal_etotnorm'],200,0,4),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
         ax.hist(c.add_cut(tree['P_cal_etotnorm'],"p_cal_nt"),bins=c.setbin(tree['P_cal_etotnorm'],200,0,4),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('P_cal_etotnorm')
         plt.ylabel('Count')
 
-        ax = f.add_subplot(234)
+        ax = f.add_subplot(335)
         ax.hist(tree['P_hgcer_npeSum'],bins=c.setbin(tree['P_hgcer_npeSum'],200,0,200),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
         ax.hist(c.add_cut(tree['P_hgcer_npeSum'],"p_hgcer_nt"),bins=c.setbin(tree['P_hgcer_npeSum'],200,0,200),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('P_hgcer_npeSum')
         plt.ylabel('Count')
 
-        ax = f.add_subplot(235)
+        ax = f.add_subplot(336)
         ax.hist(tree['P_aero_npeSum'],bins=c.setbin(tree['P_aero_npeSum'],200,0,400),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
         ax.hist(c.add_cut(tree['P_aero_npeSum'],"p_aero_nt"),bins=c.setbin(tree['P_aero_npeSum'],200,0,400),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
@@ -336,7 +343,7 @@ def pid_cuts():
         plt.ylabel('Count')   
     
         if ANATYPE == "Pion":
-            ax = f.add_subplot(236)
+            ax = f.add_subplot(337)
             ax.hist(tree['P_ngcer_npeSum'],bins=c.setbin(tree['P_ngcer_npeSum'],200,0,250),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
             ax.hist(c.add_cut(tree['P_ngcer_npeSum'],"p_ngcer_nt"), bins=c.setbin(tree['P_ngcer_npeSum'],200,0,250),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
             plt.yscale('log')
@@ -584,7 +591,7 @@ def track_pid_cuts():
 
         ax = f.add_subplot(242)
         ax.hist2d(tree['H_cal_etottracknorm'],tree['H_gtr_beta'],bins=[c.setbin(tree['H_cal_etottracknorm'],400,0,4),c.setbin(tree['H_gtr_beta'],400,-2.0,2.0)],cmin=1,label='no cut',alpha=0.5)
-        ax.hist2d(c.add_cut(tree['H_cal_etottracknorm'],"H_%scut_lumi" % SHMS_PID),c.add_cut(tree['H_gtr_beta'],"h_%scut_lumi" % HMS_PID),bins=[c.setbin(tree['H_cal_etottracknorm'],400,0,4),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='cut', alpha=1.0)
+        ax.hist2d(c.add_cut(tree['H_cal_etottracknorm'],"h_%scut_lumi" % HMS_PID),c.add_cut(tree['H_gtr_beta'],"h_%scut_lumi" % HMS_PID),bins=[c.setbin(tree['H_cal_etottracknorm'],400,0,4),c.setbin(tree['P_gtr_beta'],400,-2.0,2.0)],cmin=1,label='cut', alpha=1.0)
         plt.xlabel('H_cal_etottracknorm')
         plt.ylabel('H_gtr_beta')
 
