@@ -344,9 +344,9 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
     #Nathan Heinrich - broke the current correction into 3 parts to reflect BCM calibrations
     # Corrections only valid when using BMC2
     if(int(runNum) > 14777):
-        scalers.update({"curr_corr" : ((charge_sum[bcm_ix]/time_sum[bcm_ix])-0.025)/(charge_sum[bcm_ix]/time_sum[bcm_ix])})
+        scalers.update({"curr_corr" : ((charge_sum[bcm_ix]/time_sum[bcm_ix])-0.033)/(charge_sum[bcm_ix]/time_sum[bcm_ix])})
     elif (int(runNum) > 12004):
-        scalers.update({"curr_corr" : ((charge_sum[bcm_ix]/time_sum[bcm_ix])-0.155)/(charge_sum[bcm_ix]/time_sum[bcm_ix])})
+        scalers.update({"curr_corr" : ((charge_sum[bcm_ix]/time_sum[bcm_ix])-0.14)/(charge_sum[bcm_ix]/time_sum[bcm_ix])})
     else: # I have not data for this period, so I'm leaving the offset zero.
         scalers.update({"curr_corr" : (0+(charge_sum[bcm_ix]/time_sum[bcm_ix]))/(charge_sum[bcm_ix]/time_sum[bcm_ix])})
     
