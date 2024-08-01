@@ -891,7 +891,8 @@ def main():
     # Replace zeros with NaN
     table.replace(0,np.nan,inplace=True)
     # Replace None with NaN
-    table.replace([None],np.nan,inplace=True)
+    with pd.option_context('future.no_silent_downcasting', True):
+        table.replace([None],np.nan,inplace=True)
 
     file_exists = os.path.isfile(out_f)
 
@@ -903,11 +904,18 @@ def main():
             print("Error: %s does not appear to exist." % out_f)
         # Checks if run number is alread in csv and replaces it if it is there
         run_index = out_data.index[out_data['run number'] == int(runNum)].tolist()
-        out_data.drop(run_index, inplace=True)
-        out_data = out_data.append(table,ignore_index=True)
-        with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
-            print("Output luminosity values\n",out_data)
-        out_data.to_csv(out_f, index = False, header=True, mode='w+',)
+        if run_index:
+            out_data.drop(run_index, inplace=True)
+        out_data = pd.concat([out_data, table], ignore_index=True)
+        with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+            print("Output luminosity values\n", out_data)
+        out_data.to_csv(out_f, index=False, header=True, mode='w+')
+#        run_index = out_data.index[out_data['run number'] == int(runNum)].tolist()
+#        out_data.drop(run_index, inplace=True)
+#        out_data = pd.concat([out_data, table], axis=1) #.append(table,ignore_index=True)
+#        with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
+#            print("Output luminosity values\n",out_data)
+#        out_data.to_csv(out_f, index = False, header=True, mode='w+',)
     else:
         with pd.option_context('display.max_rows', None, 'display.max_columns', None):  # more options can be specified also
             print("Output luminosity values\n",table)
