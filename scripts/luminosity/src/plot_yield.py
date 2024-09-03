@@ -180,15 +180,46 @@ def calc_yield():
         
 
 
-    
+    gwidth = 55*(10**(-9)) #gate width == 55 nanometers
     
         
     # Total livetime calculation
-    TLT = makeList("accp_edtm")/makeList("sent_edtm_PS")
-    yield_dict.update({"TLT" : TLT})
+    TLT_EDTM = makeList("accp_edtm")/makeList("sent_edtm_PS") #TLT with edtm 
+    
+    if makeList("HMS_PS").any() != 0:
+        yield_dict.update({"rate_HMS": makeList("HMSTRIG_scaler")/makeList("time")})
+    else:  yield_dict.update({"rate_HMS": 0})
+        
+    if makeList("SHMS_PS").any() != 0:
+        yield_dict.update({"rate_SHMS": makeList("SHMSTRIG_scaler")/makeList("time")})  
+    else: yield_dict.update({"rate_SHMS": 0})
+    
+    EDT2 = gwidth*(yield_dict["rate_HMS"] + yield_dict["rate_SHMS"]) # estimation of dead time using gate width and trigger rate
+    
+    
+    ELT2 = 1 - EDT2 
+    
+    TLT_ELT = ELT2*yield_dict["CPULT_phys"]
+    
+  
+ 
+    yield_dict.update({"TLT" : TLT_EDTM})
+    yield_dict.update({"TLT_ELT" : TLT_ELT})
+    
+    
+ 
+    
+    #yield_dict.update({"TLT" : TLT})
+    
     uncern_TLT = np.sqrt(makeList("accp_edtm")/makeList("sent_edtm_PS")**2+makeList("accp_edtm")**2/makeList("sent_edtm_PS")**4)
+   
+    uncern_TLT_ELT = TLT_ELT*np.sqrt((makeList("CPULT_scaler_uncern")/makeList("CPULT_scaler"))**2 + (ELT2*(1-ELT2))/(50*TLT_ELT**2))
+    
+    #uncern_TLT_ELT = np.sqrt((ELT2*(1-ELT2))/100)
+    
     #uncern_TLT = np.sqrt(makeList("sent_edtm_PS")*.95*.05)
     yield_dict.update({"uncern_TLT" : uncern_TLT})
+    yield_dict.update({"uncern_TLT_ELT" : uncern_TLT_ELT })
         
     yield_dict.update({"rate_SHMS" : makeList("SHMSTRIG_scaler")/makeList("time")})
     
@@ -222,18 +253,30 @@ def calc_yield():
             yield_SHMS_track.append(1)
             yield_SHMS_CPULT_notrack.append(1)
             yield_SHMS_CPULT_track.append(1)
-    else:        
-        yield_SHMS_scaler = (yield_dict["SHMS_scaler_accp"])/(makeList("charge")*makeList("curr_corr"))
-        yield_SHMS_notrack = (makeList("p_int_etotnorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"])
-        yield_SHMS_track = (makeList("p_int_etottracknorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*makeList("SHMS_track"))
-        yield_SHMS_CPULT_notrack = (makeList("p_int_etotnorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"])
-        yield_SHMS_CPULT_track = (makeList("p_int_etottracknorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"]*makeList("SHMS_track"))
-    
+    else:             
+            yield_SHMS_scaler = (yield_dict["SHMS_scaler_accp"])/(makeList("charge")*makeList("curr_corr"))
+            yield_SHMS_notrack = (makeList("p_int_etotnorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"])
+            yield_SHMS_track = (makeList("p_int_etottracknorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*makeList("SHMS_track"))
+            yield_SHMS_CPULT_notrack = (makeList("p_int_etotnorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"])
+            yield_SHMS_CPULT_track = (makeList("p_int_etottracknorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"]*makeList("SHMS_track"))
+            
+            
     yield_dict.update({"yield_SHMS_scaler" : yield_SHMS_scaler})
     yield_dict.update({"yield_SHMS_notrack" : yield_SHMS_notrack})
     yield_dict.update({"yield_SHMS_track" : yield_SHMS_track})
     yield_dict.update({"yield_SHMS_CPULT_notrack" : yield_SHMS_CPULT_notrack})
     yield_dict.update({"yield_SHMS_CPULT_track" : yield_SHMS_CPULT_track})
+
+    for i,curr in enumerate(yield_dict["current"]):
+        if abs((TLT_EDTM)[i] - (TLT_ELT)[i]) > ((abs(uncern_TLT_ELT)[i]) + abs((uncern_TLT)[i])) and TLT_ELT[i] > TLT_EDTM[i]:
+            
+            yield_dict["yield_SHMS_notrack"][i] = (makeList("p_int_etotnorm_evts")[i]*makeList("SHMS_PS")[i])/(makeList("charge")[i]*makeList("curr_corr")[i]*yield_dict["TLT_ELT"][i])
+            yield_dict["yield_SHMS_track"][i] = (makeList("p_int_etottracknorm_evts")[i]*makeList("SHMS_PS")[i])/(makeList("charge")[i]*makeList("curr_corr")[i]*yield_dict["TLT_ELT"][i]*makeList("SHMS_track")[i])
+        else: pass  
+
+
+
+
 
     yield_dict.update({"rate_HMS" : makeList("HMSTRIG_scaler")/makeList("time")})
     
@@ -270,12 +313,14 @@ def calc_yield():
             yield_HMS_CPULT_notrack.append(1)
             yield_HMS_CPULT_track.append(1)
     else:
-        yield_HMS_scaler = (yield_dict["HMS_scaler_accp"])/(makeList("charge")*makeList("curr_corr"))
-        yield_HMS_notrack = (makeList("h_int_etotnorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"])
-        yield_HMS_track = (makeList("h_int_etottracknorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*makeList("HMS_track"))
-        yield_HMS_CPULT_notrack = (makeList("h_int_etotnorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"])
-        yield_HMS_CPULT_track = (makeList("h_int_etottracknorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"]*makeList("HMS_track"))
-    
+
+            yield_HMS_scaler = (yield_dict["HMS_scaler_accp"])/(makeList("charge")*makeList("curr_corr"))
+            yield_HMS_notrack = (makeList("h_int_etotnorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"])
+            yield_HMS_track = (makeList("h_int_etottracknorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*makeList("HMS_track"))
+            yield_HMS_CPULT_notrack = (makeList("h_int_etotnorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"])
+            yield_HMS_CPULT_track = (makeList("h_int_etottracknorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"]*makeList("HMS_track"))
+
+        
         
     yield_dict.update({"yield_HMS_scaler" : yield_HMS_scaler})
     yield_dict.update({"yield_HMS_notrack" : yield_HMS_notrack})
@@ -283,7 +328,13 @@ def calc_yield():
     yield_dict.update({"yield_HMS_CPULT_notrack" : yield_HMS_CPULT_notrack})
     yield_dict.update({"yield_HMS_CPULT_track" : yield_HMS_CPULT_track})
 
-
+    for i,curr in enumerate(yield_dict["current"]):
+        if abs((TLT_EDTM)[i] - (TLT_ELT)[i]) > ((abs(uncern_TLT_ELT)[i]) + abs((uncern_TLT)[i])) and TLT_ELT[i] > TLT_EDTM[i] :
+            
+            yield_dict["yield_HMS_notrack"][i] = (makeList("h_int_etotnorm_evts")[i]*makeList("HMS_PS")[i])/(makeList("charge")[i]*makeList("curr_corr")[i]*yield_dict["TLT_ELT"][i])
+            yield_dict["yield_HMS_track"][i] = (makeList("h_int_etottracknorm_evts")[i]*makeList("HMS_PS")[i])/(makeList("charge")[i]*makeList("curr_corr")[i]*yield_dict["TLT_ELT"][i]*makeList("HMS_track")[i])
+        else: pass 
+    
     
     # define relative yield to the error weighted average of the absolute yield as opposed to the minimum current
     
@@ -1723,7 +1774,11 @@ def plot_yield():
     if "SHMS" in inp_name.upper():
         plt.xlabel('SHMS ElReal (PS2) Rate (kHz)', fontsize =12)
         plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["TLT"],yerr=yield_data["TLT"]*yield_data["uncern_TLT"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-        plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["TLT"],color='blue',zorder=4,label="_nolegend_")
+        plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["TLT"],color='red',zorder=4,label="_nolegend_") #TLT using EDTM
+        
+        plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["TLT_ELT"],yerr=yield_data["TLT"]*yield_data["uncern_TLT_ELT"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["TLT_ELT"],color='blue',zorder=4,label="_nolegend_") #TLT using CPULT
+       
         a_fit_SHMS_tltVSrate, cov_SHMS_tltVSrate = curve_fit(linfunc,yield_data["rate_SHMS"]/1000, yield_data["TLT"], sigma=yield_data["uncern_TLT"], absolute_sigma = True)
         inter_SHMS_tltVSrate = a_fit_SHMS_tltVSrate[0]
         slope_SHMS_tltVSrate = a_fit_SHMS_tltVSrate[1]
@@ -1736,7 +1791,12 @@ def plot_yield():
     else: 
         plt.xlabel('HMS ElReal (PS4) Rate (kHz)', fontsize =12)
         plt.errorbar(yield_data["rate_HMS"]/1000,yield_data["TLT"],yerr=yield_data["TLT"]*yield_data["uncern_TLT"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-        plt.scatter(yield_data["rate_HMS"]/1000,yield_data["TLT"],color='blue',zorder=4,label="_nolegend_")
+        plt.scatter(yield_data["rate_HMS"]/1000,yield_data["TLT"],color='red',zorder=4,label="_nolegend_")
+       
+        plt.errorbar(yield_data["rate_HMS"]/1000,yield_data["TLT_ELT"],yerr=yield_data["TLT"]*yield_data["uncern_TLT_ELT"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["rate_HMS"]/1000,yield_data["TLT_ELT"],color='blue',zorder=4,label="_nolegend_")
+       
+       
         a_fit_HMS_tltVSrate, cov_HMS_tltVSrate = curve_fit(linfunc,yield_data["rate_HMS"]/1000, yield_data["TLT"], sigma=yield_data["uncern_TLT"], absolute_sigma = True)
         inter_HMS_tltVSrate = a_fit_HMS_tltVSrate[0]
         slope_HMS_tltVSrate = a_fit_HMS_tltVSrate[1]
@@ -1900,6 +1960,7 @@ def debug():
    # print("Run numbers: ", data["run number"].sort_values())
    # print("HMS scaler ratio",data["HMS_scaler_accp"]/data["HMSTRIG_scaler"])
    # print("SHMS scaler ratio",data["SHMS_scaler_accp"]/data["SHMSTRIG_scaler"])
+
     print("HMS Cal etotnorm\n",data[["h_int_etotnorm_evts","current"]])
     print("SHMS Cal etotnorm\n",data[["p_int_etotnorm_evts","current"]])
     print("HMS yield no track\n",data["yield_HMS_notrack"])
@@ -1915,6 +1976,10 @@ def debug():
     print("Average HMS",np.average(data["yieldRel_HMS_scaler"]))
     print("Average SHMS",np.average(data["yieldRel_SHMS_scaler"]))
     print("Average I",np.average(data["current"]))
+    
+   
+    
+    
 
 ################################################################################################################################################
 
