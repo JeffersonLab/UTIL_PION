@@ -10,14 +10,14 @@
 #
 # Copyright (c) trottar
 #
-import uproot as up
-import numpy as np
-import pandas as pd
-import scipy
-import scipy.integrate as integrate
-import matplotlib
+import uproot as up # type: ignore
+import numpy as np # type: ignore
+import pandas as pd # type: ignore
+import scipy # type: ignore
+import scipy.integrate as integrate # type: ignore
+import matplotlib # type: ignore
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt # type: ignore
 import sys, math, os, subprocess
 
 ################################################################################################################################################
@@ -35,7 +35,7 @@ ltsep package import and pathing definitions
 '''
 
 # Import package for cuts
-from ltsep import Root
+from ltsep import Root # type: ignore
 
 lt=Root(os.path.realpath(__file__))
 
@@ -52,8 +52,10 @@ ANATYPE=lt.ANATYPE
 Grab prescale values and tracking efficiencies from report file
 '''
 
+
+
 # Open report file to grab prescale values and tracking efficiency
-report = UTILPATH+"/REPORT_OUTPUT/Analysis/Lumi/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
+report = UTILPATH+"/REPORT_OUTPUT/Analysis/Lumi/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent) 
 f = open(report)
 psList = ['PLT_Ps1_factor','PLT_Ps2_factor','PLT_Ps3_factor','PLT_Ps4_factor','PLT_Ps5_factor','PLT_Ps6_factor']
     
@@ -110,7 +112,7 @@ try:
 except NameError:
     ps5=-1
 try:
-    ps6=int(ps6_tmp)
+    ps6=int(ps6_tmp)      
 except NameError:
     ps6=-1
 SHMS_track_eff = float(SHMS_track_info[0]) # Also define below, I'll probably use the report for consistency's sake
@@ -119,7 +121,7 @@ HMS_track_eff = float(HMS_track_info[0]) # Also define below, I'll probably use 
 HMS_track_uncern = float(HMS_track_info[1])
 
 # Convert the prescale input values to their actual DAQ values
-for i,index in enumerate(psActual):
+for i,index in enumerate(psActual): # changed from enumerate in psActual to psValue and it seems to spit out the actual DAQ PS values
     #psValue
     if (index == ps1) :
         if(index == -1):
@@ -150,7 +152,41 @@ for i,index in enumerate(psActual):
         if(index == -1):
             PS6 = 0
         else:
-            PS6 = psActual[i]            
+            PS6 = psActual[i]    
+            
+            
+for i,index in enumerate(psValue): # changed from enumerate in psActual to psValue and it seems to spit out the actual DAQ PS values
+    #psValue
+    if (index == ps1) :
+        if(index == -1):
+            PS1 = 0
+        else:
+            PS1 = psActual[i]
+    if (index == ps2) :
+        if(index == -1):
+            PS2 = 0
+        else:
+            PS2 = psActual[i]            
+    if (index == ps3) :
+        if(index == -1):
+            PS3 = 0
+        else:
+            PS3 = psActual[i]
+    if (index == ps4) :
+        if(index == -1):
+            PS4 = 0
+        else:
+            PS4 = psActual[i]            
+    if (index == ps5) :
+        if(index == -1):
+            PS5 = 0
+        else:
+            PS5 = psActual[i]
+    if (index == ps6) :
+        if(index == -1):
+            PS6 = 0
+        else:
+            PS6 = psActual[i]         
 f.close()
 
 ################################################################################################################################################
@@ -219,12 +255,12 @@ else:
         cuts = ["p_cal_nt","p_hgcer_nt","p_ngcer_nt","p_aero_nt","p_cal","p_hgcer","p_ngcer","p_aero","p_ngcer_nt","p_%scut_lumi_nt" % SHMS_PID,"p_%scut_lumi" % SHMS_PID,"c_noedtm","c_edtm","c_edtmSHMS","c_curr","p_%strack_lumi_before" % SHMS_PID,"p_%strack_lumi_after" % SHMS_PID]
     else: # only HMS
         cuts = ["h_cal_nt","h_cer_nt","h_cal","h_cer","h_%scut_lumi_nt" % HMS_PID,"h_%scut_lumi" % HMS_PID,"c_noedtm","c_edtm","c_edtmHMS","c_curr","h_%strack_lumi_before" % HMS_PID,"h_%strack_lumi_after" % HMS_PID]
-
+            #^^^^^^^^ these are the used cuts for HMS only runs
 for ps in PS_names:
     if ps == "PS1" or ps == "PS2":
         cuts+=["c_ptrigSHMS%s" % ps.replace("PS","")]        
     if ps == "PS3" or ps == "PS4":
-        cuts+=["c_ptrigHMS%s" % ps.replace("PS","")]
+        cuts+=["c_ptrigHMS%s" % ps.replace("PS","")] # <<<<<<------- c_ptrigHMS4 is printed for run 16728
     if ps == "PS5" or ps == "PS6":
         cuts+=["c_ptrigCOIN%s" % ps.replace("PS","")]    
 
@@ -797,10 +833,10 @@ def analysis():
         track_info = {
     
             "tot_events" : len(EventType),
-            "h_int_etotnorm_evts" : scipy.integrate.simps(h_etotnorm),
-            "p_int_etotnorm_evts" : scipy.integrate.simps(p_etotnorm),
-            "h_int_etottracknorm_evts" : scipy.integrate.simps(h_etottracknorm),
-            "p_int_etottracknorm_evts" : scipy.integrate.simps(p_etottracknorm),                
+            "h_int_etotnorm_evts" : scipy.integrate.simpson(h_etotnorm),
+            "p_int_etotnorm_evts" : scipy.integrate.simpson(p_etotnorm),
+            "h_int_etottracknorm_evts" : scipy.integrate.simpson(h_etottracknorm),
+            "p_int_etottracknorm_evts" : scipy.integrate.simpson(p_etottracknorm),                
             "accp_edtm" : (len(EDTM)),
             "paccp_edtm" : (len(EDTM_SHMS)),
             "haccp_edtm" : (len(EDTM_HMS)),
