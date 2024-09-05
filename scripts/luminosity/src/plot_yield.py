@@ -59,6 +59,8 @@ target = data_path[0]
 inp_f = data_path[1]
 out_f = data_path[2]
 
+print("Input_file = " + inp_f)
+
 #assume both HMS and SHMS data in file
 NO_HMS = False
 NO_SHMS = False
@@ -72,6 +74,7 @@ try:
     lumi_data = pd.read_csv(inp_f)
     print(inp_f)
     print(lumi_data.keys())
+    print(lumi_data["run number"])
 except IOError:
     print("Error: %s does not appear to exist." % inp_f)
     sys.exit(0)
@@ -94,10 +97,6 @@ def removeRun(runNum):
         print("Removing run {} from lumi_data...".format(runNum))
         lumi_data = lumi_data[lumi_data['run number'] != runNum].reset_index(drop=True)
         print("After",lumi_data["run number"].values)
-    
-# Remove runs, removeRun(runNumber)
-# Carbon
-# removeRun(5301) # 10p6 l2, bad TLT (<20%)
 
 
 ################################################################################################################################################
@@ -128,13 +127,6 @@ def calc_yield():
     # Create dictionary for calculations that were not calculated in previous scripts.
     yield_dict = {
         "current" : makeList("charge")/makeList("time"),
-        
-       
-        
-        
-        
-        
-    
         
         "rate_HMS" : makeList("HMSTRIG_scaler")/makeList("time"),
         "rate_SHMS" : makeList("SHMSTRIG_scaler")/makeList("time"),
@@ -356,9 +348,6 @@ def calc_yield():
     
     
     
-    
-    
-    
     if makeList("HMS_PS").any() >0.5:
         uncern_yield_HMS_scaler = np.sqrt((yield_dict["yield_HMS_scaler"]**2)*((yield_dict["uncern_HMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2))
         uncern_yield_HMS_track = np.sqrt(abs(yield_dict["yield_HMS_track"]**2)*((yield_dict["uncern_HMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2))
@@ -407,10 +396,6 @@ def calc_yield():
     avg_yield_HMS_cpu_ntr = tot_hms_cpu_ntr/tweight_hms_cpu_ntr
     
     
-    
-    
-  
-  
     tot_shms_scaler = 0  #the total of each yield type, weighted by the reciprocal of their respective error
     tot_shms_tr = 0
     tot_shms_ntr = 0
