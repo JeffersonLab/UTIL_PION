@@ -59,8 +59,6 @@ target = data_path[0]
 inp_f = data_path[1]
 out_f = data_path[2]
 
-print("Input_file = " + inp_f)
-
 #assume both HMS and SHMS data in file
 NO_HMS = False
 NO_SHMS = False
@@ -74,7 +72,7 @@ try:
     lumi_data = pd.read_csv(inp_f)
     print(inp_f)
     print(lumi_data.keys())
-    print(lumi_data["run number"])
+    print(lumi_data["tot_events"])
 except IOError:
     print("Error: %s does not appear to exist." % inp_f)
     sys.exit(0)
