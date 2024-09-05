@@ -160,23 +160,27 @@ def calc_yield():
         "uncern_SHMS_evts_track" : np.sqrt(abs(makeList("p_int_etottracknorm_evts")))/makeList("p_int_etottracknorm_evts"),
     }            
     
+    # defult case, setting to 2021 for now - NH
+    slope = 5513.79
+    uncern_slope = 7.6
+    intercept = 250429
+    uncern_intercept = 271
     #2022 data or 2021 data
     if "2022" in inp_name:
         slope = 5542.0
         uncern_slope = 11.5
         intercept = 250029
         uncern_intercept = 270
-        uncern_charge = np.sqrt(((((makeList("charge")**2)*((uncern_slope**2))+ (makeList("time")**2)+uncern_intercept**2))/slope**2))
-        yield_dict.update({"uncern_charge" : uncern_charge})
     else: 
         if "2021" in inp_name:
             slope = 5513.79
             uncern_slope = 7.6
             intercept = 250429
             uncern_intercept = 271
-            uncern_charge = np.sqrt(((((makeList("charge")**2)*((uncern_slope**2))+ (makeList("time")**2)+uncern_intercept**2))/slope**2))
-            yield_dict.update({"uncern_charge" : uncern_charge})
         else: pass
+            
+    uncern_charge = np.sqrt(((((makeList("charge")**2)*((uncern_slope**2))+ (makeList("time")**2)+uncern_intercept**2))/slope**2))
+    yield_dict.update({"uncern_charge" : uncern_charge})
         
 
 
