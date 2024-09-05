@@ -528,14 +528,15 @@ def calc_yield():
                 min_yield_HMS_CPULT_track = 1
                 
     for i,curr in enumerate(yield_dict["current"]):
-        if curr == min_curr_shms:
-            min_yield_SHMS_scaler = yield_dict["yield_SHMS_scaler"][i]
-            min_yield_SHMS_notrack = yield_dict["yield_SHMS_notrack"][i]
-            min_yield_SHMS_track = yield_dict["yield_SHMS_track"][i]
-        if curr == min_curr_hms:
-            min_yield_HMS_scaler = yield_dict["yield_HMS_scaler"][i]
-            min_yield_HMS_notrack = yield_dict["yield_HMS_notrack"][i]
-            min_yield_HMS_track = yield_dict["yield_HMS_track"][i]
+        if (curr == min_curr_shms or curr == min_curr_hms):
+            if makeList("SHMS_PS")[i] > 0.0:
+                min_yield_SHMS_scaler = yield_dict["yield_SHMS_scaler"][i]
+                min_yield_SHMS_notrack = yield_dict["yield_SHMS_notrack"][i]
+                min_yield_SHMS_track = yield_dict["yield_SHMS_track"][i]
+            if makeList("HMS_PS")[i] > 0.0:
+                min_yield_HMS_scaler = yield_dict["yield_HMS_scaler"][i]
+                min_yield_HMS_notrack = yield_dict["yield_HMS_notrack"][i]
+                min_yield_HMS_track = yield_dict["yield_HMS_track"][i]
     yield_dict.update({"min_yield_HMS_scaler" : min_yield_HMS_scaler})                
     yield_dict.update({"min_yield_HMS_notrack" : min_yield_HMS_notrack})
     yield_dict.update({"min_yield_HMS_track" : min_yield_HMS_track})
