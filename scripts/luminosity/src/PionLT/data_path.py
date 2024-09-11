@@ -84,7 +84,17 @@ def get_file(inp_name,SCRIPTPATH):
                 inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi6-4/HMS/lumi_data_Carbon.csv"
                 out_f = SCRIPTPATH+"/luminosity/OUTPUTS/Lumi6-4/HMS/yield_data_Carbon.csv"
                 print("\nGrabbing input...\n\n%s" % str(inp_f))
-        
+    elif "SIDIS" in inp_name.upper():
+        if "1" in inp_name.upper():
+            target = "LH2"
+            inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/sidis/lumi_data_sidis1.csv"
+            out_f = SCRIPTPATH+"/luminosity/OUTPUTS/sidis/yield_data_sidis1.csv"
+            print("\nGrabbing input...\n\n%s" % str(inp_f))
+        if "2" in inp_name.upper():
+            target = "LH2"
+            inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/sidis/lumi_data_sidis2.csv"
+            out_f = SCRIPTPATH+"/luminosity/OUTPUTS/sidis/yield_data_sidis2.csv"
+            print("\nGrabbing input...\n\n%s" % str(inp_f))
     else:
         target = "carbon"
         inp_f = SCRIPTPATH+"/luminosity/OUTPUTS/lumi_data.csv"
