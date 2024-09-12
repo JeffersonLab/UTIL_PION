@@ -53,9 +53,9 @@ c_eptrack_lumi_after = current.bcm2+track.p_track_after+track.h_track_after+misc
 # PID cuts #
 ############
 # coin no-track
-c_nt_lumi = current.bcm2++misc.c_noedtm+coin_time.Coin_Pion_Prompt+misc.starttime
-c_epi_nt_lumi = current.bcm2++misc.c_noedtm+coin_time.Coin_Pion_Prompt+misc.starttime+pid.p_picut+pid.h_ecut
-c_ep_nt_lumi = current.bcm2++misc.c_noedtm+coin_time.Coin_Pion_Prompt+misc.starttime+pid.p_pcut+pid.h_ecut
+c_nt_lumi = current.bcm2+misc.c_noedtm+coin_time.Coin_Pion_Prompt+misc.starttime
+c_epi_nt_lumi = current.bcm2+misc.c_noedtm+coin_time.Coin_Pion_Prompt+misc.starttime+pid.p_picut+pid.h_ecut
+c_ep_nt_lumi = current.bcm2+misc.c_noedtm+coin_time.Coin_Pion_Prompt+misc.starttime+pid.p_pcut+pid.h_ecut
 # no-track cut
 h_ecut_lumi_nt = current.bcm2+pid.h_ecut_nt+misc.h_starttime
 h_picut_lumi_nt = current.bcm2+pid.h_picut_nt+misc.h_starttime
