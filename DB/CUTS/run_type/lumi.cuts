@@ -38,9 +38,24 @@ p_picut_lumi_eff = current.bcm2+accept.delta+pid.p_picut-pid.p_picut.P_gtr_beta+
 p_kcut_lumi_eff = current.bcm2+accept.delta+pid.p_kcut-pid.p_kcut.P_gtr_beta+misc.p_starttime
 p_pcut_lumi_eff = current.bcm2+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta+misc.p_starttime
 p_hadcut_lumi_eff = current.bcm2+accept.delta+pid.p_hadcut-pid.p_hadcut.P_gtr_beta+misc.p_starttime
+###################
+# COIN track cuts #
+###################
+# before
+c_track_lumi_before = current.bcm2+track.p_track_before+track.h_track_before+misc.c_noedtm+coin_time.Coin_Pion_Prompt+misc.starttime
+c_epitrack_lumi_before = current.bcm2+track.p_track_before+track.h_track_before+misc.c_noedtm+coin_time.Coin_Pion_Prompt+misc.starttime+pid.p_picut+pid.h_ecut
+c_eptrack_lumi_before = current.bcm2+track.p_track_before+track.h_track_before+misc.c_noedtm+coin_time.Coin_Pion_Prompt+misc.starttime+pid.p_pcut+pid.h_ecut
+# after
+c_track_lumi_after = current.bcm2+track.p_track_after+track.h_track_after+misc.c_noedtm+coin_time.Coin_Pion_Prompt+misc.starttime
+c_epitrack_lumi_after = current.bcm2+track.p_track_after+track.h_track_after+misc.c_noedtm+coin_time.Coin_Pion_Prompt+misc.starttime+pid.p_picut+pid.h_ecut
+c_eptrack_lumi_after = current.bcm2+track.p_track_after+track.h_track_after+misc.c_noedtm+coin_time.Coin_Pion_Prompt+misc.starttime+pid.p_pcut+pid.h_ecut
 ############
 # PID cuts #
 ############
+# coin no-track
+c_nt_lumi = current.bcm2++misc.c_noedtm+coin_time.Coin_Pion_Prompt+misc.starttime
+c_epi_nt_lumi = current.bcm2++misc.c_noedtm+coin_time.Coin_Pion_Prompt+misc.starttime+pid.p_picut+pid.h_ecut
+c_ep_nt_lumi = current.bcm2++misc.c_noedtm+coin_time.Coin_Pion_Prompt+misc.starttime+pid.p_pcut+pid.h_ecut
 # no-track cut
 h_ecut_lumi_nt = current.bcm2+pid.h_ecut_nt+misc.h_starttime
 h_picut_lumi_nt = current.bcm2+pid.h_picut_nt+misc.h_starttime
