@@ -1,5 +1,5 @@
 # Pion coin time windows, Stephen version
-Coin_Pion_Prompt = {"CTime_ePiCoinTime_ROC1" : (CTime_ePiCoinTime_ROC1 > ((CT.Pion_Prompt_Peak)-((CT.Bunch_Spacing)/2.0)-(CT.Coin_Offset))) & (CTime_ePiCoinTime_ROC1 < ((CT.Pion_Prompt_Peak)+((CT.Bunch_Spacing)/2.0)+(CT.Coin_Offset)))}
+Coin_Pion_Prompt = {"CTime_ePiCoinTime_ROC1" : ((CTime_ePiCoinTime_ROC1 > ((CT.Pion_Prompt_Peak)-((CT.Bunch_Spacing)/2.0)-(CT.Coin_Offset))) & (CTime_ePiCoinTime_ROC1 < ((CT.Pion_Prompt_Peak)+((CT.Bunch_Spacing)/2.0)+(CT.Coin_Offset))))}
 Coin_Pion_Rand = {"CTime_ePiCoinTime_ROC1" : (((CTime_ePiCoinTime_ROC1 > ((CT.Pion_Prompt_Peak)-((CT.Bunch_Spacing)/2.0)-(CT.Coin_Offset)-((CT.nSkip)*(CT.Bunch_Spacing))-(((CT.nWindows)/2.0)*(CT.Bunch_Spacing)))) & (CTime_ePiCoinTime_ROC1 < ((CT.Pion_Prompt_Peak)-((CT.Bunch_Spacing)/2.0)-(CT.Coin_Offset)-((CT.nSkip)*(CT.Bunch_Spacing)))))|((CTime_ePiCoinTime_ROC1 > ((CT.Pion_Prompt_Peak)+((CT.Bunch_Spacing)/2.0)+(CT.Coin_Offset)+((CT.nSkip)*(CT.Bunch_Spacing)))) & (CTime_ePiCoinTime_ROC1 < ((CT.Pion_Prompt_Peak)+((CT.Bunch_Spacing)/2.0)+(CT.Coin_Offset)+((CT.nSkip)*(CT.Bunch_Spacing))+(((CT.nWindows)/2.0)*(CT.Bunch_Spacing))))))}
 #
 # Kaon coin time windows, Stephen version
