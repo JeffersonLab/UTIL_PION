@@ -401,6 +401,23 @@ def pid_cuts():
             plt.yscale('log')
             plt.xlabel('P_ngcer_npeSum')
             plt.ylabel('Count')
+    
+    if (not COIN_PS == None):
+        ax = f.add_subplot(338)
+        ax.hist(P_ngcer_npeSum,bins=c.setbin(CTime_ePiCoinTime_ROC1,600,-250,250),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"c_epi_nt_lumi"), bins=c.setbin(CTime_ePiCoinTime_ROC1,600,-250,250),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        plt.yscale('log')
+        plt.xlabel('CTime_ePiCoinTime_ROC1 + No Track Cut')
+        plt.ylabel('Count')
+#            c_noTrack = c.add_cut(tree["CTime_ePiCoinTime_ROC1"], "c_epi_nt_lumi")
+        
+        ax = f.add_subplot(339)
+        ax.hist(P_ngcer_npeSum,bins=c.setbin(CTime_ePiCoinTime_ROC1,600,-250,250),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"c_epitrack_lumi_after"), bins=c.setbin(CTime_ePiCoinTime_ROC1,600,-250,250),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        plt.yscale('log')
+        plt.xlabel('CTime_ePiCoinTime_ROC1 + Track Cut')
+        plt.ylabel('Count')
+#       c_Track = c.add_cut(tree["CTime_ePiCoinTime_ROC1"], "c_epitrack_lumi_after")
 
     plt.legend(loc="upper right")
 
@@ -838,8 +855,8 @@ def analysis():
             "tot_events" : len(EventType),
             "h_int_etotnorm_evts" : scipy.integrate.simpson(h_etotnorm),
             "p_int_etotnorm_evts" : scipy.integrate.simpson(p_etotnorm),
-            "h_int_etottracknorm_evts" : scipy.integrate.simpson(c_noTrack),
-            "p_int_etottracknorm_evts" : scipy.integrate.simpson(c_Track),
+            "h_int_etottracknorm_evts" : scipy.integrate.simpson(h_etottracknorm),
+            "p_int_etottracknorm_evts" : scipy.integrate.simpson(p_etottracknorm),
             "c_int_noTrack_events" : scipy.integrate.simpson(c_noTrack),
             "c_int_Track_events" : scipy.integrate.simpson(c_Track),
             "accp_edtm" : (len(EDTM)),
