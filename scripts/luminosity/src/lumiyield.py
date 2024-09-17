@@ -827,8 +827,8 @@ def analysis():
         p_etottracknorm = c.add_cut(tree["P_cal_etottracknorm"],"p_%scut_lumi" % SHMS_PID)    
     
     if (not COIN_PS == None):
-        c_noTrack = c.add_cut(tree["P_cal_etotnorm"], "c_epi_nt_lumi")
-        c_Track = c.add_cut(tree["p_cal_etottracknorm"], "c_epitrack_lumi_after")
+        c_noTrack = c.add_cut(tree["CTime_ePiCoinTime_ROC1"], "c_epi_nt_lumi")
+        c_Track = c.add_cut(tree["CTime_ePiCoinTime_ROC1"], "c_epitrack_lumi_after")
     
     # Creates a dictionary for the calculated luminosity values 
     # Seperated this into cases where PS are on
