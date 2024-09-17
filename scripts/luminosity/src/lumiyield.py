@@ -37,7 +37,7 @@ ltsep package import and pathing definitions
 # Import package for cuts
 from ltsep import Root # type: ignore
 
-lt=Root(os.path.realpath(__file__))
+lt=Root(os.path.realpath(__file__), DEBUG=True)
 
 # Add this to all files for more dynamic pathing
 USER=lt.USER # Grab user info for file finding
@@ -341,7 +341,7 @@ def pid_cuts():
     P_gtr_beta = np.asarray(tree['P_gtr_beta'])
     
     T_coin_pEDTM_tdcTimeRaw = np.asarray(tree["T_coin_pEDTM_tdcTimeRaw"])
-
+    CTime_ePiCoinTime_ROC1 = np.asarray(tree["CTime_ePiCoinTime_ROC1"])
     
     ###########################
     ######## 1D plots  ########
@@ -503,7 +503,7 @@ def track_pid_cuts():
     P_gtr_beta = np.asarray(tree['P_gtr_beta'])
     
     T_coin_pEDTM_tdcTimeRaw = np.asarray(tree["T_coin_pEDTM_tdcTimeRaw"])
-    
+    CTime_ePiCoinTime_ROC1 = np.asarray(tree["CTime_ePiCoinTime_ROC1"])
     
     ###########################
     ######## 1D plots  ########
