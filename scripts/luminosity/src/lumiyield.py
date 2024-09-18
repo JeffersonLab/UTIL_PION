@@ -404,16 +404,16 @@ def pid_cuts():
     
     if (not COIN_PS == None):
         ax = f.add_subplot(338)
-        ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"h_ecut_lumi_nt"),bins=c.setbin(CTime_ePiCoinTime_ROC1,600,-250,250),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"c_epi_nt_lumi"), bins=c.setbin(CTime_ePiCoinTime_ROC1,600,-250,250),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"h_ecut_lumi_nt"),bins=c.setbin(CTime_ePiCoinTime_ROC1,1200,-250,250),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"c_epi_nt_lumi"), bins=c.setbin(CTime_ePiCoinTime_ROC1,1200,-250,250),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('CTime_ePiCoinTime_ROC1 + No Track Cut')
         plt.ylabel('Count')
 #            c_noTrack = c.add_cut(tree["CTime_ePiCoinTime_ROC1"], "c_epi_nt_lumi")
         
         ax = f.add_subplot(339)
-        ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"h_ecut_lumi"),bins=c.setbin(CTime_ePiCoinTime_ROC1,100,-10,10),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"c_epitrack_lumi_after"), bins=c.setbin(CTime_ePiCoinTime_ROC1,100,-10,10),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"h_ecut_lumi"),bins=c.setbin(CTime_ePiCoinTime_ROC1,400,50,150),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"c_epitrack_lumi_after"), bins=c.setbin(CTime_ePiCoinTime_ROC1,400,50,150),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('CTime_ePiCoinTime_ROC1 + Track Cut')
         plt.ylabel('Count')
