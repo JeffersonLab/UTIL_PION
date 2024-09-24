@@ -207,7 +207,7 @@ def calc_yield():
     #yield_dict.update({"TLT" : TLT})
     
     uncern_TLT = np.sqrt(makeList("accp_edtm")/makeList("sent_edtm_PS")**2+makeList("accp_edtm")**2/makeList("sent_edtm_PS")**4)
-    uncern_TLT_ELT = TLT_ELT*np.sqrt((makeList("CPULT_scaler_uncern")/makeList("CPULT_scaler"))**2 + (uncer_gwidth/gwidth)**2)
+    uncern_TLT_ELT = TLT_ELT*np.sqrt((makeList("CPULT_scaler_uncern")/makeList("CPULT_scaler"))**2 + (uncern_gwidth/gwidth)**2)
     
     #uncern_TLT_ELT = np.sqrt((ELT2*(1-ELT2))/100)
     #uncern_TLT = np.sqrt(makeList("sent_edtm_PS")*.95*.05)
