@@ -429,16 +429,19 @@ def calc_yield():
                 min_yield_HMS_scaler = yield_dict["yield_HMS_scaler"][i]
                 min_yield_HMS_notrack = yield_dict["yield_HMS_notrack"][i]
                 min_yield_HMS_track = yield_dict["yield_HMS_track"][i]
-            print("run a min current")
+            #print("run a min current")
             min_yield_COIN_scaler = yield_dict["yield_COIN_scaler"][i]
-            min_yield_COIN_scaler = yield_dict["yield_COIN_notrack"][i]
-            min_yield_COIN_scaler = yield_dict["yield_COIN_track"][i]
+            min_yield_COIN_notrack = yield_dict["yield_COIN_notrack"][i]
+            min_yield_COIN_track = yield_dict["yield_COIN_track"][i]
     yield_dict.update({"min_yield_HMS_scaler" : min_yield_HMS_scaler})                
     yield_dict.update({"min_yield_HMS_notrack" : min_yield_HMS_notrack})
     yield_dict.update({"min_yield_HMS_track" : min_yield_HMS_track})
     yield_dict.update({"min_yield_SHMS_scaler" : min_yield_SHMS_scaler})                
     yield_dict.update({"min_yield_SHMS_notrack" : min_yield_SHMS_notrack})
     yield_dict.update({"min_yield_SHMS_track" : min_yield_SHMS_track})
+    yield_dict.update({"min_yield_COIN_scaler": min_yield_COIN_scaler})
+    yield_dict.update({"min_yield_COIN_notrack": min_yield_COIN_notrack})
+    yield_dict.update({"min_yield_COIN_track": min_yield_COIN_track})
 
     # Define relative yield relative to minimum current
     for i,curr in enumerate(yield_dict["current"]):
