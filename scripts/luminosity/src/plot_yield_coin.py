@@ -908,7 +908,7 @@ def plot_yield():
     plt.errorbar(yield_data["current"],yield_data["yieldRel_COIN_notrack"],yerr=yield_data["yieldRel_COIN_notrack"]*yield_data["uncern_yieldRel_COIN_notrack"],color='black',linestyle='None',zorder=3,label="_nolegend_")
     plt.scatter(yield_data["current"],yield_data["yieldRel_COIN_notrack"],color='blue',zorder=4,label="_nolegend_")
     
-    plt.ylabel('Rel. Yield no track'), fontsize=16)
+    plt.ylabel('Rel. Yield no track', fontsize=16)
     plt.xlabel('Current [uA]', fontsize =16)
     plt.legend(prop={'size' :7})    
     if target == 'LD2' :
