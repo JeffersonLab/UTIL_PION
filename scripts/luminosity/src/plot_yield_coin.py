@@ -152,7 +152,7 @@ def calc_yield():
 
         "uncern_SHMS_evts_track" : np.sqrt(abs(makeList("p_int_etottracknorm_evts")))/makeList("p_int_etottracknorm_evts"),
         
-        "uncern_COIN_evts_notrack" : np.sqrt(abs(makeList("c_int_noTrack_events")))/makeList("c_int_noTrack_events")
+        "uncern_COIN_evts_notrack" : np.sqrt(abs(makeList("c_int_noTrack_events")))/makeList("c_int_noTrack_events"),
         
         "uncern_COIN_evts_track" : np.sqrt(abs(makeList("c_int_Track_events")))/makeList("c_int_Track_events")
     }            
