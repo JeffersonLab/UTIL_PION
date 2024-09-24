@@ -429,6 +429,7 @@ def calc_yield():
                 min_yield_HMS_scaler = yield_dict["yield_HMS_scaler"][i]
                 min_yield_HMS_notrack = yield_dict["yield_HMS_notrack"][i]
                 min_yield_HMS_track = yield_dict["yield_HMS_track"][i]
+            print("run a min current")
             min_yield_COIN_scaler = yield_dict["yield_COIN_scaler"][i]
             min_yield_COIN_scaler = yield_dict["yield_COIN_notrack"][i]
             min_yield_COIN_scaler = yield_dict["yield_COIN_track"][i]
