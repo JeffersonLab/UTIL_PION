@@ -951,6 +951,7 @@ def plot_yield():
     ##              Rate Depedance Plots        #############################################################################################################
     #########################################################################################################################################################
     
+    RatePlotFontSize = 12
     raterelYieldPlot = plt.figure(figsize=(12,8))
 
     if(not NO_HMS):
@@ -986,15 +987,15 @@ def plot_yield():
         #poly_HMS_scalerVSrate = np.poly1d(coeff_HMS_scalerVSrate)
         #plt.plot(yield_data["rate_HMS"]/1000, poly_HMS_scalerVSrate(yield_data["yieldRel_HMS_scaler"]), color='green', label='Line of Best Fit')
        
-        plt.ylabel('Rel. Yield %s' % (str(HMSscaler)), fontsize=16)
-        plt.xlabel('HMS %s Rate [kHz]' % (str(HMSscaler)), fontsize =16)
+        plt.ylabel('Rel. Yield %s' % (str(HMSscaler)), fontsize=RatePlotFontSize)
+        plt.xlabel('HMS %s Rate [kHz]' % (str(HMSscaler)), fontsize=RatePlotFontSize)
         plt.legend(prop={'size' :7})
         if target == 'LD2' :
-            plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+            plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize=RatePlotFontSize)
         elif target == 'LH2' :
-            plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+            plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize=RatePlotFontSize)
         else :
-            plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+            plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize=RatePlotFontSize)
     
         #HMS plot no track
         plt.subplot(2,3,2)    
@@ -1023,15 +1024,15 @@ def plot_yield():
     
         
         
-        plt.ylabel('Rel. Yield no track', fontsize=16)
-        plt.xlabel('HMS %s Rate [kHz]' % (str(HMSscaler)), fontsize =16)
+        plt.ylabel('Rel. Yield no track', fontsize=RatePlotFontSize)
+        plt.xlabel('HMS %s Rate [kHz]' % (str(HMSscaler)), fontsize=RatePlotFontSize)
         plt.legend(prop={'size' :7})
         if target == 'LD2' :
-            plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+            plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize=RatePlotFontSize)
         elif target == 'LH2' :
-            plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+            plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize=RatePlotFontSize)
         else :
-            plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+            plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize=RatePlotFontSize)
     
         #HMS plot track
         plt.subplot(2,3,3)    
@@ -1058,15 +1059,15 @@ def plot_yield():
         #yield_data["m0_rate_HMS_track"] = linear_plot(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_track"],None,yield_data["uncern_yieldRel_HMS_track"],xvalmax=max((yield_data["rate_HMS"])/1000)+5)
         #plt.errorbar(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_CPULT_track"],yerr=yield_data["yieldRel_HMS_CPULT_track"]*yield_data["uncern_yieldRel_HMS_CPULT_track"],color='black',linestyle='None',zorder=5)
         #plt.scatter(yield_data["rate_HMS"]/1000,yield_data["yieldRel_HMS_CPULT_track"],color='red',zorder=6)
-        plt.ylabel('Rel. Yield track', fontsize=16)
-        plt.xlabel('HMS %s Rate [kHz]' % (str(HMSscaler)), fontsize =16)
+        plt.ylabel('Rel. Yield track', fontsize=RatePlotFontSize)
+        plt.xlabel('HMS %s Rate [kHz]' % (str(HMSscaler)), fontsize=RatePlotFontSize)
         plt.legend(prop={'size' :7})
         if target == 'LD2' :
-            plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+            plt.title('HMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize=RatePlotFontSize)
         elif target == 'LH2' :
-            plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+            plt.title('HMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize=RatePlotFontSize)
         else :
-            plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+            plt.title('HMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize=RatePlotFontSize)
 
     if(not NO_SHMS):
         #SHMS plot scaler
@@ -1079,15 +1080,15 @@ def plot_yield():
         plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_scaler"],color='blue',zorder=4,label="_nolegend_")
         #yield_data["m0_rate_SHMS_scaler"] = linear_plot(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_scaler"],None,yield_data["uncern_yieldRel_SHMS_scaler"],xvalmax=max((yield_data["rate_SHMS"])/1000)+5)
     
-        plt.ylabel('Rel. Yield %s' % (str(SHMSscaler)), fontsize=16)
-        plt.xlabel('SHMS %s Rate [kHz]' % (str(SHMSscaler)), fontsize =16)
+        plt.ylabel('Rel. Yield %s' % (str(SHMSscaler)), fontsize=RatePlotFontSize)
+        plt.xlabel('SHMS %s Rate [kHz]' % (str(SHMSscaler)), fontsize =RatePlotFontSize)
         plt.legend(prop={'size' :7})
         if target == 'LD2' :
-            plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+            plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
         elif target == 'LH2' :
-            plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+            plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
         else :
-            plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+            plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
     
         #SHMS plot no track
         plt.subplot(3,3,5)    
@@ -1101,15 +1102,15 @@ def plot_yield():
         #yield_data["m0_rate_SHMS_notrack"] = linear_plot(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_notrack"],None,yield_data["uncern_yieldRel_SHMS_notrack"],xvalmax=max((yield_data["rate_SHMS"])/1000)+5)
         #plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_CPULT_notrack"],yerr=yield_data["yieldRel_SHMS_CPULT_notrack"]*yield_data["uncern_yieldRel_SHMS_CPULT_notrack"],color='black',linestyle='None',zorder=5)
         #plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_CPULT_notrack"],color='red',zorder=6)
-        plt.ylabel('Rel. Yield no track', fontsize=16)
-        plt.xlabel('SHMS %s Rate [kHz]' % (str(SHMSscaler)), fontsize =16)
+        plt.ylabel('Rel. Yield no track', fontsize=RatePlotFontSize)
+        plt.xlabel('SHMS %s Rate [kHz]' % (str(SHMSscaler)), fontsize =RatePlotFontSize)
         plt.legend(prop={'size' :7})
         if target == 'LD2' :
-            plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+            plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
         elif target == 'LH2' :
-            plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+            plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
         else :
-            plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+            plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
 
         #SHMS plot track
         plt.subplot(3,3,6)    
@@ -1136,15 +1137,15 @@ def plot_yield():
             plt.plot(yield_data["rate_SHMS"]/1000, yfit, color = 'green', label = "slope = %f +/- %f" %(slope_SHMS_trVSrate, d_slope_SHMS_trVSrate) + "\n intercept = %f +/- %f" %(inter_SHMS_trVSrate, d_inter_SHMS_trVSrate))
     
         
-        plt.ylabel('Rel. Yield track', fontsize=16)
-        plt.xlabel('SHMS %s Rate [kHz]' % (str(SHMSscaler)), fontsize =16)
+        plt.ylabel('Rel. Yield track', fontsize=RatePlotFontSize)
+        plt.xlabel('SHMS %s Rate [kHz]' % (str(SHMSscaler)), fontsize =RatePlotFontSize)
         plt.legend(prop={'size' :7})
         if target == 'LD2' :
-            plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+            plt.title('SHMS LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
         elif target == 'LH2' :
-            plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+            plt.title('SHMS LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
         else :
-            plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+            plt.title('SHMS Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
 
     ## Begin Coin ##
     ## Scaler ##
@@ -1156,15 +1157,15 @@ def plot_yield():
     plt.errorbar(yield_data["rate_COIN"],yield_data["yieldRel_COIN_scaler"],yerr=yield_data["yieldRel_COIN_scaler"]*yield_data["uncern_yieldRel_COIN_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
     plt.scatter(yield_data["rate_COIN"],yield_data["yieldRel_COIN_scaler"],color='blue',zorder=4,label="_nolegend_")
     
-    plt.ylabel('Rel. Yield %s' % (str(COINscaler)), fontsize=16)
-    plt.xlabel('COIN %s Rate [kHz]' % (str(COINscaler)), fontsize =16)
+    plt.ylabel('Rel. Yield %s' % (str(COINscaler)), fontsize=RatePlotFontSize)
+    plt.xlabel('COIN %s Rate [kHz]' % (str(COINscaler)), fontsize =RatePlotFontSize)
     plt.legend(prop={'size' :7})    
     if target == 'LD2' :
-        plt.title('COIN LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        plt.title('COIN LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
     elif target == 'LH2' :
-        plt.title('COIN LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        plt.title('COIN LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
     else :
-        plt.title('COIN Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        plt.title('COIN Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
             
     ## No Track ##        
     plt.subplot(3,3,8)    
@@ -1175,15 +1176,15 @@ def plot_yield():
     plt.errorbar(yield_data["rate_COIN"],yield_data["yieldRel_COIN_notrack"],yerr=yield_data["yieldRel_COIN_notrack"]*yield_data["uncern_yieldRel_COIN_notrack"],color='black',linestyle='None',zorder=3,label="_nolegend_")
     plt.scatter(yield_data["rate_COIN"],yield_data["yieldRel_COIN_notrack"],color='blue',zorder=4,label="_nolegend_")
     
-    plt.ylabel('Rel. Yield no track', fontsize=16)
-    plt.xlabel('COIN %s Rate [kHz]' % (str(COINscaler)), fontsize =16)
+    plt.ylabel('Rel. Yield no track', fontsize=RatePlotFontSize)
+    plt.xlabel('COIN %s Rate [kHz]' % (str(COINscaler)), fontsize =RatePlotFontSize)
     plt.legend(prop={'size' :7})    
     if target == 'LD2' :
-        plt.title('COIN LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        plt.title('COIN LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
     elif target == 'LH2' :
-        plt.title('COIN LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        plt.title('COIN LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
     else :
-        plt.title('COIN Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        plt.title('COIN Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
     
     ## Track ##
     plt.subplot(3,3,9)    
@@ -1194,15 +1195,15 @@ def plot_yield():
     plt.errorbar(yield_data["rate_COIN"],yield_data["yieldRel_COIN_track"],yerr=yield_data["yieldRel_COIN_track"]*yield_data["uncern_yieldRel_COIN_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
     plt.scatter(yield_data["rate_COIN"],yield_data["yieldRel_COIN_track"],color='blue',zorder=4,label="_nolegend_")
     
-    plt.ylabel('Rel. Yield track', fontsize=16)
-    plt.xlabel('COIN %s Rate [kHz]' % (str(COINscaler)), fontsize =16)
+    plt.ylabel('Rel. Yield track', fontsize=RatePlotFontSize)
+    plt.xlabel('COIN %s Rate [kHz]' % (str(COINscaler)), fontsize =RatePlotFontSize)
     plt.legend(prop={'size' :7})    
     if target == 'LD2' :
-        plt.title('COIN LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        plt.title('COIN LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
     elif target == 'LH2' :
-        plt.title('COIN LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        plt.title('COIN LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
     else :
-        plt.title('COIN Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =16)
+        plt.title('COIN Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
     
 
     plt.tight_layout()
