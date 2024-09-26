@@ -951,7 +951,7 @@ def plot_yield():
     ##              Rate Depedance Plots        #############################################################################################################
     #########################################################################################################################################################
     
-    RatePlotFontSize = 10
+    RatePlotFontSize = 8
     raterelYieldPlot = plt.figure(figsize=(12,8))
 
     if(not NO_HMS):
@@ -1151,7 +1151,7 @@ def plot_yield():
     ## Scaler ##
     plt.subplot(3,3,7)    
     plt.grid(zorder=1)
-    plt.xlim(0,100)
+    #plt.xlim(0,100)
     plt.ylim(0.9,2)
     plt.plot([0,100], [1,1], 'r-',zorder=2)
     plt.errorbar(yield_data["rate_COIN"],yield_data["yieldRel_COIN_scaler"],yerr=yield_data["yieldRel_COIN_scaler"]*yield_data["uncern_yieldRel_COIN_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
@@ -1170,7 +1170,7 @@ def plot_yield():
     ## No Track ##        
     plt.subplot(3,3,8)    
     plt.grid(zorder=1)
-    plt.xlim(0,100)
+    #plt.xlim(0,100)
     plt.ylim(0.9,1.1)
     plt.plot([0,100], [1,1], 'r-',zorder=2)
     plt.errorbar(yield_data["rate_COIN"],yield_data["yieldRel_COIN_notrack"],yerr=yield_data["yieldRel_COIN_notrack"]*yield_data["uncern_yieldRel_COIN_notrack"],color='black',linestyle='None',zorder=3,label="_nolegend_")
@@ -1189,7 +1189,7 @@ def plot_yield():
     ## Track ##
     plt.subplot(3,3,9)    
     plt.grid(zorder=1)
-    plt.xlim(0,100)
+    #plt.xlim(0,100)
     plt.ylim(0.9,1.1)
     plt.plot([0,100], [1,1], 'r-',zorder=2)
     plt.errorbar(yield_data["rate_COIN"],yield_data["yieldRel_COIN_track"],yerr=yield_data["yieldRel_COIN_track"]*yield_data["uncern_yieldRel_COIN_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
