@@ -738,7 +738,7 @@ def plot_yield():
         plt.subplot(3,3,1)    
         plt.grid(zorder=1)
         plt.xlim(0,100)
-        plt.ylim(0.9,1.04)
+        plt.ylim(0.9,1.1)
         plt.plot([0,100], [1,1], 'r-',zorder=2)
         
         
@@ -781,7 +781,7 @@ def plot_yield():
         plt.subplot(3,3,2)    
         plt.grid(zorder=1)
         plt.xlim(0,100)
-        plt.ylim(0.9,1.04)
+        plt.ylim(0.9,1.1)
         plt.plot([0,100], [1,1], 'r-',zorder=2)
         
         plt.errorbar(yield_data["current"], yield_data["yieldRel_HMS_notrack"], yerr=yield_data["yieldRel_HMS_notrack"]*yield_data["uncern_yieldRel_HMS_notrack"], color='black', linestyle='None', zorder=3, label="_nolegend_")
@@ -801,7 +801,7 @@ def plot_yield():
         plt.subplot(3,3,3)    
         plt.grid(zorder=1)
         plt.xlim(0,100)
-        plt.ylim(0.9,1.04)
+        plt.ylim(0.9,1.1)
         plt.plot([0,100], [1,1], 'r-',zorder=2)
         plt.errorbar(yield_data["current"],yield_data["yieldRel_HMS_track"],yerr=yield_data["yieldRel_HMS_track"]*yield_data["uncern_yieldRel_HMS_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
         plt.scatter(yield_data["current"],yield_data["yieldRel_HMS_track"],color='blue',zorder=4,label="_nolegend_")
@@ -823,7 +823,7 @@ def plot_yield():
         plt.subplot(3,3,4)    
         plt.grid(zorder=1)
         plt.xlim(0,100)
-        plt.ylim(0.9,1.04)
+        plt.ylim(0.9,1.1)
         plt.plot([0,100], [1,1], 'r-',zorder=2)
         
         plt.errorbar(yield_data["current"],yield_data["yieldRel_SHMS_scaler"],yerr=yield_data["yieldRel_SHMS_scaler"]*yield_data["uncern_yieldRel_SHMS_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
@@ -844,7 +844,7 @@ def plot_yield():
         plt.subplot(3,3,5)    
         plt.grid(zorder=1)
         plt.xlim(0,100)
-        plt.ylim(0.9,1.04)
+        plt.ylim(0.9,1.1)
         plt.plot([0,100], [1,1], 'r-',zorder=2)
         
         plt.errorbar(yield_data["current"],yield_data["yieldRel_SHMS_notrack"],yerr=yield_data["yieldRel_SHMS_notrack"]*yield_data["uncern_yieldRel_SHMS_notrack"],color='black',linestyle='None',zorder=3,label="_nolegend_")
@@ -867,7 +867,7 @@ def plot_yield():
         plt.subplot(3,3,6)    
         plt.grid(zorder=1)
         plt.xlim(0,100)
-        plt.ylim(0.9,1.04)
+        plt.ylim(0.9,1.1)
         plt.plot([0,100], [1,1], 'r-',zorder=2)
         
         plt.errorbar(yield_data["current"],yield_data["yieldRel_SHMS_track"],yerr=yield_data["yieldRel_SHMS_track"]*yield_data["uncern_yieldRel_SHMS_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
@@ -891,7 +891,7 @@ def plot_yield():
     plt.subplot(3,3,7)    
     plt.grid(zorder=1)
     plt.xlim(0,100)
-    plt.ylim(0.9,2)
+    plt.ylim(0.9,4)
     plt.plot([0,100], [1,1], 'r-',zorder=2)
     plt.errorbar(yield_data["current"],yield_data["yieldRel_COIN_scaler"],yerr=yield_data["yieldRel_COIN_scaler"]*yield_data["uncern_yieldRel_COIN_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
     plt.scatter(yield_data["current"],yield_data["yieldRel_COIN_scaler"],color='blue',zorder=4,label="_nolegend_")
@@ -910,7 +910,7 @@ def plot_yield():
     plt.subplot(3,3,8)    
     plt.grid(zorder=1)
     plt.xlim(0,100)
-    plt.ylim(0.9,1.1)
+    plt.ylim(0.9,1.3)
     plt.plot([0,100], [1,1], 'r-',zorder=2)
     plt.errorbar(yield_data["current"],yield_data["yieldRel_COIN_notrack"],yerr=yield_data["yieldRel_COIN_notrack"]*yield_data["uncern_yieldRel_COIN_notrack"],color='black',linestyle='None',zorder=3,label="_nolegend_")
     plt.scatter(yield_data["current"],yield_data["yieldRel_COIN_notrack"],color='blue',zorder=4,label="_nolegend_")
@@ -929,7 +929,7 @@ def plot_yield():
     plt.subplot(3,3,9)    
     plt.grid(zorder=1)
     plt.xlim(0,100)
-    plt.ylim(0.9,1.1)
+    plt.ylim(0.9,1.3)
     plt.plot([0,100], [1,1], 'r-',zorder=2)
     plt.errorbar(yield_data["current"],yield_data["yieldRel_COIN_track"],yerr=yield_data["yieldRel_COIN_track"]*yield_data["uncern_yieldRel_COIN_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
     plt.scatter(yield_data["current"],yield_data["yieldRel_COIN_track"],color='blue',zorder=4,label="_nolegend_")
@@ -959,7 +959,7 @@ def plot_yield():
         plt.subplot(2,3,1)    
         plt.grid(zorder=1)
         plt.xlim(0,(max(yield_data["rate_HMS"])/1000)+5)
-        plt.ylim(0.9,1.04)
+        plt.ylim(0.9,1.1)
         plt.plot([0,(max(yield_data["rate_HMS"])/1000)+5], [1,1], 'r-',zorder=2)
         
         if(np.isnan(yield_data["yieldRel_HMS_scaler"][0])== False):
@@ -1001,7 +1001,7 @@ def plot_yield():
         plt.subplot(2,3,2)    
         plt.grid(zorder=1)
         plt.xlim(0,(max(yield_data["rate_HMS"])/1000)+5)
-        plt.ylim(0.9,1.04)
+        plt.ylim(0.9,1.1)
         plt.plot([0,(max(yield_data["rate_HMS"])/1000)+5], [1,1], 'r-',zorder=2)
         
         if(np.isnan(yield_data["yieldRel_HMS_notrack"][0])== False):
@@ -1038,7 +1038,7 @@ def plot_yield():
         plt.subplot(2,3,3)    
         plt.grid(zorder=1)
         plt.xlim(0,(max(yield_data["rate_HMS"])/1000)+5)
-        plt.ylim(0.9,1.04)
+        plt.ylim(0.9,1.1)
         plt.plot([0,(max(yield_data["rate_HMS"])/1000)+5], [1,1], 'r-',zorder=2)
         
         if(np.isnan(yield_data["yieldRel_HMS_track"][0])== False):
@@ -1074,7 +1074,7 @@ def plot_yield():
         plt.subplot(3,3,4)    
         plt.grid(zorder=1)
         plt.xlim(0,(max(yield_data["rate_SHMS"])/1000)+5)
-        plt.ylim(0.9,1.04)
+        plt.ylim(0.9,1.1)
         plt.plot([0,(max(yield_data["rate_SHMS"])/1000)+5], [1,1], 'r-',zorder=2)
         plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_scaler"],yerr=yield_data["yieldRel_SHMS_scaler"]*yield_data["uncern_yieldRel_SHMS_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
         plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_scaler"],color='blue',zorder=4,label="_nolegend_")
@@ -1094,7 +1094,7 @@ def plot_yield():
         plt.subplot(3,3,5)    
         plt.grid(zorder=1)
         plt.xlim(0,(max(yield_data["rate_SHMS"])/1000)+5)
-        plt.ylim(0.9,1.04)
+        plt.ylim(0.9,1.1)
         plt.plot([0,(max(yield_data["rate_SHMS"])/1000)+5], [1,1], 'r-',zorder=2)
         
         plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["yieldRel_SHMS_notrack"],yerr=yield_data["yieldRel_SHMS_notrack"]*yield_data["uncern_yieldRel_SHMS_notrack"],color='black',linestyle='None',zorder=3,label="_nolegend_")
@@ -1116,7 +1116,7 @@ def plot_yield():
         plt.subplot(3,3,6)    
         plt.grid(zorder=1)
         plt.xlim(0,(max(yield_data["rate_SHMS"])/1000)+5)
-        plt.ylim(0.9,1.04)
+        plt.ylim(0.9,1.1)
         plt.plot([0,(max(yield_data["rate_SHMS"])/1000)+5], [1,1], 'r-',zorder=2)
         
         if(np.isnan(yield_data["yieldRel_SHMS_track"][0])== False):
@@ -1152,7 +1152,7 @@ def plot_yield():
     plt.subplot(3,3,7)    
     plt.grid(zorder=1)
     #plt.xlim(0,100)
-    plt.ylim(0.9,2)
+    plt.ylim(0.9,3)
     plt.plot([0,100], [1,1], 'r-',zorder=2)
     plt.errorbar(yield_data["rate_COIN"],yield_data["yieldRel_COIN_scaler"],yerr=yield_data["yieldRel_COIN_scaler"]*yield_data["uncern_yieldRel_COIN_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
     plt.scatter(yield_data["rate_COIN"],yield_data["yieldRel_COIN_scaler"],color='blue',zorder=4,label="_nolegend_")
@@ -1171,7 +1171,7 @@ def plot_yield():
     plt.subplot(3,3,8)    
     plt.grid(zorder=1)
     #plt.xlim(0,100)
-    plt.ylim(0.9,1.1)
+    plt.ylim(0.9,1.2)
     plt.plot([0,100], [1,1], 'r-',zorder=2)
     plt.errorbar(yield_data["rate_COIN"],yield_data["yieldRel_COIN_notrack"],yerr=yield_data["yieldRel_COIN_notrack"]*yield_data["uncern_yieldRel_COIN_notrack"],color='black',linestyle='None',zorder=3,label="_nolegend_")
     plt.scatter(yield_data["rate_COIN"],yield_data["yieldRel_COIN_notrack"],color='blue',zorder=4,label="_nolegend_")
@@ -1190,7 +1190,7 @@ def plot_yield():
     plt.subplot(3,3,9)    
     plt.grid(zorder=1)
     #plt.xlim(0,100)
-    plt.ylim(0.9,1.1)
+    plt.ylim(0.9,1.2)
     plt.plot([0,100], [1,1], 'r-',zorder=2)
     plt.errorbar(yield_data["rate_COIN"],yield_data["yieldRel_COIN_track"],yerr=yield_data["yieldRel_COIN_track"]*yield_data["uncern_yieldRel_COIN_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
     plt.scatter(yield_data["rate_COIN"],yield_data["yieldRel_COIN_track"],color='blue',zorder=4,label="_nolegend_")
