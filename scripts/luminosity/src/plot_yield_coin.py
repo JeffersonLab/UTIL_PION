@@ -951,7 +951,7 @@ def plot_yield():
     ##              Rate Depedance Plots        #############################################################################################################
     #########################################################################################################################################################
     
-    RatePlotFontSize = 12
+    RatePlotFontSize = 10
     raterelYieldPlot = plt.figure(figsize=(12,8))
 
     if(not NO_HMS):
@@ -1158,14 +1158,14 @@ def plot_yield():
     plt.scatter(yield_data["rate_COIN"],yield_data["yieldRel_COIN_scaler"],color='blue',zorder=4,label="_nolegend_")
     
     plt.ylabel('Rel. Yield %s' % (str(COINscaler)), fontsize=RatePlotFontSize)
-    plt.xlabel('COIN %s Rate [kHz]' % (str(COINscaler)), fontsize =RatePlotFontSize)
+    plt.xlabel('COIN %s [kHz]' % (str(COINscaler)), fontsize =RatePlotFontSize)
     plt.legend(prop={'size' :7})    
     if target == 'LD2' :
-        plt.title('COIN LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
+        plt.title('COIN %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
     elif target == 'LH2' :
-        plt.title('COIN LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
+        plt.title('COIN %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
     else :
-        plt.title('COIN Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
+        plt.title('COIN %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
             
     ## No Track ##        
     plt.subplot(3,3,8)    
@@ -1177,14 +1177,14 @@ def plot_yield():
     plt.scatter(yield_data["rate_COIN"],yield_data["yieldRel_COIN_notrack"],color='blue',zorder=4,label="_nolegend_")
     
     plt.ylabel('Rel. Yield no track', fontsize=RatePlotFontSize)
-    plt.xlabel('COIN %s Rate [kHz]' % (str(COINscaler)), fontsize =RatePlotFontSize)
+    plt.xlabel('COIN %s [kHz]' % (str(COINscaler)), fontsize =RatePlotFontSize)
     plt.legend(prop={'size' :7})    
     if target == 'LD2' :
-        plt.title('COIN LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
+        plt.title('COIN %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
     elif target == 'LH2' :
-        plt.title('COIN LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
+        plt.title('COIN %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
     else :
-        plt.title('COIN Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
+        plt.title('COIN %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
     
     ## Track ##
     plt.subplot(3,3,9)    
@@ -1196,14 +1196,14 @@ def plot_yield():
     plt.scatter(yield_data["rate_COIN"],yield_data["yieldRel_COIN_track"],color='blue',zorder=4,label="_nolegend_")
     
     plt.ylabel('Rel. Yield track', fontsize=RatePlotFontSize)
-    plt.xlabel('COIN %s Rate [kHz]' % (str(COINscaler)), fontsize =RatePlotFontSize)
+    plt.xlabel('COIN %s [kHz]' % (str(COINscaler)), fontsize =RatePlotFontSize)
     plt.legend(prop={'size' :7})    
     if target == 'LD2' :
-        plt.title('COIN LD2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
+        plt.title('COIN %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
     elif target == 'LH2' :
-        plt.title('COIN LH2 %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
+        plt.title('COIN %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
     else :
-        plt.title('COIN Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
+        plt.title('COIN %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
     
 
     plt.tight_layout()
