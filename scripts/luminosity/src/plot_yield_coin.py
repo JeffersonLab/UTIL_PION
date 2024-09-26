@@ -1154,8 +1154,8 @@ def plot_yield():
     #plt.xlim(0,100)
     plt.ylim(0.9,3)
     plt.plot([0,100], [1,1], 'r-',zorder=2)
-    plt.errorbar(yield_data["rate_COIN"],yield_data["yieldRel_COIN_scaler"],yerr=yield_data["yieldRel_COIN_scaler"]*yield_data["uncern_yieldRel_COIN_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["rate_COIN"],yield_data["yieldRel_COIN_scaler"],color='blue',zorder=4,label="_nolegend_")
+    plt.errorbar(yield_data["rate_COIN"]/1000,yield_data["yieldRel_COIN_scaler"],yerr=yield_data["yieldRel_COIN_scaler"]*yield_data["uncern_yieldRel_COIN_scaler"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+    plt.scatter(yield_data["rate_COIN"]/1000,yield_data["yieldRel_COIN_scaler"],color='blue',zorder=4,label="_nolegend_")
     
     plt.ylabel('Rel. Yield %s' % (str(COINscaler)), fontsize=RatePlotFontSize)
     plt.xlabel('COIN %s [kHz]' % (str(COINscaler)), fontsize =RatePlotFontSize)
@@ -1173,8 +1173,8 @@ def plot_yield():
     #plt.xlim(0,100)
     plt.ylim(0.9,1.2)
     plt.plot([0,100], [1,1], 'r-',zorder=2)
-    plt.errorbar(yield_data["rate_COIN"],yield_data["yieldRel_COIN_notrack"],yerr=yield_data["yieldRel_COIN_notrack"]*yield_data["uncern_yieldRel_COIN_notrack"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["rate_COIN"],yield_data["yieldRel_COIN_notrack"],color='blue',zorder=4,label="_nolegend_")
+    plt.errorbar(yield_data["rate_COIN"]/1000,yield_data["yieldRel_COIN_notrack"],yerr=yield_data["yieldRel_COIN_notrack"]*yield_data["uncern_yieldRel_COIN_notrack"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+    plt.scatter(yield_data["rate_COIN"]/1000,yield_data["yieldRel_COIN_notrack"],color='blue',zorder=4,label="_nolegend_")
     
     plt.ylabel('Rel. Yield no track', fontsize=RatePlotFontSize)
     plt.xlabel('COIN %s [kHz]' % (str(COINscaler)), fontsize =RatePlotFontSize)
@@ -1192,8 +1192,8 @@ def plot_yield():
     #plt.xlim(0,100)
     plt.ylim(0.9,1.2)
     plt.plot([0,100], [1,1], 'r-',zorder=2)
-    plt.errorbar(yield_data["rate_COIN"],yield_data["yieldRel_COIN_track"],yerr=yield_data["yieldRel_COIN_track"]*yield_data["uncern_yieldRel_COIN_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["rate_COIN"],yield_data["yieldRel_COIN_track"],color='blue',zorder=4,label="_nolegend_")
+    plt.errorbar(yield_data["rate_COIN"]/1000,yield_data["yieldRel_COIN_track"],yerr=yield_data["yieldRel_COIN_track"]*yield_data["uncern_yieldRel_COIN_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+    plt.scatter(yield_data["rate_COIN"]/1000,yield_data["yieldRel_COIN_track"],color='blue',zorder=4,label="_nolegend_")
     
     plt.ylabel('Rel. Yield track', fontsize=RatePlotFontSize)
     plt.xlabel('COIN %s [kHz]' % (str(COINscaler)), fontsize =RatePlotFontSize)
@@ -1206,7 +1206,7 @@ def plot_yield():
         plt.title('COIN %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =RatePlotFontSize)
     
 
-    plt.tight_layout()
+    #plt.tight_layout()
     plt.savefig(SCRIPTPATH+'/luminosity/OUTPUTS/plots/Yield_%s_%s.png' % (out_f.split("yield_data_")[1].replace(".csv",""),"raterelYieldPlot"))
             
 
@@ -1404,52 +1404,19 @@ def plot_yield():
         plt.title('Carbon %s-%s' % (int(min(yield_data["run number"])),int(max(yield_data["run number"]))), fontsize =12)
     '''
 
-#TLT vs Rate
-
-   
-
-
+    #TLT vs Rate
     plt.subplot(2,4,4)    
     plt.grid(zorder=1)
     #plt.xlim(0,100)
     plt.ylabel('TLT', fontsize=16)
     
-   
+    plt.xlabel('SHMS ElReal (PS2) Rate (kHz)', fontsize =12)
+    plt.errorbar(yield_data["rate_COIN"]/1000,yield_data["TLT"],yerr=yield_data["TLT"]*yield_data["uncern_TLT"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+    plt.scatter(yield_data["rate_COIN"]/1000,yield_data["TLT"],color='red',zorder=4,label="_nolegend_") #TLT using EDTM
     
-    if "SHMS" in inp_name.upper():
-        plt.xlabel('SHMS ElReal (PS2) Rate (kHz)', fontsize =12)
-        plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["TLT"],yerr=yield_data["TLT"]*yield_data["uncern_TLT"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-        plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["TLT"],color='red',zorder=4,label="_nolegend_") #TLT using EDTM
-        
-        plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["TLT_ELT"],yerr=yield_data["TLT"]*yield_data["uncern_TLT_ELT"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-        plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["TLT_ELT"],color='blue',zorder=4,label="_nolegend_") #TLT using CPULT
+    #plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["TLT_ELT"],yerr=yield_data["TLT"]*yield_data["uncern_TLT_ELT"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+    #plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["TLT_ELT"],color='blue',zorder=4,label="_nolegend_") #TLT using CPULT
        
-        a_fit_SHMS_tltVSrate, cov_SHMS_tltVSrate = curve_fit(linfunc,yield_data["rate_SHMS"]/1000, yield_data["TLT"], sigma=yield_data["uncern_TLT"], absolute_sigma = True)
-        inter_SHMS_tltVSrate = a_fit_SHMS_tltVSrate[0]
-        slope_SHMS_tltVSrate = a_fit_SHMS_tltVSrate[1]
-        d_inter_SHMS_tltVSrate = np.sqrt(cov_SHMS_tltVSrate[0][0])
-        d_slope_SHMS_tltVSrate = np.sqrt(cov_SHMS_tltVSrate[1][1])
-        yfit = (slope_SHMS_tltVSrate)*(yield_data["rate_SHMS"]/1000) + inter_SHMS_tltVSrate
-        #plt.plot(yield_data["rate_SHMS"]/1000, yfit, color = 'green', label = "slope = %f +/- %f" %(slope_SHMS_tltVSrate, d_slope_SHMS_tltVSrate) + "\n intercept = %f +/- %f" %(inter_SHMS_tltVSrate, d_inter_SHMS_tltVSrate))
-    
-    
-    else: 
-        plt.xlabel('HMS ElReal (PS4) Rate (kHz)', fontsize =12)
-        plt.errorbar(yield_data["rate_HMS"]/1000,yield_data["TLT"],yerr=yield_data["TLT"]*yield_data["uncern_TLT"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-        plt.scatter(yield_data["rate_HMS"]/1000,yield_data["TLT"],color='red',zorder=4,label="_nolegend_")
-       
-        plt.errorbar(yield_data["rate_HMS"]/1000,yield_data["TLT_ELT"],yerr=yield_data["TLT"]*yield_data["uncern_TLT_ELT"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-        plt.scatter(yield_data["rate_HMS"]/1000,yield_data["TLT_ELT"],color='blue',zorder=4,label="_nolegend_")
-       
-       
-        a_fit_HMS_tltVSrate, cov_HMS_tltVSrate = curve_fit(linfunc,yield_data["rate_HMS"]/1000, yield_data["TLT"], sigma=yield_data["uncern_TLT"], absolute_sigma = True)
-        inter_HMS_tltVSrate = a_fit_HMS_tltVSrate[0]
-        slope_HMS_tltVSrate = a_fit_HMS_tltVSrate[1]
-        d_inter_HMS_tltVSrate = np.sqrt(cov_HMS_tltVSrate[0][0])
-        d_slope_HMS_tltVSrate = np.sqrt(cov_HMS_tltVSrate[1][1])
-        yfit = (slope_HMS_tltVSrate)*(yield_data["rate_HMS"]/1000) + inter_HMS_tltVSrate
-        #plt.plot(yield_data["rate_HMS"]/1000, yfit, color = 'green', label = "slope = %f +/- %f" %(slope_HMS_tltVSrate, d_slope_HMS_tltVSrate) + "\n intercept = %f +/- %f" %(inter_HMS_tltVSrate, d_inter_HMS_tltVSrate))
-    
     plt.legend(prop={'size' :7})
     
     

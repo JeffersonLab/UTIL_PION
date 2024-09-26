@@ -67,15 +67,7 @@ psValue = [-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
 for line in f:
     data = line.split(':')
     track_data = line.split(':')
-    if (5149 <= int(runNum) <= 5303):
-        if ('PLT_SHMS_Pion_SING_TRACK_EFF' in track_data[0]):
-            SHMS_track_info = track_data[1].split("+-")
-    else:
-        #if ('PLT_SHMS_Elec_SING_TRACK_EFF' in track_data[0]):
-        if ('PLT_SHMS_Elec_ALL_TRACK_EFF' in track_data[0]):
-            SHMS_track_info = track_data[1].split("+-")
-    if ('PLT_HMS_Elec_SING_TRACK_EFF' in track_data[0]):
-        HMS_track_info = track_data[1].split("+-")
+    
     for i, obj in enumerate(psList) :
         if (psList[i] in data[0]) : 
             if (i == 0) :  
@@ -90,6 +82,19 @@ for line in f:
                 ps5_tmp = data[1].strip()
             if (i == 5) :
                 ps6_tmp = data[1].strip()
+    if ((int(ps5_temp) >= 0) || (int(ps6_temp) >=0))
+        if ('PLT_SHMS_Pion_SING_TRACK_EFF' in track_data[0]):
+            SHMS_track_info = track_data[1].split("+-")             
+    else:
+        if ((5149 <= int(runNum) <= 5303) ):
+            if ('PLT_SHMS_Pion_SING_TRACK_EFF' in track_data[0]):
+                SHMS_track_info = track_data[1].split("+-")
+        else:
+            #if ('PLT_SHMS_Elec_SING_TRACK_EFF' in track_data[0]):
+            if ('PLT_SHMS_Elec_ALL_TRACK_EFF' in track_data[0]):
+                SHMS_track_info = track_data[1].split("+-")
+        if ('PLT_HMS_Elec_SING_TRACK_EFF' in track_data[0]):
+            HMS_track_info = track_data[1].split("+-")
     
 try:
     ps1=int(ps1_tmp)
