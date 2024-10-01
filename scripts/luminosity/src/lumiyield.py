@@ -63,8 +63,11 @@ psList = ['PLT_Ps1_factor','PLT_Ps2_factor','PLT_Ps3_factor','PLT_Ps4_factor','P
 psActual = [-1,1,2,3,5,9,17,33,65,129,257,513,1025,2049,4097,8193,16385,32769]
 psValue = [-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
 
-# Search root file for prescale values and tracking efficiency, then save as variables
+# Setting up defaults so python can't throw bs errors
 foundPS = False
+ps5_tmp = "-1"
+ps6_tmp = "-1"
+# Search root file for prescale values and tracking efficiency, then save as variables
 for line in f:
     data = line.split(':')
     track_data = line.split(':')
@@ -80,7 +83,6 @@ for line in f:
             if (i == 3) :
                 ps4_tmp = data[1].strip()
             if (i == 4) :
-                foundPS = True
                 ps5_tmp = data[1].strip()
             if (i == 5) :
                 foundPS = True
