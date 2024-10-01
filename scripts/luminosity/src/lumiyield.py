@@ -82,7 +82,7 @@ for line in f:
                 ps5_tmp = data[1].strip()
             if (i == 5) :
                 ps6_tmp = data[1].strip()
-    if ((int(ps5_temp) >= 0) || (int(ps6_temp) >=0))
+    if ((int(ps5_temp) >= 0) or (int(ps6_temp) >=0))
         if ('PLT_SHMS_Pion_SING_TRACK_EFF' in track_data[0]):
             SHMS_track_info = track_data[1].split("+-")             
     else:
