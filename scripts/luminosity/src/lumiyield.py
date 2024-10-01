@@ -80,9 +80,12 @@ for line in f:
                 ps4_tmp = data[1].strip()
             if (i == 4) :
                 ps5_tmp = data[1].strip()
+                print("ps5_temp: " +  ps5_tmp)
             if (i == 5) :
                 ps6_tmp = data[1].strip()
-    if ((int(ps5_temp) >= 0) or (int(ps6_temp) >=0))
+                print("ps6_temp: " + ps6_temp)
+    print("\nstuff before error\n")
+    if ((int(ps5_temp) >= 0) or (int(ps6_temp) >=0)):
         if ('PLT_SHMS_Pion_SING_TRACK_EFF' in track_data[0]):
             SHMS_track_info = track_data[1].split("+-")             
     else:
