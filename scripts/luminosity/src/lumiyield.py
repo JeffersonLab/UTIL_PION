@@ -85,19 +85,20 @@ for line in f:
             if (i == 5) :
                 foundPS = True
                 ps6_tmp = data[1].strip()
-    if (foundPS and ((int(ps5_temp) >= 0) or (int(ps6_temp) >=0))):
-        if ('PLT_SHMS_Pion_SING_TRACK_EFF' in track_data[0]):
-            SHMS_track_info = track_data[1].split("+-")             
-    else:
-        if ((5149 <= int(runNum) <= 5303) ):
+    if (foundPS):
+        if ((int(ps5_temp) >= 0) or (int(ps6_temp) >=0)):
             if ('PLT_SHMS_Pion_SING_TRACK_EFF' in track_data[0]):
-                SHMS_track_info = track_data[1].split("+-")
+                SHMS_track_info = track_data[1].split("+-")             
         else:
-            #if ('PLT_SHMS_Elec_SING_TRACK_EFF' in track_data[0]):
-            if ('PLT_SHMS_Elec_ALL_TRACK_EFF' in track_data[0]):
-                SHMS_track_info = track_data[1].split("+-")
-        if ('PLT_HMS_Elec_SING_TRACK_EFF' in track_data[0]):
-            HMS_track_info = track_data[1].split("+-")
+            if ((5149 <= int(runNum) <= 5303) ):
+                if ('PLT_SHMS_Pion_SING_TRACK_EFF' in track_data[0]):
+                    SHMS_track_info = track_data[1].split("+-")
+            else:
+                #if ('PLT_SHMS_Elec_SING_TRACK_EFF' in track_data[0]):
+                if ('PLT_SHMS_Elec_ALL_TRACK_EFF' in track_data[0]):
+                    SHMS_track_info = track_data[1].split("+-")
+            if ('PLT_HMS_Elec_SING_TRACK_EFF' in track_data[0]):
+                HMS_track_info = track_data[1].split("+-")
     
 try:
     ps1=int(ps1_tmp)
