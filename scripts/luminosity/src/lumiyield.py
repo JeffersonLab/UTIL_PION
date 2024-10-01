@@ -64,6 +64,7 @@ psActual = [-1,1,2,3,5,9,17,33,65,129,257,513,1025,2049,4097,8193,16385,32769]
 psValue = [-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
 
 # Search root file for prescale values and tracking efficiency, then save as variables
+foundPS = False
 for line in f:
     data = line.split(':')
     track_data = line.split(':')
@@ -79,13 +80,12 @@ for line in f:
             if (i == 3) :
                 ps4_tmp = data[1].strip()
             if (i == 4) :
+                foundPS = True
                 ps5_tmp = data[1].strip()
-                print("ps5_temp: " +  ps5_tmp)
             if (i == 5) :
+                foundPS = True
                 ps6_tmp = data[1].strip()
-                print("ps6_temp: " + ps6_temp)
-    print("\nstuff before error\n")
-    if ((int(ps5_temp) >= 0) or (int(ps6_temp) >=0)):
+    if (foundPS and ((int(ps5_temp) >= 0) or (int(ps6_temp) >=0))):
         if ('PLT_SHMS_Pion_SING_TRACK_EFF' in track_data[0]):
             SHMS_track_info = track_data[1].split("+-")             
     else:
