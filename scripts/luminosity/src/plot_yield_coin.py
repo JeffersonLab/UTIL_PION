@@ -132,6 +132,7 @@ def calc_yield():
         "rate_HMS" : makeList("HMSTRIG_scaler")/makeList("time"),
         "rate_SHMS" : makeList("SHMSTRIG_scaler")/makeList("time"),
         "rate_COIN" : makeList("COINTRIG_scaler")/makeList("time"),
+        "rate_TOTAL" : (makeList("COINTRIG_scaler") + makeList("SHMSTRIG_scaler") + makeList("HMSTRIG_scaler"))/makeList("time"), #for ELT live time
         
         #"CPULT_phys" : (makeList("HMSTRIG_cut")*makeList("HMS_PS")+makeList("SHMSTRIG_cut")*makeList("SHMS_PS"))*makeList("CPULT_scaler"),
         "CPULT_phys" : makeList("CPULT_scaler"),
@@ -182,7 +183,7 @@ def calc_yield():
 
 
     gwidth = 55*(10**(-9)) #gate width == 55 nanoseconds
-    uncern_gwidth = 5 # 5 ns uncerntainty
+    uncern_gwidth = 5*(10**(-9)) # 5 ns uncerntainty
         
     # Total livetime calculation
     TLT_EDTM = makeList("accp_edtm")/makeList("sent_edtm_PS") #TLT with edtm 
@@ -195,7 +196,7 @@ def calc_yield():
         yield_dict.update({"rate_SHMS": makeList("SHMSTRIG_scaler")/makeList("time")})  
     else: yield_dict.update({"rate_SHMS": 0})
     
-    EDT2 = gwidth*(yield_dict["rate_HMS"] + yield_dict["rate_SHMS"]) # estimation of dead time using gate width and trigger rate
+    EDT2 = gwidth*(yield_dict["rate_TOTAL"]) # estimation of dead time using gate width and trigger rate
     
     
     ELT2 = 1 - EDT2 
@@ -1410,12 +1411,12 @@ def plot_yield():
     #plt.xlim(0,100)
     plt.ylabel('TLT', fontsize=16)
     
-    plt.xlabel('SHMS ElReal (PS2) Rate (kHz)', fontsize =12)
-    plt.errorbar(yield_data["rate_COIN"]/1000,yield_data["TLT"],yerr=yield_data["TLT"]*yield_data["uncern_TLT"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    plt.scatter(yield_data["rate_COIN"]/1000,yield_data["TLT"],color='red',zorder=4,label="_nolegend_") #TLT using EDTM
+    plt.xlabel('Total Trigger Rate (kHz)', fontsize =12)
+    plt.errorbar(yield_data["rate_TOTAL"]/1000,yield_data["TLT"],yerr=yield_data["TLT"]*yield_data["uncern_TLT"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+    plt.scatter(yield_data["rate_TOTAL"]/1000,yield_data["TLT"],color='red',zorder=4,label="_nolegend_") #TLT using EDTM
     
-    #plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["TLT_ELT"],yerr=yield_data["TLT"]*yield_data["uncern_TLT_ELT"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-    #plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["TLT_ELT"],color='blue',zorder=4,label="_nolegend_") #TLT using CPULT
+    plt.errorbar(yield_data["rate_TOTAL"]/1000,yield_data["TLT_ELT"],yerr=yield_data["TLT"]*yield_data["uncern_TLT_ELT"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+    plt.scatter(yield_data["rate_TOTAL"]/1000,yield_data["TLT_ELT"],color='blue',zorder=4,label="_nolegend_") #TLT using CPULT
        
     plt.legend(prop={'size' :7})
     
