@@ -99,7 +99,7 @@ for line in f:
                 #if ('PLT_SHMS_Elec_SING_TRACK_EFF' in track_data[0]):
                 if ('PLT_SHMS_Elec_ALL_TRACK_EFF' in track_data[0]):
                     SHMS_track_info = track_data[1].split("+-")
-            if ('PLT_HMS_Elec_SING_TRACK_EFF' in track_data[0]):
+        if ('PLT_HMS_Elec_SING_TRACK_EFF' in track_data[0]):
                 HMS_track_info = track_data[1].split("+-")
     
 try:
