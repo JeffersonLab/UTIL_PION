@@ -394,7 +394,7 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
     scalers.update({"HMSTRIG_scaler": trig_sum[hms_ps_ix]})
     scalers.update({"HMS_eLT_scaler": 1 - ((6/5)*(PRE_sum[1]-PRE_sum[2])/(PRE_sum[1]))})
     scalers.update({"HMS_eLT_scaler_uncern": (PRE_sum[1]-PRE_sum[2])/(PRE_sum[1])*np.sqrt((np.sqrt(PRE_sum[1]) + np.sqrt(PRE_sum[2]))/(PRE_sum[1] - PRE_sum[2]) + (np.sqrt(PRE_sum[1])/PRE_sum[1]))})
-    #scalers.update({"COINTRIG_scaler": trig_sum[coin_ps_ix]})
+    scalers.update({"COINTRIG_scaler": trig_sum[coin_ps_ix]})
 
     print("\n\nUsed current threshold value: %.2f uA" % thres_curr)
 
