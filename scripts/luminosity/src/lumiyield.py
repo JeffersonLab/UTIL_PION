@@ -258,9 +258,9 @@ cut_f = '/DB/CUTS/run_type/lumi.cuts'
 
 if ((not HMS_PS == None) and (not SHMS_PS == None)) or (not COIN_PS == None): #normal case for kaonLT and most of PionLT - heinricn 2024/03/22
     if ANATYPE == "Pion":
-        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_ngcer_nt","p_aero_nt","h_cal","h_cer","p_cal","p_hgcer","p_ngcer","p_aero","p_ngcer_nt","p_%scut_lumi_nt" % SHMS_PID,"h_%scut_lumi_nt" % HMS_PID,"p_%scut_lumi" % SHMS_PID,"h_%scut_lumi" % HMS_PID,"c_noedtm","c_edtm","c_edtmHMS","c_edtmSHMS","c_curr","h_%strack_lumi_before" % HMS_PID,"h_%strack_lumi_after" % HMS_PID,"p_%strack_lumi_before" % SHMS_PID,"p_%strack_lumi_after" % SHMS_PID,"c_epitrack_lumi_before","c_epitrack_lumi_after","c_epi_nt_lumi"]
+        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_ngcer_nt","p_aero_nt","h_cal","h_cer","p_cal","p_hgcer","p_ngcer","p_aero","p_ngcer_nt","p_%scut_lumi_nt" % SHMS_PID,"h_%scut_lumi_nt" % HMS_PID,"p_%scut_lumi" % SHMS_PID,"h_%scut_lumi" % HMS_PID,"c_noedtm","c_edtm","c_edtmHMS","c_edtmSHMS","c_curr","h_%strack_lumi_before" % HMS_PID,"h_%strack_lumi_after" % HMS_PID,"p_%strack_lumi_before" % SHMS_PID,"p_%strack_lumi_after" % SHMS_PID,"c_epitrack_lumi", "c_epitrack_lumi_rand","c_epi_nt_lumi", "c_epi_nt_lumi_rand"]
     else:
-        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","h_cal","h_cer","p_cal","p_hgcer","p_aero","p_%scut_lumi_nt" % SHMS_PID,"h_%scut_lumi_nt" % HMS_PID,"p_%scut_lumi" % SHMS_PID,"h_%scut_lumi" % HMS_PID,"c_noedtm","c_edtm","c_edtmHMS","c_edtmSHMS","c_curr","h_%strack_lumi_before" % HMS_PID,"h_%strack_lumi_after" % HMS_PID,"p_%strack_lumi_before" % SHMS_PID,"p_%strack_lumi_after" % SHMS_PID,"c_epitrack_lumi_before","c_epitrack_lumi_after","c_epi_nt_lumi"]
+        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","h_cal","h_cer","p_cal","p_hgcer","p_aero","p_%scut_lumi_nt" % SHMS_PID,"h_%scut_lumi_nt" % HMS_PID,"p_%scut_lumi" % SHMS_PID,"h_%scut_lumi" % HMS_PID,"c_noedtm","c_edtm","c_edtmHMS","c_edtmSHMS","c_curr","h_%strack_lumi_before" % HMS_PID,"h_%strack_lumi_after" % HMS_PID,"p_%strack_lumi_before" % SHMS_PID,"p_%strack_lumi_after" % SHMS_PID,"c_epitrack_lumi", "c_epitrack_lumi_rand","c_epi_nt_lumi", "c_epi_nt_lumi_rand"]
 else:
     if HMS_PS == None: #if only SHMS
         cuts = ["p_cal_nt","p_hgcer_nt","p_ngcer_nt","p_aero_nt","p_cal","p_hgcer","p_ngcer","p_aero","p_ngcer_nt","p_%scut_lumi_nt" % SHMS_PID,"p_%scut_lumi" % SHMS_PID,"c_noedtm","c_edtm","c_edtmSHMS","c_curr","p_%strack_lumi_before" % SHMS_PID,"p_%strack_lumi_after" % SHMS_PID]
@@ -856,7 +856,9 @@ def analysis():
     
     if (not COIN_PS == None):
         c_noTrack = c.add_cut(tree["CTime_ePiCoinTime_ROC1"], "c_epi_nt_lumi")
-        c_Track = c.add_cut(tree["CTime_ePiCoinTime_ROC1"], "c_epitrack_lumi_after")
+        c_noTrack_Rand = c.add_cut(tree["CTime_ePiCoinTime_ROC1"], "c_epi_nt_lumi_rand")
+        c_Track = c.add_cut(tree["CTime_ePiCoinTime_ROC1"], "c_epitrack_lumi")
+        c_Track_Rand = c.add_cut(tree["CTime_ePiCoinTime_ROC1"], "c_epitrack_lumi_rand")
     
     # Creates a dictionary for the calculated luminosity values 
     # Seperated this into cases where PS are on
@@ -870,6 +872,8 @@ def analysis():
             "p_int_etottracknorm_evts" : scipy.integrate.simpson(p_etottracknorm),
             "c_int_noTrack_events" : scipy.integrate.simpson(c_noTrack),
             "c_int_Track_events" : scipy.integrate.simpson(c_Track),
+            "c_int_noTrack_Rand_events" : scipy.integrate.simpson(c_noTrack_Rand),
+            "c_int_Track_Rand_events" : scipy.integrate.simpson(c_Track_Rand),
             "accp_edtm" : (len(EDTM)),
             "paccp_edtm" : (len(EDTM_SHMS)),
             "haccp_edtm" : (len(EDTM_HMS)),
