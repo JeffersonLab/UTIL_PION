@@ -153,9 +153,9 @@ def calc_yield():
 
         "uncern_SHMS_evts_track" : np.sqrt(abs(makeList("p_int_etottracknorm_evts")))/makeList("p_int_etottracknorm_evts"),
         
-        "uncern_COIN_evts_notrack" : np.sqrt(abs(makeList("c_int_noTrack_events")))/makeList("c_int_noTrack_events"),
+        "uncern_COIN_evts_notrack" : np.sqrt(abs((makeList("c_int_noTrack_events")/(makeList("c_int_noTrack_events")**2) + makeList("c_int_noTrack_Rand_events")/(makeList("c_int_noTrack_Rand_events")**2))/(makeList("c_int_noTrack_events") - makeList("c_int_noTrack_Rand_events")))),
         
-        "uncern_COIN_evts_track" : np.sqrt(abs(makeList("c_int_Track_events")))/makeList("c_int_Track_events")
+        "uncern_COIN_evts_track" : np.sqrt(abs((makeList("c_int_Track_events")/(makeList("c_int_Track_events")**2) + makeList("c_int_Track_Rand_events")/(makeList("c_int_Track_Rand_events")**2))/(makeList("c_int_Track_events") - makeList("c_int_Track_Rand_events"))))
     }            
     
     # defult case, setting to 2021 for now - NH
@@ -230,8 +230,8 @@ def calc_yield():
 
     COIN_scaler_accp = makeList("COINTRIG_scaler")-makeList("sent_edtm")
     yield_COIN_scaler = COIN_scaler_accp/(makeList("charge")*makeList("curr_corr"))
-    yield_COIN_notrack = makeList("c_int_noTrack_events")/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"])
-    yield_COIN_track = makeList("c_int_Track_events")/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*makeList("SHMS_track")*makeList("HMS_track"))
+    yield_COIN_notrack = (makeList("c_int_noTrack_events")-(makeList("c_int_noTrack_Rand_events")/6))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"])
+    yield_COIN_track = (makeList("c_int_Track_events")-(makeList("c_int_Track_Rand_events")/6))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*makeList("SHMS_track")*makeList("HMS_track"))
     
     yield_dict.update({"yield_COIN_scaler" : yield_COIN_scaler})
     yield_dict.update({"yield_COIN_notrack" : yield_COIN_notrack})
