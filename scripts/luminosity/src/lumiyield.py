@@ -424,11 +424,11 @@ def pid_cuts():
         
         ax = f.add_subplot(339)
         ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"h_ecut_lumi"),bins=c.setbin(CTime_ePiCoinTime_ROC1,300,50,80),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"c_epitrack_lumi_after"), bins=c.setbin(CTime_ePiCoinTime_ROC1,300,50,80),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"c_epitrack_lumi"), bins=c.setbin(CTime_ePiCoinTime_ROC1,300,50,80),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
         plt.xlabel('CTime_ePiCoinTime_ROC1 + Track Cut')
         plt.ylabel('Count')
-#       c_Track = c.add_cut(tree["CTime_ePiCoinTime_ROC1"], "c_epitrack_lumi_after")
+#       c_Track = c.add_cut(tree["CTime_ePiCoinTime_ROC1"], "c_epitrack_lumi")
 
     plt.legend(loc="upper right")
 
