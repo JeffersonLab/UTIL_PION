@@ -911,7 +911,7 @@ def plot_yield():
     plt.subplot(3,3,8)    
     plt.grid(zorder=1)
     plt.xlim(0,100)
-    plt.ylim(0.8,1.1)
+    plt.ylim(0.85,1.05)
     plt.plot([0,100], [1,1], 'r-',zorder=2)
     plt.errorbar(yield_data["current"],yield_data["yieldRel_COIN_notrack"],yerr=yield_data["yieldRel_COIN_notrack"]*yield_data["uncern_yieldRel_COIN_notrack"],color='black',linestyle='None',zorder=3,label="_nolegend_")
     plt.scatter(yield_data["current"],yield_data["yieldRel_COIN_notrack"],color='blue',zorder=4,label="_nolegend_")
@@ -930,7 +930,7 @@ def plot_yield():
     plt.subplot(3,3,9)    
     plt.grid(zorder=1)
     plt.xlim(0,100)
-    plt.ylim(0.8,1.1)
+    plt.ylim(0.85,1.05)
     plt.plot([0,100], [1,1], 'r-',zorder=2)
     plt.errorbar(yield_data["current"],yield_data["yieldRel_COIN_track"],yerr=yield_data["yieldRel_COIN_track"]*yield_data["uncern_yieldRel_COIN_track"],color='black',linestyle='None',zorder=3,label="_nolegend_")
     plt.scatter(yield_data["current"],yield_data["yieldRel_COIN_track"],color='blue',zorder=4,label="_nolegend_")
@@ -1608,7 +1608,10 @@ def main():
     
     file_exists = os.path.isfile(out_f)
 
-    table.to_csv(out_f, index=False, header=True, mode='w+',)
+    #table.to_csv(out_f, index=False, header=True, mode='w+',)
+    print(yield_data["run number", "yieldRel_COIN_track", "uncern_yieldRel_COIN_track"],file=out_f) 
+
+
 
 if __name__ == '__main__':
     main()
