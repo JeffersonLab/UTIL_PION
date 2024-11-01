@@ -1767,12 +1767,12 @@ def plot_yield():
         plt.errorbar(yield_data["rate_SHMS"]/1000,yield_data["TLT_ELT"],yerr=yield_data["TLT"]*yield_data["uncern_TLT_ELT"],color='black',linestyle='None',zorder=3,label="_nolegend_")
         plt.scatter(yield_data["rate_SHMS"]/1000,yield_data["TLT_ELT"],color='blue',zorder=4,label="_nolegend_") #TLT using CPULT
        
-        a_fit_SHMS_tltVSrate, cov_SHMS_tltVSrate = curve_fit(linfunc,yield_data["rate_SHMS"]/1000, yield_data["TLT"], sigma=yield_data["uncern_TLT"], absolute_sigma = True)
-        inter_SHMS_tltVSrate = a_fit_SHMS_tltVSrate[0]
-        slope_SHMS_tltVSrate = a_fit_SHMS_tltVSrate[1]
-        d_inter_SHMS_tltVSrate = np.sqrt(cov_SHMS_tltVSrate[0][0])
-        d_slope_SHMS_tltVSrate = np.sqrt(cov_SHMS_tltVSrate[1][1])
-        yfit = (slope_SHMS_tltVSrate)*(yield_data["rate_SHMS"]/1000) + inter_SHMS_tltVSrate
+        #a_fit_SHMS_tltVSrate, cov_SHMS_tltVSrate = curve_fit(linfunc,yield_data["rate_SHMS"]/1000, yield_data["TLT"], sigma=yield_data["uncern_TLT"], absolute_sigma = True)
+        #inter_SHMS_tltVSrate = a_fit_SHMS_tltVSrate[0]
+        #slope_SHMS_tltVSrate = a_fit_SHMS_tltVSrate[1]
+        #d_inter_SHMS_tltVSrate = np.sqrt(cov_SHMS_tltVSrate[0][0])
+        #d_slope_SHMS_tltVSrate = np.sqrt(cov_SHMS_tltVSrate[1][1])
+        #yfit = (slope_SHMS_tltVSrate)*(yield_data["rate_SHMS"]/1000) + inter_SHMS_tltVSrate
         #plt.plot(yield_data["rate_SHMS"]/1000, yfit, color = 'green', label = "slope = %f +/- %f" %(slope_SHMS_tltVSrate, d_slope_SHMS_tltVSrate) + "\n intercept = %f +/- %f" %(inter_SHMS_tltVSrate, d_inter_SHMS_tltVSrate))
     
     
@@ -1785,12 +1785,12 @@ def plot_yield():
         plt.scatter(yield_data["rate_HMS"]/1000,yield_data["TLT_ELT"],color='blue',zorder=4,label="_nolegend_")
        
        
-        a_fit_HMS_tltVSrate, cov_HMS_tltVSrate = curve_fit(linfunc,yield_data["rate_HMS"]/1000, yield_data["TLT"], sigma=yield_data["uncern_TLT"], absolute_sigma = True)
-        inter_HMS_tltVSrate = a_fit_HMS_tltVSrate[0]
-        slope_HMS_tltVSrate = a_fit_HMS_tltVSrate[1]
-        d_inter_HMS_tltVSrate = np.sqrt(cov_HMS_tltVSrate[0][0])
-        d_slope_HMS_tltVSrate = np.sqrt(cov_HMS_tltVSrate[1][1])
-        yfit = (slope_HMS_tltVSrate)*(yield_data["rate_HMS"]/1000) + inter_HMS_tltVSrate
+        #a_fit_HMS_tltVSrate, cov_HMS_tltVSrate = curve_fit(linfunc,yield_data["rate_HMS"]/1000, yield_data["TLT"], sigma=yield_data["uncern_TLT"], absolute_sigma = True)
+        #inter_HMS_tltVSrate = a_fit_HMS_tltVSrate[0]
+        #slope_HMS_tltVSrate = a_fit_HMS_tltVSrate[1]
+        #d_inter_HMS_tltVSrate = np.sqrt(cov_HMS_tltVSrate[0][0])
+        #d_slope_HMS_tltVSrate = np.sqrt(cov_HMS_tltVSrate[1][1])
+        #yfit = (slope_HMS_tltVSrate)*(yield_data["rate_HMS"]/1000) + inter_HMS_tltVSrate
         #plt.plot(yield_data["rate_HMS"]/1000, yfit, color = 'green', label = "slope = %f +/- %f" %(slope_HMS_tltVSrate, d_slope_HMS_tltVSrate) + "\n intercept = %f +/- %f" %(inter_HMS_tltVSrate, d_inter_HMS_tltVSrate))
     
     plt.legend(prop={'size' :7})
