@@ -349,8 +349,8 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
         scalers.update({"curr_corr" : ((charge_sum[bcm_ix]/time_sum[bcm_ix])-0.033)/(charge_sum[bcm_ix]/time_sum[bcm_ix])}) #offset is in uA
         print("> 14777, Correction: ",((charge_sum[bcm_ix]/time_sum[bcm_ix])-0.033)/(charge_sum[bcm_ix]/time_sum[bcm_ix]))
     elif (int(runNum) > 12004):
-        scalers.update({"curr_corr" : ((charge_sum[bcm_ix]/time_sum[bcm_ix])-0.11)/(charge_sum[bcm_ix]/time_sum[bcm_ix])})
-        print("> 12004, Correction: ",((charge_sum[bcm_ix]/time_sum[bcm_ix])-0.11)/(charge_sum[bcm_ix]/time_sum[bcm_ix]))
+        scalers.update({"curr_corr" : ((charge_sum[bcm_ix]/time_sum[bcm_ix])-0.0)/(charge_sum[bcm_ix]/time_sum[bcm_ix])})
+        print("> 12004, Correction: ",((charge_sum[bcm_ix]/time_sum[bcm_ix])-0.0)/(charge_sum[bcm_ix]/time_sum[bcm_ix]))
     else: # I have not data for this period, so I'm leaving the offset zero.
         scalers.update({"curr_corr" : (0+(charge_sum[bcm_ix]/time_sum[bcm_ix]))/(charge_sum[bcm_ix]/time_sum[bcm_ix])})
     
