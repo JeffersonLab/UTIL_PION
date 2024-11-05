@@ -47,28 +47,64 @@ TGraphErrors* ReBase(TGraphErrors *ge1)
 
 void PlotCombinedLumi (TString dataType)
 {
+    gROOT->SetBatch(kTRUE);
     int NFILES;
     TString *filenames;
+    TString OutFileName;
     
-    TString fileName1 = "../OUTPUTS/ExclusiveLumi/yield_data_exc1_clean.csv";
-    TString fileName2 = "../OUTPUTS/ExclusiveLumi/yield_data_exc2_clean.csv";
-    TString fileName3 = "../OUTPUTS/ExclusiveLumi/yield_data_exc3_clean.csv";
-    TString fileName4 = "../OUTPUTS/ExclusiveLumi/yield_data_exc4_clean.csv";
-    TString fileName5 = "../OUTPUTS/ExclusiveLumi/yield_data_exc5_clean.csv";
-    TString fileName6 = "../OUTPUTS/sidis/yield_data_sidis1_clean.csv";
-    TString fileName7 = "../OUTPUTS/sidis/yield_data_sidis2_clean.csv";
-    NFILES = 7;
-    
-    filenames = new TString[NFILES];
-    filenames[0] = fileName1;
-    filenames[1] = fileName2;
-    filenames[2] = fileName3;
-    filenames[3] = fileName4;
-    filenames[4] = fileName5;
-    filenames[5] = fileName6;
-    filenames[6] = fileName7;
+    // This is my nifty way of handling the amount of inputfiles, so that I need only write stuff once,
+    // danamically allocated arrays, a marvel to behold 
+    if (dataType.ToLower() == "coin" ) {
+        NFILES = 7;
+        filenames = new TString[NFILES];
+        filenames[0] = "../OUTPUTS/ExclusiveLumi/yield_data_exc1_clean.csv";
+        filenames[1] = "../OUTPUTS/ExclusiveLumi/yield_data_exc2_clean.csv";
+        filenames[2] = "../OUTPUTS/ExclusiveLumi/yield_data_exc3_clean.csv";
+        filenames[3] = "../OUTPUTS/ExclusiveLumi/yield_data_exc4_clean.csv";
+        filenames[4] = "../OUTPUTS/ExclusiveLumi/yield_data_exc5_clean.csv";
+        filenames[5] = "../OUTPUTS/sidis/yield_data_sidis1_clean.csv";
+        filenames[6] = "../OUTPUTS/sidis/yield_data_sidis2_clean.csv";
+        OutFileName = "Coin";
+    }else if (dataType.ToLower() == "carbon"){
+        NFILES = 6;
+        filenames[0] = "../OUTPUTS/Lumi6-4/SHMS/yield_data_Carbon_clean.csv";
+        filenames[1] = "../OUTPUTS/Lumi6-4/HMS/yield_data_Carbon_clean.csv";
+        filenames[2] = "../OUTPUTS/Lumi9-2/pt1/yield_data_Carbon_HMS.csv";
+        filenames[3] = "../OUTPUTS/Lumi9-2/pt1/yield_data_Carbon_SHMS.csv";
+        filenames[4] = "../OUTPUTS/Lumi9-2/pt2/yield_data_Carbon_HMS.csv";
+        filenames[5] = "../OUTPUTS/Lumi9-2/pt2/yield_data_Carbon_SHMS.csv";
+        OutFileName = "Carbon";
+    }else if (dataType.ToLower() == "singles"){
+        NFILES = 6;
+        filenames[0] = "../OUTPUTS/Lumi6-4/SHMS/yield_data_LH2_clean.csv";
+        filenames[1] = "../OUTPUTS/Lumi6-4/HMS/yield_data_LH2_clean.csv";
+        filenames[2] = "../OUTPUTS/Lumi9-2/pt1/yield_data_LH2_HMS.csv";
+        filenames[3] = "../OUTPUTS/Lumi9-2/pt1/yield_data_LH2_SHMS.csv";
+        filenames[4] = "../OUTPUTS/Lumi9-2/pt2/yield_data_LH2_HMS.csv";
+        filenames[5] = "../OUTPUTS/Lumi9-2/pt2/yield_data_LH2_SHMS.csv";
+        OutFileName = "LH2_Singles";
+    }else if (dataType.ToLower() == "lh2_all"){
+        NFILES = 13;
+        filenames[0] = "../OUTPUTS/Lumi6-4/SHMS/yield_data_LH2_clean.csv";
+        filenames[1] = "../OUTPUTS/Lumi6-4/HMS/yield_data_LH2_clean.csv";
+        filenames[2] = "../OUTPUTS/Lumi9-2/pt1/yield_data_LH2_HMS.csv";
+        filenames[3] = "../OUTPUTS/Lumi9-2/pt1/yield_data_LH2_SHMS.csv";
+        filenames[4] = "../OUTPUTS/Lumi9-2/pt2/yield_data_LH2_HMS.csv";
+        filenames[5] = "../OUTPUTS/Lumi9-2/pt2/yield_data_LH2_SHMS.csv";
+        filenames[6] = "../OUTPUTS/ExclusiveLumi/yield_data_exc1_clean.csv";
+        filenames[7] = "../OUTPUTS/ExclusiveLumi/yield_data_exc2_clean.csv";
+        filenames[8] = "../OUTPUTS/ExclusiveLumi/yield_data_exc3_clean.csv";
+        filenames[9] = "../OUTPUTS/ExclusiveLumi/yield_data_exc4_clean.csv";
+        filenames[10] = "../OUTPUTS/ExclusiveLumi/yield_data_exc5_clean.csv";
+        filenames[11] = "../OUTPUTS/sidis/yield_data_sidis1_clean.csv";
+        filenames[12] = "../OUTPUTS/sidis/yield_data_sidis2_clean.csv";
+        OutFileName = "LH2_ALL";
+    }else{
+        cout << "choose one of: 'coin', 'carbon', 'singles', or 'lh2_all'. \nShutting down!\n";
+        return;
+    }
 
-    TString OutFileName = "Coin";
+    //yes yes, needlessly complicated. At least I need only rewrite the above everytime the files change!
     TCanvas **C = new TCanvas*[NFILES]; 
     TGraphErrors **Gi = new TGraphErrors*[NFILES];
     TGraphErrors **Gf = new TGraphErrors*[NFILES];
