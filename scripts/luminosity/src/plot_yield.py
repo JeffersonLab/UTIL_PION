@@ -175,7 +175,6 @@ def calc_yield():
 
 
     gwidth = 55*(10**(-9)) #gate width == 55 nanometers
-    
         
     # Total livetime calculation
     TLT_EDTM = makeList("accp_edtm")/makeList("sent_edtm_PS") #TLT with edtm 
@@ -189,20 +188,22 @@ def calc_yield():
     else: yield_dict.update({"rate_SHMS": 0})
     
     EDT2 = gwidth*(yield_dict["rate_HMS"] + yield_dict["rate_SHMS"]) # estimation of dead time using gate width and trigger rate
-    
-    
-    ELT2 = 1 - EDT2 
-    
+    EDT2_HMS = gwidth*(yield_dict["rate_HMS"]) # estimation of dead time using gate width and trigger rate
+    EDT2_SHMS = gwidth*(yield_dict["rate_SHMS"]) # estimation of dead time using gate width and trigger rate
+
+    ELT2 = 1 - EDT2
+    ELT2_HMS  = 1 - EDT2_HMS
+    ELT2_SHMS = 1 - EDT2_SHMS
+    uncern_ELT2 = (ELT2*(1-ELT2))/(50*ELT2**2)
+
     TLT_ELT = ELT2*yield_dict["CPULT_phys"]
-    
-  
- 
+
     yield_dict.update({"TLT" : TLT_EDTM})
     yield_dict.update({"TLT_ELT" : TLT_ELT})
-    
-    
- 
-    
+    yield_dict.update({"ELT2_HMS" : ELT2_HMS})
+    yield_dict.update({"ELT2_SHMS" : ELT2_SHMS})
+    yield_dict.update({"uncern_ELT2" : uncern_ELT2})
+
     #yield_dict.update({"TLT" : TLT})
     
     uncern_TLT = np.sqrt(makeList("accp_edtm")/makeList("sent_edtm_PS")**2+makeList("accp_edtm")**2/makeList("sent_edtm_PS")**4)
@@ -248,7 +249,7 @@ def calc_yield():
             yield_SHMS_CPULT_notrack.append(1)
             yield_SHMS_CPULT_track.append(1)
     else:             
-            yield_SHMS_scaler = (yield_dict["SHMS_scaler_accp"])/(makeList("charge")*makeList("curr_corr"))
+            yield_SHMS_scaler = (yield_dict["SHMS_scaler_accp"])/(makeList("charge")*makeList("curr_corr")*yield_dict["ELT2_SHMS"])
             yield_SHMS_notrack = (makeList("p_int_etotnorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"])
             yield_SHMS_track = (makeList("p_int_etottracknorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*makeList("SHMS_track"))
             yield_SHMS_CPULT_notrack = (makeList("p_int_etotnorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"])
@@ -261,12 +262,12 @@ def calc_yield():
     yield_dict.update({"yield_SHMS_CPULT_notrack" : yield_SHMS_CPULT_notrack})
     yield_dict.update({"yield_SHMS_CPULT_track" : yield_SHMS_CPULT_track})
 
-    for i,curr in enumerate(yield_dict["current"]):
-        if abs((TLT_EDTM)[i] - (TLT_ELT)[i]) > ((abs(uncern_TLT_ELT)[i]) + abs((uncern_TLT)[i])) and TLT_ELT[i] > TLT_EDTM[i]:
-            
-            yield_dict["yield_SHMS_notrack"][i] = (makeList("p_int_etotnorm_evts")[i]*makeList("SHMS_PS")[i])/(makeList("charge")[i]*makeList("curr_corr")[i]*yield_dict["TLT_ELT"][i])
-            yield_dict["yield_SHMS_track"][i] = (makeList("p_int_etottracknorm_evts")[i]*makeList("SHMS_PS")[i])/(makeList("charge")[i]*makeList("curr_corr")[i]*yield_dict["TLT_ELT"][i]*makeList("SHMS_track")[i])
-        else: pass  
+    #for i,curr in enumerate(yield_dict["current"]):
+    #    if abs((TLT_EDTM)[i] - (TLT_ELT)[i]) > ((abs(uncern_TLT_ELT)[i]) + abs((uncern_TLT)[i])) and TLT_ELT[i] > TLT_EDTM[i]:
+    #        
+    #        yield_dict["yield_SHMS_notrack"][i] = (makeList("p_int_etotnorm_evts")[i]*makeList("SHMS_PS")[i])/(makeList("charge")[i]*makeList("curr_corr")[i]*yield_dict["TLT_ELT"][i])
+    #        yield_dict["yield_SHMS_track"][i] = (makeList("p_int_etottracknorm_evts")[i]*makeList("SHMS_PS")[i])/(makeList("charge")[i]*makeList("curr_corr")[i]*yield_dict["TLT_ELT"][i]*makeList("SHMS_track")[i])
+    #    else: pass  
 
 
 
@@ -308,7 +309,7 @@ def calc_yield():
             yield_HMS_CPULT_track.append(1)
     else:
 
-            yield_HMS_scaler = (yield_dict["HMS_scaler_accp"])/(makeList("charge")*makeList("curr_corr"))
+            yield_HMS_scaler = (yield_dict["HMS_scaler_accp"])/(makeList("charge")*makeList("curr_corr")*yield_dict["ELT2_HMS"])
             yield_HMS_notrack = (makeList("h_int_etotnorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"])
             yield_HMS_track = (makeList("h_int_etottracknorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*makeList("HMS_track"))
             yield_HMS_CPULT_notrack = (makeList("h_int_etotnorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"])
@@ -322,12 +323,12 @@ def calc_yield():
     yield_dict.update({"yield_HMS_CPULT_notrack" : yield_HMS_CPULT_notrack})
     yield_dict.update({"yield_HMS_CPULT_track" : yield_HMS_CPULT_track})
 
-    for i,curr in enumerate(yield_dict["current"]):
-        if abs((TLT_EDTM)[i] - (TLT_ELT)[i]) > ((abs(uncern_TLT_ELT)[i]) + abs((uncern_TLT)[i])) and TLT_ELT[i] > TLT_EDTM[i] :
-            
-            yield_dict["yield_HMS_notrack"][i] = (makeList("h_int_etotnorm_evts")[i]*makeList("HMS_PS")[i])/(makeList("charge")[i]*makeList("curr_corr")[i]*yield_dict["TLT_ELT"][i])
-            yield_dict["yield_HMS_track"][i] = (makeList("h_int_etottracknorm_evts")[i]*makeList("HMS_PS")[i])/(makeList("charge")[i]*makeList("curr_corr")[i]*yield_dict["TLT_ELT"][i]*makeList("HMS_track")[i])
-        else: pass 
+    #for i,curr in enumerate(yield_dict["current"]):
+    #    if abs((TLT_EDTM)[i] - (TLT_ELT)[i]) > ((abs(uncern_TLT_ELT)[i]) + abs((uncern_TLT)[i])) and TLT_ELT[i] > TLT_EDTM[i] :
+    #        
+    #        yield_dict["yield_HMS_notrack"][i] = (makeList("h_int_etotnorm_evts")[i]*makeList("HMS_PS")[i])/(makeList("charge")[i]*makeList("curr_corr")[i]*yield_dict["TLT_ELT"][i])
+    #        yield_dict["yield_HMS_track"][i] = (makeList("h_int_etottracknorm_evts")[i]*makeList("HMS_PS")[i])/(makeList("charge")[i]*makeList("curr_corr")[i]*yield_dict["TLT_ELT"][i]*makeList("HMS_track")[i])
+    #    else: pass 
     
     
     # define relative yield to the error weighted average of the absolute yield as opposed to the minimum current
@@ -347,7 +348,7 @@ def calc_yield():
     
     
     if makeList("HMS_PS").any() >0.5:
-        uncern_yield_HMS_scaler = np.sqrt((yield_dict["yield_HMS_scaler"]**2)*((yield_dict["uncern_HMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2))
+        uncern_yield_HMS_scaler = np.sqrt((yield_dict["yield_HMS_scaler"]**2)*((yield_dict["uncern_HMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+(yield_dict["uncern_ELT2"])**2)
         uncern_yield_HMS_track = np.sqrt(abs(yield_dict["yield_HMS_track"]**2)*((yield_dict["uncern_HMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2))
         uncern_yield_HMS_notrack = np.sqrt(abs(yield_dict["yield_HMS_notrack"]**2)*((yield_dict["uncern_HMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2))
         uncern_yield_HMS_CPULT_track = np.sqrt((yield_dict["yield_HMS_CPULT_track"]**2)*((yield_dict["uncern_HMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2))
@@ -417,7 +418,7 @@ def calc_yield():
     
     
     if makeList("SHMS_PS").any() >0.5:
-        uncern_yield_SHMS_scaler = np.sqrt((yield_dict["yield_SHMS_scaler"]**2)*((yield_dict["uncern_SHMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2))
+        uncern_yield_SHMS_scaler = np.sqrt((yield_dict["yield_SHMS_scaler"]**2)*((yield_dict["uncern_SHMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+(yield_dict["uncern_ELT2"])**2)
         uncern_yield_SHMS_track = np.sqrt(abs(yield_dict["yield_SHMS_track"]**2)*((yield_dict["uncern_SHMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2))
         uncern_yield_SHMS_notrack = np.sqrt(abs(yield_dict["yield_SHMS_notrack"]**2)*((yield_dict["uncern_SHMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2))
         uncern_yield_SHMS_CPULT_track = np.sqrt((yield_dict["yield_SHMS_CPULT_track"]**2)*((yield_dict["uncern_SHMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2))
