@@ -200,6 +200,7 @@ def calc_yield():
 
     yield_dict.update({"TLT" : TLT_EDTM})
     yield_dict.update({"TLT_ELT" : TLT_ELT})
+    yield_dict.update({"ELT2" : ELT2})
     yield_dict.update({"ELT2_HMS" : ELT2_HMS})
     yield_dict.update({"ELT2_SHMS" : ELT2_SHMS})
     yield_dict.update({"uncern_ELT2" : uncern_ELT2})
