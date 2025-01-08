@@ -175,8 +175,8 @@ def calc_yield():
     boilingCorr = 1 - (yield_dict[current]*makeList("curr_corr")*(2.80/10000)) #boiling correction for 2.8%/100uA slope
     uncer_boilingCorr = np.sqrt((((uncern_slope**2)+ (uncern_intercept**2/yield_dict[current]))/slope**2) + (0.17**2+0.69**2)/(2.8**2))
 
-    yield_dict.update({"boilingCorr"}: boilingCorr)
-    yield_dict.update({"uncer_boilingCorr"}: uncer_boilingCorr)
+    yield_dict.update({"boilingCorr": boilingCorr})
+    yield_dict.update({"uncer_boilingCorr": uncer_boilingCorr})
 
     gwidth = 55*(10**(-9)) #gate width == 55 nanometers
         
