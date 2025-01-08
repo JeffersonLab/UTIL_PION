@@ -181,7 +181,7 @@ def calc_yield():
     yield_dict.update({"uncern_charge" : uncern_charge})
         
     boilingCorr = 1 - (yield_dict["current"]*makeList("curr_corr")*(2.80/10000)) #boiling correction for 2.8%/100uA slope
-    uncer_boilingCorr = np.sqrt((((uncern_slope**2)+ (uncern_intercept**2/yield_dict["current"]))/slope**2) + (0.17**2+0.69**2)/(2.8**2))
+    uncer_boilingCorr = (((uncern_slope**2)+ (uncern_intercept**2/yield_dict["current"]))/slope**2) + (np.sqrt(0.17**2+0.69**2)/(2.8))**2
 
     yield_dict.update({"boilingCorr": boilingCorr})
     yield_dict.update({"uncer_boilingCorr": uncer_boilingCorr})
@@ -242,8 +242,8 @@ def calc_yield():
     yield_dict.update({"yield_COIN_track" : yield_COIN_track})
     
     uncern_yieldRel_COIN_scaler = np.sqrt((yield_dict["uncern_COIN_evts_scaler"]/makeList("COINTRIG_scaler"))**2 + (yield_dict["uncern_charge"]/makeList("charge"))**2)
-    uncern_yieldRel_COIN_notrack = np.sqrt((yield_dict["uncern_COIN_evts_notrack"]/makeList("c_int_noTrack_events"))**2 + (yield_dict["uncern_charge"]/makeList("charge"))**2 + (yield_dict["uncern_TLT"]/yield_dict["TLT"])**2 + yield_dict["uncer_boilingCorr"]**2)
-    uncern_yieldRel_COIN_track = np.sqrt((yield_dict["uncern_COIN_evts_track"]/makeList("c_int_Track_events"))**2 + (yield_dict["uncern_charge"]/makeList("charge"))**2 + (yield_dict["uncern_TLT"]/yield_dict["TLT"])**2 + (makeList("SHMS_track_uncern")/makeList("SHMS_track"))**2 + (makeList("HMS_track_uncern")/makeList("HMS_track"))**2 + yield_dict["uncer_boilingCorr"]**2) 
+    uncern_yieldRel_COIN_notrack = np.sqrt((yield_dict["uncern_COIN_evts_notrack"]/makeList("c_int_noTrack_events"))**2 + (yield_dict["uncern_charge"]/makeList("charge"))**2 + (yield_dict["uncern_TLT"]/yield_dict["TLT"])**2 + yield_dict["uncer_boilingCorr"])
+    uncern_yieldRel_COIN_track = np.sqrt((yield_dict["uncern_COIN_evts_track"]/makeList("c_int_Track_events"))**2 + (yield_dict["uncern_charge"]/makeList("charge"))**2 + (yield_dict["uncern_TLT"]/yield_dict["TLT"])**2 + (makeList("SHMS_track_uncern")/makeList("SHMS_track"))**2 + (makeList("HMS_track_uncern")/makeList("HMS_track"))**2 + yield_dict["uncer_boilingCorr"]) 
     
     yield_dict.update({"uncern_yieldRel_COIN_scaler" : uncern_yieldRel_COIN_scaler})
     yield_dict.update({"uncern_yieldRel_COIN_notrack" : uncern_yieldRel_COIN_notrack})

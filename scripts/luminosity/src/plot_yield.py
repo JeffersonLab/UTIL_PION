@@ -173,7 +173,7 @@ def calc_yield():
     yield_dict.update({"uncern_charge" : uncern_charge})
         
     boilingCorr = 1 - (yield_dict["current"]*makeList("curr_corr")*(2.80/10000)) #boiling correction for 2.8%/100uA slope
-    uncer_boilingCorr = np.sqrt((((uncern_slope**2)+ (uncern_intercept**2/yield_dict["current"]))/slope**2) + (0.17**2+0.69**2)/(2.8**2))
+    uncer_boilingCorr = (((uncern_slope**2)+ (uncern_intercept**2/yield_dict["current"]))/slope**2) + (np.sqrt(0.17**2+0.69**2)/(2.8))**2
 
     yield_dict.update({"boilingCorr": boilingCorr})
     yield_dict.update({"uncer_boilingCorr": uncer_boilingCorr})
@@ -353,11 +353,11 @@ def calc_yield():
     
     
     if makeList("HMS_PS").any() >0.5:
-        uncern_yield_HMS_scaler = np.sqrt((yield_dict["yield_HMS_scaler"]**2)*((yield_dict["uncern_HMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+(yield_dict["uncern_ELT2"])**2 + yield_dict["uncer_boilingCorr"]**2)
-        uncern_yield_HMS_track = np.sqrt(abs(yield_dict["yield_HMS_track"]**2)*((yield_dict["uncern_HMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+ yield_dict["uncer_boilingCorr"]**2)
-        uncern_yield_HMS_notrack = np.sqrt(abs(yield_dict["yield_HMS_notrack"]**2)*((yield_dict["uncern_HMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+ yield_dict["uncer_boilingCorr"]**2)
-        uncern_yield_HMS_CPULT_track = np.sqrt((yield_dict["yield_HMS_CPULT_track"]**2)*((yield_dict["uncern_HMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+ yield_dict["uncer_boilingCorr"]**2)
-        uncern_yield_HMS_CPULT_notrack = np.sqrt((yield_dict["yield_HMS_CPULT_notrack"]**2)*((yield_dict["uncern_HMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+ yield_dict["uncer_boilingCorr"]**2)
+        uncern_yield_HMS_scaler = np.sqrt((yield_dict["yield_HMS_scaler"]**2)*((yield_dict["uncern_HMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+(yield_dict["uncern_ELT2"])**2 + yield_dict["uncer_boilingCorr"])
+        uncern_yield_HMS_track = np.sqrt(abs(yield_dict["yield_HMS_track"]**2)*((yield_dict["uncern_HMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+ yield_dict["uncer_boilingCorr"])
+        uncern_yield_HMS_notrack = np.sqrt(abs(yield_dict["yield_HMS_notrack"]**2)*((yield_dict["uncern_HMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+ yield_dict["uncer_boilingCorr"])
+        uncern_yield_HMS_CPULT_track = np.sqrt((yield_dict["yield_HMS_CPULT_track"]**2)*((yield_dict["uncern_HMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+ yield_dict["uncer_boilingCorr"])
+        uncern_yield_HMS_CPULT_notrack = np.sqrt((yield_dict["yield_HMS_CPULT_notrack"]**2)*((yield_dict["uncern_HMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+ yield_dict["uncer_boilingCorr"])
     else:
         uncern_yield_HMS_scaler = .000000001
         uncern_yield_HMS_track = .00000001
@@ -423,11 +423,11 @@ def calc_yield():
     
     
     if makeList("SHMS_PS").any() >0.5:
-        uncern_yield_SHMS_scaler = np.sqrt((yield_dict["yield_SHMS_scaler"]**2)*((yield_dict["uncern_SHMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+(yield_dict["uncern_ELT2"])**2 + yield_dict["uncer_boilingCorr"]**2)
-        uncern_yield_SHMS_track = np.sqrt(abs(yield_dict["yield_SHMS_track"]**2)*((yield_dict["uncern_SHMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+ yield_dict["uncer_boilingCorr"]**2)
-        uncern_yield_SHMS_notrack = np.sqrt(abs(yield_dict["yield_SHMS_notrack"]**2)*((yield_dict["uncern_SHMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+ yield_dict["uncer_boilingCorr"]**2)
-        uncern_yield_SHMS_CPULT_track = np.sqrt((yield_dict["yield_SHMS_CPULT_track"]**2)*((yield_dict["uncern_SHMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+ yield_dict["uncer_boilingCorr"]**2)
-        uncern_yield_SHMS_CPULT_notrack = np.sqrt((yield_dict["yield_SHMS_CPULT_notrack"]**2)*((yield_dict["uncern_SHMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+ yield_dict["uncer_boilingCorr"]**2)
+        uncern_yield_SHMS_scaler = np.sqrt((yield_dict["yield_SHMS_scaler"]**2)*((yield_dict["uncern_SHMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+(yield_dict["uncern_ELT2"])**2 + yield_dict["uncer_boilingCorr"])
+        uncern_yield_SHMS_track = np.sqrt(abs(yield_dict["yield_SHMS_track"]**2)*((yield_dict["uncern_SHMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+ yield_dict["uncer_boilingCorr"])
+        uncern_yield_SHMS_notrack = np.sqrt(abs(yield_dict["yield_SHMS_notrack"]**2)*((yield_dict["uncern_SHMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+ yield_dict["uncer_boilingCorr"])
+        uncern_yield_SHMS_CPULT_track = np.sqrt((yield_dict["yield_SHMS_CPULT_track"]**2)*((yield_dict["uncern_SHMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+ yield_dict["uncer_boilingCorr"])
+        uncern_yield_SHMS_CPULT_notrack = np.sqrt((yield_dict["yield_SHMS_CPULT_notrack"]**2)*((yield_dict["uncern_SHMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2)+ yield_dict["uncer_boilingCorr"])
     else:
         uncern_yield_SHMS_scaler = .000000001
         uncern_yield_SHMS_track = .00000001
@@ -566,15 +566,15 @@ def calc_yield():
             yield_dict.update({"yieldRel_SHMS_CPULT_track" : yieldRel_SHMS_CPULT_track})
             
             
-            uncern_yieldRel_SHMS_scaler = np.sqrt((yield_dict["uncern_SHMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2 +(yield_dict["uncern_ELT2"])**2 + yield_dict["uncer_boilingCorr"]**2)
-            uncern_yieldRel_SHMS_notrack = np.sqrt((yield_dict["uncern_SHMS_evts_notrack"]**2)+(yield_dict["uncern_TLT"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2 + yield_dict["uncer_boilingCorr"]**2)
-            uncern_yieldRel_SHMS_track =  np.sqrt((yield_dict["uncern_SHMS_evts_notrack"]**2)+(yield_dict["uncern_TLT"]**2)+(makeList("SHMS_track_uncern")**2)+((yield_dict["uncern_charge"]/makeList("charge"))**2) + yield_dict["uncer_boilingCorr"]**2)
+            uncern_yieldRel_SHMS_scaler = np.sqrt((yield_dict["uncern_SHMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2 +(yield_dict["uncern_ELT2"])**2 + yield_dict["uncer_boilingCorr"])
+            uncern_yieldRel_SHMS_notrack = np.sqrt((yield_dict["uncern_SHMS_evts_notrack"]**2)+(yield_dict["uncern_TLT"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2 + yield_dict["uncer_boilingCorr"])
+            uncern_yieldRel_SHMS_track =  np.sqrt((yield_dict["uncern_SHMS_evts_notrack"]**2)+(yield_dict["uncern_TLT"]**2)+(makeList("SHMS_track_uncern")**2)+((yield_dict["uncern_charge"]/makeList("charge"))**2) + yield_dict["uncer_boilingCorr"])
             yield_dict.update({"uncern_yieldRel_SHMS_scaler" : uncern_yieldRel_SHMS_scaler})
             yield_dict.update({"uncern_yieldRel_SHMS_notrack" : uncern_yieldRel_SHMS_notrack})
             yield_dict.update({"uncern_yieldRel_SHMS_track" : uncern_yieldRel_SHMS_track})
             
-            uncern_yieldRel_SHMS_CPULT_notrack = (yield_dict["uncern_SHMS_evts_notrack"]+yield_dict["uncern_CPULT_phys"]+yield_dict["uncern_charge"]/makeList("charge") + yield_dict["uncer_boilingCorr"]**2)
-            uncern_yieldRel_SHMS_CPULT_track =  (yield_dict["uncern_SHMS_evts_notrack"]+yield_dict["uncern_CPULT_phys"]+makeList("SHMS_track_uncern")+yield_dict["uncern_charge"]/makeList("charge") + yield_dict["uncer_boilingCorr"]**2)
+            uncern_yieldRel_SHMS_CPULT_notrack = (yield_dict["uncern_SHMS_evts_notrack"]+yield_dict["uncern_CPULT_phys"]+yield_dict["uncern_charge"]/makeList("charge") + yield_dict["uncer_boilingCorr"])
+            uncern_yieldRel_SHMS_CPULT_track =  (yield_dict["uncern_SHMS_evts_notrack"]+yield_dict["uncern_CPULT_phys"]+makeList("SHMS_track_uncern")+yield_dict["uncern_charge"]/makeList("charge") + yield_dict["uncer_boilingCorr"])
             yield_dict.update({"uncern_yieldRel_SHMS_CPULT_notrack" : uncern_yieldRel_SHMS_CPULT_notrack})
             yield_dict.update({"uncern_yieldRel_SHMS_CPULT_track" : uncern_yieldRel_SHMS_CPULT_track})
             
@@ -609,15 +609,15 @@ def calc_yield():
             yield_dict.update({"yieldRel_HMS_CPULT_track" : yieldRel_HMS_CPULT_track})
             
             
-            uncern_yieldRel_HMS_scaler = np.sqrt((yield_dict["uncern_HMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2 +(yield_dict["uncern_ELT2"])**2 + yield_dict["uncer_boilingCorr"]**2)
-            uncern_yieldRel_HMS_notrack = np.sqrt((yield_dict["uncern_HMS_evts_notrack"]**2)+(yield_dict["uncern_TLT"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2 + yield_dict["uncer_boilingCorr"]**2)
-            uncern_yieldRel_HMS_track =  np.sqrt((yield_dict["uncern_HMS_evts_notrack"]**2)+(yield_dict["uncern_TLT"]**2)+(makeList("HMS_track_uncern")**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2 + yield_dict["uncer_boilingCorr"]**2)
+            uncern_yieldRel_HMS_scaler = np.sqrt((yield_dict["uncern_HMS_evts_scaler"]**2)+(yield_dict["uncern_CPULT_phys"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2 +(yield_dict["uncern_ELT2"])**2 + yield_dict["uncer_boilingCorr"])
+            uncern_yieldRel_HMS_notrack = np.sqrt((yield_dict["uncern_HMS_evts_notrack"]**2)+(yield_dict["uncern_TLT"]**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2 + yield_dict["uncer_boilingCorr"])
+            uncern_yieldRel_HMS_track =  np.sqrt((yield_dict["uncern_HMS_evts_notrack"]**2)+(yield_dict["uncern_TLT"]**2)+(makeList("HMS_track_uncern")**2)+(yield_dict["uncern_charge"]/makeList("charge"))**2 + yield_dict["uncer_boilingCorr"])
             yield_dict.update({"uncern_yieldRel_HMS_scaler" : uncern_yieldRel_HMS_scaler})
             yield_dict.update({"uncern_yieldRel_HMS_notrack" : uncern_yieldRel_HMS_notrack})
             yield_dict.update({"uncern_yieldRel_HMS_track" : uncern_yieldRel_HMS_track})
             
-            uncern_yieldRel_HMS_CPULT_notrack = (yield_dict["uncern_HMS_evts_notrack"]+yield_dict["uncern_CPULT_phys"] + yield_dict["uncer_boilingCorr"]**2)
-            uncern_yieldRel_HMS_CPULT_track =  (yield_dict["uncern_HMS_evts_notrack"]+yield_dict["uncern_CPULT_phys"]+makeList("HMS_track_uncern") + yield_dict["uncer_boilingCorr"]**2)
+            uncern_yieldRel_HMS_CPULT_notrack = (yield_dict["uncern_HMS_evts_notrack"]+yield_dict["uncern_CPULT_phys"] + yield_dict["uncer_boilingCorr"])
+            uncern_yieldRel_HMS_CPULT_track =  (yield_dict["uncern_HMS_evts_notrack"]+yield_dict["uncern_CPULT_phys"]+makeList("HMS_track_uncern") + yield_dict["uncer_boilingCorr"])
             yield_dict.update({"uncern_yieldRel_HMS_CPULT_notrack" : uncern_yieldRel_HMS_CPULT_notrack})
             yield_dict.update({"uncern_yieldRel_HMS_CPULT_track" : uncern_yieldRel_HMS_CPULT_track})
         else:
