@@ -47,7 +47,7 @@ TGraphErrors* ReBase(TGraphErrors *ge1)
     return ge2;
 }
 
-void PlotCombinedLumi (TString dataType)
+void PlotCombinedLumi_Scalar (TString dataType)
 {
     gROOT->SetBatch(kTRUE);
     int NFILES;
@@ -59,8 +59,11 @@ void PlotCombinedLumi (TString dataType)
     TString coin_rate = "coin_rate";
     TString carbon = "carbon";
     TString singles = "singles";
+    TString singles_rate = "singles_rate";
     TString shms = "shms";
     TString hms = "hms";
+    TString shms_rate = "shms_rate";
+    TString hms_rate = "hms_rate";
     TString lh2_all = "lh2_all";
     bool rate = false;
     
@@ -70,26 +73,26 @@ void PlotCombinedLumi (TString dataType)
         cout << "running Coin\n";
         NFILES = 7;
         filenames = new TString[NFILES];
-        filenames[0] = "../OUTPUTS/ExclusiveLumi/yield_data_exc1_clean.csv";
-        filenames[1] = "../OUTPUTS/ExclusiveLumi/yield_data_exc2_clean.csv";
-        filenames[2] = "../OUTPUTS/ExclusiveLumi/yield_data_exc3_clean.csv";
-        filenames[3] = "../OUTPUTS/ExclusiveLumi/yield_data_exc4_clean.csv";
-        filenames[4] = "../OUTPUTS/ExclusiveLumi/yield_data_exc5_clean.csv";
-        filenames[5] = "../OUTPUTS/sidis/yield_data_sidis1_clean.csv";
-        filenames[6] = "../OUTPUTS/sidis/yield_data_sidis2_clean.csv";
+        filenames[0] = "../OUTPUTS/ExclusiveLumi/yield_data_exc1_ScYvCur.csv";
+        filenames[1] = "../OUTPUTS/ExclusiveLumi/yield_data_exc2_ScYvCur.csv";
+        filenames[2] = "../OUTPUTS/ExclusiveLumi/yield_data_exc3_ScYvCur.csv";
+        filenames[3] = "../OUTPUTS/ExclusiveLumi/yield_data_exc4_ScYvCur.csv";
+        filenames[4] = "../OUTPUTS/ExclusiveLumi/yield_data_exc5_ScYvCur.csv";
+        filenames[5] = "../OUTPUTS/sidis/yield_data_sidis1_ScvCur.csv";
+        filenames[6] = "../OUTPUTS/sidis/yield_data_sidis2_ScvCur.csv";
         OutFileName = "Coin";
     } else if (!dataType.CompareTo(coin_rate) ) {
         cout << "running Coin vrs Rate\n";
         rate = true;
         NFILES = 7;
         filenames = new TString[NFILES];
-        filenames[0] = "../OUTPUTS/ExclusiveLumi/yield_data_exc1_TrYvRate.csv";
-        filenames[1] = "../OUTPUTS/ExclusiveLumi/yield_data_exc2_TrYvRate.csv";
-        filenames[2] = "../OUTPUTS/ExclusiveLumi/yield_data_exc3_TrYvRate.csv";
-        filenames[3] = "../OUTPUTS/ExclusiveLumi/yield_data_exc4_TrYvRate.csv";
-        filenames[4] = "../OUTPUTS/ExclusiveLumi/yield_data_exc5_TrYvRate.csv";
-        filenames[5] = "../OUTPUTS/sidis/yield_data_sidis1_TrvRate.csv";
-        filenames[6] = "../OUTPUTS/sidis/yield_data_sidis2_TrvRate.csv";
+        filenames[0] = "../OUTPUTS/ExclusiveLumi/yield_data_exc1_ScYvRate.csv";
+        filenames[1] = "../OUTPUTS/ExclusiveLumi/yield_data_exc2_ScYvRate.csv";
+        filenames[2] = "../OUTPUTS/ExclusiveLumi/yield_data_exc3_ScYvRate.csv";
+        filenames[3] = "../OUTPUTS/ExclusiveLumi/yield_data_exc4_ScYvRate.csv";
+        filenames[4] = "../OUTPUTS/ExclusiveLumi/yield_data_exc5_ScYvRate.csv";
+        filenames[5] = "../OUTPUTS/sidis/yield_data_sidis1_ScvRate.csv";
+        filenames[6] = "../OUTPUTS/sidis/yield_data_sidis2_ScvRate.csv";
         OutFileName = "CoinRate";
     }else if (!dataType.CompareTo(carbon)){
         cout << "running Carbon\n";
@@ -106,46 +109,76 @@ void PlotCombinedLumi (TString dataType)
         cout << "running Singles\n";
         NFILES = 6;
         filenames = new TString[NFILES];
-        filenames[0] = "../OUTPUTS/Lumi6-4/SHMS/yield_data_LH2_clean.csv";
-        filenames[1] = "../OUTPUTS/Lumi6-4/HMS/yield_data_LH2_clean.csv";
-        filenames[2] = "../OUTPUTS/Lumi9-2/pt1/yield_data_LH2_HMS.csv";
-        filenames[3] = "../OUTPUTS/Lumi9-2/pt1/yield_data_LH2_SHMS.csv";
-        filenames[4] = "../OUTPUTS/Lumi9-2/pt2/yield_data_LH2_HMS.csv";
-        filenames[5] = "../OUTPUTS/Lumi9-2/pt2/yield_data_LH2_SHMS.csv";
+        filenames[0] = "../OUTPUTS/Lumi6-4/SHMS/yield_data_LH2_Sc.csv";
+        filenames[1] = "../OUTPUTS/Lumi6-4/HMS/yield_data_LH2_Sc.csv";
+        filenames[2] = "../OUTPUTS/Lumi9-2/pt1/yield_data_LH2_HMS_Sc.csv";
+        filenames[3] = "../OUTPUTS/Lumi9-2/pt1/yield_data_LH2_SHMS_Sc.csv";
+        filenames[4] = "../OUTPUTS/Lumi9-2/pt2/yield_data_LH2_HMS_Sc.csv";
+        filenames[5] = "../OUTPUTS/Lumi9-2/pt2/yield_data_LH2_SHMS_Sc.csv";
         OutFileName = "LH2_Singles";
+    }else if (!dataType.CompareTo(singles_rate)){
+        cout << "running Singles\n";
+        NFILES = 6;
+        rate = true;
+        filenames = new TString[NFILES];
+        filenames[0] = "../OUTPUTS/Lumi6-4/SHMS/yield_data_LH2_ScVr.csv";
+        filenames[1] = "../OUTPUTS/Lumi6-4/HMS/yield_data_LH2_ScVr.csv";
+        filenames[2] = "../OUTPUTS/Lumi9-2/pt1/yield_data_LH2_HMS_ScVr.csv";
+        filenames[3] = "../OUTPUTS/Lumi9-2/pt1/yield_data_LH2_SHMS_ScVr.csv";
+        filenames[4] = "../OUTPUTS/Lumi9-2/pt2/yield_data_LH2_HMS_ScVr.csv";
+        filenames[5] = "../OUTPUTS/Lumi9-2/pt2/yield_data_LH2_SHMS_ScVr.csv";
+        OutFileName = "LH2_Singles_Rate";
     }else if (!dataType.CompareTo(shms)){
         cout << "running Singles\n";
         NFILES = 3;
         filenames = new TString[NFILES];
-        filenames[0] = "../OUTPUTS/Lumi6-4/SHMS/yield_data_LH2_clean.csv";
-        filenames[1] = "../OUTPUTS/Lumi9-2/pt1/yield_data_LH2_SHMS.csv";
-        filenames[2] = "../OUTPUTS/Lumi9-2/pt2/yield_data_LH2_SHMS.csv";
+        filenames[0] = "../OUTPUTS/Lumi6-4/SHMS/yield_data_LH2_Sc.csv";
+        filenames[1] = "../OUTPUTS/Lumi9-2/pt1/yield_data_LH2_SHMS_Sc.csv";
+        filenames[2] = "../OUTPUTS/Lumi9-2/pt2/yield_data_LH2_SHMS_Sc.csv";
         OutFileName = "SHMS_LH2";
     }else if (!dataType.CompareTo(hms)){
         cout << "running Singles\n";
         NFILES = 3;
         filenames = new TString[NFILES];
-        filenames[0] = "../OUTPUTS/Lumi6-4/HMS/yield_data_LH2_clean.csv";
-        filenames[1] = "../OUTPUTS/Lumi9-2/pt1/yield_data_LH2_HMS.csv";
-        filenames[2] = "../OUTPUTS/Lumi9-2/pt2/yield_data_LH2_HMS.csv";
+        filenames[0] = "../OUTPUTS/Lumi6-4/HMS/yield_data_LH2_Sc.csv";
+        filenames[1] = "../OUTPUTS/Lumi9-2/pt1/yield_data_LH2_HMS_Sc.csv";
+        filenames[2] = "../OUTPUTS/Lumi9-2/pt2/yield_data_LH2_HMS_Sc.csv";
         OutFileName = "HMS_LH2";
+    }else if (!dataType.CompareTo(shms_rate)){
+        cout << "running Singles\n";
+        NFILES = 3;
+        rate = true;
+        filenames = new TString[NFILES];
+        filenames[0] = "../OUTPUTS/Lumi6-4/SHMS/yield_data_LH2_ScVr.csv";
+        filenames[1] = "../OUTPUTS/Lumi9-2/pt1/yield_data_LH2_SHMS_ScVr.csv";
+        filenames[2] = "../OUTPUTS/Lumi9-2/pt2/yield_data_LH2_SHMS_ScVr.csv";
+        OutFileName = "SHMS_rate_LH2";
+    }else if (!dataType.CompareTo(hms_rate)){
+        cout << "running Singles\n";
+        NFILES = 3;
+        rate = true;
+        filenames = new TString[NFILES];
+        filenames[0] = "../OUTPUTS/Lumi6-4/HMS/yield_data_LH2_ScVr.csv";
+        filenames[1] = "../OUTPUTS/Lumi9-2/pt1/yield_data_LH2_HMS_ScVr.csv";
+        filenames[2] = "../OUTPUTS/Lumi9-2/pt2/yield_data_LH2_HMS_ScVr.csv";
+        OutFileName = "HMS_rate_LH2";
     }else if (!dataType.CompareTo(lh2_all)){
         cout << "running LH2_ALL\n";
         NFILES = 13;
         filenames = new TString[NFILES];
-        filenames[0] = "../OUTPUTS/Lumi6-4/SHMS/yield_data_LH2_clean.csv";
-        filenames[1] = "../OUTPUTS/Lumi6-4/HMS/yield_data_LH2_clean.csv";
-        filenames[2] = "../OUTPUTS/Lumi9-2/pt1/yield_data_LH2_HMS.csv";
-        filenames[3] = "../OUTPUTS/Lumi9-2/pt1/yield_data_LH2_SHMS.csv";
-        filenames[4] = "../OUTPUTS/Lumi9-2/pt2/yield_data_LH2_HMS.csv";
-        filenames[5] = "../OUTPUTS/Lumi9-2/pt2/yield_data_LH2_SHMS.csv";
-        filenames[6] = "../OUTPUTS/ExclusiveLumi/yield_data_exc1_clean.csv";
-        filenames[7] = "../OUTPUTS/ExclusiveLumi/yield_data_exc2_clean.csv";
-        filenames[8] = "../OUTPUTS/ExclusiveLumi/yield_data_exc3_clean.csv";
-        filenames[9] = "../OUTPUTS/ExclusiveLumi/yield_data_exc4_clean.csv";
-        filenames[10] = "../OUTPUTS/ExclusiveLumi/yield_data_exc5_clean.csv";
-        filenames[11] = "../OUTPUTS/sidis/yield_data_sidis1_clean.csv";
-        filenames[12] = "../OUTPUTS/sidis/yield_data_sidis2_clean.csv";
+        filenames[0] = "../OUTPUTS/Lumi6-4/SHMS/yield_data_LH2_ScvCur.csv";
+        filenames[1] = "../OUTPUTS/Lumi6-4/HMS/yield_data_LH2_ScvCur.csv";
+        filenames[2] = "../OUTPUTS/Lumi9-2/pt1/yield_data_LH2_HMS_Sc.csv";
+        filenames[3] = "../OUTPUTS/Lumi9-2/pt1/yield_data_LH2_SHMS_Sc.csv";
+        filenames[4] = "../OUTPUTS/Lumi9-2/pt2/yield_data_LH2_HMS_Sc.csv";
+        filenames[5] = "../OUTPUTS/Lumi9-2/pt2/yield_data_LH2_SHMS_Sc.csv";
+        filenames[6] = "../OUTPUTS/ExclusiveLumi/yield_data_exc1_ScYvCur.csv";
+        filenames[7] = "../OUTPUTS/ExclusiveLumi/yield_data_exc2_ScYvCur.csv";
+        filenames[8] = "../OUTPUTS/ExclusiveLumi/yield_data_exc3_ScYvCur.csv";
+        filenames[9] = "../OUTPUTS/ExclusiveLumi/yield_data_exc4_ScYvCur.csv";
+        filenames[10] = "../OUTPUTS/ExclusiveLumi/yield_data_exc5_ScYvCur.csv";
+        filenames[11] = "../OUTPUTS/sidis/yield_data_sidis1_ScvCur.csv";
+        filenames[12] = "../OUTPUTS/sidis/yield_data_sidis2_ScvCur.csv";
         OutFileName = "LH2_ALL";
     }else{
         cout << "choose one of: 'coin', 'carbon', 'singles', or 'lh2_all'. \nShutting down!\n";
@@ -173,8 +206,8 @@ void PlotCombinedLumi (TString dataType)
         //Gf[i]->SetTitle((filenames[i](lastSlash,firstDot-lastSlash)).Data());
         PlotColors(Gf[i], i);
         
-        if(i == 0) C[i]->Print(Form("../OUTPUTS/CombinedPlot%s.pdf(", OutFileName.Data()));
-        else C[i]->Print(Form("../OUTPUTS/CombinedPlot%s.pdf", OutFileName.Data()));
+        if(i == 0) C[i]->Print(Form("../OUTPUTS/CombinedPlot%s_Scalar.pdf(", OutFileName.Data()));
+        else C[i]->Print(Form("../OUTPUTS/CombinedPlot%s_Scalar.pdf", OutFileName.Data()));
         mg->Add(Gf[i]);
     }
     
@@ -182,9 +215,9 @@ void PlotCombinedLumi (TString dataType)
     if (!rate)
         mg->GetXaxis()->SetTitle("Current (uA)");
     else
-        mg->GetXaxis()->SetTitle("Rate (Hz)");
+        mg->GetXaxis()->SetTitle("Rate (MHz)");
         
-    mg->GetYaxis()->SetTitle("Renormalized Yield");
+    mg->GetYaxis()->SetTitle("Renormalized Scalar Yield");
     
     TF1 *lin2 = new TF1("lin2", "[0]+[1]*x",0,80);
     mg->Fit(lin2);
@@ -198,7 +231,7 @@ void PlotCombinedLumi (TString dataType)
     }
     l1->Draw();
     
-    cf->Print(Form("../OUTPUTS/CombinedPlot%s.pdf)", OutFileName.Data()));
+    cf->Print(Form("../OUTPUTS/CombinedPlot%s_Scalar.pdf)", OutFileName.Data()));
 }
 
 
