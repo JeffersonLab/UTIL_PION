@@ -172,11 +172,15 @@ def calc_yield():
     uncern_charge = np.sqrt(((((makeList("charge")**2)*((uncern_slope**2))+ (makeList("time")**2)*uncern_intercept**2))/slope**2))
     yield_dict.update({"uncern_charge" : uncern_charge})
 
-    boilSlope = 2.8/10000 #boiling correction for 2.8%/100uA slope
-    boilSlopeUncer = 0.17/10000 #statistical uncertainty
-    boilingCorr = 1 - (yield_dict["current"]*makeList("curr_corr")*(boilSlope)) 
     uncer_Current =  (((uncern_slope**2)+ (uncern_intercept**2/yield_dict["current"]))/slope**2)
-    uncer_boilingCorr =  np.sqrt((yield_dict["current"]*makeList("curr_corr")*boilSlopeUncer)**2 + (boilSlope*uncer_Current)**2)
+    if target == 'LH2' :
+        boilSlope = 2.8/10000 #boiling correction for 2.8%/100uA slope
+        boilSlopeUncer = 0.17/10000 + 0.69/10000 #statistical + systematic uncertainty
+        boilingCorr = 1 - (yield_dict["current"]*makeList("curr_corr")*(boilSlope))         
+        uncer_boilingCorr = (yield_dict["current"]*makeList("curr_corr")*boilSlopeUncer)**2 + (boilSlope*uncer_Current)**2
+    else:
+        boilingCorr = 1
+        uncer_boilingCorr = 0
 
     yield_dict.update({"boilingCorr": boilingCorr})
     yield_dict.update({"uncer_boilingCorr": uncer_boilingCorr})
