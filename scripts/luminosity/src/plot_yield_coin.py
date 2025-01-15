@@ -134,6 +134,9 @@ def calc_yield():
         "rate_COIN" : makeList("COINTRIG_scaler")/makeList("time"),
         "rate_TOTAL" : (makeList("COINTRIG_scaler") + makeList("SHMSTRIG_scaler") + makeList("HMSTRIG_scaler"))/makeList("time"), #for ELT live time
         
+        "rate_HMS3-4" : makeList("HMS_3-4Trig_scaler")/makeList("time"),
+        "rate_SHMS3-4" : makeList("SHMS_3-4Trig_scaler")/makeList("time"),
+        
         #"CPULT_phys" : (makeList("HMSTRIG_cut")*makeList("HMS_PS")+makeList("SHMSTRIG_cut")*makeList("SHMS_PS"))*makeList("CPULT_scaler"),
         "CPULT_phys" : makeList("CPULT_scaler"),
 
