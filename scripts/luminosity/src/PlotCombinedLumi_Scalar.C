@@ -215,7 +215,7 @@ void PlotCombinedLumi_Scalar (TString dataType)
     if (!rate)
         mg->GetXaxis()->SetTitle("Current (uA)");
     else
-        mg->GetXaxis()->SetTitle("Rate (MHz)");
+        mg->GetXaxis()->SetTitle("3/4 Rate (MHz)");
         
     mg->GetYaxis()->SetTitle("Renormalized Scalar Yield");
     
