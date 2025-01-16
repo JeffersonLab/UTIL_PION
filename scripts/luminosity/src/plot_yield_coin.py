@@ -183,8 +183,8 @@ def calc_yield():
     uncern_charge = np.sqrt(((((makeList("charge")**2)*((uncern_slope**2))+ (makeList("time")**2)+uncern_intercept**2))/slope**2))
     yield_dict.update({"uncern_charge" : uncern_charge})
         
-    rateSlope = 2.9/(10*8) #adhoc rate correction for 2.9%/MHz slope
-    rateSlopeUncer = 0.1/(10*8)  #statistical uncertainty
+    rateSlope = 2.9/(10**8) #adhoc rate correction for 2.9%/MHz slope
+    rateSlopeUncer = 0.19/(10**8)  #statistical uncertainty
     rateHMSCorr = 1 - (yield_dict["rate_HMS3-4"]*(rateSlope))         
     uncer_rateHMSCorr = (yield_dict["rate_HMS3-4"]*rateSlopeUncer)**2 + (rateSlope*yield_dict["uncern_HMS3-4_evts_scaler"])**2
     rateSHMSCorr = 1 - (yield_dict["rate_SHMS3-4"]*(rateSlope))         
