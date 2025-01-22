@@ -434,6 +434,9 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
     #For details see: https://hallcweb.jlab.org/doc-private/ShowDocument?docid=1063
     HODOGATEWIDTH = 50/(10**9) #ns - gate width is PionLT
     SHMS_HodoRate = [0]*NRATEHODO
+    SHMSTrueRate = [0]*NRATEHODO
+    SHMSDT = [0]*NRATEHODO
+    SHMSLT = [0]*NRATEHODO
     #HMS_HodoRate = [0]*NRATEHODO
     for iRATE in range(0, NRATEHODO): 
         SHMS_HodoRate[iRATE] =  SHMS_Hodo_rate_sum[iRATE]/time_sum[bcm_ix]
