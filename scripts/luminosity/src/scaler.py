@@ -442,7 +442,7 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
         SHMS_HodoRate[iRATE] =  SHMS_Hodo_rate_sum[iRATE]/time_sum[bcm_ix]
         #HMS_HodoRate[iRATE] =  HMS_Hodo_rate_sum[iRATE]/time_sum[bcm_ix]
         
-        SHMSTrueRate[iRATE] = SHMS_HodoRate[iRATE]*(1 - HODOGATEWIDTH*SHMS_HodoRate[iRATE]) 
+        SHMSTrueRate[iRATE] = SHMS_HodoRate[iRATE]/(1 - HODOGATEWIDTH*SHMS_HodoRate[iRATE]) 
         #HMSTrueRate[iRATE] = HMS_HodoRate[iRATE]*(1 - HODOGATEWIDTH*HMS_HodoRate[iRATE])
         
         SHMSDT[iRATE] = SHMSTrueRate[iRATE]*HODOGATEWIDTH
