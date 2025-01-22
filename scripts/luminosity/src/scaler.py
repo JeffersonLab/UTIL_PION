@@ -74,6 +74,16 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
         P_pPRLO_scaler = s_tree["H.PRLO.scaler"].array()
 
         P_EDTM_scaler = s_tree["H.EDTM.scaler"].array()
+        
+        P_S1X_scaler = s_tree["P.S1X.scaler"].array()
+        P_S1Y_scaler = s_tree["P.S1Y.scaler"].array()
+        P_S2X_scaler = s_tree["P.S2X.scaler"].array()
+        P_S2Y_scaler = s_tree["P.S2Y.scaler"].array()
+        
+        H_S1X_scaler = s_tree["H.S1X.scaler"].array()
+        H_S1Y_scaler = s_tree["H.S1Y.scaler"].array()
+        H_S2X_scaler = s_tree["H.S2X.scaler"].array()
+        H_S2Y_scaler = s_tree["H.S2Y.scaler"].array()
 
     else:
         s_evts = s_tree["P.BCM4A.scaler"].array()
@@ -126,6 +136,16 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
         P_pPRLO_scaler = s_tree["P.PRLO.scaler"].array()
 
         P_EDTM_scaler = s_tree["P.EDTM.scaler"].array()
+        
+        P_S1X_scaler = s_tree["P.S1X.scaler"].array()
+        P_S1Y_scaler = s_tree["P.S1Y.scaler"].array()
+        P_S2X_scaler = s_tree["P.S2X.scaler"].array()
+        P_S2Y_scaler = s_tree["P.S2Y.scaler"].array()
+        
+        H_S1X_scaler = s_tree["H.S1X.scaler"].array()
+        H_S1Y_scaler = s_tree["H.S1Y.scaler"].array()
+        H_S2X_scaler = s_tree["H.S2X.scaler"].array()
+        H_S2Y_scaler = s_tree["H.S2Y.scaler"].array()
     
     NBCM = 5
     NTRIG = 6
@@ -170,6 +190,9 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
                        P_pEL_REAL_scaler, P_pEL_CLEAN_scaler, P_pSTOF_scaler, P_pPRHI_scaler, P_pPRLO_scaler]
 
     EDTM_value = P_EDTM_scaler
+    
+    SHMS_Hodo_rate_value = [P_S1X_scaler, P_S1Y_scaler, P_S2X_scaler, P_S2Y_scaler]
+    HMS_Hodo_rate_value  = [H_S1X_scaler, H_S1Y_scaler, H_S2X_scaler, H_S2Y_scaler]
 
     # Variables useful in Process
     # To find total charge
@@ -215,12 +238,23 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
     EDTM_current = 0
     previous_EDTM = 0
     
+    # To Determine Hodo Single plane rates
+    # added later by NH (2025/01/22)
+    NRATEHODO = 4
+    SHMS_Hodo_rate_sum = [0]*NRATEHODO
+    HMS_Hodo_rate_sum = [0]*NRATEHODO
+    SHMS_Hodo_previous_rate = [0]*NRATEHODO
+    HMS_Hodo_previous_rate = [0]*NRATEHODO
+    
     # Set bcm to use (0-bcm1, 1-bcm2, 2-bcm4A, 3-bcm4B, 4-bcm4C)
     bcm_ix = 1
     
     for ibcm in range(0, 5):
         previous_acctrig = (acctrig_value[0] - EDTM_current)
         previous_EDTM = EDTM_value[0]
+        for iRATE in range(0, NRATEHODO):
+            SHMS_Hodo_previous_rate[iRATE] = SHMS_Hodo_rate_value[iRATE][0]
+            HMS_Hodo_previous_rate[iRATE]  =  HMS_Hodo_rate_value[iRATE][0]
         for itrig in range(0, NTRIG):
             previous_trig[itrig] = trig_value[itrig][0]
         for iPRE in range(0, NPRE):
@@ -260,6 +294,10 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
                 # Changing acctrig to not subtract EDTM to get CPULT for all events
                 # acctrig_sum += ((acctrig_value[i] - EDTM_current) - previous_acctrig)
                 acctrig_sum += ((acctrig_value[i]) - previous_acctrig)
+                for iRATE in range(0, NRATEHODO):
+                    #Hodoscope individuale plane sum
+                    SHMS_Hodo_rate_sum[iRATE] += (SHMS_Hodo_rate_value[iRATE][i] - SHMS_Hodo_previous_rate[iRATE])
+                    HMS_Hodo_rate_sum[iRATE] += (HMS_Hodo_rate_value[iRATE][i] - HMS_Hodo_previous_rate[iRATE])
                 for itrig in range(0, NTRIG):
                     # Trigger scaler iteration.
                     # Iterate over current value then subtracting previous so that there is no double counting. Subtracted values are uncut.
@@ -279,6 +317,9 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
             # previous_acctrig = (acctrig_value[i] - EDTM_current)
             previous_acctrig = (acctrig_value[i])
             previous_EDTM = EDTM_value[i]
+            for iRATE in range(0, NRATEHODO):
+                SHMS_Hodo_previous_rate[iRATE] = SHMS_Hodo_rate_value[iRATE][i]
+                HMS_Hodo_previous_rate[iRATE]  =  HMS_Hodo_rate_value[iRATE][i]
             for itrig in range(0, NTRIG):
                 previous_trig[itrig] = trig_value[itrig][i]
             for iPRE in range(0, NPRE):
@@ -388,6 +429,31 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
         scalers.update({"CPULT_scaler": acctrig_sum/((trig_sum[2]/HMS_PS))})
         scalers.update({"CPULT_scaler_uncern": (acctrig_sum/((trig_sum[2]/HMS_PS)))*np.sqrt((1/(trig_sum[2]/HMS_PS))+(1/acctrig_sum))}) # this has sum bug that trig_sum[3] isn't being filled, don't know why - heinricn 2024/04/12
         scalers.update({})
+
+    #calculate the ELT via individual Hodoplane rates per Dave Mack technique
+    #For details see: https://hallcweb.jlab.org/doc-private/ShowDocument?docid=1063
+    HODOGATEWIDTH = 50/(10**9) #ns - gate width is PionLT
+    SHMS_HodoRate = [0]*NRATEHODO
+    HMS_HodoRate = [0]*NRATEHODO
+    for iRATE in range(0, NRATEHODO): 
+        SHMS_HodoRate[iRATE] =  SHMS_Hodo_rate_sum[iRATE]/time_sum[bcm_ix]
+        HMS_HodoRate[iRATE] =  HMS_Hodo_rate_sum[iRATE]/time_sum[bcm_ix]
+        
+        SHMSTrueRate[iRATE] = SHMS_HodoRate[iRATE]*(1 - HODOGATEWIDTH*SHMS_HodoRate[iRATE]) 
+        HMSTrueRate[iRATE] = HMS_HodoRate[iRATE]*(1 - HODOGATEWIDTH*HMS_HodoRate[iRATE])
+        
+        SHMSDT[iRATE] = SHMSTrueRate[iRATE]*HODOGATEWIDTH
+        HMSDT[iRATE] = HMSTrueRate[iRATE]*HODOGATEWIDTH
+
+        SHMSLT[iRATE] = 1 - SHMSDT
+        HMSLT[iRATE] = 1 - HMSDT
+    
+    SHMS3of4ELT = SHMSLT[0]*SHMSLT[1]*SHMSLT[2]*SHMSLT[3] + SHMSDT[0]*SHMSLT[1]*SHMSLT[2]*SHMSLT[3] + SHMSLT[0]*SHMSDT[1]*SHMSLT[2]*SHMSLT[3] + SHMSLT[0]*SHMSLT[1]*SHMSDT[2]*SHMSLT[3] + SHMSLT[0]*SHMSLT[1]*SHMSLT[2]*SHMSDT[3]
+    HMS3of4ELT = HMSLT[0]*HMSLT[1]*HMSLT[2]*HMSLT[3] + HMSDT[0]*HMSLT[1]*HMSLT[2]*HMSLT[3] + HMSLT[0]*HMSDT[1]*HMSLT[2]*HMSLT[3] + HMSLT[0]*HMSLT[1]*HMSDT[2]*HMSLT[3] + HMSLT[0]*HMSLT[1]*HMSLT[2]*HMSDT[3]
+    print("\nHodo plane Livetimes...")
+    print("SHMS 4/3: %s" % SHMS3of4ELT, " HMS %s" % HMS3of4ELT)
+    scalers.update({"SHMS3of4ELT": SHMS3of4ELT})
+    scalers.update({"HMS3of4ELT": HMS3of4ELT})
 
     print("\nPre-scale values...")
     print("SHMS_PS : %s" % SHMS_PS, " HMS_PS : %s" % HMS_PS," COIN_PS : %s" % COIN_PS )
