@@ -228,16 +228,23 @@ def calc_yield():
         yield_dict.update({"rate_SHMS": makeList("SHMSTRIG_scaler")/makeList("time")})  
     else: yield_dict.update({"rate_SHMS": 0})
     
-    EDT2 = gwidth*(yield_dict["rate_TOTAL"]) # estimation of dead time using gate width and trigger rate
-    
-    
-    ELT2 = 1 - EDT2 
-    
+    EDT2 = gwidth*(yield_dict["rate_HMS"] + yield_dict["rate_SHMS"]) # estimation of dead time using gate width and trigger rate
+    EDT2_HMS = gwidth*(yield_dict["rate_HMS"]) # estimation of dead time using gate width and trigger rate
+    EDT2_SHMS = gwidth*(yield_dict["rate_SHMS"]) # estimation of dead time using gate width and trigger rate
+
+    ELT2 = 1 - EDT2
+    ELT2_HMS  = 1 - EDT2_HMS
+    ELT2_SHMS = 1 - EDT2_SHMS
+    uncern_ELT2 = (ELT2*(1-ELT2))/(50*ELT2**2)
+
     TLT_ELT = ELT2*yield_dict["CPULT_phys"]
 
     yield_dict.update({"TLT" : TLT_EDTM})
     yield_dict.update({"TLT_ELT" : TLT_ELT})
-    #yield_dict.update({"TLT" : TLT})
+    yield_dict.update({"ELT2" : ELT2})
+    yield_dict.update({"ELT2_HMS" : ELT2_HMS})
+    yield_dict.update({"ELT2_SHMS" : ELT2_SHMS})
+    yield_dict.update({"uncern_ELT2" : uncern_ELT2})
     
     uncern_TLT = np.sqrt(makeList("accp_edtm")/makeList("sent_edtm_PS")**2+makeList("accp_edtm")**2/makeList("sent_edtm_PS")**4)
     uncern_TLT_ELT = TLT_ELT*np.sqrt((makeList("CPULT_scaler_uncern")/makeList("CPULT_scaler"))**2 + (uncern_gwidth/gwidth)**2)
