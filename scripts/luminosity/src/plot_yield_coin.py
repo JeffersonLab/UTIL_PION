@@ -142,6 +142,8 @@ def calc_yield():
 
         "uncern_CPULT_phys" : makeList("CPULT_scaler_uncern"),
         
+        "ELT_3of4_SHMS" : makeList("SHMS3of4ELT"),
+        
         "uncern_HMS_evts_scaler" : np.sqrt(makeList("HMSTRIG_scaler"))/makeList("HMSTRIG_scaler"),
         
         "uncern_SHMS_evts_scaler" : np.sqrt(makeList("SHMSTRIG_scaler"))/makeList("SHMSTRIG_scaler"),
@@ -189,6 +191,12 @@ def calc_yield():
     uncer_rateHMSCorr = (yield_dict["rate_HMS3-4"]*rateSlopeUncer)**2 + (rateSlope*yield_dict["uncern_HMS3-4_evts_scaler"])**2
     rateSHMSCorr = 1 - (yield_dict["rate_SHMS3-4"]*(rateSlope))         
     uncer_rateSHMSCorr = (yield_dict["rate_SHMS3-4"]*rateSlopeUncer)**2 + (rateSlope*yield_dict["uncern_SHMS3-4_evts_scaler"])**2
+    
+    #temporary to test with just boiling correction
+    rateHMSCorr = rateHMSCorr/rateHMSCorr
+    rateSHMSCorr = rateSHMSCorr/rateSHMSCorr
+    uncer_rateHMSCorr = rateHMSCorr*0
+    uncer_rateSHMSCorr = rateSHMSCorr*0
     
     yield_dict.update({"rateHMSCorr": rateHMSCorr})
     yield_dict.update({"uncer_rateHMSCorr": uncer_rateHMSCorr})
