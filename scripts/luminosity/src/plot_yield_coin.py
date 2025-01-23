@@ -136,6 +136,8 @@ def calc_yield():
         
         "rate_HMS3-4" : makeList("HMS_3-4Trig_scaler")/makeList("time"),
         "rate_SHMS3-4" : makeList("SHMS_3-4Trig_scaler")/makeList("time"),
+        "uncern_HMS3-4_evts_scaler" : np.sqrt(makeList("HMS_3-4Trig_scaler"))/makeList("HMS_3-4Trig_scaler"),
+        "uncern_SHMS3-4_evts_scaler" : np.sqrt(makeList("SHMS_3-4Trig_scaler"))/makeList("SHMS_3-4Trig_scaler"),
         
         #"CPULT_phys" : (makeList("HMSTRIG_cut")*makeList("HMS_PS")+makeList("SHMSTRIG_cut")*makeList("SHMS_PS"))*makeList("CPULT_scaler"),
         "CPULT_phys" : makeList("CPULT_scaler"),
