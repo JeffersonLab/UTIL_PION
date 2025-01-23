@@ -142,7 +142,7 @@ def calc_yield():
 
         "uncern_CPULT_phys" : makeList("CPULT_scaler_uncern"),
         
-        "ELT_3of4_SHMS" : makeList("SHMS3of4ELT"),
+        #"ELT_3of4_SHMS" : makeList("SHMS3of4ELT"),
         
         "uncern_HMS_evts_scaler" : np.sqrt(makeList("HMSTRIG_scaler"))/makeList("HMSTRIG_scaler"),
         
