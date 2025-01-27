@@ -137,10 +137,10 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
 
         P_EDTM_scaler = s_tree["P.EDTM.scaler"].array()
         
-        P_S1X_scaler = s_tree["P.S1X.scaler"].array()
-        P_S1Y_scaler = s_tree["P.S1Y.scaler"].array()
-        P_S2X_scaler = s_tree["P.S2X.scaler"].array()
-        P_S2Y_scaler = s_tree["P.S2Y.scaler"].array()
+        P_S1X_scaler = s_tree["H.S1X.scaler"].array() #HMS TSH does not have the SHMS hodo planes
+        P_S1Y_scaler = s_tree["H.S1Y.scaler"].array()
+        P_S2X_scaler = s_tree["H.S2X.scaler"].array()
+        P_S2Y_scaler = s_tree["H.S2Y.scaler"].array()
         
         #H_S1X_scaler = s_tree["H.S1X.scaler"].array()
         #H_S1Y_scaler = s_tree["H.S1Y.scaler"].array()
