@@ -139,9 +139,6 @@ def calc_yield():
         "CPULT_phys" : makeList("CPULT_scaler"),
 
         "uncern_CPULT_phys" : makeList("CPULT_scaler_uncern"),
-        
-        "SHMS_DataRate" : makeList("SHMSTRIG_scaler")/(makeList("time")*makeList("SHMS_PS")),
-        "HMS_DataRate" : makeList("HMSTRIG_scaler")/(makeList("time")*makeList("HMS_PS")),
 
         "ELT_3of4_SHMS" : makeList("SHMS3of4ELT"),
         "uncern_ELT_3of4_SHMS" : (makeList("SHMS3of4ELT")*(1-makeList("SHMS3of4ELT")))/(makeList("SHMS3of4ELT")**2),
@@ -217,8 +214,7 @@ def calc_yield():
     #ELT2_SHMS = 1 - EDT2_SHMS
     uncern_ELT2_HMS = (ELT2_HMS*(1-ELT2_HMS))/(50*ELT2_HMS**2)
         
-
-
+    
     TLT_ELT_SHMS = yield_dict["ELT_3of4_SHMS"]*yield_dict["CPULT_phys"]
     TLT_ELT_HMS = ELT2_HMS*yield_dict["CPULT_phys"]
 
@@ -269,6 +265,7 @@ def calc_yield():
     yield_dict.update({"SHMS_scaler_accp" : SHMS_scaler_accp})
     if(makeList("SHMS_PS")[0] == None or makeList("SHMS_PS")[0] == -1 or makeList("SHMS_PS").any() == 0):
         NO_SHMS = True
+        SHMS_DataRate = makeList("SHMSTRIG_scaler")*0
         yield_SHMS_scaler = []
         yield_SHMS_notrack = []
         yield_SHMS_track = []
@@ -280,14 +277,15 @@ def calc_yield():
             yield_SHMS_track.append(1)
             yield_SHMS_CPULT_notrack.append(1)
             yield_SHMS_CPULT_track.append(1)
-    else:             
+    else:    
+            SHMS_DataRate = makeList("SHMSTRIG_scaler")/(makeList("time")*makeList("SHMS_PS"))
             yield_SHMS_scaler = (yield_dict["SHMS_scaler_accp"])/(makeList("charge")*makeList("curr_corr")*yield_dict["ELT_3of4_SHMS"]*yield_dict["boilingCorr"])
             yield_SHMS_notrack = (makeList("p_int_etotnorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*yield_dict["boilingCorr"])
             yield_SHMS_track = (makeList("p_int_etottracknorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*makeList("SHMS_track")*yield_dict["boilingCorr"])
             yield_SHMS_CPULT_notrack = (makeList("p_int_etotnorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"]*yield_dict["boilingCorr"])
             yield_SHMS_CPULT_track = (makeList("p_int_etottracknorm_evts")*makeList("SHMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"]*makeList("SHMS_track")*yield_dict["boilingCorr"])
             
-            
+    yield_dict.update({"SHMS_DataRate" : SHMS_DataRate})
     yield_dict.update({"yield_SHMS_scaler" : yield_SHMS_scaler})
     yield_dict.update({"yield_SHMS_notrack" : yield_SHMS_notrack})
     yield_dict.update({"yield_SHMS_track" : yield_SHMS_track})
@@ -328,6 +326,7 @@ def calc_yield():
     # Calculate yield values
     if(makeList("HMS_PS")[0] == None or makeList("HMS_PS")[0] == -1 or makeList("HMS_PS").any() == 0):
         NO_HMS = True
+        HMS_DataRate = makeList("HMSTRIG_scaler")*0
         yield_HMS_scaler = []
         yield_HMS_notrack = []
         yield_HMS_track = []
@@ -340,7 +339,7 @@ def calc_yield():
             yield_HMS_CPULT_notrack.append(1)
             yield_HMS_CPULT_track.append(1)
     else:
-
+            HMS_DataRate = makeList("HMSTRIG_scaler")/(makeList("time")*makeList("HMS_PS"))
             yield_HMS_scaler = (yield_dict["HMS_scaler_accp"])/(makeList("charge")*makeList("curr_corr")*yield_dict["ELT2_HMS"]*yield_dict["boilingCorr"])
             yield_HMS_notrack = (makeList("h_int_etotnorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*yield_dict["boilingCorr"])
             yield_HMS_track = (makeList("h_int_etottracknorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*makeList("HMS_track")*yield_dict["boilingCorr"])
@@ -348,7 +347,7 @@ def calc_yield():
             yield_HMS_CPULT_track = (makeList("h_int_etottracknorm_evts")*makeList("HMS_PS"))/(makeList("charge")*makeList("curr_corr")*yield_dict["CPULT_phys"]*makeList("HMS_track")*yield_dict["boilingCorr"])
 
         
-        
+    yield_dict.update({"HMS_DataRate" : HMS_DataRate})   
     yield_dict.update({"yield_HMS_scaler" : yield_HMS_scaler})
     yield_dict.update({"yield_HMS_notrack" : yield_HMS_notrack})
     yield_dict.update({"yield_HMS_track" : yield_HMS_track})
