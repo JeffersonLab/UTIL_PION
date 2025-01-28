@@ -140,6 +140,9 @@ def calc_yield():
 
         "uncern_CPULT_phys" : makeList("CPULT_scaler_uncern"),
         
+        "SHMS_DataRate" : makeList("SHMSTRIG_scaler")/(makeList("time")*makeList("SHMS_PS")),
+        "HMS_DataRate" : makeList("HMSTRIG_scaler")/(makeList("time")*makeList("HMS_PS")),
+
         "ELT_3of4_SHMS" : makeList("SHMS3of4ELT"),
         "uncern_ELT_3of4_SHMS" : (makeList("SHMS3of4ELT")*(1-makeList("SHMS3of4ELT")))/(makeList("SHMS3of4ELT")**2),
         
@@ -1842,20 +1845,20 @@ def plot_yield():
     #plt.xlim(0,100)
     
     if "SHMS" in inp_name.upper():
-        plt.errorbar(yield_data["rate_SHMS"]/make_list("SHMS_PS"),yield_data["CPULT_phys"],yerr=yield_data["CPULT_phys"]*yield_data["uncern_CPULT_phys"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-        plt.scatter(yield_data["rate_SHMS"]/make_list("SHMS_PS"),yield_data["CPULT_phys"],color='blue',zorder=4,label="_nolegend_")
+        plt.errorbar(yield_data["SHMS_DataRate"],yield_data["CPULT_phys"],yerr=yield_data["CPULT_phys"]*yield_data["uncern_CPULT_phys"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["SHMS_DataRate"],yield_data["CPULT_phys"],color='blue',zorder=4,label="_nolegend_")
         
-        plt.errorbar(yield_data["rate_SHMS"]/make_list("SHMS_PS"),yield_data["CPULT_TLT_SHMS"],yerr=yield_data["CPULT_TLT_SHMS"]*(yield_data["uncern_ELT_3of4_SHMS"] + yield_data["uncern_TLT"]), color='black', linestyle='None', zorder=3, label="_nolegend_")
-        plt.scatter(yield_data["rate_SHMS"]/make_list("SHMS_PS"),yield_data["CPULT_TLT_SHMS"],color='red',zorder=4,label="_nolegend_")
+        plt.errorbar(yield_data["SHMS_DataRate"],yield_data["CPULT_TLT_SHMS"],yerr=yield_data["CPULT_TLT_SHMS"]*(yield_data["uncern_ELT_3of4_SHMS"] + yield_data["uncern_TLT"]), color='black', linestyle='None', zorder=3, label="_nolegend_")
+        plt.scatter(yield_data["SHMS_DataRate"],yield_data["CPULT_TLT_SHMS"],color='red',zorder=4,label="_nolegend_")
     elif "HMS" in inp_name.upper():
-        plt.errorbar(yield_data["rate_HMS"]/make_list("HMS_PS"),yield_data["CPULT_phys"],yerr=yield_data["CPULT_phys"]*yield_data["uncern_CPULT_phys"],color='black',linestyle='None',zorder=3,label="_nolegend_")
-        plt.scatter(yield_data["rate_HMS"]/make_list("HMS_PS"),yield_data["CPULT_phys"],color='blue',zorder=4,label="_nolegend_")
+        plt.errorbar(yield_data["HMS_DataRate"],yield_data["CPULT_phys"],yerr=yield_data["CPULT_phys"]*yield_data["uncern_CPULT_phys"],color='black',linestyle='None',zorder=3,label="_nolegend_")
+        plt.scatter(yield_data["HMS_DataRate"],yield_data["CPULT_phys"],color='blue',zorder=4,label="_nolegend_")
         
-        plt.errorbar(yield_data["rate_HMS"]/make_list("HMS_PS"),yield_data["CPULT_TLT_HMS"],yerr=yield_data["CPULT_TLT_HMS"]*(yield_data["uncern_ELT2_HMS"] + yield_data["uncern_TLT"]), color='black', linestyle='None', zorder=3, label="_nolegend_")
-        plt.scatter(yield_data["rate_HMS"]/make_list("HMS_PS"),yield_data["CPULT_TLT_HMS"],color='red',zorder=4,label="_nolegend_")
+        plt.errorbar(yield_data["HMS_DataRate"],yield_data["CPULT_TLT_HMS"],yerr=yield_data["CPULT_TLT_HMS"]*(yield_data["uncern_ELT2_HMS"] + yield_data["uncern_TLT"]), color='black', linestyle='None', zorder=3, label="_nolegend_")
+        plt.scatter(yield_data["HMS_DataRate"],yield_data["CPULT_TLT_HMS"],color='red',zorder=4,label="_nolegend_")
     else:
-        plt.errorbar(yield_data["rate_SHMS"]/make_list("SHMS_PS") + yield_data["rate_HMS"]/make_list("HMS_PS"), yield_data["CPULT_phys"], yerr=yield_data["CPULT_phys"]*yield_data["uncern_CPULT_phys"], color='black', linestyle='None', zorder=3, label="_nolegend_")
-        plt.scatter(yield_data["rate_SHMS"]/make_list("SHMS_PS") + yield_data["rate_HMS"]/make_list("HMS_PS"),yield_data["CPULT_phys"],color='blue',zorder=4,label="_nolegend_")
+        plt.errorbar(yield_data["SHMS_DataRate"] + yield_data["HMS_DataRate"], yield_data["CPULT_phys"], yerr=yield_data["CPULT_phys"]*yield_data["uncern_CPULT_phys"], color='black', linestyle='None', zorder=3, label="_nolegend_")
+        plt.scatter(yield_data["SHMS_DataRate"] + yield_data["HMS_DataRate"],yield_data["CPULT_phys"],color='blue',zorder=4,label="_nolegend_")
     plt.ylabel('CPULT', fontsize=16)
     plt.xlabel('Prescaled Data Rate (Hz)', fontsize =12)
     if target == 'LD2' :
