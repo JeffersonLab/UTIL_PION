@@ -1857,7 +1857,7 @@ def plot_yield():
         plt.scatter(yield_data["HMS_DataRate"],yield_data["CPULT_TLT_HMS"],color='red',zorder=4,label="_nolegend_")
     else:
         plt.errorbar(yield_data["SHMS_DataRate"] + yield_data["HMS_DataRate"], yield_data["CPULT_phys"], yerr=yield_data["CPULT_phys"]*yield_data["uncern_CPULT_phys"], color='black', linestyle='None', zorder=3, label="_nolegend_")
-        plt.scatter(yield_data["SHMS_DataRate"] + yield_data["HMS_DataRate"],yield_data["CPULT_phys"],color='blue',zorder=4,label="_nolegend_")
+        plt.scatter(yield_data["SHMS_DataRate"] + yield_data["HMS_DataRate"],yield_data["CPULT_phys"],color='red',zorder=4,label="_nolegend_")
 
         plt.errorbar(yield_data["SHMS_DataRate"] + yield_data["HMS_DataRate"], yield_data["CPULT_TLT_SHMS"], yerr=yield_data["CPULT_TLT_SHMS"]*(yield_data["uncern_ELT_3of4_SHMS"] + yield_data["uncern_TLT"]), color='black', linestyle='None', zorder=3, label="_nolegend_")
         plt.scatter(yield_data["SHMS_DataRate"] + yield_data["HMS_DataRate"],yield_data["CPULT_TLT_SHMS"],color='blue',zorder=4,label="_nolegend_")
