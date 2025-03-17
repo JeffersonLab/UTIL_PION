@@ -205,7 +205,7 @@ def calc_yield():
     yield_dict.update({"rateSHMSCorr": rateSHMSCorr})
     yield_dict.update({"uncer_rateSHMSCorr": uncer_rateSHMSCorr})
         
-    boilSlope = 2.8/1000 #boiling correction for 2.8%/100uA slope
+    boilSlope = 2.8/10000 #boiling correction for 2.8%/100uA slope
     boilSlopeUncer = 0.17/10000 + 0.69/10000 #statistical + systematic uncertainty
     boilingCorr = 1 - (yield_dict["current"]*makeList("curr_corr")*(boilSlope)) 
     uncer_Current =  (((uncern_slope**2)+ (uncern_intercept**2/yield_dict["current"]))/slope**2)
