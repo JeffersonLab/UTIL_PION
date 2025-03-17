@@ -233,7 +233,7 @@ def calc_yield():
     EDT2_SHMS = gwidth*(yield_dict["rate_SHMS"]) # estimation of dead time using gate width and trigger rate
 
     ELT2_HMS  = 1 - EDT2_HMS
-    #ELT2_SHMS = 1 - EDT2_SHMS
+    ELT2_SHMS = 1 - EDT2_SHMS
     uncern_ELT2_HMS = (ELT2_HMS*(1-ELT2_HMS))/(50*ELT2_HMS**2)
         
     
@@ -251,7 +251,7 @@ def calc_yield():
     yield_dict.update({"TLT_ELT_HMS" : TLT_ELT_HMS})
     yield_dict.update({"TLT_ELT" : TLT_ELT})
     yield_dict.update({"ELT2_HMS" : ELT2_HMS})
-    #yield_dict.update({"ELT2_SHMS" : ELT2_SHMS})
+    yield_dict.update({"ELT2_SHMS" : ELT2_SHMS})
     yield_dict.update({"uncern_ELT2_HMS" : uncern_ELT2_HMS})
 
     #yield_dict.update({"TLT" : TLT})
