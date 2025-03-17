@@ -607,6 +607,11 @@ def calc_yield():
     yieldRel_COIN_scaler = yield_dict["yield_COIN_scaler"]/yield_dict["min_yield_COIN_scaler"]
     yieldRel_COIN_notrack = yield_dict["yield_COIN_notrack"]/yield_dict["min_yield_COIN_notrack"]
     yieldRel_COIN_track = yield_dict["yield_COIN_track"]/yield_dict["min_yield_COIN_track"]
+    
+    print("\n\n******************")
+    print("yieldRel_COIN_track:")
+    print(yieldRel_COIN_track)
+    print("\n\n*******************")
     yield_dict.update({"yieldRel_COIN_scaler": yieldRel_COIN_scaler})
     yield_dict.update({"yieldRel_COIN_notrack": yieldRel_COIN_notrack})
     yield_dict.update({"yieldRel_COIN_track": yieldRel_COIN_track})
