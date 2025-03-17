@@ -237,9 +237,9 @@ def calc_yield():
     uncern_ELT2_HMS = (ELT2_HMS*(1-ELT2_HMS))/(50*ELT2_HMS**2)
         
     
-    TLT_ELT_SHMS = yield_dict["ELT_3of4_SHMS"]*yield_dict["CPULT_phys"]
+    TLT_ELT_SHMS = yield_dict["rateSHMSCorr"]*yield_dict["CPULT_phys"]
     TLT_ELT_HMS = ELT2_HMS*yield_dict["CPULT_phys"]
-    TLT_ELT = yield_dict["ELT_3of4_SHMS"]*ELT2_HMS*yield_dict["CPULT_phys"]
+    TLT_ELT = yield_dict["rateSHMSCorr"]*ELT2_HMS*yield_dict["CPULT_phys"]
 
     CPULT_TLT_SHMS = TLT_EDTM/TLT_ELT_SHMS
     CPULT_TLT_HMS = TLT_EDTM/TLT_ELT_HMS
