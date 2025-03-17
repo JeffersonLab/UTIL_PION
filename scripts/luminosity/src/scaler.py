@@ -438,7 +438,7 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
     SHMSDT = [0]*NRATEHODO
     SHMSLT = [0]*NRATEHODO
     #HMS_HodoRate = [0]*NRATEHODO
-    for iRATE in range(0, NRATEHODO): 
+    for iRATE in range(0, NRATEHODO): #iRATE is the number is the hodoscope plane
         SHMS_HodoRate[iRATE] =  SHMS_Hodo_rate_sum[iRATE]/time_sum[bcm_ix]
         #HMS_HodoRate[iRATE] =  HMS_Hodo_rate_sum[iRATE]/time_sum[bcm_ix]
         
