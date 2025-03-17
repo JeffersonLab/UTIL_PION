@@ -295,6 +295,12 @@ def calc_yield():
     
     yield_COIN_notrack = (makeList("c_int_noTrack_events")-(makeList("c_int_noTrack_Rand_events")/6))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*yield_dict["boilingCorr"])
     yield_COIN_track = (makeList("c_int_Track_events")-(makeList("c_int_Track_Rand_events")/6))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*makeList("SHMS_track")*makeList("HMS_track")*yield_dict["boilingCorr"])
+    print("\n\n******************")
+    print("yield_COIN_notrack:")
+    print(yield_COIN_notrack)
+    print("yield_COIN_track")
+    print(yield_COIN_track)
+    print("\n\n*******************")
     
     yield_dict.update({"yield_COIN_scaler" : yield_COIN_scaler})
     yield_dict.update({"yield_COIN_notrack" : yield_COIN_notrack})
