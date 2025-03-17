@@ -310,6 +310,11 @@ def calc_yield():
     uncern_yieldRel_COIN_notrack = np.sqrt((yield_dict["uncern_COIN_evts_notrack"]/makeList("c_int_noTrack_events"))**2 + (yield_dict["uncern_charge"]/makeList("charge"))**2 + (yield_dict["uncern_TLT"]/yield_dict["TLT"])**2 + yield_dict["uncer_boilingCorr"] + yield_dict["uncer_rateHMSCorr"] + yield_dict["uncer_rateSHMSCorr"])
     uncern_yieldRel_COIN_track = np.sqrt((yield_dict["uncern_COIN_evts_track"]/makeList("c_int_Track_events"))**2 + (yield_dict["uncern_charge"]/makeList("charge"))**2 + (yield_dict["uncern_TLT"]/yield_dict["TLT"])**2 + (makeList("SHMS_track_uncern")/makeList("SHMS_track"))**2 + (makeList("HMS_track_uncern")/makeList("HMS_track"))**2 + yield_dict["uncer_boilingCorr"]  + yield_dict["uncer_rateHMSCorr"] + yield_dict["uncer_rateSHMSCorr"]) 
     
+    print("\n\n******************")
+    print("uncern_yieldRel_COIN_track:")
+    print(uncern_yieldRel_COIN_track)
+    print("\n\n*******************")
+    
     yield_dict.update({"uncern_yieldRel_COIN_scaler" : uncern_yieldRel_COIN_scaler})
     yield_dict.update({"uncern_yieldRel_COIN_notrack" : uncern_yieldRel_COIN_notrack})
     yield_dict.update({"uncern_yieldRel_COIN_track" : uncern_yieldRel_COIN_track})
