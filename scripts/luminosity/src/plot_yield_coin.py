@@ -1687,8 +1687,8 @@ def main():
     
     file_exists = os.path.isfile(out_f)
 
-    #table.to_csv(out_f, index=False, header=True, mode='w+',)
-    print(yield_data["run number", "yieldRel_COIN_track", "uncern_yieldRel_COIN_track"],file=out_f) 
+    table.to_csv(out_f, index=False, header=True, mode='w+',)
+    #print(yield_data["run number", "yieldRel_COIN_track", "uncern_yieldRel_COIN_track"],file=out_f) 
 
 
 
