@@ -23,7 +23,7 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
     '''
 
     # s_evts = len(s_tree)
-    if SHMS_PS == None:
+    if SHMS_PS != None:
         s_evts = s_tree["H.BCM4A.scaler"].array()
 
         P_BCM4A_scalerCharge = s_tree["H.BCM4A.scalerCharge"].array()
