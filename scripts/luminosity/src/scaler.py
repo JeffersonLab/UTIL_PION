@@ -23,7 +23,7 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
     '''
 
     # s_evts = len(s_tree)
-    if SHMS_PS != None:
+    if SHMS_PS == None:
         s_evts = s_tree["H.BCM4A.scaler"].array()
 
         P_BCM4A_scalerCharge = s_tree["H.BCM4A.scalerCharge"].array()
@@ -75,15 +75,10 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
 
         P_EDTM_scaler = s_tree["H.EDTM.scaler"].array()
         
-        P_S1X_scaler = s_tree["P.S1X.scaler"].array()
-        P_S1Y_scaler = s_tree["P.S1Y.scaler"].array()
-        P_S2X_scaler = s_tree["P.S2X.scaler"].array()
-        P_S2Y_scaler = s_tree["P.S2Y.scaler"].array()
-        
-        #H_S1X_scaler = s_tree["H.S1X.scaler"].array()
-        #H_S1Y_scaler = s_tree["H.S1Y.scaler"].array()
-        #H_S2X_scaler = s_tree["H.S2X.scaler"].array()
-        #H_S2Y_scaler = s_tree["H.S2Y.scaler"].array()
+        P_S1X_scaler = s_tree["H.S1X.scaler"].array() #HMS TSH does not have the SHMS hodo planes
+        P_S1Y_scaler = s_tree["H.S1Y.scaler"].array()
+        P_S2X_scaler = s_tree["H.S2X.scaler"].array()
+        P_S2Y_scaler = s_tree["H.S2Y.scaler"].array()
 
     else:
         s_evts = s_tree["P.BCM4A.scaler"].array()
@@ -137,10 +132,10 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
 
         P_EDTM_scaler = s_tree["P.EDTM.scaler"].array()
         
-        P_S1X_scaler = s_tree["H.S1X.scaler"].array() #HMS TSH does not have the SHMS hodo planes
-        P_S1Y_scaler = s_tree["H.S1Y.scaler"].array()
-        P_S2X_scaler = s_tree["H.S2X.scaler"].array()
-        P_S2Y_scaler = s_tree["H.S2Y.scaler"].array()
+        P_S1X_scaler = s_tree["P.S1X.scaler"].array()
+        P_S1Y_scaler = s_tree["P.S1Y.scaler"].array()
+        P_S2X_scaler = s_tree["P.S2X.scaler"].array()
+        P_S2Y_scaler = s_tree["P.S2Y.scaler"].array()
         
         #H_S1X_scaler = s_tree["H.S1X.scaler"].array()
         #H_S1Y_scaler = s_tree["H.S1Y.scaler"].array()
