@@ -409,7 +409,7 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
     
     print("\n\n\n",trig_sum,"\n\n\n")
 
-    if ("PS1" in PS_names or "PS2" in PS_names) and ("PS3" in PS_names or "PS4" in PS_names) and ("PS5" in PS_names or "PS6" in PS_names)):
+    if ("PS1" in PS_names or "PS2" in PS_names) and ("PS3" in PS_names or "PS4" in PS_names) and ("PS5" in PS_names or "PS6" in PS_names):
         print("Debug: in HMS + SHMS")
         if (not (SHMS_PS == None or HMS_PS == None):
             scalers.update({"CPULT_scaler": acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS) + (trig_sum[coin_ps_ix]/COIN_PS))})
