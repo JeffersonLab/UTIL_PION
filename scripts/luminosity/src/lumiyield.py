@@ -306,7 +306,7 @@ if SHMS_PS == None:
     s_tree = up.open(rootName)["TSH"]
 else:
     s_tree = up.open(rootName)["TSP"]
-
+    sh_tree = up.open(rootName)["TSH"]
 ################################################################################################################################################
 
 for ps in PS_names:
@@ -962,12 +962,21 @@ def main():
 
     # Import dictionaries
     scalers = scaler.scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNum, MaxEvent, s_tree) 
+    if (not (COIN_PS == None)): 
+        print ("Second loop of scalers to get HMS 3 of 4 eff")
+        hscalers = scaler.scaler(PS_names, HMS_PS, None, COIN_PS, thres_curr, report_current, runNum, MaxEvent, sh_tree) 
+        print(hscalers["HMS3of4ELT"])
+    
     track_info = analysis()
 
     # Merge and sort the two dictionaries of calculations
     data = {}
     for d in (scalers, track_info): 
         data.update(d)
+    
+    if (not (COIN_PS == None)):
+        data["HMS3of4ELT"] = hscalers["HMS3of4ELT"]
+    
     lumi_data = {i : data[i] for i in sorted(data.keys())}
 
     # Convert merged dictionary to a pandas dataframe then sort it

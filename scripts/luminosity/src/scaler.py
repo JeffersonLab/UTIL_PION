@@ -446,13 +446,21 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
         SHMSLT[iRATE] = 1 - SHMSDT[iRATE]
         #HMSLT[iRATE] = 1 - HMSDT
     
-    SHMS3of4ELT = SHMSLT[0]*SHMSLT[1]*SHMSLT[2]*SHMSLT[3] + SHMSDT[0]*SHMSLT[1]*SHMSLT[2]*SHMSLT[3] + SHMSLT[0]*SHMSDT[1]*SHMSLT[2]*SHMSLT[3] + SHMSLT[0]*SHMSLT[1]*SHMSDT[2]*SHMSLT[3] + SHMSLT[0]*SHMSLT[1]*SHMSLT[2]*SHMSDT[3]
-    #HMS3of4ELT = HMSLT[0]*HMSLT[1]*HMSLT[2]*HMSLT[3] + HMSDT[0]*HMSLT[1]*HMSLT[2]*HMSLT[3] + HMSLT[0]*HMSDT[1]*HMSLT[2]*HMSLT[3] + HMSLT[0]*HMSLT[1]*HMSDT[2]*HMSLT[3] + HMSLT[0]*HMSLT[1]*HMSLT[2]*HMSDT[3]
-    print("\nHodo plane Livetimes...")
-    print("SHMS_Hodo_rate_sum S1X %s" % SHMS_Hodo_rate_sum[0], "SHMS_Hodo_rate_sum S1Y %s" % SHMS_Hodo_rate_sum[1], "SHMS_Hodo_rate_sum S2X %s" % SHMS_Hodo_rate_sum[2], "SHMS_Hodo_rate_sum S2Y %s" % SHMS_Hodo_rate_sum[3])    
-    print("SHMS 4/3: %s" % SHMS3of4ELT)
+    if SHMS_PS == None:
+        HMS3of4ELT = SHMSLT[0]*SHMSLT[1]*SHMSLT[2]*SHMSLT[3] + SHMSDT[0]*SHMSLT[1]*SHMSLT[2]*SHMSLT[3] + SHMSLT[0]*SHMSDT[1]*SHMSLT[2]*SHMSLT[3] + SHMSLT[0]*SHMSLT[1]*SHMSDT[2]*SHMSLT[3] + SHMSLT[0]*SHMSLT[1]*SHMSLT[2]*SHMSDT[3]
+        SHMS3of4ELT = -1
+        print("\nHodo plane Livetimes...")
+        print("HMS_Hodo_rate_sum S1X %s" % SHMS_Hodo_rate_sum[0], "HMS_Hodo_rate_sum S1Y %s" % SHMS_Hodo_rate_sum[1], "HMS_Hodo_rate_sum S2X %s" % SHMS_Hodo_rate_sum[2], "HMS_Hodo_rate_sum S2Y %s" % SHMS_Hodo_rate_sum[3])    
+        print("HMS 4/3: %s" % SHMS3of4ELT)
+    else:
+        SHMS3of4ELT = SHMSLT[0]*SHMSLT[1]*SHMSLT[2]*SHMSLT[3] + SHMSDT[0]*SHMSLT[1]*SHMSLT[2]*SHMSLT[3] + SHMSLT[0]*SHMSDT[1]*SHMSLT[2]*SHMSLT[3] + SHMSLT[0]*SHMSLT[1]*SHMSDT[2]*SHMSLT[3] + SHMSLT[0]*SHMSLT[1]*SHMSLT[2]*SHMSDT[3]
+        HMS3of4ELT = -1
+        print("\nHodo plane Livetimes...")
+        print("SHMS_Hodo_rate_sum S1X %s" % SHMS_Hodo_rate_sum[0], "SHMS_Hodo_rate_sum S1Y %s" % SHMS_Hodo_rate_sum[1], "SHMS_Hodo_rate_sum S2X %s" % SHMS_Hodo_rate_sum[2], "SHMS_Hodo_rate_sum S2Y %s" % SHMS_Hodo_rate_sum[3])    
+        print("SHMS 4/3: %s" % SHMS3of4ELT)
+
     scalers.update({"SHMS3of4ELT": SHMS3of4ELT})
-    #scalers.update({"HMS3of4ELT": HMS3of4ELT})
+    scalers.update({"HMS3of4ELT": HMS3of4ELT})
 
     print("\nPre-scale values...")
     print("SHMS_PS : %s" % SHMS_PS, " HMS_PS : %s" % HMS_PS," COIN_PS : %s" % COIN_PS )
