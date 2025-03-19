@@ -401,8 +401,8 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
         else:
             scalers.update({"sent_edtm_PS" : EDTM_sum/HMS_PS+EDTM_sum/SHMS_PS-EDTM_sum/(HMS_PS*SHMS_PS)})
     else:
-        if SHMS_PS == None:
-            scalers.update({"sent_edtm_PS" : EDTM_sum} #dummy situation so no crashes
+        if SHMS_PS == None or HMS_PS == None:
+            scalers.update({"sent_edtm_PS" : EDTM_sum}) #dummy situation so no crashes
         else:
             scalers.update({"sent_edtm_PS" : EDTM_sum/HMS_PS+EDTM_sum/SHMS_PS+EDTM_sum/COIN_PS+EDTM_sum/(SHMS_PS*HMS_PS*COIN_PS)-EDTM_sum/(HMS_PS*SHMS_PS)-EDTM_sum/(COIN_PS*SHMS_PS)-EDTM_sum/(HMS_PS*COIN_PS)})
 
