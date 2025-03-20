@@ -139,6 +139,9 @@ def calc_yield():
         "uncern_HMS3-4_evts_scaler" : np.sqrt(makeList("HMS_3-4Trig_scaler"))/makeList("HMS_3-4Trig_scaler"),
         "uncern_SHMS3-4_evts_scaler" : np.sqrt(makeList("SHMS_3-4Trig_scaler"))/makeList("SHMS_3-4Trig_scaler"),
         
+        "SHMS3of4ELT" : makeList("SHMS3of4ELT"),
+        "HMS3of4ELT" : makeList("HMS3of4ELT"),
+        
         #"CPULT_phys" : (makeList("HMSTRIG_cut")*makeList("HMS_PS")+makeList("SHMSTRIG_cut")*makeList("SHMS_PS"))*makeList("CPULT_scaler"),
         "CPULT_phys" : makeList("CPULT_scaler"),
 
@@ -193,16 +196,22 @@ def calc_yield():
     rateSHMSSlope = 4.5/(10**7) #adhoc rate correction for 0.04%/kHz slope
     rateSHMSSlopeUncer = 0.22/(10**7)  #statistical uncertainty
     
-    rateHMSCorr = 1 - (yield_dict["rate_HMS3-4"]*(rateHMSSlope))         
-    uncer_rateHMSCorr = (yield_dict["rate_HMS3-4"]*rateHMSSlopeUncer)**2 + (rateHMSSlope*yield_dict["uncern_HMS3-4_evts_scaler"])**2
-    rateSHMSCorr = 1 - (yield_dict["rate_SHMS3-4"]*(rateSHMSSlope))         
-    uncer_rateSHMSCorr = (yield_dict["rate_SHMS3-4"]*rateSHMSSlopeUncer)**2 + (rateSHMSSlope*yield_dict["uncern_SHMS3-4_evts_scaler"])**2
+    #rateHMSCorr = 1 - (yield_dict["rate_HMS3-4"]*(rateHMSSlope))         
+    #uncer_rateHMSCorr = (yield_dict["rate_HMS3-4"]*rateHMSSlopeUncer)**2 + (rateHMSSlope*yield_dict["uncern_HMS3-4_evts_scaler"])**2
+    #rateSHMSCorr = 1 - (yield_dict["rate_SHMS3-4"]*(rateSHMSSlope))         
+    #uncer_rateSHMSCorr = (yield_dict["rate_SHMS3-4"]*rateSHMSSlopeUncer)**2 + (rateSHMSSlope*yield_dict["uncern_SHMS3-4_evts_scaler"])**2
+    
+    rateHMSCorr = 1 - (yield_dict["HMS3of4ELT"])         
+    uncer_rateHMSCorr = (yield_dict["uncern_HMS3-4_evts_scaler"])
+    rateSHMSCorr = 1 - (yield_dict["SHMS3of4ELT"])         
+    uncer_rateSHMSCorr = (yield_dict["uncern_SHMS3-4_evts_scaler"])
+    
     
     #temporary to test with just boiling correction
     #rateHMSCorr = rateHMSCorr/rateHMSCorr
-    rateSHMSCorr = rateSHMSCorr/rateSHMSCorr
+    #rateSHMSCorr = rateSHMSCorr/rateSHMSCorr
     #uncer_rateHMSCorr = rateHMSCorr*0
-    uncer_rateSHMSCorr = rateSHMSCorr*0
+    #uncer_rateSHMSCorr = rateSHMSCorr*0
     
     yield_dict.update({"rateHMSCorr": rateHMSCorr})
     yield_dict.update({"uncer_rateHMSCorr": uncer_rateHMSCorr})
@@ -242,8 +251,8 @@ def calc_yield():
         
     
     TLT_ELT_SHMS = yield_dict["rateSHMSCorr"]*yield_dict["CPULT_phys"]
-    TLT_ELT_HMS = ELT2_HMS*yield_dict["CPULT_phys"]
-    TLT_ELT = yield_dict["rateSHMSCorr"]*ELT2_HMS*yield_dict["CPULT_phys"]
+    TLT_ELT_HMS = yield_dict["rateHMSCorr"]*yield_dict["CPULT_phys"]
+    TLT_ELT = yield_dict["rateSHMSCorr"]*yield_dict["rateHMSCorr"]*yield_dict["CPULT_phys"]
 
     CPULT_TLT_SHMS = TLT_EDTM/TLT_ELT_SHMS
     CPULT_TLT_HMS = TLT_EDTM/TLT_ELT_HMS
@@ -262,9 +271,9 @@ def calc_yield():
     
     uncern_TLT = np.sqrt(makeList("accp_edtm")/makeList("sent_edtm_PS")**2+makeList("accp_edtm")**2/makeList("sent_edtm_PS")**4)
    
-    uncern_TLT_ELT_SHMS = ((makeList("CPULT_scaler_uncern")/makeList("CPULT_scaler"))**2 + yield_dict["rateSHMSCorr"])
-    uncern_TLT_ELT_HMS = ((makeList("CPULT_scaler_uncern")/makeList("CPULT_scaler"))**2 + (ELT2_HMS*(1-ELT2_HMS))/(TLT_ELT_HMS**2))
-    uncern_TLT_ELT = (makeList("CPULT_scaler_uncern")/makeList("CPULT_scaler"))**2 + yield_dict["rateSHMSCorr"] + (ELT2_HMS*(1-ELT2_HMS))/(TLT_ELT_HMS**2)
+    uncern_TLT_ELT_SHMS = ((makeList("CPULT_scaler_uncern")/makeList("CPULT_scaler"))**2 + yield_dict["uncer_rateSHMSCorr"])
+    uncern_TLT_ELT_HMS = ((makeList("CPULT_scaler_uncern")/makeList("CPULT_scaler"))**2 + yield_dict["uncer_rateHMSCorr"])
+    uncern_TLT_ELT = (makeList("CPULT_scaler_uncern")/makeList("CPULT_scaler"))**2 + yield_dict["uncer_rateSHMSCorr"] + yield_dict["uncer_rateHMSCorr"]
 
     #uncern_TLT_ELT = np.sqrt((ELT2*(1-ELT2))/100)
     
