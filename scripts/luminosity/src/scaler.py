@@ -413,7 +413,8 @@ def scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNu
         print("Debug: in HMS + SHMS")
         if (not (SHMS_PS == None or HMS_PS == None)):
             scalers.update({"CPULT_scaler": acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS) + (trig_sum[coin_ps_ix]/COIN_PS))})
-            scalers.update({"CPULT_scaler_uncern": (acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS)))*np.sqrt((1/(trig_sum[shms_ps_ix]/SHMS_PS))+(1/(trig_sum[hms_ps_ix]/HMS_PS))+(1/acctrig_sum))})
+            #scalers.update({"CPULT_scaler_uncern": (acctrig_sum/((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS)))*np.sqrt((1/(trig_sum[shms_ps_ix]/SHMS_PS))+(1/(trig_sum[hms_ps_ix]/HMS_PS))+(1/acctrig_sum))})
+            scalers.update({"CPULT_scaler_uncern": np.sqrt(acctrig_sum/(((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS) + (trig_sum[coin_ps_ix]/COIN_PS))**2) - acctrig_sum**2/(((trig_sum[shms_ps_ix]/SHMS_PS) + (trig_sum[hms_ps_ix]/HMS_PS) + (trig_sum[coin_ps_ix]/COIN_PS))**3))})
         else:
             scalers.update({"CPULT_scaler": (trig_sum[coin_ps_ix]/COIN_PS)})
             scalers.update({"CPULT_scaler_uncern": (1/acctrig_sum)})
