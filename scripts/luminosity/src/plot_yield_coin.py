@@ -202,9 +202,9 @@ def calc_yield():
     #uncer_rateSHMSCorr = (yield_dict["rate_SHMS3-4"]*rateSHMSSlopeUncer)**2 + (rateSHMSSlope*yield_dict["uncern_SHMS3-4_evts_scaler"])**2
     
     rateHMSCorr = (yield_dict["HMS3of4ELT"])         
-    uncer_rateHMSCorr = (yield_dict["uncern_HMS3-4_evts_scaler"])
+    uncer_rateHMSCorr = 0*yield_dict["HMS3of4ELT"]
     rateSHMSCorr = (yield_dict["SHMS3of4ELT"])         
-    uncer_rateSHMSCorr = (yield_dict["uncern_SHMS3-4_evts_scaler"])
+    uncer_rateSHMSCorr = 0*yield_dict["SHMS3of4ELT"]
     
     
     #temporary to test with just boiling correction
