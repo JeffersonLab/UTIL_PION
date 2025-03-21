@@ -21,9 +21,9 @@ void PlotColors (TGraphErrors *g, int i)
 
 //does fit and resets intercept to 1 at x=0 in linear fit
 // Yes this causes a memory leak, I don't care
-TGraphErrors* ReBase(TGraphErrors *ge1)
+TGraphErrors* ReBase(TGraphErrors *ge1, bool rate)
 {
-    Double_t *reBase1;
+    Double_t *reBase1, *reX, *reEX;
     TF1 *lin1 = new TF1("lin1", "[0]+[1]*x",0,80);
 
     PlotColors(ge1,0);
@@ -38,12 +38,23 @@ TGraphErrors* ReBase(TGraphErrors *ge1)
     
     reBase1 = ge1->GetY();
     int N = ge1->GetN();
+    reX = ge1->GetX();
+    reEX = ge1->GetEX();
     Double_t *reBase2 = new Double_t[N];
+    Double_t *reX2 = new Double_t[N];
+    Double_t *reEX2 = new Double_t[N];
     for(int i = 0; i < N; i++)
     {
         reBase2[i]= reBase1[i] - (reIntercept - 1);
+        if(rate){ // conver to kHz
+            reX2[i] = reX[i]/1000;
+            reEX2[i] = reEX[i]/1000;
+        }else{
+            reX2[i] = reX[i];
+            reEX2[i] = reEX[i];
+        }
     }
-    TGraphErrors *ge2 = new TGraphErrors(N, ge1->GetX(), reBase2, ge1->GetEX(), ge1->GetEY());
+    TGraphErrors *ge2 = new TGraphErrors(N, reX2, reBase2, reEX2, ge1->GetEY());
     return ge2;
 }
 
@@ -57,6 +68,9 @@ void PlotCombinedLumi (TString dataType)
     //cout << dataType;
     TString coin = "coin";
     TString coin_rate = "coin_rate";
+    TString coin_Detrate = "coin_detrate";
+    TString coinSHMSrate = "coinshmsrate";
+    TString coinHMSrate = "coinhmsrate";
     TString carbon = "carbon";
     TString singles = "singles";
     TString shms = "shms";
@@ -73,10 +87,10 @@ void PlotCombinedLumi (TString dataType)
         filenames[0] = "../OUTPUTS/ExclusiveLumi/yield_data_exc1_clean.csv";
         filenames[1] = "../OUTPUTS/ExclusiveLumi/yield_data_exc2_clean.csv";
         filenames[2] = "../OUTPUTS/ExclusiveLumi/yield_data_exc3_clean.csv";
-        filenames[3] = "../OUTPUTS/ExclusiveLumi/yield_data_exc4_clean.csv";
-        filenames[4] = "../OUTPUTS/ExclusiveLumi/yield_data_exc5_clean.csv";
-        filenames[5] = "../OUTPUTS/sidis/yield_data_sidis1_clean.csv";
-        filenames[6] = "../OUTPUTS/sidis/yield_data_sidis2_clean.csv";
+        filenames[3] = "../OUTPUTS/ExclusiveLumi/yield_data_exc5_clean.csv";
+        filenames[4] = "../OUTPUTS/sidis/yield_data_sidis1_clean.csv";
+        filenames[5] = "../OUTPUTS/sidis/yield_data_sidis2_clean.csv";
+        filenames[6] = "../OUTPUTS/ExclusiveLumi/yield_data_exc4_clean.csv";
         OutFileName = "Coin";
     } else if (!dataType.CompareTo(coin_rate) ) {
         cout << "running Coin vrs Rate\n";
@@ -86,11 +100,50 @@ void PlotCombinedLumi (TString dataType)
         filenames[0] = "../OUTPUTS/ExclusiveLumi/yield_data_exc1_TrYvRate.csv";
         filenames[1] = "../OUTPUTS/ExclusiveLumi/yield_data_exc2_TrYvRate.csv";
         filenames[2] = "../OUTPUTS/ExclusiveLumi/yield_data_exc3_TrYvRate.csv";
-        filenames[3] = "../OUTPUTS/ExclusiveLumi/yield_data_exc4_TrYvRate.csv";
-        filenames[4] = "../OUTPUTS/ExclusiveLumi/yield_data_exc5_TrYvRate.csv";
-        filenames[5] = "../OUTPUTS/sidis/yield_data_sidis1_TrvRate.csv";
-        filenames[6] = "../OUTPUTS/sidis/yield_data_sidis2_TrvRate.csv";
+        filenames[3] = "../OUTPUTS/ExclusiveLumi/yield_data_exc5_TrYvRate.csv";
+        filenames[4] = "../OUTPUTS/sidis/yield_data_sidis1_TrvRate.csv";
+        filenames[5] = "../OUTPUTS/sidis/yield_data_sidis2_TrvRate.csv";
+        filenames[6] = "../OUTPUTS/ExclusiveLumi/yield_data_exc4_TrYvRate.csv";
         OutFileName = "CoinRate";
+    } else if (!dataType.CompareTo(coin_Detrate) ) {
+        cout << "running Coin vrs Rate\n";
+        rate = true;
+        NFILES = 7;
+        filenames = new TString[NFILES];
+        filenames[0] = "../OUTPUTS/ExclusiveLumi/yield_data_exc1_TrYvDRate.csv";
+        filenames[1] = "../OUTPUTS/ExclusiveLumi/yield_data_exc2_TrYvDRate.csv";
+        filenames[2] = "../OUTPUTS/ExclusiveLumi/yield_data_exc3_TrYvDRate.csv";
+        filenames[3] = "../OUTPUTS/ExclusiveLumi/yield_data_exc5_TrYvDRate.csv";
+        filenames[4] = "../OUTPUTS/sidis/yield_data_sidis1_TrvDRate.csv";
+        filenames[5] = "../OUTPUTS/sidis/yield_data_sidis2_TrvDRate.csv";
+        filenames[6] = "../OUTPUTS/ExclusiveLumi/yield_data_exc4_TrYvDRate.csv";
+        OutFileName = "CoinDetRate";
+    } else if (!dataType.CompareTo(coinSHMSrate) ) {
+        cout << "running Coin vrs Rate\n";
+        rate = true;
+        NFILES = 7;
+        filenames = new TString[NFILES];
+        filenames[0] = "../OUTPUTS/ExclusiveLumi/yield_data_exc1_TrYvPRate.csv";
+        filenames[1] = "../OUTPUTS/ExclusiveLumi/yield_data_exc2_TrYvPRate.csv";
+        filenames[2] = "../OUTPUTS/ExclusiveLumi/yield_data_exc3_TrYvPRate.csv";
+        filenames[3] = "../OUTPUTS/ExclusiveLumi/yield_data_exc5_TrYvPRate.csv";
+        filenames[4] = "../OUTPUTS/sidis/yield_data_sidis1_TrvPRate.csv";
+        filenames[5] = "../OUTPUTS/sidis/yield_data_sidis2_TrvPRate.csv";
+        filenames[6] = "../OUTPUTS/ExclusiveLumi/yield_data_exc4_TrYvPRate.csv";
+        OutFileName = "CoinSHMSRate";
+    } else if (!dataType.CompareTo(coinHMSrate) ) {
+        cout << "running Coin vrs Rate\n";
+        rate = true;
+        NFILES = 7;
+        filenames = new TString[NFILES];
+        filenames[0] = "../OUTPUTS/ExclusiveLumi/yield_data_exc1_TrYvHRate.csv";
+        filenames[1] = "../OUTPUTS/ExclusiveLumi/yield_data_exc2_TrYvHRate.csv";
+        filenames[2] = "../OUTPUTS/ExclusiveLumi/yield_data_exc3_TrYvHRate.csv";
+        filenames[3] = "../OUTPUTS/ExclusiveLumi/yield_data_exc5_TrYvHRate.csv";
+        filenames[4] = "../OUTPUTS/sidis/yield_data_sidis1_TrvHRate.csv";
+        filenames[5] = "../OUTPUTS/sidis/yield_data_sidis2_TrvHRate.csv";
+        filenames[6] = "../OUTPUTS/ExclusiveLumi/yield_data_exc4_TrYvHRate.csv";
+        OutFileName = "CoinHMSRate";
     }else if (!dataType.CompareTo(carbon)){
         cout << "running Carbon\n";
         NFILES = 6;
@@ -164,7 +217,7 @@ void PlotCombinedLumi (TString dataType)
         Gi[i] = new TGraphErrors(filenames[i], "%lg, %lg, %lg");
         Gi[i]->SetName(filenames[i]);
         Gi[i]->SetTitle(filenames[i]);
-        Gf[i] = ReBase(Gi[i]);
+        Gf[i] = ReBase(Gi[i], rate);
         int lastSlash = filenames[i].Last('/');
         int firstDot = filenames[i].First('.');
         Gf[i]->SetName(filenames[i]);
@@ -182,7 +235,7 @@ void PlotCombinedLumi (TString dataType)
     if (!rate)
         mg->GetXaxis()->SetTitle("Current (uA)");
     else
-        mg->GetXaxis()->SetTitle("Rate (Hz)");
+        mg->GetXaxis()->SetTitle("Rate (kHz)");
         
     mg->GetYaxis()->SetTitle("Renormalized Yield");
     
