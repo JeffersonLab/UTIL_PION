@@ -303,11 +303,11 @@ def calc_yield():
 
     COIN_scaler_accp = makeList("COINTRIG_scaler")-makeList("sent_edtm")
     yield_COIN_scaler = COIN_scaler_accp/(makeList("charge")*makeList("curr_corr"))
-    yield_COIN_notrack = (makeList("c_int_noTrack_events")-(makeList("c_int_noTrack_Rand_events")/6))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*yield_dict["boilingCorr"]*yield_dict["rateHMSCorr"]*yield_dict["rateSHMSCorr"])
-    yield_COIN_track = (makeList("c_int_Track_events")-(makeList("c_int_Track_Rand_events")/6))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*makeList("SHMS_track")*makeList("HMS_track")*yield_dict["boilingCorr"]*yield_dict["rateHMSCorr"]*yield_dict["rateSHMSCorr"])
+    #yield_COIN_notrack = (makeList("c_int_noTrack_events")-(makeList("c_int_noTrack_Rand_events")/6))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*yield_dict["boilingCorr"]*yield_dict["rateHMSCorr"]*yield_dict["rateSHMSCorr"])
+    #yield_COIN_track = (makeList("c_int_Track_events")-(makeList("c_int_Track_Rand_events")/6))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*makeList("SHMS_track")*makeList("HMS_track")*yield_dict["boilingCorr"]*yield_dict["rateHMSCorr"]*yield_dict["rateSHMSCorr"])
     
-    #yield_COIN_notrack = (makeList("c_int_noTrack_events")-(makeList("c_int_noTrack_Rand_events")/6))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*yield_dict["boilingCorr"])
-    #yield_COIN_track = (makeList("c_int_Track_events")-(makeList("c_int_Track_Rand_events")/6))/(makeList("charge")*makeList("curr_corr")*yield_dict["TLT"]*makeList("SHMS_track")*makeList("HMS_track")*yield_dict["boilingCorr"])
+    yield_COIN_notrack = (makeList("c_int_noTrack_events")-(makeList("c_int_noTrack_Rand_events")/6))/(makeList("charge")*makeList("curr_corr")*yield_dict["ELT_TLT"]*yield_dict["boilingCorr"])
+    yield_COIN_track = (makeList("c_int_Track_events")-(makeList("c_int_Track_Rand_events")/6))/(makeList("charge")*makeList("curr_corr")*yield_dict["ELT_TLT"]*makeList("SHMS_track")*makeList("HMS_track")*yield_dict["boilingCorr"])
     print("\n\n******************")
     print("yield_COIN_notrack:")
     print(yield_COIN_notrack)
