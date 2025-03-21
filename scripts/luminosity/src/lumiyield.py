@@ -976,6 +976,7 @@ def main():
     
     if (not (COIN_PS == None)):
         data["HMS3of4ELT"] = hscalers["HMS3of4ELT"]
+        data["HMS3of4ELT_err"] = hscalers["HMS3of4ELT_err"]
     
     lumi_data = {i : data[i] for i in sorted(data.keys())}
 
