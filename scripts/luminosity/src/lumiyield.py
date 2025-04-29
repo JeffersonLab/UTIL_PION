@@ -352,7 +352,7 @@ def pid_cuts():
     P_gtr_beta = np.asarray(tree['P_gtr_beta'])
     
     T_coin_pEDTM_tdcTimeRaw = np.asarray(tree["T_coin_pEDTM_tdcTimeRaw"])
-    CTime_epCoinTime = np.asarray(tree["CTime_epCoinTime"])
+    CTime_ePiCoinTime_ROC1 = np.asarray(tree["CTime_ePiCoinTime_ROC1"])
     
     ###########################
     ######## 1D plots  ########
@@ -415,20 +415,20 @@ def pid_cuts():
     
     if (not COIN_PS == None):
         ax = f.add_subplot(338)
-        ax.hist(c.add_cut(CTime_epCoinTime,"h_ecut_lumi_nt"),bins=c.setbin(CTime_epCoinTime,1200,-250,250),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(CTime_epCoinTime,"c_epi_nt_lumi"), bins=c.setbin(CTime_epCoinTime,1200,-250,250),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"h_ecut_lumi_nt"),bins=c.setbin(CTime_ePiCoinTime_ROC1,1200,-250,250),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"c_epi_nt_lumi"), bins=c.setbin(CTime_ePiCoinTime_ROC1,1200,-250,250),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
-        plt.xlabel('CTime_epCoinTime + No Track Cut')
+        plt.xlabel('CTime_ePiCoinTime_ROC1 + No Track Cut')
         plt.ylabel('Count')
-#            c_noTrack = c.add_cut(tree["CTime_epCoinTime"], "c_epi_nt_lumi")
+#            c_noTrack = c.add_cut(tree["CTime_ePiCoinTime_ROC1"], "c_epi_nt_lumi")
         
         ax = f.add_subplot(339)
-        ax.hist(c.add_cut(CTime_epCoinTime,"h_ecut_lumi"),bins=c.setbin(CTime_epCoinTime,300,50,80),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(CTime_epCoinTime,"c_epitrack_lumi"), bins=c.setbin(CTime_epCoinTime,300,50,80),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"h_ecut_lumi"),bins=c.setbin(CTime_ePiCoinTime_ROC1,300,50,80),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(CTime_ePiCoinTime_ROC1,"c_epitrack_lumi"), bins=c.setbin(CTime_ePiCoinTime_ROC1,300,50,80),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
-        plt.xlabel('CTime_epCoinTime + Track Cut')
+        plt.xlabel('CTime_ePiCoinTime_ROC1 + Track Cut')
         plt.ylabel('Count')
-#       c_Track = c.add_cut(tree["CTime_epCoinTime"], "c_epitrack_lumi")
+#       c_Track = c.add_cut(tree["CTime_ePiCoinTime_ROC1"], "c_epitrack_lumi")
 
     plt.legend(loc="upper right")
 
@@ -531,7 +531,7 @@ def track_pid_cuts():
     P_gtr_beta = np.asarray(tree['P_gtr_beta'])
     
     T_coin_pEDTM_tdcTimeRaw = np.asarray(tree["T_coin_pEDTM_tdcTimeRaw"])
-    CTime_epCoinTime = np.asarray(tree["CTime_epCoinTime_ROC2"])
+    CTime_ePiCoinTime_ROC1 = np.asarray(tree["CTime_ePiCoinTime_ROC1"])
     
     ###########################
     ######## 1D plots  ########
@@ -855,10 +855,10 @@ def analysis():
         p_etottracknorm = c.add_cut(tree["P_cal_etottracknorm"],"p_%scut_lumi" % SHMS_PID)    
     
     if (not COIN_PS == None):
-        c_noTrack = c.add_cut(tree["CTime_epCoinTime_ROC2"], "c_epi_nt_lumi")
-        c_noTrack_Rand = c.add_cut(tree["CTime_epCoinTime_ROC2"], "c_epi_nt_lumi_rand")
-        c_Track = c.add_cut(tree["CTime_epCoinTime_ROC2"], "c_epitrack_lumi")
-        c_Track_Rand = c.add_cut(tree["CTime_epCoinTime_ROC2"], "c_epitrack_lumi_rand")
+        c_noTrack = c.add_cut(tree["CTime_ePiCoinTime_ROC1"], "c_epi_nt_lumi")
+        c_noTrack_Rand = c.add_cut(tree["CTime_ePiCoinTime_ROC1"], "c_epi_nt_lumi_rand")
+        c_Track = c.add_cut(tree["CTime_ePiCoinTime_ROC1"], "c_epitrack_lumi")
+        c_Track_Rand = c.add_cut(tree["CTime_ePiCoinTime_ROC1"], "c_epitrack_lumi_rand")
     
     # Creates a dictionary for the calculated luminosity values 
     # Seperated this into cases where PS are on
