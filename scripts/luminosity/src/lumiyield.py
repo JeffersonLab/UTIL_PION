@@ -945,6 +945,7 @@ def analysis():
             print("Calculated HMS tracking efficiency: %f +/- %f\n" % ((track_info['HMS_track']), (track_info['HMS_track_uncern'])))
         if ps == "PS5" or ps == "PS6":
             print("Number of COINTRIG Events: %.0f" % (COIN_PS*track_info['COINTRIG_cut']))
+            print("Number of good coin events: %.0f" % track_info['c_int_Track_events'])
 
     print("============================================================================\n\n")
           
@@ -993,7 +994,7 @@ def main():
     file_exists = os.path.isfile(out_f)
 
     # Updates csv file with luminosity calculated values for later analysis (see plot_yield.py)
-    if file_exists:
+    if False:#file_exists: #modified so that it would only output values for this run - much more useful with ~100 runs in file - NH
         try:
             out_data = pd.read_csv(out_f)
         except IOError:
