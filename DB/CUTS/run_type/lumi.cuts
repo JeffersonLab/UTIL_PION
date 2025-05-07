@@ -93,10 +93,10 @@ h_cal_nt = current.bcm2+pid.h_ecut_nt-pid.h_ecut_nt.H_cer_npeSum+misc.h_starttim
 h_cer = current.bcm2+pid.h_ecut-pid.h_ecut.H_cal_etottracknorm+misc.h_starttime
 h_cer_nt = current.bcm2+pid.h_ecut_nt-pid.h_ecut_nt.H_cal_etotnorm+misc.h_starttime
 # pid cut
-p_cal = current.bcm2+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_hgcer_npeSum-pid.p_pcut.P_aero_npeSum-pid.p_pcut.P_ngcer_npeSum+misc.p_starttime
-p_hgcer = current.bcm2+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_cal_etottracknorm-pid.p_pcut.P_aero_npeSum-pid.p_pcut.P_ngcer_npeSum+misc.p_starttime
-p_ngcer = current.bcm2+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_cal_etottracknorm-pid.p_pcut.P_aero_npeSum-pid.p_pcut.P_hgcer_npeSum+misc.p_starttime
-p_aero = current.bcm2+accept.delta+pid.p_pcut-pid.p_pcut.P_gtr_beta-pid.p_pcut.P_cal_etottracknorm-pid.p_pcut.P_hgcer_npeSum-pid.p_pcut.P_ngcer_npeSum+misc.p_starttime
+p_cal = current.bcm2+accept.delta+pid.p_picut-pid.p_picut.P_gtr_beta-pid.p_picut.P_hgcer_npeSum-pid.p_picut.P_aero_npeSum-pid.p_picut.P_ngcer_npeSum+misc.p_starttime
+p_hgcer = current.bcm2+accept.delta+pid.p_picut-pid.p_picut.P_gtr_beta-pid.p_picut.P_cal_etottracknorm-pid.p_picut.P_aero_npeSum-pid.p_picut.P_ngcer_npeSum+misc.p_starttime
+p_ngcer = current.bcm2+accept.delta+pid.p_picut-pid.p_picut.P_gtr_beta-pid.p_picut.P_cal_etottracknorm-pid.p_picut.P_aero_npeSum-pid.p_picut.P_hgcer_npeSum+misc.p_starttime
+p_aero = current.bcm2+accept.delta+pid.p_picut-pid.p_picut.P_gtr_beta-pid.p_picut.P_cal_etottracknorm-pid.p_picut.P_hgcer_npeSum-pid.p_picut.P_ngcer_npeSum+misc.p_starttime
 # pid no-track cut
 p_cal_nt = current.bcm2+pid.p_ecut_nt-pid.p_ecut_nt.P_hgcer_npeSum-pid.p_ecut_nt.P_aero_npeSum-pid.p_ecut_nt.P_ngcer_npeSum+misc.p_starttime
 p_hgcer_nt = current.bcm2+pid.p_ecut_nt-pid.p_ecut_nt.P_cal_etotnorm-pid.p_ecut_nt.P_aero_npeSum-pid.p_ecut_nt.P_ngcer_npeSum+misc.p_starttime
