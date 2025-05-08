@@ -114,8 +114,8 @@ c_ptrigSHMS1 = current.bcm2+misc.c_ptrigSHMS1+misc.cal_edtm+misc.evt_type_1+misc
 c_ptrigSHMS2 = current.bcm2+misc.c_ptrigSHMS2+misc.cal_edtm+misc.evt_type_1+misc.evt_type_3
 c_ptrigHMS3 = current.bcm2+misc.c_ptrigHMS3+misc.cal_edtm+misc.evt_type_2
 c_ptrigHMS4 = current.bcm2+misc.c_ptrigHMS4+misc.cal_edtm+misc.evt_type_2
-c_ptrigCOIN5 = current.bcm2+misc.c_ptrigCOIN5+misc.cal_edtm
-c_ptrigCOIN6 = current.bcm2+misc.c_ptrigCOIN6+misc.cal_edtm
+c_ptrigCOIN5 = current.bcm2
+c_ptrigCOIN6 = current.bcm2
 # Current only (note: there is a threshold cut in the scalers that is seprate from this!)
 c_curr = current.bcm2
 c_nozero_edtm = current.bcm2+misc.c_nozero_edtm
