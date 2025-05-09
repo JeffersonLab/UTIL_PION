@@ -871,7 +871,7 @@ def analysis():
             "h_int_etottracknorm_evts" : scipy.integrate.simpson(h_etottracknorm),
             "p_int_etottracknorm_evts" : scipy.integrate.simpson(p_etottracknorm),
             "c_int_noTrack_events" : scipy.integrate.simpson(c_noTrack),
-            "c_int_Track_events" : scipy.integrate.simpson(c_Track),
+            "c_int_Track_events" : (len(c_Track)),
             "c_int_noTrack_Rand_events" : scipy.integrate.simpson(c_noTrack_Rand),
             "c_int_Track_Rand_events" : scipy.integrate.simpson(c_Track_Rand),
             "accp_edtm" : (len(EDTM)),
