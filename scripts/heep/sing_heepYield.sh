@@ -1,1 +1,0 @@
-sing_heepYield_v2.sh

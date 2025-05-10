@@ -1,27 +1,25 @@
 #! /usr/bin/python
-
 #
 # Description:
 # ================================================================
-# Time-stamp: "2024-02-09 12:05:00 junaid"
+# Time-stamp: "2025-03-13 01:29:19 junaid"
 # ================================================================
 #
-# Created: Muhammad junaid  <mjo147@uregina.ca>
-# Copyright (c) trottar & junaid
+# Author:  Muhammad Junaid III <mjo147@uregina.ca>
 #
+# Copyright (c) junaid
+#
+###################################################################################################################################################
 
-################################################################################################################################################
-'''
-'''
 import re
 
 def dictionary(UTILPATH,ROOTPrefix,runNum,MaxEvent, DEBUG=False):
 
     # Open report file to grab prescale values and tracking efficiency
-    report = UTILPATH+"/REPORT_OUTPUT/Analysis/HeeP/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
+#    report = UTILPATH+"/REPORT_OUTPUT/Analysis/HeeP/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
 #    report = UTILPATH+"/REPORT_OUTPUT/Analysis/Lumi/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
 #    report = UTILPATH+"/REPORT_OUTPUT/Analysis/pTRIG6/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
-#    report = UTILPATH+"/REPORT_OUTPUT/Analysis/PionLT/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
+    report = UTILPATH+"/REPORT_OUTPUT/Analysis/PionLT/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
 
     with open(report) as f:
         effDict = {
@@ -35,10 +33,11 @@ def dictionary(UTILPATH,ROOTPrefix,runNum,MaxEvent, DEBUG=False):
             'SHMS_Particle_Mass' : None,
             'SHMS_P_Central' : None,
             'SHMS_Angle' : None,
-            'BCM1_Charge': None,
-            'BCM1_Beam_Cut_Charge': None,
-            'BCM1_Current': None,
-            'BCM1_Beam_Cut_Current': None,
+            'BCM2_Charge': None,
+#            'BCM2_Charge_ERROR': None,
+            'BCM2_Beam_Cut_Charge': None,
+            'BCM2_Current': None,
+            'BCM2_Beam_Cut_Current': None,
             'SHMS_Run_Length': None,
             'HMS_Run_Length': None,
             'BCM_Cut_SHMS_Run_Length': None,
@@ -167,7 +166,9 @@ def dictionary(UTILPATH,ROOTPrefix,runNum,MaxEvent, DEBUG=False):
             'SHMS_Hodo_S1XY' : None,
             'SHMS_Hodo_S2XY' : None,
             'SHMS_Hodo_3_of_4_EFF' : None,
+#            'SHMS_Hodo_3_of_4_EFF_ERROR' : None,
             'SHMS_Hodo_4_of_4_EFF' : None,
+#            'SHMS_Hodo_4_of_4_EFF_ERROR' : None,
             'HMS_Hodo_Plane_1' : None,
             'HMS_Hodo_Plane_2' : None,
             'HMS_Hodo_Plane_3' : None,
@@ -175,17 +176,19 @@ def dictionary(UTILPATH,ROOTPrefix,runNum,MaxEvent, DEBUG=False):
             'HMS_Hodo_S1XY' : None,
             'HMS_Hodo_S2XY' : None,
             'HMS_Hodo_3_of_4_EFF' : None,
+#            'HMS_Hodo_3_of_4_EFF_ERROR' : None,
             'HMS_Hodo_4_of_4_EFF' : None,
+#            'HMS_Hodo_4_of_4_EFF_ERROR' : None,
             'SHMS_Hodoscope_S1X_Triggers' : None,
             'HMS_Hodoscope_S1X_Triggers' : None,
             'SHMS_Hodoscope_S1X_Rate' : None,
             'HMS_Hodoscope_S1X_Rate' : None,
             # Calorimeter
-	    'HMS_Cal_ALL_Elec_Eff' : None,            
+	         'HMS_Cal_ALL_Elec_Eff' : None,            
             'HMS_Cal_ALL_Elec_Eff_ERROR' : None,
-	    'HMS_Cal_COIN_Elec_Eff' : None,
+	        'HMS_Cal_COIN_Elec_Eff' : None,
             'HMS_Cal_COIN_Elec_Eff_ERROR' : None,
-	    'HMS_Cal_SING_Elec_Eff' : None,
+	        'HMS_Cal_SING_Elec_Eff' : None,
             'HMS_Cal_SING_Elec_Eff_ERROR' : None,
             'SHMS_Cal_ALL_Elec_Eff' : None,
             'SHMS_Cal_ALL_Elec_Eff_ERROR' : None,
@@ -198,6 +201,8 @@ def dictionary(UTILPATH,ROOTPrefix,runNum,MaxEvent, DEBUG=False):
         # Search for keywords, then save as value in dictionary
         for line in f:
             data = line.split(':')
+            if len(data) < 2:
+                continue  # Skip invalid lines
             for key,val in effDict.items():
                 if "ERROR" in key:
                     nkey = key.replace("_ERROR","")
@@ -205,36 +210,38 @@ def dictionary(UTILPATH,ROOTPrefix,runNum,MaxEvent, DEBUG=False):
                         if DEBUG:
                             print("ERROR:",nkey,"\t",key)
                             print(data)
-                        effDict[key] = float(re.compile(r'[^\d.]+').sub("","%s" % data[1].split("+-")[1]))
+                        # Try to extract the error part after "+-"
+                        try:
+                            effDict[key] = float(re.compile(r'[^\d.]+').sub("", data[1].split("+-")[1]))
+                        except IndexError:
+                            effDict[key] = None  # Handle cases where error is missing
                 if key in data[0]:
                     if DEBUG:
                         print(key)
                         print(data)
-                    # Check that the HMS in file line isn't actually part of SHMS
-                    # Check if first element of string is H in key
+                    # Ensure it is an HMS key and not SHMS
                     if "H" == key[0]:
-                        # Then check that the file line isn't actually SHMS
                         if "SHMS" not in data[0]:
-                            if "+-" in data[1]:
-                                effDict[key] = float(re.compile(r'[^\d.]+').sub("","%s" % data[1].split("+-")[0]))
-                            else:
-                                effDict[key] = float(re.compile(r'[^\d.]+').sub("","%s" % data[1]))
-                        # Otherwise skip key
+                            if "+-" in data[1]:  # Extract the value before "+-"
+                                effDict[key] = float(re.compile(r'[^\d.]+').sub("", data[1].split("+-")[0]))
+                            else:  # If no "+-", just extract the value
+                                effDict[key] = float(re.compile(r'[^\d.]+').sub("", data[1]))
                         else:
-                            continue
+                            continue  # Skip SHMS keys
+                    # Handle non-HMS keys
                     elif "+-" in data[1]:
-                        effDict[key] = float(re.compile(r'[^\d.]+').sub("","%s" % data[1].split("+-")[0]))
+                        effDict[key] = float(re.compile(r'[^\d.]+').sub("", data[1].split("+-")[0]))
                     else:
-                        effDict[key] = float(re.compile(r'[^\d.]+').sub("","%s" % data[1]))
+                        effDict[key] = float(re.compile(r'[^\d.]+').sub("", data[1]))
 
         if DEBUG:
-            for key,val in effDict.items(): 
+            for key, val in effDict.items():
                 if val is None:
-                    print(key,"\t",val)
-        # Removes any empty keys that are not used by this run type
-        effDict = {key: val for key,val in effDict.items() if val is not None}
+                    print(key, "\t", val)
+        # Remove any empty or None keys that are not used by this run type
+        effDict = {key: val for key, val in effDict.items() if val is not None}
+
         if DEBUG:
-            print(effDict)
-        
+            print("Final extracted efficiencies:\n", effDict) 
 
     return effDict

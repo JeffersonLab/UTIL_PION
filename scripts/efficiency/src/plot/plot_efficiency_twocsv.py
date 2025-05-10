@@ -1,14 +1,15 @@
 #! /usr/bin/python
-
 #
 # Description:
 # ================================================================
-# Time-stamp: "2024-02-09 12:05:00 junaid"
+# Time-stamp: "2024-03-13 01:29:19 junaid"
 # ================================================================
 #
-# Created: Muhammad junaid  <mjo147@uregina.ca>
-# Copyright (c) trottar & junaid
+# Author:  Muhammad Junaid III <mjo147@uregina.ca>
 #
+# Copyright (c) junaid
+#
+###################################################################################################################################################
 
 import numpy as np
 import pandas as pd

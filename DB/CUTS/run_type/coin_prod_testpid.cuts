@@ -4,42 +4,79 @@
 ##############
 # RLT, 09/19/21 SWING: Removed HGCer cut because it was effecting the fADC deadtime negative SHMS delta dramatically (due to low momentum in spec)
 # RLT, 09/19/21 SWING (con't): Make sure to revert this change when we go back to physics so we can make sure this was actually the issue and not something with gas contamination
-coin_epi_cut_all_noRF = misc.starttime+accept.delta+pid.p_coin_picut
 #
-coin_epi_cut_prompt_noRF = coin_time.Coin_Pion_Prompt+misc.starttime+accept.delta+pid.p_coin_picut
+#coin_epi_cut_all = misc.starttime+accept.delta
 #
-coin_epi_cut_rand_noRF = coin_time.Coin_Pion_Rand+misc.starttime+accept.delta+pid.p_coin_picut
+#coin_epi_cut_prompt = coin_time.Coin_Pion_Prompt+misc.starttime+accept.delta
 #
-coin_epi_cut_all_RF = coin_time.SHMS_Pi_RF+misc.starttime+accept.delta+pid.p_coin_picut
+#coin_epi_cut_rand = coin_time.Coin_Pion_Rand+misc.starttime+accept.delta
 #
-coin_epi_cut_prompt_RF = coin_time.Coin_Pion_Prompt+coin_time.SHMS_Pi_RF+misc.starttime+accept.delta+pid.p_coin_picut
+#coin_epi_cut_all = misc.starttime+accept.delta+pid.p_coin_picut
 #
-coin_epi_cut_rand_RF = coin_time.Coin_Pion_Rand+coin_time.SHMS_Pi_RF+misc.starttime+accept.delta+pid.p_coin_picut
+#coin_epi_cut_prompt = coin_time.Coin_Pion_Prompt+misc.starttime+accept.delta+pid.p_coin_picut
+#
+#coin_epi_cut_rand = coin_time.Coin_Pion_Rand+misc.starttime+accept.delta+pid.p_coin_picut
+#
+#coin_epi_cut_all = coin_time.SHMS_Pi_RF+misc.starttime+accept.delta
+#
+#coin_epi_cut_prompt = coin_time.Coin_Pion_Prompt+coin_time.SHMS_Pi_RF+misc.starttime+accept.delta
+#
+#coin_epi_cut_rand = coin_time.Coin_Pion_Rand+coin_time.SHMS_Pi_RF+misc.starttime+accept.delta
+#
+coin_epi_cut_all = coin_time.SHMS_Pi_RF+misc.starttime+accept.delta+pid.p_coin_picut
+#
+coin_epi_cut_prompt = coin_time.Coin_Pion_Prompt+coin_time.SHMS_Pi_RF+misc.starttime+accept.delta+pid.p_coin_picut
+#
+coin_epi_cut_rand = coin_time.Coin_Pion_Rand+coin_time.SHMS_Pi_RF+misc.starttime+accept.delta+pid.p_coin_picut
 ##############
 # COIN kcut  #
 ##############
-coin_ek_cut_all_noRF = misc.starttime+accept.delta+pid.p_coin_kcut
+#coin_ek_cut_all = misc.starttime+accept.delta
 #
-coin_ek_cut_prompt_noRF = coin_time.Coin_Kaon_Prompt+misc.starttime+accept.delta+pid.p_coin_kcut
+#coin_ek_cut_prompt = coin_time.Coin_Kaon_Prompt+misc.starttime+accept.delta
 #
-coin_ek_cut_rand_noRF = coin_time.Coin_Kaon_Rand+misc.starttime+accept.delta+pid.p_coin_kcut
+#coin_ek_cut_rand = coin_time.Coin_Kaon_Rand+misc.starttime+accept.delta
 #
-coin_ek_cut_all_RF = coin_time.SHMS_K_RF+misc.starttime+accept.delta+pid.p_coin_kcut
+#coin_ek_cut_all = misc.starttime+accept.delta+pid.p_coin_kcut
 #
-coin_ek_cut_prompt_RF = coin_time.Coin_Kaon_Prompt+coin_time.SHMS_K_RF+misc.starttime+accept.delta+pid.p_coin_kcut
+#coin_ek_cut_prompt = coin_time.Coin_Kaon_Prompt+misc.starttime+accept.delta+pid.p_coin_kcut
 #
-coin_ek_cut_rand_RF = coin_time.Coin_Kaon_Rand+coin_time.SHMS_K_RF+misc.starttime+accept.delta+pid.p_coin_kcut
+#coin_ek_cut_rand = coin_time.Coin_Kaon_Rand+misc.starttime+accept.delta+pid.p_coin_kcut
+#
+#coin_ek_cut_all = coin_time.SHMS_K_RF+misc.starttime+accept.delta
+#
+#coin_ek_cut_prompt = coin_time.Coin_Kaon_Prompt+coin_time.SHMS_K_RF+misc.starttime+accept.delta
+#
+#coin_ek_cut_rand = coin_time.Coin_Kaon_Rand+coin_time.SHMS_K_RF+misc.starttime+accept.delta
+#
+coin_ek_cut_all = coin_time.SHMS_K_RF+misc.starttime+accept.delta+pid.p_coin_kcut
+#
+coin_ek_cut_prompt = coin_time.Coin_Kaon_Prompt+coin_time.SHMS_K_RF+misc.starttime+accept.delta+pid.p_coin_kcut
+#
+coin_ek_cut_rand = coin_time.Coin_Kaon_Rand+coin_time.SHMS_K_RF+misc.starttime+accept.delta+pid.p_coin_kcut
 ##############
 # COIN pcut  #
 ##############
-coin_ep_cut_all_noRF = misc.starttime+accept.delta+pid.p_coin_pcut
+#coin_ep_cut_all = misc.starttime+accept.delta
 #
-coin_ep_cut_prompt_noRF = coin_time.Coin_Proton_Prompt+misc.starttime+accept.delta+pid.p_coin_pcut
+#coin_ep_cut_prompt = coin_time.Coin_Proton_Prompt+misc.starttime+accept.delta
 #
-coin_ep_cut_rand_noRF = coin_time.Coin_Proton_Rand+misc.starttime+accept.delta+pid.p_coin_pcut
+#coin_ep_cut_rand = coin_time.Coin_Proton_Rand+misc.starttime+accept.delta
 #
-coin_ep_cut_all_RF = coin_time.SHMS_p_RF+misc.starttime+accept.delta+pid.p_coin_pcut
+#coin_ep_cut_all = misc.starttime+accept.delta+pid.p_coin_pcut
 #
-coin_ep_cut_prompt_RF = coin_time.Coin_Proton_Prompt+coin_time.SHMS_p_RF+misc.starttime+accept.delta+pid.p_coin_pcut
+#coin_ep_cut_prompt = coin_time.Coin_Proton_Prompt+misc.starttime+accept.delta+pid.p_coin_pcut
 #
-coin_ep_cut_rand_RF = coin_time.Coin_Proton_Rand+coin_time.SHMS_p_RF+misc.starttime+accept.delta+pid.p_coin_pcut
+#coin_ep_cut_rand = coin_time.Coin_Proton_Rand+misc.starttime+accept.delta+pid.p_coin_pcut
+#
+#coin_ep_cut_all = coin_time.SHMS_p_RF+misc.starttime+accept.delta
+#
+#coin_ep_cut_prompt = coin_time.Coin_Proton_Prompt+coin_time.SHMS_p_RF+misc.starttime+accept.delta
+#
+#coin_ep_cut_rand = coin_time.Coin_Proton_Rand+coin_time.SHMS_p_RF+misc.starttime+accept.delta
+#
+coin_ep_cut_all = coin_time.SHMS_p_RF+misc.starttime+accept.delta+pid.p_coin_pcut
+#
+coin_ep_cut_prompt = coin_time.Coin_Proton_Prompt+coin_time.SHMS_p_RF+misc.starttime+accept.delta+pid.p_coin_pcut
+#
+coin_ep_cut_rand = coin_time.Coin_Proton_Rand+coin_time.SHMS_p_RF+misc.starttime+accept.delta+pid.p_coin_pcut

@@ -1,14 +1,15 @@
 #! /usr/bin/python
-
 #
 # Description:
 # ================================================================
-# Time-stamp: "2024-02-09 12:05:00 junaid"
+# Time-stamp: "2024-03-13 01:29:19 junaid"
 # ================================================================
 #
-# Created: Muhammad junaid  <mjo147@uregina.ca>
-# Copyright (c) trottar & junaid
+# Author:  Muhammad Junaid III <mjo147@uregina.ca>
 #
+# Copyright (c) junaid
+#
+###################################################################################################################################################
 
 import pandas as pd
 import sys, os, time
@@ -49,7 +50,8 @@ OUTPATH=lt.OUTPATH
 
 def getTable():
     # Output for luminosity table
-    inp_f = UTILPATH+"/scripts/efficiency/OUTPUTS/%s_%s_efficiency_data_%s.csv"  % (ROOTPrefix.replace("replay_",""),runType,timestmp)
+#    inp_f = UTILPATH+"/scripts/efficiency/OUTPUTS/%s_%s_efficiency_data_%s.csv"  % (ROOTPrefix.replace("replay_",""),runType,timestmp)
+    inp_f = UTILPATH+"/efficiencies/%s_%s_efficiency_data_%s.csv"  % (ROOTPrefix.replace("replay_",""),runType,timestmp)
 
     # Converts csv data to dataframe
     try:
