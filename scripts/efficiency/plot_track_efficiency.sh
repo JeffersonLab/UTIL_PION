@@ -3,19 +3,21 @@
 #
 # Description:
 # ================================================================
-# Time-stamp: "2024-02-09 12:10:00 junaid"
+# Time-stamp: "2024-03-11 12:12:00 junaid"
 # ================================================================
 #
 # Author:  Muhammad Junaid <mjo147@uregina.ca>
 #
 # Copyright (c) junaid
 #
+##################################################################################
 
 # Runs script in the ltsep python package that grabs current path enviroment
 if [[ ${HOSTNAME} = *"cdaq"* ]]; then
     PATHFILE_INFO=`python3 /home/cdaq/pionLT-2021/hallc_replay_lt/UTIL_PION/bin/python/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
 elif [[ "${HOSTNAME}" = *"farm"* ]]; then
-    PATHFILE_INFO=`python3 /u/home/${USER}/.local/lib/python3.4/site-packages/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
+#    PATHFILE_INFO=`python3 /u/home/${USER}/.local/lib/python3.4/site-packages/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
+    PATHFILE_INFO=`python3 /u/group/c-pionlt/USERS/${USER}/replay_lt_env/lib/python3.9/site-packages/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
 fi
 
 # Split the string we get to individual variables, easier for printing and use later
@@ -88,7 +90,7 @@ if [[ $s_flag = "true" ]]; then
 
 else
     RUNTYPE=$1
-    TIMESTMP="2024_03_02"
+    TIMESTMP="2024_09_05"
     if [[ $RUNTYPE = "HeePCoin" ]]; then
         ROOTPREFIX=PionLT_HeeP_coin
         python3 plot/plot_heepcoin_efficiency.py ${ROOTPREFIX} ${RUNTYPE} ${TIMESTMP}
@@ -108,12 +110,13 @@ else
 #      rm -f *.png
         exit 1
     elif [[ $RUNTYPE = "Prod" ]]; then
-        ROOTPREFIX=PionLT_coin_production
-        python3 plot/plot_prod_efficiency.py ${ROOTPREFIX} ${RUNTYPE} ${TIMESTMP}
-        cd "${SCRIPTPATH}/efficiency/OUTPUTS/plots"
-        convert *.png "${ROOTPREFIX}_${RUNTYPE}_${TIMESTMP}.pdf"
+        ROOTPREFIX=coin_production
+#        python3 plot/plot_prod_efficiency.py ${ROOTPREFIX} ${RUNTYPE} ${TIMESTMP}
+        python3 plot/plot_efficiency.py ${ROOTPREFIX} ${RUNTYPE} ${TIMESTMP}
+       cd "${SCRIPTPATH}/efficiency/OUTPUTS/plots"
+#        convert *.png "${ROOTPREFIX}_${RUNTYPE}_${TIMESTMP}.pdf"
 #      evince "${RUNTYPE}_${TIMESTMP}.pdf"
-        mv *.png png/
+#        mv *.png png/
 #      rm -f *.png
         exit 1
     elif [[ $RUNTYPE = "pTRIG6" ]]; then

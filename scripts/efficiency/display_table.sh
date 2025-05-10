@@ -3,19 +3,22 @@
 #
 # Description:
 # ================================================================
-# Time-stamp: "2024-02-09 12:10:00 junaid"
+# Time-stamp: "2024-03-11 12:12:00 junaid"
 # ================================================================
 #
 # Author:  Muhammad Junaid <mjo147@uregina.ca>
 #
 # Copyright (c) junaid
 #
+##################################################################################
 
 # Runs script in the ltsep python package that grabs current path enviroment
 if [[ ${HOSTNAME} = *"cdaq"* ]]; then
     PATHFILE_INFO=`python3 /home/cdaq/pionLT-2021/hallc_replay_lt/UTIL_PION/bin/python/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
 elif [[ "${HOSTNAME}" = *"farm"* ]]; then
-    PATHFILE_INFO=`python3 /u/home/${USER}/.local/lib/python3.4/site-packages/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
+#    PATHFILE_INFO=`python3 /u/home/${USER}/.local/lib/python3.4/site-packages/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
+    PATHFILE_INFO=`python3 /u/group/c-pionlt/USERS/${USER}/replay_lt_env/lib/python3.9/site-packages/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
+
 fi
 
 # Split the string we get to individual variables, easier for printing and use later
@@ -63,7 +66,7 @@ if [[ $s_flag = "true" ]]; then
     COLUMN1=$4
 #    COLUMN1=Run_Number
     COLUMN2=$5
-    TIMESTMP="2024_03_06"
+    TIMESTMP="2024_09_19"
     if [[ $RUNTYPE = "HeePSing" ]]; then
 	ROOTPREFIX=PionLT_${SPEC}_HeePSing
     elif [[ $RUNTYPE = "LumiSing" ]]; then
@@ -77,7 +80,7 @@ else
     COLUMN1=$2
 #    COLUMN1=Run_Number
     COLUMN2=$3
-    TIMESTMP="2024_03_06"
+    TIMESTMP="2024_10_10"
     if [[ $RUNTYPE = "HeePCoin" ]]; then
         ROOTPREFIX=PionLT_HeeP_coin
     elif [[ $RUNTYPE = "LumiCoin" ]]; then
