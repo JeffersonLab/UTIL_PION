@@ -994,7 +994,7 @@ def main():
     file_exists = os.path.isfile(out_f)
 
     # Updates csv file with luminosity calculated values for later analysis (see plot_yield.py)
-    if False:#file_exists: #modified so that it would only output values for this run - much more useful with ~100 runs in file - NH
+    if file_exists: 
         try:
             out_data = pd.read_csv(out_f)
         except IOError:
