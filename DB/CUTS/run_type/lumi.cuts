@@ -46,7 +46,7 @@ c_epitrack_lumi = current.bcm2+coin_time.Coin_Pion_Prompt+pid.h_ecut+pid.p_picut
 c_eptrack_lumi = current.bcm2+track.p_track+track.h_track+misc.c_noedtm+coin_time.Coin_Pion_Prompt+misc.starttime+pid.p_pcut+pid.h_ecut+accept.delta+accept.h_pfp+accept.p_pfp
 
 c_track_lumi_rand = current.bcm2+track.p_track+track.h_track+misc.c_noedtm+coin_time.Coin_Pion_Rand+misc.starttime
-c_epitrack_lumi_rand = current.bcm2+track.p_track+track.h_track+misc.c_noedtm+coin_time.Coin_Pion_Rand+misc.starttime+pid.p_picut_noHGC+pid.h_ecut
+c_epitrack_lumi_rand = current.bcm2+coin_time.Coin_Pion_Rand+pid.h_ecut+pid.p_picut_noHGC+accept.delta
 c_eptrack_lumi_rand = current.bcm2+track.p_track+track.h_track+misc.c_noedtm+coin_time.Coin_Pion_Rand+misc.starttime+pid.p_pcut+pid.h_ecut
 ############
 # PID cuts #
