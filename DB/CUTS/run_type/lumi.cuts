@@ -42,7 +42,7 @@ p_hadcut_lumi_eff = current.bcm2+accept.delta+pid.p_hadcut-pid.p_hadcut.P_gtr_be
 # COIN track cuts #
 ###################
 c_track_lumi = current.bcm2+track.p_track+track.h_track+misc.c_noedtm+coin_time.Coin_Pion_Prompt+misc.starttime+accept.delta+accept.h_pfp+accept.p_pfp
-c_epitrack_lumi = current.bcm2+coin_time.Coin_Pion_Prompt+pid.h_ecut+pid.p_picut_noHGC+accept.delta+accept.h_pfp+accept.p_pfp
+c_epitrack_lumi = current.bcm2+coin_time.Coin_Pion_Prompt+pid.h_ecut+pid.p_picut_noHGC+accept.delta
 c_eptrack_lumi = current.bcm2+track.p_track+track.h_track+misc.c_noedtm+coin_time.Coin_Pion_Prompt+misc.starttime+pid.p_pcut+pid.h_ecut+accept.delta+accept.h_pfp+accept.p_pfp
 
 c_track_lumi_rand = current.bcm2+track.p_track+track.h_track+misc.c_noedtm+coin_time.Coin_Pion_Rand+misc.starttime
