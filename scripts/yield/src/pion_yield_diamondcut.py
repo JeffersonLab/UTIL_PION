@@ -76,13 +76,16 @@ OUTPATH=lt.OUTPATH
 RUNLISTPATH = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_BATCH/InputRunLists/PionLT_2021_2022" % (USER)
 MMCUT_CSV   = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/LTSep_CSVs/mm_offset_cut_csv" % (USER)
 EFF_CSV     = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/efficiencies" % (USER)
-SIMCPATH = "/volatile/hallc/c-pionlt/%s/OUTPUT/Analysis/SIMC" % (USER)
+
+# Define paths SIMC
+physet_dir_name = "_".join(PHY_SETTING.split("_")[:3]) + "_std"
+SIMCPATH = "/volatile/hallc/c-pionlt/%s/OUTPUT/Analysis/SIMC/%s/" % (USER, physet_dir_name)
 
 #################################################################################################################################################
 
 # Output PDF File Name
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, REPLAYPATH))
-Pion_Analysis_Distributions = "%s/%s_%s_ProdCoin_Pion_Analysis_DiamondCut_Distributions.pdf" % (OUTPATH, PHY_SETTING, MaxEvent)
+Pion_Analysis_Distributions = "%s/%s_%s_ProdCoin_Pion_Analysis_Diamondcut_Distributions.pdf" % (OUTPATH, PHY_SETTING, MaxEvent)
 
 # Extract the first three words from PHY_SETTING for the CSV file name
 setting_name = "_".join(PHY_SETTING.split("_")[:3])
@@ -402,23 +405,7 @@ vertex1 = [None, None]  # bottom-left
 vertex2 = [None, None]  # top-left
 vertex3 = [None, None]  # top-right
 vertex4 = [None, None]  # bottom-right
-'''
-# Iterate over the bins to find the vertices
-for i in range(1, n_bins_x + 1):
-    for j in range(1, n_bins_y + 1):
-        bin_content = Q2_vs_W_pions_dummysub_data_cut_all.GetBinContent(i, j)
-        if bin_content > 0:
-            bin_center_x = Q2_vs_W_pions_dummysub_data_cut_all.GetXaxis().GetBinCenter(i)
-            bin_center_y = Q2_vs_W_pions_dummysub_data_cut_all.GetYaxis().GetBinCenter(j)
-#            if vertex1[0] is None or (bin_center_x + bin_center_y < vertex1[0] + vertex1[1]):
-#                vertex1 = [bin_center_x, bin_center_y]
-            if vertex2[0] is None or (bin_center_y > vertex2[1]):
-                vertex2 = [bin_center_x, bin_center_y]
-#            if vertex3[0] is None or (bin_center_x + bin_center_y > vertex3[0] + vertex3[1]):
-#                vertex3 = [bin_center_x, bin_center_y]
-            if vertex4[0] is None or (bin_center_y < vertex4[1]):
-                vertex4 = [bin_center_x, bin_center_y]
-'''
+
 # Project the 2D histogram onto the x and y axes
 Q2_projection = Q2_vs_W_pions_dummysub_data_cut_all.ProjectionX()
 W_projection = Q2_vs_W_pions_dummysub_data_cut_all.ProjectionY()

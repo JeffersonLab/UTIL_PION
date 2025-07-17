@@ -42,7 +42,7 @@ ROOT.gROOT.SetBatch(ROOT.kTRUE) # Set ROOT to batch mode explicitly, does not sp
 
 # Check the number of arguments provided to the script
 if len(sys.argv)-1!=8:
-    print("!!!!! ERROR !!!!!\n Expected 7 arguments\n Usage is with - ROOTfileSuffixs Beam Energy MaxEvents RunList CVSFile\n!!!!! ERROR !!!!!")
+    print("!!!!! ERROR !!!!!\n Expected 8 arguments\n Usage is with - ROOTfileSuffixs Beam Energy MaxEvents RunList CVSFile\n!!!!! ERROR !!!!!")
     sys.exit(1)
 
 ##################################################################################################################################################
@@ -78,15 +78,17 @@ RUNLISTPATH = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_BATCH/InputRunLis
 EFF_CSV     = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/efficiencies" % (USER)
 MMCUT_CSV   = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/LTSep_CSVs/mm_offset_cut_csv" % (USER)
 DCUT_CSV    = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/LTSep_CSVs/diamond_cut_csv" % (USER)
-SIMCPATH    = "/volatile/hallc/c-pionlt/%s/OUTPUT/Analysis/SIMC" % (USER)
+
+# Extract the first three words from PHY_SETTING for the CSV file name
+setting_name = "_".join(PHY_SETTING.split("_")[:3])
+physet_dir_name = "%s_std" % (setting_name)
+SIMCPATH = "/volatile/hallc/c-pionlt/%s/OUTPUT/Analysis/SIMC/%s/" % (USER, physet_dir_name)
+
 #################################################################################################################################################
 
 # Output PDF File Name
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, REPLAYPATH))
-Pion_Analysis_Distributions = "%s/%s_%s_ProdCoin_Pion_Analysis_Comparison_Distributions.pdf" % (OUTPATH, PHY_SETTING, MaxEvent)
-
-# Extract the first three words from PHY_SETTING for the CSV file name
-setting_name = "_".join(PHY_SETTING.split("_")[:3])
+Pion_Analysis_Distributions = "%s/%s_%s_ProdCoin_Pion_Analysis_Ratio_Comparison_Distributions.pdf" % (OUTPATH, PHY_SETTING, MaxEvent)
 
 # Input file location and variables taking
 rootFile_DATA = "%s/%s_%s_%s.root" % (OUTPATH, PHY_SETTING, MaxEvent, DATA_Suffix)
@@ -331,12 +333,8 @@ for index, row in filtered_data_df.iterrows():
         continue
 
     data_charge_error = math.sqrt(((data_charge * data_d_slope)**2 + (data_d_amplitude * data_run_time)**2)/(data_slope)**2)
-    data_current_error = math.sqrt((data_d_slope/data_slope)**2 + (data_d_amplitude / (data_slope * data_BCM2_Beam_Cut_Current))**2)
-    data_Boiling_factor_error = math.sqrt((data_BCM2_Beam_Cut_Current_error/data_BCM2_Beam_Cut_Current)** 2 + (0.000017/0.00028)**2)
-
-#    data_charge_error = data_charge * math.sqrt((d_slope/slope)**2 + ((d_amplitude * data_run_time)/(slope * data_charge))**2)
-#    data_current_error = data_BCM2_Beam_Cut_Current * math.sqrt((d_slope/slope)**2 + (d_amplitude / (slope * data_BCM2_Beam_Cut_Current))**2)
-#    data_Boiling_factor_error = data_Boiling_factor * math.sqrt((data_BCM2_Beam_Cut_Current_error/data_BCM2_Beam_Cut_Current)** 2 + (0.000017/0.00028)**2)
+    data_BCM2_Beam_Cut_Current_error = data_BCM2_Beam_Cut_Current * math.sqrt((data_d_slope/data_slope)**2 + (data_d_amplitude / (data_slope * data_BCM2_Beam_Cut_Current))**2)
+    data_Boiling_factor_error = data_Boiling_factor * math.sqrt((data_BCM2_Beam_Cut_Current_error/data_BCM2_Beam_Cut_Current)** 2 + (0.000017/0.00028)**2)
 
     data_product = (data_charge * data_hms_tracking_efficiency * data_shms_tracking_efficiency * hms_Cer_detector_efficiency * hms_Cal_detector_efficiency * data_hms_hodo_3_of_4_efficiency * data_shms_hodo_3_of_4_efficiency * data_edtm_livetime_Corr * data_Boiling_factor)
     data_product_error = data_product * (math.sqrt((data_charge_error/data_charge)** 2 +  (data_hms_tracking_efficiency_error/data_hms_tracking_efficiency)** 2 + (data_shms_tracking_efficiency_error/data_shms_tracking_efficiency)** 2 + (data_edtm_livetime_Corr_error/data_edtm_livetime_Corr)** 2 + (hms_Cer_detector_efficiency_error/hms_Cer_detector_efficiency)** 2 + (hms_Cal_detector_efficiency_error/hms_Cal_detector_efficiency)** 2 + (data_hms_hodo_3_of_4_efficiency_error/data_hms_hodo_3_of_4_efficiency)** 2 + (data_shms_hodo_3_of_4_efficiency_error/data_shms_hodo_3_of_4_efficiency)** 2 + (data_Boiling_factor_error/data_Boiling_factor)** 2)) 
@@ -425,9 +423,6 @@ total_dummy_effective_charge_cal_error = math.sqrt(total_dummy_effective_charge_
 
 total_dummy_effective_charge = (total_dummy_effective_charge_cal * dummy_target_corr)
 total_dummy_effective_charge_error = total_dummy_effective_charge * math.sqrt((total_dummy_effective_charge_cal_error/total_dummy_effective_charge_cal)**2 + (dummy_target_corr_error/dummy_target_corr)** 2)
-
-#total_dummy_effective_charge = total_dummy_effective_charge_sum * dummy_target_corr
-#total_dummy_effective_charge_error = math.sqrt(total_dummy_effective_charge_error_sum + (dummy_target_corr_error/dummy_target_corr)** 2)
 
 print("\nTotal effective charge for the data run list: {:.5f} ± {:.5f}".format(total_data_effective_charge, total_data_effective_charge_error))
 print("\nTotal effective charge for the dummy run list: {:.5f} ± {:.5f}".format(total_dummy_effective_charge, total_dummy_effective_charge_error))

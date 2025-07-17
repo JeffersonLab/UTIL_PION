@@ -42,7 +42,7 @@ ROOT.gROOT.SetBatch(ROOT.kTRUE) # Set ROOT to batch mode explicitly, does not sp
 
 # Check the number of arguments provided to the script
 if len(sys.argv)-1!=3:
-    print("!!!!! ERROR !!!!!\n Expected 7 arguments\n Usage is with - ROOTfileSuffixs Beam Energy MaxEvents RunList CVSFile\n!!!!! ERROR !!!!!")
+    print("!!!!! ERROR !!!!!\n Expected 3 arguments\n Usage is with - ROOTfileSuffixs Beam Energy MaxEvents RunList CVSFile\n!!!!! ERROR !!!!!")
     sys.exit(1)
 
 ##################################################################################################################################################
@@ -72,16 +72,17 @@ OUTPATH=lt.OUTPATH
 MMCUT_CSV   = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/LTSep_CSVs/mm_offset_cut_csv" % (USER)
 DCUT_CSV    = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/LTSep_CSVs/diamond_cut_csv" % (USER)
 TBINCSVPATH = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/LTSep_CSVs/t_binning_csv" % (USER)
-SIMCPATH = "/volatile/hallc/c-pionlt/%s/OUTPUT/Analysis/SIMC" % (USER)
+
+# Extract the first three words from PHY_SETTING for the CSV file name
+setting_name = "_".join(PHY_SETTING.split("_")[:3])
+physet_dir_name = "%s_std" % (setting_name)
+SIMCPATH = "/volatile/hallc/c-pionlt/%s/OUTPUT/Analysis/SIMC/%s/" % (USER, physet_dir_name)
 
 #################################################################################################################################################
 
 # Output PDF File Name
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, REPLAYPATH))
 #Pion_Analysis_Distributions = "%s/%s_%s_ProdCoin_Pion_Analysis_SIMCYield_Distributions.pdf" % (OUTPATH, PHY_SETTING, MaxEvent)
-
-# Extract the first three words from PHY_SETTING for the CSV file name
-setting_name = "_".join(PHY_SETTING.split("_")[:3])
 
 # Input file location and variables taking
 rootFile_SIMC = "%s/%s.root" % (SIMCPATH, SIMC_Suffix)
@@ -171,25 +172,30 @@ t_max_values = tbin_df['t_max'].values
 
 # Define the cuts using row 1 and row 3 values
 tbin_Cut1 = lambda event: (t_min_values[0] <= -event.t <= t_max_values[0])  # Row 1
-tbin_Cut2 = lambda event: (t_min_values[1] <= -event.t <= t_max_values[1])  # Row 2
-tbin_Cut3 = lambda event: (t_min_values[2] <= -event.t <= t_max_values[2])  # Row 3
-tbin_Cut4 = lambda event: (t_min_values[3] <= -event.t <= t_max_values[3])  # Row 4
-tbin_Cut5 = lambda event: (t_min_values[4] <= -event.t <= t_max_values[4])  # Row 5
+tbin_Cut2 = lambda event: (t_min_values[1] < -event.t <= t_max_values[1])  # Row 2
+tbin_Cut3 = lambda event: (t_min_values[2] < -event.t <= t_max_values[2])  # Row 3
+tbin_Cut4 = lambda event: (t_min_values[3] < -event.t <= t_max_values[3])  # Row 4
+tbin_Cut5 = lambda event: (t_min_values[4] < -event.t <= t_max_values[4])  # Row 5
 
 # Bundle them into a list
 tbin_cuts = [tbin_Cut1, tbin_Cut2, tbin_Cut3, tbin_Cut4, tbin_Cut5]
 
 # Print the t-binning cuts with 3 decimal places
-print("\n t-binning cuts:")
-print(f"tbin_Cut1: t_min = {t_min_values[0]:.3f}, t_max = {t_max_values[0]:.3f}")
-print(f"tbin_Cut2: t_min = {t_min_values[1]:.3f}, t_max = {t_max_values[1]:.3f}")
-print(f"tbin_Cut3: t_min = {t_min_values[2]:.3f}, t_max = {t_max_values[2]:.3f}")
-print(f"tbin_Cut4: t_min = {t_min_values[3]:.3f}, t_max = {t_max_values[3]:.3f}")
-print(f"tbin_Cut5: t_min = {t_min_values[4]:.3f}, t_max = {t_max_values[4]:.3f}")
-print("-"*40)
+#print("\n t-binning cuts:")
+#print(f"tbin_Cut1: t_min = {t_min_values[0]:.3f}, t_max = {t_max_values[0]:.3f}")
+#print(f"tbin_Cut2: t_min = {t_min_values[1]:.3f}, t_max = {t_max_values[1]:.3f}")
+#print(f"tbin_Cut3: t_min = {t_min_values[2]:.3f}, t_max = {t_max_values[2]:.3f}")
+#print(f"tbin_Cut4: t_min = {t_min_values[3]:.3f}, t_max = {t_max_values[3]:.3f}")
+#print(f"tbin_Cut5: t_min = {t_min_values[4]:.3f}, t_max = {t_max_values[4]:.3f}")
+#print("-"*40)
 
 # Define phi bins (15 bins from 0 to 360 degrees, each 24 degrees wide)
 phi_bins = [i for i in range(0, 361, 24)]  # 0, 24, 48, ..., 360
+
+# Calculate total number of t-bins and phi bins
+total_tbins = len(tbin_cuts)
+total_phibins = len(phi_bins) - 1
+#print(f"Total t-bins: {total_tbins}, Total phi bins: {total_phibins}")
 
 #########################################################################################################################################
 
@@ -219,16 +225,66 @@ print("-"*40)
 print ("normfac_simc: ", normfac_simc)
 print("-"*40)
 
+# Define the output CSV file name
+normfact_pions_path =  "%s/LTSep_CSVs/simc_yields_csv/%s_Physics_SIMC_Normfact_Calculation.csv" % (UTILPATH, setting_name)
+
+# Define CSV header
+header = ["Physics_Setting", "simc_normfactor", "simc_nevents", "normfac_simc"]
+
+# New row to be written
+new_row = {
+    "Physics_Setting": PHY_SETTING,
+    "simc_normfactor": simc_normfactor,
+    "simc_nevents": simc_nevents,
+    "normfac_simc": normfac_simc
+}
+
+# Read existing CSV file
+rows = []
+try:
+    with open(normfact_pions_path, mode='r') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        rows = list(csv_reader)
+except FileNotFoundError:
+    # If file doesn't exist yet
+    rows = []
+
+# Update row if Physics_Setting already exists
+row_found = False
+for row in rows:
+    if row["Physics_Setting"] == PHY_SETTING:
+        row.update(new_row)
+        row_found = True
+        break
+
+# Append new row if not found
+if not row_found:
+    rows.append(new_row)
+
+# Write to file
+with open(normfact_pions_path, mode='w', newline='') as csv_file:
+    writer = csv.DictWriter(csv_file, fieldnames=header)
+    writer.writeheader()
+    writer.writerows(rows)
+
+print(f"SIMC normalization info written to {normfact_pions_path}")
+
 ###################################################################################################################################################
 
 nbins = 200
 
 hist_config = {
-    "MMpi":     ("MIssing Mass Distribution (Cut_All); MM_{\pi}; Counts", nbins, 0.8, 1.2),
+    "MMpi":    ("Missing Mass Distribution (Cut_All); MM_{\pi}; Counts", nbins, 0.8, 1.2),
+    "Q2":      ("Q^{2} Distribution (Cut_All); Q^{2}; Counts", nbins, 2.0, 5.0),
+    "W":       ("W Distribution (Cut_All); W; Counts", nbins, 2.0, 3.0),
+    "epsilon": ("Epsilon Distribution (Cut_All); #epsilon; Counts", nbins, 0.0, 1.0),
+    "theta":   ("Theta Distribution (Cut_All); #theta; Counts", nbins, 0.0, 0.5),
 }
 
 def initialize_histograms(t_min_values, t_max_values, phi_bins, hist_config, category_suffixes):
     histograms_by_tphi_cut = []
+    added_t_bin_vars = set()  # Track which (tmin, tmax, suffix, var) already had W/Q2 added
+
     for i in range(len(t_min_values)):
         tmin = t_min_values[i]
         tmax = t_max_values[i]
@@ -238,12 +294,21 @@ def initialize_histograms(t_min_values, t_max_values, phi_bins, hist_config, cat
             phimax = phi_bins[j + 1]
             phi_label = f"phi({phimin}-{phimax})"
             hist_set = {suffix: {} for suffix in category_suffixes}
+
             for var, (base_title, nbins, xmin, xmax) in hist_config.items():
                 for suffix in category_suffixes:
-                    # Create unique histogram name and title for each category
-                    hname = f"{var}_{t_label}_{phi_label}_{suffix}_simc_cut_all"
-                    title = f"{base_title} (t ∈ [{tmin:.2f}, {tmax:.2f}], φ ∈ [{phimin}, {phimax}], Category: {suffix})"
-                    hist_set[suffix][var] = ROOT.TH1D(hname, title, nbins, xmin, xmax)
+                    if var == "MMpi":
+                        # MMpi → t and φ bins
+                        hname = f"{var}_{t_label}_{phi_label}_{suffix}_data_cut_all"
+                        title = f"{base_title} (t ∈ [{tmin:.2f}, {tmax:.2f}], φ ∈ [{phimin}, {phimax}], Category: {suffix})"
+                        hist_set[suffix][var] = ROOT.TH1D(hname, title, nbins, xmin, xmax)
+                    elif var in ("Q2", "W", "epsilon", "theta") and (tmin, tmax, suffix, var) not in added_t_bin_vars:
+                        # Q2, W → only once per t-bin across full phi
+                        hname = f"{var}_{t_label}_{suffix}_data_cut_all"
+                        title = f"{base_title} (t ∈ [{tmin:.2f}, {tmax:.2f}], φ ∈ [0, 360], Category: {suffix})"
+                        hist_set[suffix][var] = ROOT.TH1D(hname, title, nbins, xmin, xmax)
+                        added_t_bin_vars.add((tmin, tmax, suffix, var))
+
             histograms_by_tphi_cut.append((tmin, tmax, phimin, phimax, hist_set))
     return histograms_by_tphi_cut
 
@@ -263,19 +328,27 @@ Uncut_Pion_Events_SIMC_tree = infile_SIMC.Get("h10")
 
 # Fill the histograms with the data
 for event in Uncut_Pion_Events_SIMC_tree:
-    # Apply the MMpi cut and Diamond cut
     if HMS_Acceptance(event) and SHMS_Acceptance(event) and SIMC_MMpi_Cut(event) and Diamond_Cut(event):
-        # Loop over t-bins
         for tbin_cut, (tmin, tmax) in zip(tbin_cuts, zip(t_min_values, t_max_values)):
-            if tbin_cut(event):  # Apply the t-bin cut
-                # Loop over phi-bins
-                for phimin, phimax in zip(phi_bins[:-1], phi_bins[1:]):
-                    if phimin <= event.phipq * (180 / math.pi) + 180 <= phimax:  # Apply the phi-bin cut
-                        # Fill the histogram for the corresponding t-bin and phi-bin
-                        for tmin_hist, tmax_hist, phimin_hist, phimax_hist, hist_set in data_histograms_by_tphi_cut:
-                            if tmin == tmin_hist and tmax == tmax_hist and phimin == phimin_hist and phimax == phimax_hist:
-                                for var in hist_config:
-                                    hist_set["simc"][var].Fill(event.missmass, event.Weight)
+            if tbin_cut(event):
+                # Fill Q² and W (once per t-bin)
+                for tmin_hist, tmax_hist, _, _, hist_set in data_histograms_by_tphi_cut:
+                    if tmin == tmin_hist and tmax == tmax_hist:
+                        if "Q2" in hist_set["simc"]:
+                            hist_set["simc"]["Q2"].Fill(event.Q2, event.Weight)
+                        if "W" in hist_set["simc"]:
+                            hist_set["simc"]["W"].Fill(event.W, event.Weight)
+                        if "epsilon" in hist_set["simc"]:
+                            hist_set["simc"]["epsilon"].Fill(event.epsilon, event.Weight)
+                        if "theta" in hist_set["simc"]:
+                            hist_set["simc"]["theta"].Fill(event.thetapq, event.Weight)
+                        break  # Only fill Q2/W once for this t-bin
+                # Fill MMπ per t–φ bin
+                phi_deg = event.phipq * (180 / math.pi) + 180  # Convert φ to degrees in [0, 360]
+                for tmin_hist, tmax_hist, phimin_hist, phimax_hist, hist_set in data_histograms_by_tphi_cut:
+                    if tmin == tmin_hist and tmax == tmax_hist and phimin_hist <= phi_deg <= phimax_hist:
+                        hist_set["simc"]["MMpi"].Fill(event.missmass, event.Weight)
+                        break  # Only fill in the matching t–φ bin
 
 for event in Uncut_Pion_Events_SIMC_tree:
     # Apply the MMpi cut and Diamond cut
@@ -283,14 +356,12 @@ for event in Uncut_Pion_Events_SIMC_tree:
         # Loop over t-bins
         for tbin_cut, (tmin, tmax) in zip(tbin_cuts, zip(t_min_values, t_max_values)):
             if tbin_cut(event):  # Apply the t-bin cut
-                # Loop over phi-bins
-                for phimin, phimax in zip(phi_bins[:-1], phi_bins[1:]):
-                    if phimin <= event.phipq * (180 / math.pi) + 180 <= phimax:  # Apply the phi-bin cut
-                        # Fill the histogram for the corresponding t-bin and phi-bin
-                        for tmin_hist, tmax_hist, phimin_hist, phimax_hist, hist_set in data_histograms_by_tphi_cut:
-                            if tmin == tmin_hist and tmax == tmax_hist and phimin == phimin_hist and phimax == phimax_hist:
-                                for var in hist_config:
-                                    hist_set["simc_raw"][var].Fill(event.missmass)
+                # Fill MMπ per t–φ bin
+                phi_deg = event.phipq * (180 / math.pi) + 180  # Convert φ to degrees in [0, 360]
+                for tmin_hist, tmax_hist, phimin_hist, phimax_hist, hist_set in data_histograms_by_tphi_cut:
+                    if tmin == tmin_hist and tmax == tmax_hist and phimin_hist <= phi_deg <= phimax_hist:
+                        hist_set["simc_raw"]["MMpi"].Fill(event.missmass)
+                        break  # Only fill in the matching t–φ bin
 
 print("####################################")
 print("###### Histogram filling done ######")
@@ -302,18 +373,116 @@ print("####################################\n")
 for tmin_hist, tmax_hist, phimin_hist, phimax_hist, hist_set in data_histograms_by_tphi_cut:
     for var in hist_config:
         # Scale the simc histogram
-        simc_hist = hist_set["simc"][var]
-        norm_simc_hist = simc_hist.Clone()
-
-        # Scale the cloned histogram with the normalization factor
-        norm_simc_hist.Scale(normfac_simc)
-        hist_set["norm_simc"][var] = norm_simc_hist
+        if "simc" in hist_set and var in hist_set["simc"]:
+            simc_hist = hist_set["simc"][var]
+            if simc_hist:
+                norm_simc_hist = simc_hist.Clone()
+                norm_simc_hist.Scale(normfac_simc)
+                hist_set["norm_simc"][var] = norm_simc_hist
 
 print("####################################")
 print("###### SIMC Normalization done ######")
 print("####################################\n")
 
 #############################################################################################################################################
+
+print(f"Average Q2 , W, phi, eps and theta values for each t-bin (with uncertainties)")
+
+avg_kin_tbin = {}
+for tmin, tmax in zip(t_min_values, t_max_values):
+    for tmin_hist, tmax_hist, phimin_hist, _, hist_set in data_histograms_by_tphi_cut:
+        if tmin == tmin_hist and tmax == tmax_hist and phimin_hist == 0:
+            hist_Q = hist_set["norm_simc"]["Q2"]
+            hist_W = hist_set["norm_simc"]["W"]
+            hist_eps = hist_set["norm_simc"]["epsilon"]
+            hist_theta = hist_set["norm_simc"]["theta"]
+
+            avg_Q2 = hist_Q.GetMean()
+            err_Q2 = hist_Q.GetMeanError()
+            avg_W = hist_W.GetMean()
+            err_W = hist_W.GetMeanError()
+            avg_eps = hist_eps.GetMean()
+            err_eps = hist_eps.GetMeanError()
+            avg_theta = hist_theta.GetMean()
+            err_theta = hist_theta.GetMeanError()
+
+            tbin_key = f"t({tmin:.2f}-{tmax:.2f})"
+            avg_kin_tbin[tbin_key] = {
+                "avg_Q2": avg_Q2, "err_Q2": err_Q2,
+                "avg_W": avg_W, "err_W": err_W,
+                "avg_eps": avg_eps, "err_eps": err_eps,
+                "avg_theta": avg_theta, "err_theta": err_theta
+            }
+
+            print(f"{tbin_key}: <Q²> = {avg_Q2:.4f} ± {err_Q2:.4f}, <W> = {avg_W:.4f} ± {err_W:.4f}, <eps> = {avg_eps:.4f} ± {err_eps:.4f}, <θ> = {avg_theta:.4f} ± {err_theta:.4f}")
+            break
+
+# Define output CSV file path for average kinematics
+avg_kinematics_path = "%s/LTSep_CSVs/simc_yields_csv/%s_Physics_Avg_SIMC_Kinematics.csv" % (UTILPATH, setting_name)
+
+# Define the header
+avg_kin_header = [
+    "Physics_Setting", "total_tbins", "tbin_number", "t_min", "t_max", "t_central",
+    "total_phibins", "phi_central", "avg_Q2", "avg_Q2_err", "avg_W", "avg_W_err",
+    "avg_eps", "avg_eps_err", "avg_theta", "avg_theta_err"
+]
+# Read the existing CSV file
+rows = []
+try:
+    with open(avg_kinematics_path, mode='r') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        rows = list(csv_reader)
+except FileNotFoundError:
+    rows = []
+
+# Prepare new rows for this Physics_Setting
+new_setting_rows = []
+for i, (tmin, tmax) in enumerate(zip(t_min_values, t_max_values), start=1):
+    tbin_key = f"t({tmin:.2f}-{tmax:.2f})"
+    if tbin_key in avg_kin_tbin:
+        avg_kin = avg_kin_tbin[tbin_key]
+        new_setting_rows.append({
+            "Physics_Setting": PHY_SETTING,
+            "total_tbins": total_tbins,
+            "tbin_number": i,
+            "t_min": f"{tmin:.4f}",
+            "t_max": f"{tmax:.4f}",
+            "t_central": f"{(tmin + tmax) / 2:.4f}",
+            "total_phibins": total_phibins,  # This should match the header
+            "phi_central": f"{(0 + 360) / 2:.4f}",
+            "avg_Q2": f"{avg_kin['avg_Q2']:.6f}",
+            "avg_Q2_err": f"{avg_kin['err_Q2']:.6f}",
+            "avg_W": f"{avg_kin['avg_W']:.6f}",
+            "avg_W_err": f"{avg_kin['err_W']:.6f}",
+            "avg_eps": f"{avg_kin['avg_eps']:.6f}",
+            "avg_eps_err": f"{avg_kin['err_eps']:.6f}",
+            "avg_theta": f"{avg_kin['avg_theta']:.6f}",
+            "avg_theta_err": f"{avg_kin['err_theta']:.6f}"
+        })
+
+# Check if Physics_Setting already exists
+setting_exists = any(
+    row["Physics_Setting"] == PHY_SETTING and
+    float(row["t_min"]) == float(tmin) and
+    float(row["t_max"]) == float(tmax)
+    for row in rows
+)
+# Replace or append
+if setting_exists:
+    rows = [row for row in rows if row["Physics_Setting"] != PHY_SETTING]
+    rows.extend(new_setting_rows)
+else:
+    rows.extend(new_setting_rows)
+
+# Write everything back to CSV
+with open(avg_kinematics_path, mode='w', newline='') as csv_file:
+    writer = csv.DictWriter(csv_file, fieldnames=avg_kin_header)
+    writer.writeheader()
+    writer.writerows(rows)
+
+print(f"Average Q² and W values updated for '{PHY_SETTING}' in: {avg_kinematics_path}")
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # SIMC Yield Calculations
 N_simc_raw_MMpi = {}
@@ -392,8 +561,8 @@ for tmin, tmax, phimin, phimax, hist_set in data_histograms_by_tphi_cut:
         dN_simc_norm = N_simc_norm * (0)
 
     # Ensure dN_data_norm and dN_dummy_norm are not zero
-    if dN_simc_norm == 0:
-        dN_simc_norm = 1.0
+#    if dN_simc_norm == 0:
+#        dN_simc_norm = 1000.0
 
     # Store the results in the dictionary
     dN_error[bin_key] = {
@@ -418,43 +587,65 @@ print("=" * 40)
 # Define the output CSV file name
 yields_pions_path =  "%s/LTSep_CSVs/simc_yields_csv/%s_Physics_SIMC_Yield.csv" % (UTILPATH, setting_name)
 
+# Updated header with tbin_number and phibin_number included
+header = ["Physics_Setting", "tbin_number", "t_min", "t_max", "phibin_number", "phi_min", "phi_max", "Counts", "simc_yield", "simc_yield_error", "%error/yield"]
+
 # Read the existing CSV file into memory
 rows = []
-header = ["Physics Setting", "t_min", "t_max", "phi_min", "phi_max", "Counts", "simc_yield", "simc_yield_error", "%error/yield"]
 try:
     with open(yields_pions_path, mode='r') as csv_file:
         csv_reader = csv.DictReader(csv_file)
         rows = list(csv_reader)
 except FileNotFoundError:
-    # If the file doesn't exist, initialize an empty list
     rows = []
+
+# Gather all unique t-bin and phi-bin edges
+tbin_edges = sorted(list({(tmin, tmax) for tmin, tmax, _, _, _ in data_histograms_by_tphi_cut}))
 
 # Update or add rows
 updated_rows = []
-for tmin, tmax, phimin, phimax, hist_set in data_histograms_by_tphi_cut:
-    # Create a unique key for the current t-bin and phi-bin
-    bin_key = f"t({tmin:.2f}-{tmax:.2f})_phi({phimin}-{phimax})"
+for tbin_number, (tmin, tmax) in enumerate(tbin_edges, start=1):
+    # Filter phi bins for this t range, and sort
+    phibins = sorted([(phimin, phimax) for tmin2, tmax2, phimin, phimax, _ in data_histograms_by_tphi_cut if tmin2 == tmin and tmax2 == tmax])
+    for phibin_number, (phimin, phimax) in enumerate(phibins, start=1):
+        bin_key = f"t({tmin:.2f}-{tmax:.2f})_phi({phimin}-{phimax})"
+        N_simc_raw = N_simc_raw_MMpi[bin_key]["N_simc_raw"]
+        N_simc_norm = dN_simc_MMpi[bin_key]["integral"]
+        dN_simc_norm = dN_error[bin_key]["dN_simc_norm"]
 
-    # Retrieve the physics yield (N_data) and its error
-    N_simc_raw = N_simc_raw_MMpi[bin_key]["N_simc_raw"]
-    N_simc_norm = dN_simc_MMpi[bin_key]["integral"]
-    dN_simc_norm = dN_error[bin_key]["dN_simc_norm"]
+        # See if the row already exists and update it, else append new
+        row_found = False
+        for row in rows:
+            if (
+                row["Physics_Setting"] == PHY_SETTING
+                and float(row["t_min"]) == tmin
+                and float(row["t_max"]) == tmax
+                and float(row["phi_min"]) == phimin
+                and float(row["phi_max"]) == phimax
+            ):
+                row.update({
+                    "Physics_Setting": PHY_SETTING,
+                    "tbin_number": tbin_number,
+                    "t_min": tmin,
+                    "t_max": tmax,
+                    "phibin_number": phibin_number,
+                    "phi_min": phimin,
+                    "phi_max": phimax,
+                    "Counts": N_simc_raw,
+                    "simc_yield": N_simc_norm,
+                    "simc_yield_error": dN_simc_norm,
+                    "%error/yield": (dN_simc_norm/N_simc_norm)*100 if N_simc_norm != 0 else dN_simc_norm
+                })
+                row_found = True
+                break
 
-    # Check if the setting already exists in the CSV
-    row_found = False
-    for row in rows:
-        if (
-            row["Physics Setting"] == PHY_SETTING
-            and float(row["t_min"]) == tmin
-            and float(row["t_max"]) == tmax
-            and float(row["phi_min"]) == phimin
-            and float(row["phi_max"]) == phimax
-        ):
-            # Update the existing row
-            row.update({
-                "Physics Setting": PHY_SETTING,
+        if not row_found:
+            updated_rows.append({
+                "Physics_Setting": PHY_SETTING,
+                "tbin_number": tbin_number,
                 "t_min": tmin,
                 "t_max": tmax,
+                "phibin_number": phibin_number,
                 "phi_min": phimin,
                 "phi_max": phimax,
                 "Counts": N_simc_raw,
@@ -462,22 +653,6 @@ for tmin, tmax, phimin, phimax, hist_set in data_histograms_by_tphi_cut:
                 "simc_yield_error": dN_simc_norm,
                 "%error/yield": (dN_simc_norm/N_simc_norm)*100 if N_simc_norm != 0 else dN_simc_norm
             })
-            row_found = True
-            break
-
-    if not row_found:
-        # Add a new row if the setting doesn't exist
-        updated_rows.append({
-            "Physics Setting": PHY_SETTING,
-            "t_min": tmin,
-            "t_max": tmax,
-            "phi_min": phimin,
-            "phi_max": phimax,
-            "Counts": N_simc_raw,
-            "simc_yield": N_simc_norm,
-            "simc_yield_error": dN_simc_norm,
-            "%error/yield": (dN_simc_norm/N_simc_norm)*100 if N_simc_norm != 0 else dN_simc_norm
-        })
 
 # Combine updated rows with existing rows
 rows.extend(updated_rows)
@@ -495,36 +670,39 @@ print(f"simc yield results written to {yields_pions_path}")
 # Making directories in output file
 outHistFile = ROOT.TFile.Open("%s/%s_%s_Yield_SIMC.root" % (OUTPATH, PHY_SETTING, MaxEvent) , "RECREATE")
 
+# Create top-level directories for Q2 and W
+q2_dir = outHistFile.mkdir("Cut_Q2_Pion_Events_Norm_SIMC")
+w_dir = outHistFile.mkdir("Cut_W_Pion_Events_Norm_SIMC")
+epsilon_dir = outHistFile.mkdir("Cut_Epsilon_Pion_Events_Norm_SIMC")
+theta_dir = outHistFile.mkdir("Cut_Theta_Pion_Events_Norm_SIMC")
+
 # Write histograms to t-bin-specific directories
 for tmin, tmax, phimin, phimax, hist_set in data_histograms_by_tphi_cut:
-    # Format the directory name for the t-bin
-    t_dirname = f"Cut_Pion_Events_Norm_t{tmin:.2f}-t{tmax:.2f}_SIMC".replace(".", "p")
-    
-    # Check if the directory already exists
-    tdir = outHistFile.GetDirectory(t_dirname)
-    if not tdir:
-        # Create the directory if it doesn't exist
-        tdir = outHistFile.mkdir(t_dirname)
-    tdir.cd()
 
-    # Write each phi-bin histogram for this t-bin
-    for var in hist_config:
-        for cat in ["simc"]:
+    # --- Write MMpi (binned in t and phi) ---
+    t_dirname_MM = f"Cut_MM_Pion_Events_Norm_t{tmin:.2f}-t{tmax:.2f}_SIMC".replace(".", "p")
+    tdir_MM = outHistFile.GetDirectory(t_dirname_MM)
+    if not tdir_MM:
+        tdir_MM = outHistFile.mkdir(t_dirname_MM)
+    tdir_MM.cd()
+    var_MM = "MMpi"
+    for cat in ["norm_simc"]:
+        hist = hist_set[cat].get(var_MM)
+        if hist:
+            hist.SetTitle(f"{var_MM}_t{tmin:.2f}-t{tmax:.2f}_phi{phimin}-phi{phimax}_{cat}".replace(".", "p"))
+            hist.SetName(f"{var_MM}_t{tmin:.2f}-t{tmax:.2f}_phi{phimin}-phi{phimax}_{cat}".replace(".", "p"))
+            hist.GetYaxis().SetTitle("Counts")
+            hist.Write()
+
+    # --- Write Q2 and W once per t-bin (no phi binning) ---
+    for var, target_dir in zip(["Q2", "W", "epsilon", "theta"], [q2_dir, w_dir, epsilon_dir, theta_dir]):
+        for cat in ["norm_simc"]:
             hist = hist_set[cat].get(var)
             if hist:
-                # Update the histogram title to include t and phi ranges
-                hist.SetTitle(f"{var}_t{tmin:.2f}-t{tmax:.2f}_phi{phimin}-phi{phimax}_norm_{cat}_cut_all".replace(".", "p"))
-            
-                # Update the Y-axis label to "Counts"
+                target_dir.cd()
+                hist.SetTitle(f"{var}_t{tmin:.2f}-t{tmax:.2f}_{cat}".replace(".", "p"))
+                hist.SetName(f"{var}_t{tmin:.2f}-t{tmax:.2f}_{cat}".replace(".", "p"))
                 hist.GetYaxis().SetTitle("Counts")
-
-                # Set the histogram name dynamically
-                hist.SetName(f"{var}_t{tmin:.2f}-t{tmax:.2f}_phi{phimin}-phi{phimax}_norm_{cat}_cut_all".replace(".", "p"))
-
-                # Set the default drawing option to "HIST"
-                #hist.SetOption("HIST")
-
-                # Write the histogram to the file
                 hist.Write()
 
 print("####################################")

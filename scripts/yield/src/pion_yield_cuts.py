@@ -79,7 +79,7 @@ def coin_pions():
         "P_dc_xp_fp", "P_dc_yp_fp", "P_hod_goodscinhit", "P_hod_goodstarttime", "P_cal_etotnorm", "P_cal_etottracknorm",
         "P_aero_npeSum", "P_aero_xAtAero", "P_aero_yAtAero", "P_hgcer_npeSum", "P_hgcer_xAtCer", "P_hgcer_yAtCer",
         "P_ngcer_npeSum", "P_ngcer_xAtCer", "P_ngcer_yAtCer", "MMpi", "H_RF_Dist", "P_RF_Dist", "Q2", "W", "epsilon",
-        "ph_q", "MandelT", "pmiss", "pmiss_x", "pmiss_y", "pmiss_z", "emiss", "Erecoil", "Mrecoil"
+        "ph_q", "th_q", "MandelT", "pmiss", "pmiss_x", "pmiss_y", "pmiss_z", "emiss", "Erecoil", "Mrecoil",
     ]
 
     # Extract the data arrays for each branch
@@ -114,7 +114,7 @@ def coin_pions():
 def main():
     COIN_Pion_Data = coin_pions()
 
-    COIN_Pion_Data_Header = ["H_gtr_beta", "H_gtr_xp", "H_gtr_yp", "H_gtr_dp", "H_gtr_p", "H_dc_x_fp", "H_dc_y_fp", "H_dc_xp_fp", "H_dc_yp_fp", "H_hod_goodscinhit", "H_hod_goodstarttime", "H_cal_etotnorm", "H_cal_etottracknorm", "H_cer_npeSum", "CTime_ePiCoinTime_ROC1", "P_gtr_beta", "P_gtr_xp", "P_gtr_yp", "P_gtr_p", "P_gtr_dp", "P_dc_x_fp", "P_dc_y_fp", "P_dc_xp_fp", "P_dc_yp_fp", "P_hod_goodscinhit", "P_hod_goodstarttime", "P_cal_etotnorm", "P_cal_etottracknorm", "P_aero_npeSum", "P_aero_xAtAero", "P_aero_yAtAero", "P_hgcer_npeSum", "P_hgcer_xAtCer", "P_hgcer_yAtCer", "P_ngcer_npeSum", "P_ngcer_xAtCer", "P_ngcer_yAtCer", "MMpi", "H_RF_Dist", "P_RF_Dist", "Q2", "W", "epsilon", "ph_q", "MandelT", "pmiss", "pmiss_x", "pmiss_y", "pmiss_z", "emiss", "Erecoil", "Mrecoil"]
+    COIN_Pion_Data_Header = ["H_gtr_beta", "H_gtr_xp", "H_gtr_yp", "H_gtr_dp", "H_gtr_p", "H_dc_x_fp", "H_dc_y_fp", "H_dc_xp_fp", "H_dc_yp_fp", "H_hod_goodscinhit", "H_hod_goodstarttime", "H_cal_etotnorm", "H_cal_etottracknorm", "H_cer_npeSum", "CTime_ePiCoinTime_ROC1", "P_gtr_beta", "P_gtr_xp", "P_gtr_yp", "P_gtr_p", "P_gtr_dp", "P_dc_x_fp", "P_dc_y_fp", "P_dc_xp_fp", "P_dc_yp_fp", "P_hod_goodscinhit", "P_hod_goodstarttime", "P_cal_etotnorm", "P_cal_etottracknorm", "P_aero_npeSum", "P_aero_xAtAero", "P_aero_yAtAero", "P_hgcer_npeSum", "P_hgcer_xAtCer", "P_hgcer_yAtCer", "P_ngcer_npeSum", "P_ngcer_xAtCer", "P_ngcer_yAtCer", "MMpi", "H_RF_Dist", "P_RF_Dist", "Q2", "W", "epsilon", "ph_q", "th_q", "MandelT", "pmiss", "pmiss_x", "pmiss_y", "pmiss_z", "emiss", "Erecoil", "Mrecoil"]
 
     data = {}
     data.update(COIN_Pion_Data)

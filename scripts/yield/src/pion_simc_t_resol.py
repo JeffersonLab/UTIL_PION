@@ -75,7 +75,10 @@ ANATYPE=lt.ANATYPE
 OUTPATH=lt.OUTPATH
 MMCUT_CSV   = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/LTSep_CSVs/mm_offset_cut_csv" % (USER)
 DCUT_CSV    = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/LTSep_CSVs/diamond_cut_csv" % (USER)
-SIMCPATH    = "/volatile/hallc/c-pionlt/%s/worksim" % (USER)
+
+# Define paths SIMC
+physet_dir_name = "_".join(PHY_SETTING.split("_")[:3]) + "_std"
+SIMCPATH = "/volatile/hallc/c-pionlt/%s/worksim/%s" % (USER, physet_dir_name)
 
 #################################################################################################################################################
 
@@ -207,17 +210,19 @@ for key, suffix in simc_suffixes.items():
 
 ###################################################################################################################################################
 nbins = 400
+min = -0.2
+max = 0.2
 
 # Defining Histograms for Pions
 # Histograms for SIMC
-t_ti_resol_pions_simc_lowepscenter_cut_all = ROOT.TH1D("t_ti_resol_pions_simc_lowepscenter_cut_all", "t - ti Distribution loweps_center; t - ti; Counts", nbins, -0.2, 0.2)
-t_ti_resol_pions_simc_lowepsleft_cut_all = ROOT.TH1D("t_ti_resol_pions_simc_lowepsleft_cut_all", "t - ti Distribution loweps_left; t - ti; Counts", nbins, -0.2, 0.2)
-t_ti_resol_pions_simc_highepsright_cut_all = ROOT.TH1D("t_ti_resol_pions_simc_highepsright_cut_all", "t - ti Distribution higheps_right; t - ti; Counts", nbins, -0.2, 0.2)
-t_ti_resol_pions_simc_highepscenter_cut_all = ROOT.TH1D("t_ti_resol_pions_simc_highepscenter_cut_all", "t - ti Distribution higheps_center; t - ti; Counts", nbins, -0.2, 0.2)
-t_ti_resol_pions_simc_highepsleft_cut_all = ROOT.TH1D("t_ti_resol_pions_simc_highepsleft_cut_all", "t - ti Distribution higheps_left; t - ti; Counts", nbins, -0.2, 0.2)
+t_ti_resol_pions_simc_lowepscenter_cut_all = ROOT.TH1D("t_ti_resol_pions_simc_lowepscenter_cut_all", "t - ti Distribution loweps_center; t - ti; Counts", nbins, min, max)
+t_ti_resol_pions_simc_lowepsleft_cut_all = ROOT.TH1D("t_ti_resol_pions_simc_lowepsleft_cut_all", "t - ti Distribution loweps_left; t - ti; Counts", nbins, min, max)
+t_ti_resol_pions_simc_highepsright_cut_all = ROOT.TH1D("t_ti_resol_pions_simc_highepsright_cut_all", "t - ti Distribution higheps_right; t - ti; Counts", nbins, min, max)
+t_ti_resol_pions_simc_highepscenter_cut_all = ROOT.TH1D("t_ti_resol_pions_simc_highepscenter_cut_all", "t - ti Distribution higheps_center; t - ti; Counts", nbins, min, max)
+t_ti_resol_pions_simc_highepsleft_cut_all = ROOT.TH1D("t_ti_resol_pions_simc_highepsleft_cut_all", "t - ti Distribution higheps_left; t - ti; Counts", nbins, min, max)
 
-t_ti_resol_pions_simc_loweps_cut_all = ROOT.TH1D("t_ti_resol_pions_simc_loweps_cut_all", "t - ti Distribution loweps; t - ti; Counts", nbins, -0.2, 0.2)
-t_ti_resol_pions_simc_higheps_cut_all = ROOT.TH1D("t_ti_resol_pions_simc_higheps_cut_all", "t - ti Distribution higheps; t - ti; Counts", nbins, -0.2, 0.2)
+t_ti_resol_pions_simc_loweps_cut_all = ROOT.TH1D("t_ti_resol_pions_simc_loweps_cut_all", "t - ti Distribution loweps; t - ti; Counts", nbins, min, max)
+t_ti_resol_pions_simc_higheps_cut_all = ROOT.TH1D("t_ti_resol_pions_simc_higheps_cut_all", "t - ti Distribution higheps; t - ti; Counts", nbins, min, max)
 
 ##########################################################################################################################################################################################################
 
@@ -297,6 +302,10 @@ t_ti_resol_pions_simc_higheps_cut_all.Add(t_ti_resol_pions_simc_highepsleft_cut_
 # Removes stat box
 ROOT.gStyle.SetOptStat(0)
 
+# Fit ranges for the t-t_i resolution histograms
+fit_range_low = -0.008
+fit_range_high = 0.008
+
 # Saving histograms in PDF
 c1_delta = TCanvas("c1_delta", "Variables Distributions", 100, 0, 1400, 1400)
 c1_delta.Divide(1,2)
@@ -307,7 +316,7 @@ phy_setting_text.SetTextAlign(13)
 phy_setting_text.SetNDC()
 c1_delta.cd(1)
 t_ti_resol_pions_simc_loweps_cut_all.Draw("hist")
-t_ti_resol_pions_simc_loweps_cut_all.Fit("gaus", "Q", "", -0.008, 0.008)
+t_ti_resol_pions_simc_loweps_cut_all.Fit("gaus", "Q", "", fit_range_low, fit_range_high)
 fit_t_ti_loweps = t_ti_resol_pions_simc_loweps_cut_all.GetFunction('gaus')
 fit_t_ti_loweps.SetLineColor(ROOT.kRed)
 fit_t_ti_loweps.Draw("same")
@@ -322,7 +331,7 @@ loweps_t_ti_resol.AddEntry(t_ti_resol_pions_simc_loweps_cut_all, "low #epsilon",
 loweps_t_ti_resol.Draw()
 c1_delta.cd(2)
 t_ti_resol_pions_simc_higheps_cut_all.Draw("hist")
-t_ti_resol_pions_simc_higheps_cut_all.Fit("gaus", "Q", "", -0.008, 0.008)
+t_ti_resol_pions_simc_higheps_cut_all.Fit("gaus", "Q", "", fit_range_low, fit_range_high)
 fit_t_ti_higheps = t_ti_resol_pions_simc_higheps_cut_all.GetFunction('gaus')
 fit_t_ti_higheps.Draw("same")
 higheps_sigma = ROOT.TLatex()
