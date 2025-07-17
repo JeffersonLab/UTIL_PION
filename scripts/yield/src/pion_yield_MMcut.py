@@ -74,13 +74,16 @@ ANATYPE=lt.ANATYPE
 OUTPATH=lt.OUTPATH
 RUNLISTPATH = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_BATCH/InputRunLists/PionLT_2021_2022" % (USER)
 EFF_CSV     = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/efficiencies" % (USER)
-SIMCPATH = "/volatile/hallc/c-pionlt/%s/OUTPUT/Analysis/SIMC" % (USER)
+
+# Define paths SIMC
+physet_dir_name = "_".join(PHY_SETTING.split("_")[:3]) + "_std"
+SIMCPATH = "/volatile/hallc/c-pionlt/%s/OUTPUT/Analysis/SIMC/%s/" % (USER, physet_dir_name)
 
 #################################################################################################################################################
 
 # Output PDF File Name
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, REPLAYPATH))
-Pion_Analysis_Distributions = "%s/%s_%s_ProdCoin_Pion_Analysis_MMCut_Distributions.pdf" % (OUTPATH, PHY_SETTING, MaxEvent)
+Pion_Analysis_Distributions = "%s/%s_%s_ProdCoin_Pion_Analysis_MMcut_Distributions.pdf" % (OUTPATH, PHY_SETTING, MaxEvent)
 
 # Input file location and variables taking
 rootFile_DATA = "%s/%s_%s_%s.root" % (OUTPATH, PHY_SETTING, MaxEvent, DATA_Suffix)
@@ -227,7 +230,6 @@ for index, row in filtered_data_df.iterrows():
     data_Boiling_factor = 1 + (-0.00028 * data_BCM2_Beam_Cut_Current)
 #    data_Boiling_factor = 1 + (-0.0007899 * data_BCM2_Beam_Cut_Current)
 #    data_Boiling_factor = 1 + (-0.0005296 * data_BCM2_Beam_Cut_Current)
-#    data_Boiling_factor_error = abs(-0.0007899 * data_BCM2_Beam_Cut_Current_error)
 
     data_BCM2_Beam_Cut_Current_error = 0.0
     data_Boiling_factor_error = 0.0
@@ -255,12 +257,8 @@ for index, row in filtered_data_df.iterrows():
         continue
 
     data_charge_error = math.sqrt(((data_charge * data_d_slope)**2 + (data_d_amplitude * data_run_time)**2)/(data_slope)**2)
-    data_current_error = math.sqrt((data_d_slope/data_slope)**2 + (data_d_amplitude / (data_slope * data_BCM2_Beam_Cut_Current))**2)
-    data_Boiling_factor_error = math.sqrt((data_BCM2_Beam_Cut_Current_error/data_BCM2_Beam_Cut_Current)** 2 + (0.000017/0.00028)**2)
-
-#    data_charge_error = data_charge * math.sqrt((d_slope/slope)**2 + ((d_amplitude * data_run_time)/(slope * data_charge))**2)
-#    data_current_error = data_BCM2_Beam_Cut_Current * math.sqrt((d_slope/slope)**2 + (d_amplitude / (slope * data_BCM2_Beam_Cut_Current))**2)
-#    data_Boiling_factor_error = data_Boiling_factor * math.sqrt((data_BCM2_Beam_Cut_Current_error/data_BCM2_Beam_Cut_Current)** 2 + (0.000017/0.00028)**2)
+    data_BCM2_Beam_Cut_Current_error = data_BCM2_Beam_Cut_Current * math.sqrt((data_d_slope/data_slope)**2 + (data_d_amplitude / (data_slope * data_BCM2_Beam_Cut_Current))**2)
+    data_Boiling_factor_error = data_Boiling_factor * math.sqrt((data_BCM2_Beam_Cut_Current_error/data_BCM2_Beam_Cut_Current)** 2 + (0.000017/0.00028)**2)
 
     data_product = (data_charge * data_hms_tracking_efficiency * data_shms_tracking_efficiency * hms_Cer_detector_efficiency * hms_Cal_detector_efficiency * data_hms_hodo_3_of_4_efficiency * data_shms_hodo_3_of_4_efficiency * data_edtm_livetime_Corr * data_Boiling_factor)
     data_product_error = data_product * (math.sqrt((data_charge_error/data_charge)** 2 +  (data_hms_tracking_efficiency_error/data_hms_tracking_efficiency)** 2 + (data_shms_tracking_efficiency_error/data_shms_tracking_efficiency)** 2 + (data_edtm_livetime_Corr_error/data_edtm_livetime_Corr)** 2 + (hms_Cer_detector_efficiency_error/hms_Cer_detector_efficiency)** 2 + (hms_Cal_detector_efficiency_error/hms_Cal_detector_efficiency)** 2 + (data_hms_hodo_3_of_4_efficiency_error/data_hms_hodo_3_of_4_efficiency)** 2 + (data_shms_hodo_3_of_4_efficiency_error/data_shms_hodo_3_of_4_efficiency)** 2 + (data_Boiling_factor_error/data_Boiling_factor)** 2)) 
@@ -273,9 +271,6 @@ for index, row in filtered_data_df.iterrows():
     row_data.append({'Run_Number':row["Run_Number"], 'charge':data_charge, 'charge_error':data_charge_error, 'HMS_Tracking_Eff':data_hms_tracking_efficiency, 'HMS_Tracking_Eff_error':data_hms_tracking_efficiency_error, 'SHMS_Tracking_Eff':data_shms_tracking_efficiency, 'SHMS_Tracking_Eff_error':data_shms_tracking_efficiency_error, 'HMS_Cer_Detector_Eff':hms_Cer_detector_efficiency, 'HMS_Cer_Detector_Eff_error':hms_Cer_detector_efficiency_error, 'HMS_Cal_Detector_Eff':hms_Cal_detector_efficiency, 'HMS_Cal_Detector_Eff_error':hms_Cal_detector_efficiency_error, 'HMS_Hodo_3_4_Eff':data_hms_hodo_3_of_4_efficiency, 'HMS_Hodo_3_4_Eff_error':data_hms_hodo_3_of_4_efficiency_error, 'SHMS_Hodo_3_4_Eff':data_shms_hodo_3_of_4_efficiency, 'SHMS_Hodo_3_4_Eff_error':data_shms_hodo_3_of_4_efficiency_error, 'EDTM_Live_Time':data_edtm_livetime_Corr, 'EDTM_Live_Time_error':data_edtm_livetime_Corr_error, 'Boiling_factor':data_Boiling_factor, 'Boiling_factor_error':data_Boiling_factor_error, 'effective_charge':data_product, 'effective_charge_error':data_product_error})
 
 print("-"*40)
-
-## save all variables included in the yield calculation to a datframe 
-df_eff_charge_calculation_output = pd.DataFrame(row_data)
 
 total_data_effective_charge = total_data_effective_charge_sum
 total_data_effective_charge_error = math.sqrt(total_data_effective_charge_error_sum)
@@ -327,9 +322,6 @@ for index, row in filtered_dummy_df.iterrows():
 
     dummy_charge_error = math.sqrt(((dummy_charge * dummy_d_slope)**2 + (dummy_d_amplitude * dummy_run_time)**2)/(dummy_slope)**2)
 
-#    dummy_charge_error = dummy_charge * math.sqrt((d_slope/slope)**2 + ((d_amplitude * dummy_run_time)/(slope * dummy_charge))**2)
-#    dummy_current_error = dummy_BCM2_Beam_Cut_Current * math.sqrt((d_slope/slope)**2 + (d_amplitude / (slope * dummy_BCM2_Beam_Cut_Current))**2)
-
     dummy_product = (dummy_charge * dummy_hms_tracking_efficiency * dummy_shms_tracking_efficiency * hms_Cer_detector_efficiency * hms_Cal_detector_efficiency * dummy_hms_hodo_3_of_4_efficiency * dummy_shms_hodo_3_of_4_efficiency * dummy_edtm_livetime_Corr)
     dummy_product_error = dummy_product * (math.sqrt(((dummy_charge_error/dummy_charge) ** 2 + dummy_hms_tracking_efficiency_error/dummy_hms_tracking_efficiency) ** 2 + (dummy_shms_tracking_efficiency_error/dummy_shms_tracking_efficiency) ** 2 + (dummy_edtm_livetime_Corr_error/dummy_edtm_livetime_Corr)** 2 + (hms_Cer_detector_efficiency_error/hms_Cer_detector_efficiency) ** 2 + (hms_Cal_detector_efficiency_error/hms_Cal_detector_efficiency) ** 2 + (dummy_hms_hodo_3_of_4_efficiency_error/dummy_hms_hodo_3_of_4_efficiency) ** 2 + (dummy_shms_hodo_3_of_4_efficiency_error/dummy_shms_hodo_3_of_4_efficiency) ** 2))
 
@@ -342,9 +334,6 @@ for index, row in filtered_dummy_df.iterrows():
 
 print("-"*40)
 
-df_dummy = pd.DataFrame(row_dummy)
-df_eff_charge_calculation_output = pd.concat([df_eff_charge_calculation_output, df_dummy], ignore_index=True)
-
 # Dummy Target Thickness Correction
 #dummy_target_corr = 4.8579 # KaonLT
 dummy_target_corr = 3.527 # PionLT
@@ -355,12 +344,6 @@ total_dummy_effective_charge_cal_error = math.sqrt(total_dummy_effective_charge_
 
 total_dummy_effective_charge = (total_dummy_effective_charge_cal * dummy_target_corr)
 total_dummy_effective_charge_error = total_dummy_effective_charge * math.sqrt((total_dummy_effective_charge_cal_error/total_dummy_effective_charge_cal)**2 + (dummy_target_corr_error/dummy_target_corr)** 2)
-
-#total_dummy_effective_charge = total_dummy_effective_charge_sum * dummy_target_corr
-#total_dummy_effective_charge_error = math.sqrt(total_dummy_effective_charge_error_sum + (dummy_target_corr_error/dummy_target_corr)** 2)
-
-#df_eff_charge_calculation_output['target_corr'] = np.where(df_eff_charge_calculation_output['Boiling_factor']=='NA',dummy_target_corr,'NA')
-#df_eff_charge_calculation_output['target_corr_error'] = np.where(df_eff_charge_calculation_output['Boiling_factor']=='NA',dummy_target_corr_error,'NA')
 
 print("\nTotal effective charge for the data run list: {:.5f} ± {:.5f}".format(total_data_effective_charge, total_data_effective_charge_error))
 print("\nTotal effective charge for the dummy run list: {:.5f} ± {:.5f}".format(total_dummy_effective_charge, total_dummy_effective_charge_error))

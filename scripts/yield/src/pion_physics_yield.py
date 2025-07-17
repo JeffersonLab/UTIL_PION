@@ -179,10 +179,10 @@ t_max_values = tbin_df['t_max'].values
 
 # Define the cuts using row 1 and row 3 values
 tbin_Cut1 = lambda event: (t_min_values[0] <= -event.MandelT <= t_max_values[0])  # Row 1
-tbin_Cut2 = lambda event: (t_min_values[1] <= -event.MandelT <= t_max_values[1])  # Row 2
-tbin_Cut3 = lambda event: (t_min_values[2] <= -event.MandelT <= t_max_values[2])  # Row 3
-tbin_Cut4 = lambda event: (t_min_values[3] <= -event.MandelT <= t_max_values[3])  # Row 4
-tbin_Cut5 = lambda event: (t_min_values[4] <= -event.MandelT <= t_max_values[4])  # Row 5
+tbin_Cut2 = lambda event: (t_min_values[1] < -event.MandelT <= t_max_values[1])  # Row 2
+tbin_Cut3 = lambda event: (t_min_values[2] < -event.MandelT <= t_max_values[2])  # Row 3
+tbin_Cut4 = lambda event: (t_min_values[3] < -event.MandelT <= t_max_values[3])  # Row 4
+tbin_Cut5 = lambda event: (t_min_values[4] < -event.MandelT <= t_max_values[4])  # Row 5
 
 # Bundle them into a list
 tbin_cuts = [tbin_Cut1, tbin_Cut2, tbin_Cut3, tbin_Cut4, tbin_Cut5]
@@ -198,6 +198,11 @@ print("-"*40)
 
 # Define phi bins (15 bins from 0 to 360 degrees, each 24 degrees wide)
 phi_bins = [i for i in range(0, 361, 24)]  # 0, 24, 48, ..., 360
+
+# Calculate total number of t-bins and phi bins
+total_tbins = len(tbin_cuts)
+total_phibins = len(phi_bins) - 1
+#print(f"Total t-bins: {total_tbins}, Total phi bins: {total_phibins}")
 
 #########################################################################################################################################
 
@@ -358,12 +363,8 @@ for index, row in filtered_data_df.iterrows():
         continue
 
     data_charge_error = math.sqrt(((data_charge * data_d_slope)**2 + (data_d_amplitude * data_run_time)**2)/(data_slope)**2)
-    data_current_error = math.sqrt((data_d_slope/data_slope)**2 + (data_d_amplitude / (data_slope * data_BCM2_Beam_Cut_Current))**2)
-    data_Boiling_factor_error = math.sqrt((data_BCM2_Beam_Cut_Current_error/data_BCM2_Beam_Cut_Current)** 2 + (0.000017/0.00028)**2)
-
-#    data_charge_error = data_charge * math.sqrt((d_slope/slope)**2 + ((d_amplitude * data_run_time)/(slope * data_charge))**2)
-#    data_current_error = data_BCM2_Beam_Cut_Current * math.sqrt((d_slope/slope)**2 + (d_amplitude / (slope * data_BCM2_Beam_Cut_Current))**2)
-#    data_Boiling_factor_error = data_Boiling_factor * math.sqrt((data_BCM2_Beam_Cut_Current_error/data_BCM2_Beam_Cut_Current)** 2 + (0.000017/0.00028)**2)
+    data_BCM2_Beam_Cut_Current_error = data_BCM2_Beam_Cut_Current * math.sqrt((data_d_slope/data_slope)**2 + (data_d_amplitude / (data_slope * data_BCM2_Beam_Cut_Current))**2)
+    data_Boiling_factor_error = data_Boiling_factor * math.sqrt((data_BCM2_Beam_Cut_Current_error/data_BCM2_Beam_Cut_Current)** 2 + (0.000017/0.00028)**2)
 
     data_product = (data_charge * data_hms_tracking_efficiency * data_shms_tracking_efficiency * hms_Cer_detector_efficiency * hms_Cal_detector_efficiency * data_hms_hodo_3_of_4_efficiency * data_shms_hodo_3_of_4_efficiency * data_edtm_livetime_Corr * data_Boiling_factor)
     data_product_error = data_product * (math.sqrt((data_charge_error/data_charge)** 2 +  (data_hms_tracking_efficiency_error/data_hms_tracking_efficiency)** 2 + (data_shms_tracking_efficiency_error/data_shms_tracking_efficiency)** 2 + (data_edtm_livetime_Corr_error/data_edtm_livetime_Corr)** 2 + (hms_Cer_detector_efficiency_error/hms_Cer_detector_efficiency)** 2 + (hms_Cal_detector_efficiency_error/hms_Cal_detector_efficiency)** 2 + (data_hms_hodo_3_of_4_efficiency_error/data_hms_hodo_3_of_4_efficiency)** 2 + (data_shms_hodo_3_of_4_efficiency_error/data_shms_hodo_3_of_4_efficiency)** 2 + (data_Boiling_factor_error/data_Boiling_factor)** 2)) 
@@ -427,9 +428,6 @@ for index, row in filtered_dummy_df.iterrows():
 
     dummy_charge_error = math.sqrt(((dummy_charge * dummy_d_slope)**2 + (dummy_d_amplitude * dummy_run_time)**2)/(dummy_slope)**2)
 
-#    dummy_charge_error = dummy_charge * math.sqrt((d_slope/slope)**2 + ((d_amplitude * dummy_run_time)/(slope * dummy_charge))**2)
-#    dummy_current_error = dummy_BCM2_Beam_Cut_Current * math.sqrt((d_slope/slope)**2 + (d_amplitude / (slope * dummy_BCM2_Beam_Cut_Current))**2)
-
     dummy_product = (dummy_charge * dummy_hms_tracking_efficiency * dummy_shms_tracking_efficiency * hms_Cer_detector_efficiency * hms_Cal_detector_efficiency * dummy_hms_hodo_3_of_4_efficiency * dummy_shms_hodo_3_of_4_efficiency * dummy_edtm_livetime_Corr)
     dummy_product_error = dummy_product * (math.sqrt(((dummy_charge_error/dummy_charge) ** 2 + dummy_hms_tracking_efficiency_error/dummy_hms_tracking_efficiency) ** 2 + (dummy_shms_tracking_efficiency_error/dummy_shms_tracking_efficiency) ** 2 + (dummy_edtm_livetime_Corr_error/dummy_edtm_livetime_Corr)** 2 + (hms_Cer_detector_efficiency_error/hms_Cer_detector_efficiency) ** 2 + (hms_Cal_detector_efficiency_error/hms_Cal_detector_efficiency) ** 2 + (dummy_hms_hodo_3_of_4_efficiency_error/dummy_hms_hodo_3_of_4_efficiency) ** 2 + (dummy_shms_hodo_3_of_4_efficiency_error/dummy_shms_hodo_3_of_4_efficiency) ** 2))
 
@@ -453,9 +451,6 @@ total_dummy_effective_charge_cal_error = math.sqrt(total_dummy_effective_charge_
 total_dummy_effective_charge = (total_dummy_effective_charge_cal * dummy_target_corr)
 total_dummy_effective_charge_error = total_dummy_effective_charge * math.sqrt((total_dummy_effective_charge_cal_error/total_dummy_effective_charge_cal)**2 + (dummy_target_corr_error/dummy_target_corr)** 2)
 
-#total_dummy_effective_charge = total_dummy_effective_charge_sum * dummy_target_corr
-#total_dummy_effective_charge_error = math.sqrt(total_dummy_effective_charge_error_sum + (dummy_target_corr_error/dummy_target_corr)** 2)
-
 print("\nTotal effective charge for the data run list: {:.5f} ± {:.5f}".format(total_data_effective_charge, total_data_effective_charge_error))
 print("\nTotal effective charge for the dummy run list: {:.5f} ± {:.5f}".format(total_dummy_effective_charge, total_dummy_effective_charge_error))
 
@@ -475,7 +470,7 @@ eff_cal_output_csv_path = "%s/LTSep_CSVs/physics_yields_csv/%s_Physics_Norm_Eff_
 
 # Prepare the header for the CSV file
 header = [
-    "Physics Setting", "Run Type", "Run Number", "Charge", "Charge Error",
+    "Physics_Setting", "Run Type", "Run Number", "Charge", "Charge Error",
     "HMS Tracking Eff", "HMS Tracking Eff Error", "SHMS Tracking Eff", "SHMS Tracking Eff Error",
     "HMS Cer Detector Eff", "HMS Cer Detector Eff Error", "HMS Cal Detector Eff", "HMS Cal Detector Eff Error",
     "HMS Hodo 3/4 Eff", "HMS Hodo 3/4 Eff Error", "SHMS Hodo 3/4 Eff", "SHMS Hodo 3/4 Eff Error",
@@ -489,7 +484,7 @@ combined_rows = []
 # Add data rows
 for row in row_data:
     combined_rows.append({
-        "Physics Setting": PHY_SETTING,
+        "Physics_Setting": PHY_SETTING,
         "Run Type": "data",
         "Run Number": row["Run_Number"],
         "Charge": row["charge"],
@@ -522,7 +517,7 @@ for row in row_data:
 # Add dummy rows
 for row in row_dummy:
     combined_rows.append({
-        "Physics Setting": PHY_SETTING,
+        "Physics_Setting": PHY_SETTING,
         "Run Type": "dummy",
         "Run Number": row["Run_Number"],
         "Charge": row["charge"],
@@ -567,13 +562,15 @@ updated_rows = []
 for new_row in combined_rows:
     row_found = False
     for existing_row in existing_rows:
-        if existing_row["Physics Setting"] == new_row["Physics Setting"] and existing_row["Run Type"] == new_row["Run Type"] and existing_row["Run Number"] == str(new_row["Run Number"]):
-            # Update the existing row
+        if (existing_row.get("Physics_Setting") == new_row.get("Physics Setting") and
+            existing_row.get("Run Type") == new_row.get("Run Type") and
+            existing_row.get("Run Number") == str(new_row.get("Run Number"))):
+            # Update existing row
             existing_row.update(new_row)
             row_found = True
             break
     if not row_found:
-        # Add the new row if it doesn't exist
+        # Add new row
         updated_rows.append(new_row)
 
 # Combine updated rows with existing rows
@@ -592,11 +589,17 @@ print(f"Run factors written to {eff_cal_output_csv_path}")
 nbins = 200
 
 hist_config = {
-    "MMpi":     ("MIssing Mass Distribution (Cut_All); MM_{\pi}; Counts", nbins, 0.8, 1.2),
+    "MMpi":    ("Missing Mass Distribution (Cut_All); MM_{\pi}; Counts", nbins, 0.8, 1.2),
+    "Q2":      ("Q^{2} Distribution (Cut_All); Q^{2}; Counts", nbins, 2.0, 5.0),
+    "W":       ("W Distribution (Cut_All); W; Counts", nbins, 2.0, 3.0),
+    "epsilon": ("Epsilon Distribution (Cut_All); #epsilon; Counts", nbins, 0.0, 1.0),
+    "theta":   ("Theta Distribution (Cut_All); #theta; Counts", nbins, 0.0, 0.5),
 }
 
 def initialize_histograms(t_min_values, t_max_values, phi_bins, hist_config, category_suffixes):
     histograms_by_tphi_cut = []
+    added_t_bin_vars = set()  # Track which (tmin, tmax, suffix, var) already had W/Q2 added
+
     for i in range(len(t_min_values)):
         tmin = t_min_values[i]
         tmax = t_max_values[i]
@@ -606,12 +609,21 @@ def initialize_histograms(t_min_values, t_max_values, phi_bins, hist_config, cat
             phimax = phi_bins[j + 1]
             phi_label = f"phi({phimin}-{phimax})"
             hist_set = {suffix: {} for suffix in category_suffixes}
+
             for var, (base_title, nbins, xmin, xmax) in hist_config.items():
                 for suffix in category_suffixes:
-                    # Create unique histogram name and title for each category
-                    hname = f"{var}_{t_label}_{phi_label}_{suffix}_data_cut_all"
-                    title = f"{base_title} (t ∈ [{tmin:.2f}, {tmax:.2f}], φ ∈ [{phimin}, {phimax}], Category: {suffix})"
-                    hist_set[suffix][var] = ROOT.TH1D(hname, title, nbins, xmin, xmax)
+                    if var == "MMpi":
+                        # MMpi → t and φ bins
+                        hname = f"{var}_{t_label}_{phi_label}_{suffix}_data_cut_all"
+                        title = f"{base_title} (t ∈ [{tmin:.2f}, {tmax:.2f}], φ ∈ [{phimin}, {phimax}], Category: {suffix})"
+                        hist_set[suffix][var] = ROOT.TH1D(hname, title, nbins, xmin, xmax)
+                    elif var in ("Q2", "W", "epsilon", "theta") and (tmin, tmax, suffix, var) not in added_t_bin_vars:
+                        # Q2, W → only once per t-bin across full phi
+                        hname = f"{var}_{t_label}_{suffix}_data_cut_all"
+                        title = f"{base_title} (t ∈ [{tmin:.2f}, {tmax:.2f}], φ ∈ [0, 360], Category: {suffix})"
+                        hist_set[suffix][var] = ROOT.TH1D(hname, title, nbins, xmin, xmax)
+                        added_t_bin_vars.add((tmin, tmax, suffix, var))
+
             histograms_by_tphi_cut.append((tmin, tmax, phimin, phimax, hist_set))
     return histograms_by_tphi_cut
 
@@ -644,64 +656,98 @@ Cut_Pion_Events_Random_Dummy_tree = infile_DUMMY.Get("Cut_Pion_Events_Random")
 
 # Fill the histograms with the data
 for event in Cut_Pion_Events_Prompt_Data_tree:
-    # Apply the MMpi cut and Diamond cut
     if DATA_MMpi_Cut(event) and Diamond_Cut(event):
-        # Loop over t-bins
         for tbin_cut, (tmin, tmax) in zip(tbin_cuts, zip(t_min_values, t_max_values)):
-            if tbin_cut(event):  # Apply the t-bin cut
-                # Loop over phi-bins
-                for phimin, phimax in zip(phi_bins[:-1], phi_bins[1:]):
-                    if phimin <= event.ph_q * (180 / math.pi) + 180 <= phimax:  # Apply the phi-bin cut
-                        # Fill the histogram for the corresponding t-bin and phi-bin
-                        for tmin_hist, tmax_hist, phimin_hist, phimax_hist, hist_set in data_histograms_by_tphi_cut:
-                            if tmin == tmin_hist and tmax == tmax_hist and phimin == phimin_hist and phimax == phimax_hist:
-                                for var in hist_config:
-                                    hist_set["prompt_data"][var].Fill(event.MMpi + MM_Offset)
+            if tbin_cut(event):
+                # Fill Q² and W (once per t-bin)
+                for tmin_hist, tmax_hist, _, _, hist_set in data_histograms_by_tphi_cut:
+                    if tmin == tmin_hist and tmax == tmax_hist:
+                        if "Q2" in hist_set["prompt_data"]:
+                            hist_set["prompt_data"]["Q2"].Fill(event.Q2)
+                        if "W" in hist_set["prompt_data"]:
+                            hist_set["prompt_data"]["W"].Fill(event.W)
+                        if "epsilon" in hist_set["prompt_data"]:
+                            hist_set["prompt_data"]["epsilon"].Fill(event.epsilon)
+                        if "theta" in hist_set["prompt_data"]:
+                            hist_set["prompt_data"]["theta"].Fill(event.th_q) 
+                        break  # Only fill Q2/W once for this t-bin
+                # Fill MMπ per t–φ bin
+                phi_deg = event.ph_q * (180 / math.pi) + 180  # Convert φ to degrees in [0, 360]
+                for tmin_hist, tmax_hist, phimin_hist, phimax_hist, hist_set in data_histograms_by_tphi_cut:
+                    if tmin == tmin_hist and tmax == tmax_hist and phimin_hist <= phi_deg <= phimax_hist:
+                        hist_set["prompt_data"]["MMpi"].Fill(event.MMpi + MM_Offset)
+                        break  # Only fill in the matching t–φ bin
 
 for event in Cut_Pion_Events_Random_Data_tree:
-    # Apply the MMpi cut and Diamond cut
     if DATA_MMpi_Cut(event) and Diamond_Cut(event):
-        # Loop over t-bins
         for tbin_cut, (tmin, tmax) in zip(tbin_cuts, zip(t_min_values, t_max_values)):
-            if tbin_cut(event):  # Apply the t-bin cut
-                # Loop over phi-bins
-                for phimin, phimax in zip(phi_bins[:-1], phi_bins[1:]):
-                    if phimin <= event.ph_q * (180 / math.pi) + 180 <= phimax:  # Apply the phi-bin cut
-                        # Fill the histogram for the corresponding t-bin and phi-bin
-                        for tmin_hist, tmax_hist, phimin_hist, phimax_hist, hist_set in data_histograms_by_tphi_cut:
-                            if tmin == tmin_hist and tmax == tmax_hist and phimin == phimin_hist and phimax == phimax_hist:
-                                for var in hist_config:
-                                    hist_set["random_data"][var].Fill(event.MMpi + MM_Offset)
+            if tbin_cut(event):
+                # Fill Q2 and W once per t-bin
+                for tmin_hist, tmax_hist, _, _, hist_set in data_histograms_by_tphi_cut:
+                    if tmin == tmin_hist and tmax == tmax_hist:
+                        if "Q2" in hist_set["random_data"]:
+                            hist_set["random_data"]["Q2"].Fill(event.Q2)
+                        if "W" in hist_set["random_data"]:
+                            hist_set["random_data"]["W"].Fill(event.W)
+                        if "epsilon" in hist_set["random_data"]:
+                            hist_set["random_data"]["epsilon"].Fill(event.epsilon)
+                        if "theta" in hist_set["random_data"]:
+                            hist_set["random_data"]["theta"].Fill(event.th_q)
+                        break
+                # Fill MMpi for t–φ bin
+                phi_deg = event.ph_q * (180 / math.pi) + 180
+                for tmin_hist, tmax_hist, phimin_hist, phimax_hist, hist_set in data_histograms_by_tphi_cut:
+                    if tmin == tmin_hist and tmax == tmax_hist and phimin_hist <= phi_deg <= phimax_hist:
+                        hist_set["random_data"]["MMpi"].Fill(event.MMpi + MM_Offset)
+                        break
 
+# --- Prompt Dummy Tree ---
 for event in Cut_Pion_Events_Prompt_Dummy_tree:
-    # Apply the MMpi cut and Diamond cut
     if DATA_MMpi_Cut(event) and Diamond_Cut(event):
-        # Loop over t-bins
         for tbin_cut, (tmin, tmax) in zip(tbin_cuts, zip(t_min_values, t_max_values)):
-            if tbin_cut(event):  # Apply the t-bin cut
-                # Loop over phi-bins
-                for phimin, phimax in zip(phi_bins[:-1], phi_bins[1:]):
-                    if phimin <= event.ph_q * (180 / math.pi) + 180 <= phimax:  # Apply the phi-bin cut
-                        # Fill the histogram for the corresponding t-bin and phi-bin
-                        for tmin_hist, tmax_hist, phimin_hist, phimax_hist, hist_set in data_histograms_by_tphi_cut:
-                            if tmin == tmin_hist and tmax == tmax_hist and phimin == phimin_hist and phimax == phimax_hist:
-                                for var in hist_config:
-                                    hist_set["prompt_dummy"][var].Fill(event.MMpi + MM_Offset)
+            if tbin_cut(event):
+                # Fill Q2 and W once per t-bin
+                for tmin_hist, tmax_hist, _, _, hist_set in data_histograms_by_tphi_cut:
+                    if tmin == tmin_hist and tmax == tmax_hist:
+                        if "Q2" in hist_set["prompt_dummy"]:
+                            hist_set["prompt_dummy"]["Q2"].Fill(event.Q2)
+                        if "W" in hist_set["prompt_dummy"]:
+                            hist_set["prompt_dummy"]["W"].Fill(event.W)
+                        if "epsilon" in hist_set["prompt_dummy"]:
+                            hist_set["prompt_dummy"]["epsilon"].Fill(event.epsilon)
+                        if "theta" in hist_set["prompt_dummy"]:
+                            hist_set["prompt_dummy"]["theta"].Fill(event.th_q)
+                        break
+                # Fill MMpi for t–φ bin
+                phi_deg = event.ph_q * (180 / math.pi) + 180
+                for tmin_hist, tmax_hist, phimin_hist, phimax_hist, hist_set in data_histograms_by_tphi_cut:
+                    if tmin == tmin_hist and tmax == tmax_hist and phimin_hist <= phi_deg <= phimax_hist:
+                        hist_set["prompt_dummy"]["MMpi"].Fill(event.MMpi + MM_Offset)
+                        break
 
+# --- Random Dummy Tree ---
 for event in Cut_Pion_Events_Random_Dummy_tree:
-    # Apply the MMpi cut and Diamond cut
     if DATA_MMpi_Cut(event) and Diamond_Cut(event):
-        # Loop over t-bins
         for tbin_cut, (tmin, tmax) in zip(tbin_cuts, zip(t_min_values, t_max_values)):
-            if tbin_cut(event):  # Apply the t-bin cut
-                # Loop over phi-bins
-                for phimin, phimax in zip(phi_bins[:-1], phi_bins[1:]):
-                    if phimin <= event.ph_q * (180 / math.pi) + 180 <= phimax:  # Apply the phi-bin cut
-                        # Fill the histogram for the corresponding t-bin and phi-bin
-                        for tmin_hist, tmax_hist, phimin_hist, phimax_hist, hist_set in data_histograms_by_tphi_cut:
-                            if tmin == tmin_hist and tmax == tmax_hist and phimin == phimin_hist and phimax == phimax_hist:
-                                for var in hist_config:
-                                    hist_set["random_dummy"][var].Fill(event.MMpi + MM_Offset)
+            if tbin_cut(event):
+                # Fill Q2 and W once per t-bin
+                for tmin_hist, tmax_hist, _, _, hist_set in data_histograms_by_tphi_cut:
+                    if tmin == tmin_hist and tmax == tmax_hist:
+                        if "Q2" in hist_set["random_dummy"]:
+                            hist_set["random_dummy"]["Q2"].Fill(event.Q2)
+                        if "W" in hist_set["random_dummy"]:
+                            hist_set["random_dummy"]["W"].Fill(event.W)
+                        if "epsilon" in hist_set["random_dummy"]:
+                            hist_set["random_dummy"]["epsilon"].Fill(event.epsilon)
+                        if "theta" in hist_set["random_dummy"]:
+                            hist_set["random_dummy"]["theta"].Fill(event.th_q)
+                        break
+                # Fill MMpi for t–φ bin
+                phi_deg = event.ph_q * (180 / math.pi) + 180
+                for tmin_hist, tmax_hist, phimin_hist, phimax_hist, hist_set in data_histograms_by_tphi_cut:
+                    if tmin == tmin_hist and tmax == tmax_hist and phimin_hist <= phi_deg <= phimax_hist:
+                        hist_set["random_dummy"]["MMpi"].Fill(event.MMpi + MM_Offset)
+                        break
 
 print("####################################")
 print("###### Histogram filling done ######")
@@ -709,45 +755,43 @@ print("####################################\n")
 
 #################################################################################################################################################
 
-# Scale random histograms
+# Scale random histograms according to nWindows
 for tmin_hist, tmax_hist, phimin_hist, phimax_hist, hist_set in data_histograms_by_tphi_cut:
     for var in hist_config:
-        # Scale the random data histogram
-        random_data_hist = hist_set["random_data"][var]
-        if random_data_hist:
-            random_data_hist.Scale(1/nWindows)
-            # Save the scaled histogram back into the random_data category
-            hist_set["random_data"][var] = random_data_hist
+        # Scale random_data
+        if "random_data" in hist_set and var in hist_set["random_data"]:
+            random_data_hist = hist_set["random_data"][var]
+            if random_data_hist:
+                random_data_hist.Scale(1 / nWindows)
+        # Scale random_dummy
+        if "random_dummy" in hist_set and var in hist_set["random_dummy"]:
+            random_dummy_hist = hist_set["random_dummy"][var]
+            if random_dummy_hist:
+                random_dummy_hist.Scale(1 / nWindows)
 
-        # Scale the random dummy histogram
-        random_dummy_hist = hist_set["random_dummy"][var]
-        if random_dummy_hist:
-            random_dummy_hist.Scale(1/nWindows)
-            # Save the scaled histogram back into the random_data category
-            hist_set["random_dummy"][var] = random_dummy_hist
-
-# Perform random subtraction for each t and phi bin
+# Perform random subtraction for each t and phi bin for real data
 for tmin_hist, tmax_hist, phimin_hist, phimax_hist, hist_set in data_histograms_by_tphi_cut:
     for var in hist_config:
-        # Get the prompt and random histograms
-        prompt_data_hist = hist_set["prompt_data"][var]
-        random_data_hist = hist_set["random_data"][var]
-        # Directly subtract the random histogram from the prompt histogram
-        randsub_data_hist = prompt_data_hist.Clone()
-        randsub_data_hist.Add(random_data_hist, -1)
-        # Store the result in the "randsub_data" category
-        hist_set["randsub_data"][var] = randsub_data_hist
+        if var in hist_set["prompt_data"] and var in hist_set["random_data"]:
+            prompt_data_hist = hist_set["prompt_data"][var]
+            random_data_hist = hist_set["random_data"][var]
+            # Clone and subtract
+            randsub_data_hist = prompt_data_hist.Clone()
+            randsub_data_hist.Add(random_data_hist, -1)
+            # Store result
+            hist_set["randsub_data"][var] = randsub_data_hist
 
+# Perform random subtraction for dummy data
 for tmin_hist, tmax_hist, phimin_hist, phimax_hist, hist_set in data_histograms_by_tphi_cut:
     for var in hist_config:
-        # Get the prompt and random histograms for dummy
-        prompt_dummy_hist = hist_set["prompt_dummy"][var]
-        random_dummy_hist = hist_set["random_dummy"][var]
-        # Directly subtract the random dummy histogram from the prompt dummy histogram
-        randsub_dummy_hist = prompt_dummy_hist.Clone()
-        randsub_dummy_hist.Add(random_dummy_hist, -1)
-        # Store the result in the "randsub_dummy" category
-        hist_set["randsub_dummy"][var] = randsub_dummy_hist
+        if var in hist_set["prompt_dummy"] and var in hist_set["random_dummy"]:
+            prompt_dummy_hist = hist_set["prompt_dummy"][var]
+            random_dummy_hist = hist_set["random_dummy"][var]
+            # Clone and subtract
+            randsub_dummy_hist = prompt_dummy_hist.Clone()
+            randsub_dummy_hist.Add(random_dummy_hist, -1)
+            # Store result
+            hist_set["randsub_dummy"][var] = randsub_dummy_hist
 
 print("######################################")
 print("###### Random substraction done ######")
@@ -759,37 +803,145 @@ print("######################################\n")
 for tmin_hist, tmax_hist, phimin_hist, phimax_hist, hist_set in data_histograms_by_tphi_cut:
     for var in hist_config:
         # Scale the randsub_data histogram
-        randsub_data_hist = hist_set["randsub_data"][var]
-        scaled_randsub_data_hist = randsub_data_hist.Clone()
-        scaled_randsub_data_hist.Scale(normfac_data)
-        hist_set["scaled_randsub_data"][var] = scaled_randsub_data_hist
-
+        if "randsub_data" in hist_set and var in hist_set["randsub_data"]:
+            randsub_data_hist = hist_set["randsub_data"][var]
+            if randsub_data_hist:
+                scaled_randsub_data_hist = randsub_data_hist.Clone()
+                scaled_randsub_data_hist.Scale(normfac_data)
+                hist_set["scaled_randsub_data"][var] = scaled_randsub_data_hist
         # Scale the randsub_dummy histogram
-        randsub_dummy_hist = hist_set["randsub_dummy"][var]
-        scaled_randsub_dummy_hist = randsub_dummy_hist.Clone()
-        scaled_randsub_dummy_hist.Scale(normfac_dummy)
-        hist_set["scaled_randsub_dummy"][var] = scaled_randsub_dummy_hist
+        if "randsub_dummy" in hist_set and var in hist_set["randsub_dummy"]:
+            randsub_dummy_hist = hist_set["randsub_dummy"][var]
+            if randsub_dummy_hist:
+                scaled_randsub_dummy_hist = randsub_dummy_hist.Clone()
+                scaled_randsub_dummy_hist.Scale(normfac_dummy)
+                hist_set["scaled_randsub_dummy"][var] = scaled_randsub_dummy_hist
 
 # Dummy Subtraction
 for tmin_hist, tmax_hist, phimin_hist, phimax_hist, hist_set in data_histograms_by_tphi_cut:
     for var in hist_config:
-        # Get the randsub_data and randsub_dummy histograms
-        scaled_randsub_data_hist = hist_set["scaled_randsub_data"][var]
-        scaled_randsub_dummy_hist = hist_set["scaled_randsub_dummy"][var]
-        # Directly subtract the randsub_dummy histogram from the randsub_data histogram
-        dummysub_data_hist = scaled_randsub_data_hist.Clone()
-        dummysub_data_hist.Add(scaled_randsub_dummy_hist, -1)
-        # Store the result in the "dummysub" category
-        hist_set["dummysub"][var] = dummysub_data_hist
+        if "scaled_randsub_data" in hist_set and "scaled_randsub_dummy" in hist_set:
+            if var in hist_set["scaled_randsub_data"] and var in hist_set["scaled_randsub_dummy"]:
+                scaled_randsub_data_hist = hist_set["scaled_randsub_data"][var]
+                scaled_randsub_dummy_hist = hist_set["scaled_randsub_dummy"][var]
+                if scaled_randsub_data_hist and scaled_randsub_dummy_hist:
+                    dummysub_data_hist = scaled_randsub_data_hist.Clone()
+                    dummysub_data_hist.Add(scaled_randsub_dummy_hist, -1)
+                    hist_set["dummysub"][var] = dummysub_data_hist
 
-        # Print confirmation of subtraction
-        #print(f"Subtraction complete for t-bin: [{tmin_hist}, {tmax_hist}], phi-bin: [{phimin_hist}, {phimax_hist}], variable: {var}")
+                    # Print confirmation of subtraction
+                    # Print only t-bin for W and Q²
+#                    if var in ["W", "Q2"]:
+#                        print(f"[SUBTRACTION DONE] Variable: {var} | t ∈ [{tmin_hist:.3f}, {tmax_hist:.3f}]")
+#                    else:  # Print both t-bin and φ-bin for MMpi
+#                        print(f"[SUBTRACTION DONE] Variable: {var} | t ∈ [{tmin_hist:.3f}, {tmax_hist:.3f}] | φ ∈ [{phimin_hist}, {phimax_hist}]")
 
 print("####################################")
 print("###### Dummy subtraction done ######")
 print("####################################\n")
 
 #############################################################################################################################################
+
+print(f"Average Q2 and W values for each t-bin (with uncertainties)")
+Beam_Energy_S = filtered_data_df['Beam_Energy'].iloc[0]
+
+print("Mean and Mean Error for W and Q² (per t-bin):")
+avg_kin_tbin = {}
+for tmin, tmax in zip(t_min_values, t_max_values):
+    for tmin_hist, tmax_hist, phimin_hist, _, hist_set in data_histograms_by_tphi_cut:
+        if tmin == tmin_hist and tmax == tmax_hist and phimin_hist == 0:
+            hist_Q = hist_set["dummysub"]["Q2"]
+            hist_W = hist_set["dummysub"]["W"]
+            hist_eps = hist_set["dummysub"]["epsilon"]
+            hist_theta = hist_set["dummysub"]["theta"]
+
+            avg_Q2 = hist_Q.GetMean()
+            err_Q2 = hist_Q.GetMeanError()
+            avg_W = hist_W.GetMean()
+            err_W = hist_W.GetMeanError()
+            avg_eps = hist_eps.GetMean()
+            err_eps = hist_eps.GetMeanError()
+            avg_theta = hist_theta.GetMean()
+            err_theta = hist_theta.GetMeanError()
+
+            tbin_key = f"t({tmin:.2f}-{tmax:.2f})"
+            avg_kin_tbin[tbin_key] = {
+                "avg_Q2": avg_Q2, "err_Q2": err_Q2,
+                "avg_W": avg_W, "err_W": err_W,
+                "avg_eps": avg_eps, "err_eps": err_eps,
+                "avg_theta": avg_theta, "err_theta": err_theta
+            }
+
+            print(f"{tbin_key}: <Q²> = {avg_Q2:.4f} ± {err_Q2:.4f}, <W> = {avg_W:.4f} ± {err_W:.4f}, <eps> = {avg_eps:.4f} ± {err_eps:.4f}, <θ> = {avg_theta:.4f} ± {err_theta:.4f}")
+            break
+
+# Define output CSV file path for average kinematics
+avg_kinematics_path = "%s/LTSep_CSVs/physics_yields_csv/%s_Physics_Avg_Data_Kinematics.csv" % (UTILPATH, setting_name)
+
+# Define the header
+avg_kin_header = [
+    "Physics_Setting", "Beam_Energy", "total_tbins", "tbin_number", "t_min", "t_max", "t_central",
+    "total_phibins", "phi_central", "avg_Q2", "avg_Q2_err", "avg_W", "avg_W_err",
+    "avg_eps", "avg_eps_err", "avg_theta", "avg_theta_err"
+]
+# Read the existing CSV file
+rows = []
+try:
+    with open(avg_kinematics_path, mode='r') as csv_file:
+        csv_reader = csv.DictReader(csv_file)
+        rows = list(csv_reader)
+except FileNotFoundError:
+    rows = []
+
+# Prepare new rows for this Physics_Setting
+new_setting_rows = []
+for i, (tmin, tmax) in enumerate(zip(t_min_values, t_max_values), start=1):
+    tbin_key = f"t({tmin:.2f}-{tmax:.2f})"
+    if tbin_key in avg_kin_tbin:
+        avg_kin = avg_kin_tbin[tbin_key]
+        new_setting_rows.append({
+            "Physics_Setting": PHY_SETTING,
+            "Beam_Energy": Beam_Energy_S,
+            "total_tbins": total_tbins,
+            "tbin_number": i,
+            "t_min": f"{tmin:.4f}",
+            "t_max": f"{tmax:.4f}",
+            "t_central": f"{(tmin + tmax) / 2:.4f}",
+            "total_phibins": total_phibins,
+            "phi_central": f"{(0 + 360) / 2:.4f}",
+            "avg_Q2": f"{avg_kin['avg_Q2']:.6f}",
+            "avg_Q2_err": f"{avg_kin['err_Q2']:.6f}",
+            "avg_W": f"{avg_kin['avg_W']:.6f}",
+            "avg_W_err": f"{avg_kin['err_W']:.6f}",
+            "avg_eps": f"{avg_kin['avg_eps']:.6f}",
+            "avg_eps_err": f"{avg_kin['err_eps']:.6f}",
+            "avg_theta": f"{avg_kin['avg_theta']:.6f}",
+            "avg_theta_err": f"{avg_kin['err_theta']:.6f}"
+        })
+
+setting_exists = any(
+    row["Physics_Setting"] == PHY_SETTING and
+    float(row["t_min"]) == float(tmin) and
+    float(row["t_max"]) == float(tmax)
+    for row in rows
+)
+
+# Replace or append
+if setting_exists:
+    rows = [row for row in rows if row["Physics_Setting"] != PHY_SETTING]
+    rows.extend(new_setting_rows)
+else:
+    rows.extend(new_setting_rows)
+
+# Write everything back to CSV
+with open(avg_kinematics_path, mode='w', newline='') as csv_file:
+    writer = csv.DictWriter(csv_file, fieldnames=avg_kin_header)
+    writer.writeheader()
+    writer.writerows(rows)
+
+print(f"Average Q² and W values updated for '{PHY_SETTING}' in: {avg_kinematics_path}")
+
+#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Physics Yield Calculations
 # Dictionary to store integrals and errors for each t-bin and phi-bin
@@ -855,11 +1007,10 @@ for tmin, tmax, phimin, phimax, hist_set in data_histograms_by_tphi_cut:
         dN_dummy_norm = N_data_norm * math.sqrt((0) ** 2 + (total_dummy_effective_charge_error / total_dummy_effective_charge) ** 2)
 
     # Ensure dN_data_norm and dN_dummy_norm are not zero
-    if dN_data_norm == 0:
-        dN_data_norm = 1.0
-
+#    if dN_data_norm == 0:
+#        dN_data_norm = 1000.0
 #    if dN_dummy_norm == 0:
-#        dN_dummy_norm = 1.0
+#        dN_dummy_norm = 1000.0
 
     # Calculate the final yield and its error
     N_data_dummy_sub_norm = N_data_norm - N_dummy_norm
@@ -879,8 +1030,8 @@ for tmin, tmax, phimin, phimax, hist_set in data_histograms_by_tphi_cut:
     }
 
     # Print the result for debugging
-    print(f"Physics Yield: {bin_key} = Yield: {N_data_dummy_sub_norm:.8f}, Error: {dN_data_dummy_sub_norm:.8f}")
-print("-" * 40)
+#    print(f"Physics Yield: {bin_key} = Yield: {N_data_dummy_sub_norm:.8f}, Error: {dN_data_dummy_sub_norm:.8f}")
+#print("-" * 40)
 
 # Print the results from both loops
 print("=" * 40)
@@ -889,8 +1040,8 @@ for bin_key in dN_data_MMpi:
     # Use the correct key names from dN_data_MMP
     Y_data = dN_data_MMpi[bin_key]["integral"]
     dY_data_dummy_sub_norm = dN_error[bin_key]["dN_data_dummy_sub_norm"]
-#    print(f"Physics Yield: {bin_key} = Yield: {Y_data:.8f}, Error: {dY_data_dummy_sub_norm:.8f}")
-#print("=" * 40)
+    print(f"Physics Yield: {bin_key} = Yield: {Y_data:.8f}, Error: {dY_data_dummy_sub_norm:.8f}")
+print("=" * 40)
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -899,7 +1050,7 @@ yields_pions_path =  "%s/LTSep_CSVs/physics_yields_csv/%s_Physics_Data_Yield.csv
 
 # Read the existing CSV file into memory
 rows = []
-header = ["Physics Setting", "t_min", "t_max", "phi_min", "phi_max", "DummySub_Counts", "physics_yield", "physics_yield_error", "%error/yield"]
+header = ["Physics_Setting", "tbin_number", "t_min", "t_max", "phibin_number", "phi_min", "phi_max", "DummySub_Counts", "physics_yield", "physics_yield_error", "%error/yield"]
 try:
     with open(yields_pions_path, mode='r') as csv_file:
         csv_reader = csv.DictReader(csv_file)
@@ -908,32 +1059,53 @@ except FileNotFoundError:
     # If the file doesn't exist, initialize an empty list
     rows = []
 
+# Gather all unique t-bin and phi-bin edges
+tbin_edges = sorted(list({(tmin, tmax) for tmin, tmax, _, _, _ in data_histograms_by_tphi_cut}))
+
 # Update or add rows
 updated_rows = []
-for tmin, tmax, phimin, phimax, hist_set in data_histograms_by_tphi_cut:
-    # Create a unique key for the current t-bin and phi-bin
-    bin_key = f"t({tmin:.2f}-{tmax:.2f})_phi({phimin}-{phimax})"
+for tbin_number, (tmin, tmax) in enumerate(tbin_edges, start=1):
+    # Filter phi bins for this t range, and sort
+    phibins = sorted([(phimin, phimax) for tmin2, tmax2, phimin, phimax, _ in data_histograms_by_tphi_cut if tmin2 == tmin and tmax2 == tmax])
+    for phibin_number, (phimin, phimax) in enumerate(phibins, start=1):
+        bin_key = f"t({tmin:.2f}-{tmax:.2f})_phi({phimin}-{phimax})"
+        N_dummysub = dN_error[bin_key]["N_dummysub"]
+        Y_data = dN_data_MMpi[bin_key]["integral"]
+        dY_data_dummy_sub_norm = dN_error[bin_key]["dN_data_dummy_sub_norm"]
 
-    # Retrieve the physics yield (N_data) and its error
-    N_dummysub = dN_error[bin_key]["N_dummysub"]
-    Y_data = dN_data_MMpi[bin_key]["integral"]
-    dY_data_dummy_sub_norm = dN_error[bin_key]["dN_data_dummy_sub_norm"]
+        # See if the row already exists and update it, else append new
+        row_found = False
+        for row in rows:
+            if (
+                row["Physics_Setting"] == PHY_SETTING
+                and float(row["t_min"]) == tmin
+                and float(row["t_max"]) == tmax
+                and float(row["phi_min"]) == phimin
+                and float(row["phi_max"]) == phimax
+            ):
+                row.update({
+                    "Physics_Setting": PHY_SETTING,
+                    "tbin_number": tbin_number,
+                    "t_min": tmin,
+                    "t_max": tmax,
+                    "phibin_number": phibin_number,
+                    "phi_min": phimin,
+                    "phi_max": phimax,
+                    "DummySub_Counts": N_dummysub,
+                    "physics_yield": Y_data,
+                    "physics_yield_error": dY_data_dummy_sub_norm,
+                    "%error/yield": (dY_data_dummy_sub_norm/Y_data)*100 if Y_data != 0 else dY_data_dummy_sub_norm
+                })
+                row_found = True
+                break
 
-    # Check if the setting already exists in the CSV
-    row_found = False
-    for row in rows:
-        if (
-            row["Physics Setting"] == PHY_SETTING
-            and float(row["t_min"]) == tmin
-            and float(row["t_max"]) == tmax
-            and float(row["phi_min"]) == phimin
-            and float(row["phi_max"]) == phimax
-        ):
-            # Update the existing row
-            row.update({
-                "Physics Setting": PHY_SETTING,
+        if not row_found:
+            updated_rows.append({
+                "Physics_Setting": PHY_SETTING,
+                "tbin_number": tbin_number,
                 "t_min": tmin,
                 "t_max": tmax,
+                "phibin_number": phibin_number,
                 "phi_min": phimin,
                 "phi_max": phimax,
                 "DummySub_Counts": N_dummysub,
@@ -941,23 +1113,6 @@ for tmin, tmax, phimin, phimax, hist_set in data_histograms_by_tphi_cut:
                 "physics_yield_error": dY_data_dummy_sub_norm,
                 "%error/yield": (dY_data_dummy_sub_norm/Y_data)*100 if Y_data != 0 else dY_data_dummy_sub_norm
             })
-            row_found = True
-            break
-
-    if not row_found:
-        # Add a new row if the setting doesn't exist
-        updated_rows.append({
-            "Physics Setting": PHY_SETTING,
-            "t_min": tmin,
-            "t_max": tmax,
-            "phi_min": phimin,
-            "phi_max": phimax,
-            "DummySub_Counts": N_dummysub,
-            "physics_yield": Y_data,
-            "physics_yield_error": dY_data_dummy_sub_norm,
-            "%error/yield": (dY_data_dummy_sub_norm/Y_data)*100 if Y_data != 0 else dY_data_dummy_sub_norm
-
-        })
 
 # Combine updated rows with existing rows
 rows.extend(updated_rows)
@@ -970,83 +1125,45 @@ with open(yields_pions_path, mode='w', newline='') as csv_file:
 
 print(f"Physics yield results written to {yields_pions_path}")
 
-'''
-from openpyxl import Workbook
-from openpyxl.styles import PatternFill
-
-# Define the output Excel file name
-output_excel_path = "%s/LTSep_CSVs/physics_yields_csv/%s_Physics_Data_Yield.xlsx" % (UTILPATH, setting_name)
-
-# Create a new workbook and select the active worksheet
-wb = Workbook()
-ws = wb.active
-ws.title = "Physics Yields"
-
-# Define the light blue fill style
-light_blue_fill = PatternFill(start_color="ADD8E6", end_color="ADD8E6", fill_type="solid")
-
-# Write the header
-header = ["Physics Setting", "t_min", "t_max", "phi_min", "phi_max", "physics_yield", "physics_yield_error"]
-ws.append(header)
-
-# Apply the light blue fill to the header row
-for cell in ws[1]:
-    cell.fill = light_blue_fill
-
-# Write the data rows
-for row in rows:
-    ws.append([
-        row["Physics Setting"],
-        row["t_min"],
-        row["t_max"],
-        row["phi_min"],
-        row["phi_max"],
-        row["physics_yield"],
-        row["physics_yield_error"]
-    ])
-
-    # Apply the light blue fill to the current row
-    for cell in ws[ws.max_row]:
-        cell.fill = light_blue_fill
-
-# Save the workbook
-wb.save(output_excel_path)
-'''
 #############################################################################################################################################
 
 # Making directories in output file
 outHistFile = ROOT.TFile.Open("%s/%s_%s_Yield_Data.root" % (OUTPATH, PHY_SETTING, MaxEvent) , "RECREATE")
 
+
+# Create top-level directories for Q2 and W
+q2_dir = outHistFile.mkdir("Cut_Q2_Pion_Events_Norm_DummySub_Data")
+w_dir = outHistFile.mkdir("Cut_W_Pion_Events_Norm_DummySub_Data")
+epsilon_dir = outHistFile.mkdir("Cut_Epsilon_Pion_Events_Norm_DummySub_Data")
+theta_dir = outHistFile.mkdir("Cut_Theta_Pion_Events_Norm_DummySub_Data")
+
 # Write histograms to t-bin-specific directories
 for tmin, tmax, phimin, phimax, hist_set in data_histograms_by_tphi_cut:
-    # Format the directory name for the t-bin
-    t_dirname = f"Cut_Pion_Events_Norm_DummySub_t{tmin:.2f}-t{tmax:.2f}_Data".replace(".", "p")
-    
-    # Check if the directory already exists
-    tdir = outHistFile.GetDirectory(t_dirname)
-    if not tdir:
-        # Create the directory if it doesn't exist
-        tdir = outHistFile.mkdir(t_dirname)
-    tdir.cd()
 
-    # Write each phi-bin histogram for this t-bin
-    for var in hist_config:
+    # --- Write MMpi (binned in t and phi) ---
+    t_dirname_MM = f"Cut_MM_Pion_Events_Norm_DummySub_t{tmin:.2f}-t{tmax:.2f}_Data".replace(".", "p")
+    tdir_MM = outHistFile.GetDirectory(t_dirname_MM)
+    if not tdir_MM:
+        tdir_MM = outHistFile.mkdir(t_dirname_MM)
+    tdir_MM.cd()
+    var_MM = "MMpi"
+    for cat in ["dummysub"]:
+        hist = hist_set[cat].get(var_MM)
+        if hist:
+            hist.SetTitle(f"{var_MM}_t{tmin:.2f}-t{tmax:.2f}_phi{phimin}-phi{phimax}_{cat}".replace(".", "p"))
+            hist.SetName(f"{var_MM}_t{tmin:.2f}-t{tmax:.2f}_phi{phimin}-phi{phimax}_{cat}".replace(".", "p"))
+            hist.GetYaxis().SetTitle("Counts")
+            hist.Write()
+
+    # --- Write Q2 and W once per t-bin (no phi binning) ---
+    for var, target_dir in zip(["Q2", "W", "epsilon", "theta"], [q2_dir, w_dir, epsilon_dir, theta_dir]):
         for cat in ["dummysub"]:
             hist = hist_set[cat].get(var)
             if hist:
-                # Update the histogram title to include t and phi ranges
-                hist.SetTitle(f"{var}_t{tmin:.2f}-t{tmax:.2f}_phi{phimin}-phi{phimax}_norm_{cat}_data_cut_all".replace(".", "p"))
-            
-                # Update the Y-axis label to "Counts"
+                target_dir.cd()
+                hist.SetTitle(f"{var}_t{tmin:.2f}-t{tmax:.2f}_{cat}".replace(".", "p"))
+                hist.SetName(f"{var}_t{tmin:.2f}-t{tmax:.2f}_{cat}".replace(".", "p"))
                 hist.GetYaxis().SetTitle("Counts")
-
-                # Set the histogram name dynamically
-                hist.SetName(f"{var}_t{tmin:.2f}-t{tmax:.2f}_phi{phimin}-phi{phimax}_norm_{cat}_data_cut_all".replace(".", "p"))
-
-                # Set the default drawing option to "HIST"
-                #hist.SetOption("HIST")
-
-                # Write the histogram to the file
                 hist.Write()
 
 print("####################################")

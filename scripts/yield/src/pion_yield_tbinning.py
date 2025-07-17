@@ -40,7 +40,7 @@ ROOT.gROOT.SetBatch(ROOT.kTRUE) # Set ROOT to batch mode explicitly, does not sp
 ###############################################################################################################################################
 
 # Check the number of arguments provided to the script
-if len(sys.argv)-1!=4:
+if len(sys.argv)-1!=5:
     print("!!!!! ERROR !!!!!\n Expected 4 arguments\n Usage is with - PHY_SETTING MaxEvents Suffix RunList\n!!!!! ERROR !!!!!")
     sys.exit(1)
 
@@ -50,16 +50,14 @@ if len(sys.argv)-1!=4:
 PHY_SETTING = sys.argv[1]
 MaxEvent = sys.argv[2]
 DATA_Suffix = sys.argv[3]
-RUN_LIST = sys.argv[4]
+DUMMY_Suffix = sys.argv[4]
+RUN_LIST = sys.argv[5]
 
-DATA_Suffix_lowepscenter = "{}_loweps_center".format(DATA_Suffix)
-DATA_Suffix_lowepsleft = "{}_loweps_left".format(DATA_Suffix)
-DATA_Suffix_highepsright = "{}_higheps_right".format(DATA_Suffix)
-DATA_Suffix_highepscenter = "{}_higheps_center".format(DATA_Suffix)
-DATA_Suffix_highepsleft = "{}_higheps_left".format(DATA_Suffix)
-
-DATA_ROOTFILE_SUFFIX = "ProdCoin_Analysed_Data"
-DUMMY_ROOTFILE_SUFFIX = "ProdCoin_Analysed_Dummy_Data"
+DATA_Suffix_lowepscenter = "{}_loweps_center".format(PHY_SETTING)
+DATA_Suffix_lowepsleft = "{}_loweps_left".format(PHY_SETTING)
+DATA_Suffix_highepsright = "{}_higheps_right".format(PHY_SETTING)
+DATA_Suffix_highepscenter = "{}_higheps_center".format(PHY_SETTING)
+DATA_Suffix_highepsleft = "{}_higheps_left".format(PHY_SETTING)
 
 ################################################################################################################################################
 '''
@@ -96,17 +94,17 @@ dcut_csv_file = "%s/%s_diamond_cut_parameters.csv" % (DCUT_CSV, setting_name)
 simc_tres_csv_file = "%s/%s_simc_t_resolution_parameters.csv" % (SIMC_tRES_CSV, setting_name)
 
 # Input file location and variables taking
-rootFile_DATA_lowepscenter = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_lowepscenter, MaxEvent, DATA_ROOTFILE_SUFFIX)
-rootFile_DATA_lowepsleft = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_lowepsleft, MaxEvent, DATA_ROOTFILE_SUFFIX)
-rootFile_DATA_highepsright = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_highepsright, MaxEvent, DATA_ROOTFILE_SUFFIX)
-rootFile_DATA_highepscenter = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_highepscenter, MaxEvent, DATA_ROOTFILE_SUFFIX)
-rootFile_DATA_highepsleft = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_highepsleft, MaxEvent, DATA_ROOTFILE_SUFFIX)
+rootFile_DATA_lowepscenter = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_lowepscenter, MaxEvent, DATA_Suffix)
+rootFile_DATA_lowepsleft = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_lowepsleft, MaxEvent, DATA_Suffix)
+rootFile_DATA_highepsright = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_highepsright, MaxEvent, DATA_Suffix)
+rootFile_DATA_highepscenter = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_highepscenter, MaxEvent, DATA_Suffix)
+rootFile_DATA_highepsleft = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_highepsleft, MaxEvent, DATA_Suffix)
 
-rootFile_DUMMY_lowepscenter = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_lowepscenter, MaxEvent, DUMMY_ROOTFILE_SUFFIX)
-rootFile_DUMMY_lowepsleft = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_lowepsleft, MaxEvent, DUMMY_ROOTFILE_SUFFIX)
-rootFile_DUMMY_highepsright = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_highepsright, MaxEvent, DUMMY_ROOTFILE_SUFFIX)
-rootFile_DUMMY_highepscenter = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_highepscenter, MaxEvent, DUMMY_ROOTFILE_SUFFIX)
-rootFile_DUMMY_highepsleft = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_highepsleft, MaxEvent, DUMMY_ROOTFILE_SUFFIX)
+rootFile_DUMMY_lowepscenter = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_lowepscenter, MaxEvent, DUMMY_Suffix)
+rootFile_DUMMY_lowepsleft = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_lowepsleft, MaxEvent, DUMMY_Suffix)
+rootFile_DUMMY_highepsright = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_highepsright, MaxEvent, DUMMY_Suffix)
+rootFile_DUMMY_highepscenter = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_highepscenter, MaxEvent, DUMMY_Suffix)
+rootFile_DUMMY_highepsleft = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_highepsleft, MaxEvent, DUMMY_Suffix)
 
 run_list = "%s/%s" % (RUNLISTPATH, RUN_LIST)
 
