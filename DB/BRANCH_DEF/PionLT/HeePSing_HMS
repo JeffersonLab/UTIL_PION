@@ -16,3 +16,24 @@ H_cal_etotnorm
 H_cal_etottracknorm
 H_cer_npeSum
 H_W
+# Kinematic quantitites
+Q2
+W
+epsilon
+ph_q
+ph_recoil
+th_q
+th_recoil
+emiss
+MMpi
+MMK
+MMp
+MandelT
+#MandelU
+pmiss
+pmiss_x
+pmiss_y
+pmiss_z
+Erecoil
+emiss_nuc
+Mrecoil

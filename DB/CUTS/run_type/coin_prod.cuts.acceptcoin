@@ -2,13 +2,16 @@
 #
 # COIN picut #
 ##############
-# RLT, 09/19/21 SWING: Removed HGCer cut because it was effecting the fADC deadtime negative SHMS delta dramatically (due to low momentum in spec)
-# RLT, 09/19/21 SWING (con't): Make sure to revert this change when we go back to physics so we can make sure this was actually the issue and not something with gas contamination
-coin_epi_cut_all_noRF = misc.starttime+accept.delta+pid.p_coin_picut
+#coin_epi_cut_all_noRF = misc.starttime+accept.delta+pid.p_coin_picut
+coin_epi_cut_all_noRF = accept.delta+accept.h_pfp+accept.p_pfp+misc.starttime
 #
-coin_epi_cut_prompt_noRF = coin_time.Coin_Pion_Prompt+misc.starttime+accept.delta+pid.p_coin_picut
+#coin_epi_cut_prompt_noRF = coin_time.Coin_Pion_Prompt+misc.starttime+accept.delta+pid.p_coin_picut
+#coin_epi_cut_prompt_noRF = accept.delta+accept.h_pfp+accept.p_pfp+pid.h_ecut_nt+misc.starttime+coin_time.Coin_Pion_Prompt
+coin_epi_cut_prompt_noRF = accept.delta+accept.h_pfp+accept.p_pfp+misc.starttime+coin_time.Coin_Pion_Prompt
 #
-coin_epi_cut_rand_noRF = coin_time.Coin_Pion_Rand+misc.starttime+accept.delta+pid.p_coin_picut
+#coin_epi_cut_rand_noRF = coin_time.Coin_Pion_Rand+misc.starttime+accept.delta+pid.p_coin_picut
+#coin_epi_cut_rand_noRF = accept.delta+accept.h_pfp+accept.p_pfp+pid.h_ecut_nt+misc.starttime+coin_time.Coin_Pion_Rand
+coin_epi_cut_rand_noRF = accept.delta+accept.h_pfp+accept.p_pfp+misc.starttime+coin_time.Coin_Pion_Rand
 #
 coin_epi_cut_all_RF = coin_time.SHMS_Pi_RF+misc.starttime+accept.delta+pid.p_coin_picut
 #

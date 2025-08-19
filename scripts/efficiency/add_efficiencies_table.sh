@@ -3,14 +3,16 @@
 #
 # Description:
 # ================================================================
-# Time-stamp: "2024-02-09 12:05:00 junaid"
+# Time-stamp: "2024-03-11 12:12:00 junaid"
 # ================================================================
 #
-# Created: Muhammad junaid  <mjo147@uregina.ca>
-# Copyright (c) trottar & junaid
+# Author:  Muhammad Junaid <mjo147@uregina.ca>
 #
+# Copyright (c) junaid
+#
+##################################################################################
 
-while getopts 'hrs' flag; do
+while getopts 'chrs' flag; do
     case "${flag}" in
         h) 
         echo "-------------------------------------------------------------------"
@@ -19,7 +21,7 @@ while getopts 'hrs' flag; do
         echo
         echo "The following flags can be called for the heep analysis..."
 	echo "    If no flags called arguments are..."
-	echo "        coin -> RunList = arg1 RunType=arg2"
+	echo "    -c  coin -> RunList = arg1 RunType=arg2"
 	echo "        sing -> RunList = arg1 RunType=arg2 SPEC=arg3 (requires -s flag)"		
         echo "    -h, help"
 	echo "    -r, run hgcer root analysis (not using this flag for now)"
@@ -30,6 +32,7 @@ while getopts 'hrs' flag; do
         ;;
 	r) r_flag='true' ;;
 	s) s_flag='true' ;;
+        c) c_flag='true' ;;
         *) print_usage
         exit 1 ;;
     esac
@@ -41,7 +44,9 @@ RunList=$2
 if [[ ${HOSTNAME} = *"cdaq"* ]]; then
     PATHFILE_INFO=`python3 /home/cdaq/pionLT-2021/hallc_replay_lt/UTIL_PION/bin/python/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
 elif [[ "${HOSTNAME}" = *"farm"* ]]; then
-    PATHFILE_INFO=`python3 /u/home/${USER}/.local/lib/python3.4/site-packages/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
+#    PATHFILE_INFO=`python3 /u/home/${USER}/.local/lib/python3.4/site-packages/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
+    PATHFILE_INFO=`python3 /u/group/c-pionlt/USERS/${USER}/replay_lt_env/lib/python3.9/site-packages/ltsep/scripts/getPathDict.py $PWD` # The output of this python script is just a comma separated string
+
 fi
 #echo $PWD
 #echo
@@ -72,25 +77,25 @@ if [[ $s_flag = "true" ]]; then
     spec=$(echo "$4" | tr '[:upper:]' '[:lower:]')
     SPEC=$(echo "$spec" | tr '[:lower:]' '[:upper:]')
     if [[ $RunType = "HeePSing" ]]; then
-	ROOTPREFIX=PionLT_replay_${SPEC}_HeePSing
+	ROOTPREFIX=PionLT_replay_${SPEC}_HeePSing  
 #	HGCERPREFIX=${ANATYPE}_${SPEC}_replay_production
 	inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
     elif [[ $RunType = "LumiSing" ]]; then
-        ROOTPREFIX=PionLT_replay_${SPEC}_Lumi
+        ROOTPREFIX=PionLT_replay_luminosity_${SPEC}
 #       HGCERPREFIX=${ANATYPE}_${SPEC}_replay_production
         inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
     else
         echo "Please Provide RUNTYPE"
     fi    
 
-else
+elif [[ $c_flag = "true" ]]; then
     RunType=$3
     if [[ $RunType = "HeePCoin" ]]; then
-        ROOTPREFIX=PionLT_replay_HeeP_coin
+         ROOTPREFIX=PionLT_replay_HeeP_coin
 #        HGCERPREFIX=${ANATYPE}_coin_replay_production
-        inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
+         inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
     elif [[ $RunType = "LumiCoin" ]]; then
-        ROOTPREFIX=PionLT_replay_Lumi_coin
+        ROOTPREFIX=PionLT_replay_luminosity
 #       HGCERPREFIX=${ANATYPE}_${SPEC}_replay_production
         inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
     elif [[ $RunType = "pTRIG6" ]]; then
@@ -100,10 +105,13 @@ else
     elif [[ $RunType = "Prod" ]]; then
         ROOTPREFIX=PionLT_replay_coin_production
 #       HGCERPREFIX=${ANATYPE}_coin_replay_production
+#        ROOTPREFIX=replay_coin_production
         inputFile="${REPLAYPATH}/UTIL_BATCH/InputRunLists/eff_runlist/${RunList}"
     else
         echo "Please Provide RUNTYPE"
     fi    
+else
+    echo "Please Provide correct arguemnts"
 fi
 
 if [[ $r_flag = "true" ]]; then

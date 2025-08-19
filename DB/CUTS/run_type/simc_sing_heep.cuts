@@ -1,8 +1,0 @@
-#############
-# HMS ecut  #
-#############
-ecut_pid = pid.h_ecut
-##############
-# SHMS pcut  #
-##############
-pcut_pid = pid.p_pcut

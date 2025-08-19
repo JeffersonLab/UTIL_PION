@@ -1,18 +1,21 @@
 ##############
 # COIN pcut  #
 ##############
-coin_ep_cut_all_noRF = accept.delta+pid.p_coin_pcut
+#coin_ep_cut_all_noRF = accept.delta+accept.h_pfp+accept.p_pfp
+coin_ep_cut_all_noRF = accept.delta+accept.h_pfp+accept.p_pfp+pid.p_coin_pcut
 #
-coin_ep_cut_prompt_noRF = coin_time.Coin_Proton_Prompt+accept.delta+pid.p_coin_pcut
+#coin_ep_cut_prompt_noRF = accept.delta+accept.h_pfp+accept.p_pfp+coin_time.Coin_Proton_Prompt+pid.p_coin_pcut
+coin_ep_cut_prompt_noRF = accept.delta+accept.h_pfp+accept.p_pfp+coin_time.Coin_Proton_Prompt+pid.p_coin_pcut
 #
-coin_ep_cut_rand_noRF = coin_time.Coin_Proton_Rand+accept.delta+pid.p_coin_pcut
+#coin_ep_cut_rand_noRF = coin_time.Coin_Proton_Rand+accept.delta+pid.p_coin_pcut
+coin_ep_cut_rand_noRF = accept.delta+accept.h_pfp+accept.p_pfp+coin_time.Coin_Proton_Rand+pid.p_coin_pcut
 #
 #coin_ep_cut_all_RF = coin_time.SHMS_p_RF+accept.delta+pid.p_coin_pcut
-coin_ep_cut_all_RF = accept.delta
+coin_ep_cut_all_RF = accept.delta+accept.h_pfp+accept.p_pfp+pid.p_coin_pcut+coin_time.SHMS_p_RF+misc.starttime
 #
 #coin_ep_cut_prompt_RF = coin_time.Coin_Proton_Prompt+coin_time.SHMS_p_RF+accept.delta+pid.p_coin_pcut
-coin_ep_cut_prompt_RF = accept.delta+coin_time.Coin_Proton_Prompt
+coin_ep_cut_prompt_RF = accept.delta+accept.h_pfp+accept.p_pfp+coin_time.Coin_Proton_Prompt+pid.p_coin_pcut+coin_time.SHMS_p_RF
 #
 #coin_ep_cut_rand_RF = coin_time.Coin_Proton_Rand+coin_time.SHMS_p_RF+accept.delta+pid.p_coin_pcut
-coin_ep_cut_rand_RF = accept.delta+coin_time.Coin_Proton_Rand
+coin_ep_cut_rand_RF = accept.delta+accept.h_pfp+accept.p_pfp+coin_time.Coin_Proton_Rand+pid.p_coin_pcut+coin_time.SHMS_p_RF
 #coin_ep_cut_rand_RF = coin_time.SHMS_p_RF

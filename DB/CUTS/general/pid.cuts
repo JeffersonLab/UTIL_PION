@@ -22,9 +22,9 @@ h_hadcut = {"H_cer_npeSum" : (H_cer_npeSum < pid.H_hadcut_H_cer)}, {"H_cal_etott
 # SHMS pid cuts #
 #################
 #
-p_ecut_nt = {"P_hgcer_npeSum" : (P_hgcer_npeSum > pid.P_ecut_P_hgcer)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum > pid.P_ecut_P_ngcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_ecut_P_aero)}, {"P_cal_etotnorm" : (P_cal_etotnorm > pid.P_ecut_P_cal)}
+p_ecut_nt = {"P_ngcer_npeSum" : (P_ngcer_npeSum > pid.P_ecut_P_ngcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_ecut_P_aero)}, {"P_cal_etotnorm" : (P_cal_etotnorm > pid.P_ecut_P_cal)}
 #
-p_ecut = {"P_hgcer_npeSum" : (P_hgcer_npeSum > pid.P_ecut_P_hgcer)}, {"P_ngcer_npeSum" : (P_ngcer_npeSum > pid.P_ecut_P_ngcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_ecut_P_aero)}, {"P_cal_etottracknorm" : (P_cal_etottracknorm > pid.P_ecut_P_cal)}
+p_ecut = {"P_ngcer_npeSum" : (P_ngcer_npeSum > pid.P_ecut_P_ngcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_ecut_P_aero)}, {"P_cal_etottracknorm" : (P_cal_etottracknorm > pid.P_ecut_P_cal)}
 #
 p_picut_nt = {"P_hgcer_npeSum" : (P_hgcer_npeSum > pid.P_picut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_picut_P_aero)}, {"P_cal_etotnorm" : (P_cal_etotnorm < pid.P_picut_P_cal)}
 #
@@ -49,8 +49,18 @@ p_hadcut = {"P_hgcer_npeSum" : (P_hgcer_npeSum > pid.P_hadcut_P_hgcer)}, {"P_aer
 # COIN pid cuts #
 #################
 #
+<<<<<<< HEAD
 p_coin_picut = {"P_hgcer_npeSum" : (P_hgcer_npeSum > pid.P_picut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_picut_P_aero)}, {"H_cal_etottracknorm" : (H_cal_etottracknorm > pid.H_ecut_H_cal)}, {"P_cal_etottracknorm" : (P_cal_etottracknorm < pid.P_picut_P_cal)}
+=======
+p_coin_picut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_picut_P_beta)},  {"P_aero_npeSum" : (P_aero_npeSum > pid.P_picut_P_aero)}, {"H_cal_etottracknorm" : (H_cal_etottracknorm > pid.H_ecut_H_cal)}, {"P_cal_etottracknorm" : (P_cal_etottracknorm >= 0.0)}, {"H_cer_npeSum" : (H_cer_npeSum > pid.H_ecut_H_cer)}
+>>>>>>> upstream/master
 #
 p_coin_kcut = {"P_hgcer_npeSum" : (P_hgcer_npeSum < pid.P_kcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum > pid.P_kcut_P_aero)}, {"H_cal_etottracknorm" : (H_cal_etottracknorm > pid.H_ecut_H_cal)}, {"P_cal_etottracknorm" : (P_cal_etottracknorm >= 0.0)}, {"H_cer_npeSum" : (H_cer_npeSum > pid.P_kcut_H_cer)}
 #
+<<<<<<< HEAD
 p_coin_pcut = {"P_hgcer_npeSum" : (P_hgcer_npeSum < pid.P_pcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum < pid.P_pcut_P_aero)}, {"H_cal_etottracknorm" : (H_cal_etottracknorm > pid.H_ecut_H_cal)}, {"P_cal_etottracknorm" : (P_cal_etottracknorm >= 0.0)}
+=======
+#p_coin_pcut = {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_pcut_P_beta)}, {"P_hgcer_npeSum" : (P_hgcer_npeSum < pid.P_pcut_P_hgcer)}, {"P_aero_npeSum" : (P_aero_npeSum < pid.P_pcut_P_aero)}, {"H_cal_etottracknorm" : (H_cal_etottracknorm > pid.H_ecut_H_cal)}, {"P_cal_etottracknorm" : (P_cal_etottracknorm >= 0.0)}
+#p_coin_pcut = {"H_gtr_beta" : ((abs(H_gtr_beta-1)) < pid.H_ecut_H_beta)}, {"H_cer_npeSum" : (H_cer_npeSum > pid.H_ecut_H_cer)}, {"H_cal_etottracknorm" : (H_cal_etottracknorm > pid.H_ecut_H_cal)}, {"P_gtr_beta" : ((abs(P_gtr_beta-1)) < pid.P_pcut_P_beta)}
+p_coin_pcut = {"H_cer_npeSum" : (H_cer_npeSum > pid.H_ecut_H_cer)}, {"H_cal_etottracknorm" : (H_cal_etottracknorm > pid.H_ecut_H_cal)}
+>>>>>>> upstream/master
