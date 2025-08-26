@@ -208,8 +208,8 @@ def calc_yield():
     uncer_rateHMSCorr = 0*yield_dict["HMS3of4ELT"]
     rateSHMSCorr = (yield_dict["SHMS3of4ELT"])         
     uncer_rateSHMSCorr = 0*yield_dict["SHMS3of4ELT"]
-    rateCOINCorr = 1-(rateCOINslope*yield_dict["rate_COIN"])
-    rateCOINCorrUncer = (rateCOINslopeUncer)*yield_dict["rate_COIN"]
+    rateCOINCorr = 1#-(rateCOINslope*yield_dict["rate_COIN"])
+    rateCOINCorrUncer = 0#(rateCOINslopeUncer)*yield_dict["rate_COIN"]
     
     #temporary to test with just boiling correction
     #rateHMSCorr = rateHMSCorr/rateHMSCorr
