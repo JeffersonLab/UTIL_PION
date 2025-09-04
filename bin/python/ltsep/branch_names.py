@@ -171,6 +171,9 @@ branch_dict = {
     "CTime_eKCoinTime_ROC1" : "CTime.eKCoinTime_ROC1",
     "CTime_ePiCoinTime_ROC1" : "CTime.ePiCoinTime_ROC1",
     "CTime_epCoinTime_ROC1" : "CTime.epCoinTime_ROC1",
+    "CTime_eKCoinTime_ROC2" : "CTime.eKCoinTime_ROC2",
+    "CTime_ePiCoinTime_ROC2" : "CTime.ePiCoinTime_ROC2",
+    "CTime_epCoinTime_ROC2" : "CTime.epCoinTime_ROC2",
 
     "P_RF_tdcTime" : "T.coin.pRF_tdcTime",
     "P_hod_fpHitsTime" : "P.hod.fpHitsTime",
