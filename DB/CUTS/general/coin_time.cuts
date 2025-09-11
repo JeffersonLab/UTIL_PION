@@ -14,3 +14,9 @@ Coin_Proton_Rand = {"CTime_epCoinTime_ROC2" : (((CTime_epCoinTime_ROC2 > ((CT.Pr
 SHMS_Pi_RF = {"P_RF_Dist" : (P_RF_Dist > (CT.PiRFLow) ) & (P_RF_Dist < (CT.PiRFHigh) )}
 SHMS_K_RF = {"P_RF_Dist" : (P_RF_Dist > (CT.KRFLow) ) & (P_RF_Dist < (CT.KRFHigh) )}
 SHMS_p_RF = {"P_RF_Dist" : (P_RF_Dist > (CT.pRFLow) ) & (P_RF_Dist < (CT.pRFHigh) )}
+#
+# Coin Blocking Cuts
+CT_Raw_Inside_ROC1 = {"CTime_CoinTime_RAW_ROC1" : (CTime_CoinTime_RAW_ROC1 < (CT.Raw_InHigh)) & (CTime_CoinTime_RAW_ROC1 > (CT.Raw_InLow))}
+CT_Raw_Total_ROC1 = {"CTime_CoinTime_RAW_ROC1" : (CTime_CoinTime_RAW_ROC1 < (CT.Raw_OutHigh)) & (CTime_CoinTime_RAW_ROC1 > (CT.Raw_OutLow))}
+CT_Raw_Inside_ROC2 = {"CTime_CoinTime_RAW_ROC2" : (CTime_CoinTime_RAW_ROC2 < (CT.Raw_InHigh)) & (CTime_CoinTime_RAW_ROC2 > (CT.Raw_InLow))}
+CT_Raw_Total_ROC2 = {"CTime_CoinTime_RAW_ROC2" : (CTime_CoinTime_RAW_ROC2 < (CT.Raw_OutHigh)) & (CTime_CoinTime_RAW_ROC2 > (CT.Raw_OutLow))}

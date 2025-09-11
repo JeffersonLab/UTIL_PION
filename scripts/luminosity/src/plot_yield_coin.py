@@ -141,7 +141,8 @@ def calc_yield():
         
         "SHMS3of4ELT" : makeList("SHMS3of4ELT"),
         "HMS3of4ELT" : makeList("HMS3of4ELT"),
-        
+        "CoinBlocking_Corr": makeList("CoinBlocking_Corr"),
+
         #"CPULT_phys" : (makeList("HMSTRIG_cut")*makeList("HMS_PS")+makeList("SHMSTRIG_cut")*makeList("SHMS_PS"))*makeList("CPULT_scaler"),
         "CPULT_phys" : makeList("CPULT_scaler"),
 
@@ -258,7 +259,7 @@ def calc_yield():
     
     TLT_ELT_SHMS = yield_dict["rateSHMSCorr"]*yield_dict["CPULT_phys"]
     TLT_ELT_HMS = yield_dict["rateHMSCorr"]*yield_dict["CPULT_phys"]
-    TLT_ELT = yield_dict["rateSHMSCorr"]*yield_dict["rateHMSCorr"]*yield_dict["CPULT_phys"]*yield_dict["rateCOINCorr"]
+    TLT_ELT = yield_dict["rateSHMSCorr"]*yield_dict["rateHMSCorr"]*yield_dict["CPULT_phys"]*yield_dict["rateCOINCorr"]*yield_dict["CoinBlocking_Corr"]
 
     CPULT_TLT_SHMS = TLT_EDTM/TLT_ELT_SHMS
     CPULT_TLT_HMS = TLT_EDTM/TLT_ELT_HMS

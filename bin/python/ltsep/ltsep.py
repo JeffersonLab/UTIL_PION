@@ -842,10 +842,10 @@ class Root():
                 CTime_epCoinTime_ROC2 = e_tree["CTime.epCoinTime_ROC2"].array()
                 treeDict.update({"CTime_epCoinTime_ROC2" : CTime_epCoinTime_ROC2})
             if branch == "CTime_CoinTime_RAW_ROC1":
-                CTime_CoinTime_RAW_ROC1 = e_tree["CTime_CoinTime_RAW_ROC1"].array()
+                CTime_CoinTime_RAW_ROC1 = e_tree["CTime.CoinTime_RAW_ROC1"].array()
                 treeDict.update({"CTime_CoinTime_RAW_ROC1" : CTime_CoinTime_RAW_ROC1})
             if branch == "CTime_CoinTime_RAW_ROC2":
-                CTime_CoinTime_RAW_ROC2 = e_tree["CTime_CoinTime_RAW_ROC2"].array()
+                CTime_CoinTime_RAW_ROC2 = e_tree["CTime.CoinTime_RAW_ROC2"].array()
                 treeDict.update({"CTime_CoinTime_RAW_ROC2" : CTime_CoinTime_RAW_ROC2})
 
             if branch == "P_RF_tdcTime":
