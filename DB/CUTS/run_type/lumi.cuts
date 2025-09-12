@@ -108,5 +108,5 @@ c_nozero_ptrigHMS = current.bcm4a+misc.c_nozero_ptrigHMS
 c_nozero_ptrigSHMS = current.bcm4a+misc.c_nozero_ptrigSHMS
 c_nozero_ptrigCOIN = current.bcm4a+misc.c_nozero_ptrigCOIN
 # Coin Blocking cuts
-c_Raw_inside = coin_time.CT_Raw_Inside_ROC2+misc.p_starttime+misc.h_starttime
-c_Raw_total = coin_time.CT_Raw_Total_ROC2+misc.p_starttime+misc.h_starttime
+c_Raw_inside = coin_time.CT_Raw_Inside_ROC2+misc.p_starttime+misc.h_starttime+p_ntrack+h_ntrack
+c_Raw_total = coin_time.CT_Raw_Total_ROC2+misc.p_starttime+misc.h_starttime+p_ntrack+h_ntrack
