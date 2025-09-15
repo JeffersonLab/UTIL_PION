@@ -353,6 +353,7 @@ def pid_cuts():
     
     T_coin_pEDTM_tdcTimeRaw = np.asarray(tree["T_coin_pEDTM_tdcTimeRaw"])
     CTime_ePiCoinTime_ROC2 = np.asarray(tree["CTime_ePiCoinTime_ROC2"])
+    CTime_CoinTime_RAW_ROC2 = np.asarray(tree["CTime_CoinTime_RAW_ROC2"])
     
     ###########################
     ######## 1D plots  ########
@@ -415,10 +416,10 @@ def pid_cuts():
     
     if (not COIN_PS == None):
         ax = f.add_subplot(338)
-        ax.hist(c.add_cut(CTime_ePiCoinTime_ROC2,"h_ecut_lumi_nt"),bins=c.setbin(CTime_ePiCoinTime_ROC2,181,-30,30),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
-        ax.hist(c.add_cut(CTime_ePiCoinTime_ROC2,"c_epi_nt_lumi"), bins=c.setbin(CTime_ePiCoinTime_ROC2,181,-30,30),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(CTime_CoinTime_RAW_ROC2,"c_Raw_total"),bins=c.setbin(CTime_CoinTime_RAW_ROC2,1600,-150,250),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(CTime_CoinTime_RAW_ROC2,"c_Raw_inside"), bins=c.setbin(CTime_CoinTime_RAW_ROC2,1600,-150,250),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
         plt.yscale('log')
-        plt.xlabel('CTime_ePiCoinTime_ROC2 + No Track Cut')
+        plt.xlabel('CTime_CoinTime_RAW_ROC2 + CoinBlocking Cut')
         plt.ylabel('Count')
 #            c_noTrack = c.add_cut(tree["CTime_ePiCoinTime_ROC2"], "c_epi_nt_lumi")
         
@@ -859,8 +860,8 @@ def analysis():
         c_noTrack_Rand = c.add_cut(tree["CTime_ePiCoinTime_ROC2"], "c_epi_nt_lumi_rand")
         c_Track = c.add_cut(tree["CTime_ePiCoinTime_ROC2"], "c_epitrack_lumi")
         c_Track_Rand = c.add_cut(tree["CTime_ePiCoinTime_ROC2"], "c_epitrack_lumi_rand")
-        c_Raw_inside = c.add_cut(tree["CTime_ePiCoinTime_ROC2"], "c_Raw_inside")
-        c_Raw_total = c.add_cut(tree["CTime_ePiCoinTime_ROC2"], "c_Raw_total")
+        c_Raw_inside = c.add_cut(tree["CTime_CoinTime_RAW_ROC2"], "c_Raw_inside")
+        c_Raw_total = c.add_cut(tree["CTime_CoinTime_RAW_ROC2"], "c_Raw_total")
     
     # Creates a dictionary for the calculated luminosity values 
     # Seperated this into cases where PS are on
@@ -880,7 +881,8 @@ def analysis():
             "paccp_edtm" : (len(EDTM_SHMS)),
             "haccp_edtm" : (len(EDTM_HMS)),
             "CoinBlocking_Corr" : (len(c_Raw_inside)/len(c_Raw_total)),
-    
+            "CoinBlocking_Total" : (len(c_Raw_total)),
+            "CoinBlocking_Inside" : (len(c_Raw_inside)),    
         }
     elif ((not HMS_PS == None) and (not SHMS_PS == None)):
         track_info = {
