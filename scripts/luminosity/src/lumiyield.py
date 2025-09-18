@@ -10,14 +10,14 @@
 #
 # Copyright (c) trottar
 #
-import uproot as up
-import numpy as np
-import pandas as pd
-import scipy
-import scipy.integrate as integrate
-import matplotlib
+import uproot as up # type: ignore
+import numpy as np # type: ignore
+import pandas as pd # type: ignore
+import scipy # type: ignore
+import scipy.integrate as integrate # type: ignore
+import matplotlib # type: ignore
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt # type: ignore
 import sys, math, os, subprocess
 
 ################################################################################################################################################
@@ -35,9 +35,9 @@ ltsep package import and pathing definitions
 '''
 
 # Import package for cuts
-from ltsep import Root
+from ltsep import Root # type: ignore
 
-lt=Root(os.path.realpath(__file__))
+lt=Root(os.path.realpath(__file__), DEBUG=True)
 
 # Add this to all files for more dynamic pathing
 USER=lt.USER # Grab user info for file finding
@@ -52,8 +52,10 @@ ANATYPE=lt.ANATYPE
 Grab prescale values and tracking efficiencies from report file
 '''
 
+
+
 # Open report file to grab prescale values and tracking efficiency
-report = UTILPATH+"/REPORT_OUTPUT/Analysis/Lumi/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
+report = UTILPATH+"/REPORT_OUTPUT/Analysis/Lumi/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent) 
 f = open(report)
 psList = ['PLT_Ps1_factor','PLT_Ps2_factor','PLT_Ps3_factor','PLT_Ps4_factor','PLT_Ps5_factor','PLT_Ps6_factor']
     
@@ -61,19 +63,15 @@ psList = ['PLT_Ps1_factor','PLT_Ps2_factor','PLT_Ps3_factor','PLT_Ps4_factor','P
 psActual = [-1,1,2,3,5,9,17,33,65,129,257,513,1025,2049,4097,8193,16385,32769]
 psValue = [-1,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
 
+# Setting up defaults so python can't throw bs errors
+foundPS = False
+ps5_tmp = "-1"
+ps6_tmp = "-1"
 # Search root file for prescale values and tracking efficiency, then save as variables
 for line in f:
     data = line.split(':')
     track_data = line.split(':')
-    if (5149 <= int(runNum) <= 5303):
-        if ('PLT_SHMS_Pion_SING_TRACK_EFF' in track_data[0]):
-            SHMS_track_info = track_data[1].split("+-")
-    else:
-        #if ('PLT_SHMS_Elec_SING_TRACK_EFF' in track_data[0]):
-        if ('PLT_SHMS_Elec_ALL_TRACK_EFF' in track_data[0]):
-            SHMS_track_info = track_data[1].split("+-")
-    if ('PLT_HMS_Elec_SING_TRACK_EFF' in track_data[0]):
-        HMS_track_info = track_data[1].split("+-")
+    
     for i, obj in enumerate(psList) :
         if (psList[i] in data[0]) : 
             if (i == 0) :  
@@ -87,7 +85,22 @@ for line in f:
             if (i == 4) :
                 ps5_tmp = data[1].strip()
             if (i == 5) :
+                foundPS = True
                 ps6_tmp = data[1].strip()
+    if (foundPS):
+        if ((int(ps5_tmp) >= 0) or (int(ps6_tmp) >=0)):
+            if ('PLT_SHMS_Pion_SING_TRACK_EFF' in track_data[0]):
+                SHMS_track_info = track_data[1].split("+-")             
+        else:
+            if ((5149 <= int(runNum) <= 5303) ):
+                if ('PLT_SHMS_Pion_SING_TRACK_EFF' in track_data[0]):
+                    SHMS_track_info = track_data[1].split("+-")
+            else:
+                #if ('PLT_SHMS_Elec_SING_TRACK_EFF' in track_data[0]):
+                if ('PLT_SHMS_Elec_ALL_TRACK_EFF' in track_data[0]):
+                    SHMS_track_info = track_data[1].split("+-")
+        if ('PLT_HMS_Elec_SING_TRACK_EFF' in track_data[0]):
+                HMS_track_info = track_data[1].split("+-")
     
 try:
     ps1=int(ps1_tmp)
@@ -110,7 +123,7 @@ try:
 except NameError:
     ps5=-1
 try:
-    ps6=int(ps6_tmp)
+    ps6=int(ps6_tmp)      
 except NameError:
     ps6=-1
 SHMS_track_eff = float(SHMS_track_info[0]) # Also define below, I'll probably use the report for consistency's sake
@@ -119,7 +132,7 @@ HMS_track_eff = float(HMS_track_info[0]) # Also define below, I'll probably use 
 HMS_track_uncern = float(HMS_track_info[1])
 
 # Convert the prescale input values to their actual DAQ values
-for i,index in enumerate(psActual):
+for i,index in enumerate(psActual): # changed from enumerate in psActual to psValue and it seems to spit out the actual DAQ PS values
     #psValue
     if (index == ps1) :
         if(index == -1):
@@ -150,7 +163,41 @@ for i,index in enumerate(psActual):
         if(index == -1):
             PS6 = 0
         else:
-            PS6 = psActual[i]            
+            PS6 = psActual[i]    
+            
+            
+for i,index in enumerate(psValue): # changed from enumerate in psActual to psValue and it seems to spit out the actual DAQ PS values
+    #psValue
+    if (index == ps1) :
+        if(index == -1):
+            PS1 = 0
+        else:
+            PS1 = psActual[i]
+    if (index == ps2) :
+        if(index == -1):
+            PS2 = 0
+        else:
+            PS2 = psActual[i]            
+    if (index == ps3) :
+        if(index == -1):
+            PS3 = 0
+        else:
+            PS3 = psActual[i]
+    if (index == ps4) :
+        if(index == -1):
+            PS4 = 0
+        else:
+            PS4 = psActual[i]            
+    if (index == ps5) :
+        if(index == -1):
+            PS5 = 0
+        else:
+            PS5 = psActual[i]
+    if (index == ps6) :
+        if(index == -1):
+            PS6 = 0
+        else:
+            PS6 = psActual[i]         
 f.close()
 
 ################################################################################################################################################
@@ -211,20 +258,20 @@ cut_f = '/DB/CUTS/run_type/lumi.cuts'
 
 if ((not HMS_PS == None) and (not SHMS_PS == None)) or (not COIN_PS == None): #normal case for kaonLT and most of PionLT - heinricn 2024/03/22
     if ANATYPE == "Pion":
-        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_ngcer_nt","p_aero_nt","h_cal","h_cer","p_cal","p_hgcer","p_ngcer","p_aero","p_ngcer_nt","p_%scut_lumi_nt" % SHMS_PID,"h_%scut_lumi_nt" % HMS_PID,"p_%scut_lumi" % SHMS_PID,"h_%scut_lumi" % HMS_PID,"c_noedtm","c_edtm","c_edtmHMS","c_edtmSHMS","c_curr","h_%strack_lumi_before" % HMS_PID,"h_%strack_lumi_after" % HMS_PID,"p_%strack_lumi_before" % SHMS_PID,"p_%strack_lumi_after" % SHMS_PID]
+        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_ngcer_nt","p_aero_nt","h_cal","h_cer","p_cal","p_hgcer","p_ngcer","p_aero","p_ngcer","p_%scut_lumi_nt" % SHMS_PID,"h_%scut_lumi_nt" % HMS_PID,"p_%scut_lumi" % SHMS_PID,"h_%scut_lumi" % HMS_PID,"c_noedtm","c_edtm","c_edtmHMS","c_edtmSHMS","c_curr","h_%strack_lumi_before" % HMS_PID,"h_%strack_lumi_after" % HMS_PID,"p_%strack_lumi_before" % SHMS_PID,"p_%strack_lumi_after" % SHMS_PID,"c_epitrack_lumi", "c_epitrack_lumi_rand","c_epi_nt_lumi", "c_epi_nt_lumi_rand", "c_Raw_inside", "c_Raw_total"]
     else:
-        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","h_cal","h_cer","p_cal","p_hgcer","p_aero","p_%scut_lumi_nt" % SHMS_PID,"h_%scut_lumi_nt" % HMS_PID,"p_%scut_lumi" % SHMS_PID,"h_%scut_lumi" % HMS_PID,"c_noedtm","c_edtm","c_edtmHMS","c_edtmSHMS","c_curr","h_%strack_lumi_before" % HMS_PID,"h_%strack_lumi_after" % HMS_PID,"p_%strack_lumi_before" % SHMS_PID,"p_%strack_lumi_after" % SHMS_PID]
+        cuts = ["h_cal_nt","h_cer_nt","p_cal_nt","p_hgcer_nt","p_aero_nt","h_cal","h_cer","p_cal","p_hgcer","p_aero","p_%scut_lumi_nt" % SHMS_PID,"h_%scut_lumi_nt" % HMS_PID,"p_%scut_lumi" % SHMS_PID,"h_%scut_lumi" % HMS_PID,"c_noedtm","c_edtm","c_edtmHMS","c_edtmSHMS","c_curr","h_%strack_lumi_before" % HMS_PID,"h_%strack_lumi_after" % HMS_PID,"p_%strack_lumi_before" % SHMS_PID,"p_%strack_lumi_after" % SHMS_PID,"c_epitrack_lumi", "c_epitrack_lumi_rand","c_epi_nt_lumi", "c_epi_nt_lumi_rand", "c_Raw_inside", "c_Raw_total"]
 else:
     if HMS_PS == None: #if only SHMS
         cuts = ["p_cal_nt","p_hgcer_nt","p_ngcer_nt","p_aero_nt","p_cal","p_hgcer","p_ngcer","p_aero","p_ngcer_nt","p_%scut_lumi_nt" % SHMS_PID,"p_%scut_lumi" % SHMS_PID,"c_noedtm","c_edtm","c_edtmSHMS","c_curr","p_%strack_lumi_before" % SHMS_PID,"p_%strack_lumi_after" % SHMS_PID]
     else: # only HMS
         cuts = ["h_cal_nt","h_cer_nt","h_cal","h_cer","h_%scut_lumi_nt" % HMS_PID,"h_%scut_lumi" % HMS_PID,"c_noedtm","c_edtm","c_edtmHMS","c_curr","h_%strack_lumi_before" % HMS_PID,"h_%strack_lumi_after" % HMS_PID]
-
+            #^^^^^^^^ these are the used cuts for HMS only runs
 for ps in PS_names:
     if ps == "PS1" or ps == "PS2":
         cuts+=["c_ptrigSHMS%s" % ps.replace("PS","")]        
     if ps == "PS3" or ps == "PS4":
-        cuts+=["c_ptrigHMS%s" % ps.replace("PS","")]
+        cuts+=["c_ptrigHMS%s" % ps.replace("PS","")] # <<<<<<------- c_ptrigHMS4 is printed for run 16728
     if ps == "PS5" or ps == "PS6":
         cuts+=["c_ptrigCOIN%s" % ps.replace("PS","")]    
 
@@ -259,7 +306,7 @@ if SHMS_PS == None:
     s_tree = up.open(rootName)["TSH"]
 else:
     s_tree = up.open(rootName)["TSP"]
-
+    sh_tree = up.open(rootName)["TSH"]
 ################################################################################################################################################
 
 for ps in PS_names:
@@ -305,7 +352,8 @@ def pid_cuts():
     P_gtr_beta = np.asarray(tree['P_gtr_beta'])
     
     T_coin_pEDTM_tdcTimeRaw = np.asarray(tree["T_coin_pEDTM_tdcTimeRaw"])
-
+    CTime_ePiCoinTime_ROC2 = np.asarray(tree["CTime_ePiCoinTime_ROC2"])
+    CTime_CoinTime_RAW_ROC2 = np.asarray(tree["CTime_CoinTime_RAW_ROC2"])
     
     ###########################
     ######## 1D plots  ########
@@ -365,6 +413,23 @@ def pid_cuts():
             plt.yscale('log')
             plt.xlabel('P_ngcer_npeSum')
             plt.ylabel('Count')
+    
+    if (not COIN_PS == None):
+        ax = f.add_subplot(338)
+        ax.hist(c.add_cut(CTime_CoinTime_RAW_ROC2,"c_Raw_total"),bins=c.setbin(CTime_CoinTime_RAW_ROC2,1600,-150,250),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(CTime_CoinTime_RAW_ROC2,"c_Raw_inside"), bins=c.setbin(CTime_CoinTime_RAW_ROC2,1600,-150,250),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        plt.yscale('log')
+        plt.xlabel('CTime_CoinTime_RAW_ROC2 + CoinBlocking Cut')
+        plt.ylabel('Count')
+#            c_noTrack = c.add_cut(tree["CTime_ePiCoinTime_ROC2"], "c_epi_nt_lumi")
+        
+        ax = f.add_subplot(339)
+        ax.hist(c.add_cut(CTime_ePiCoinTime_ROC2,"h_ecut_lumi"),bins=c.setbin(CTime_ePiCoinTime_ROC2,101,-10,10),label='no cut',histtype='step',alpha=0.5, stacked=True, fill=True)
+        ax.hist(c.add_cut(CTime_ePiCoinTime_ROC2,"c_epitrack_lumi"), bins=c.setbin(CTime_ePiCoinTime_ROC2,101,-10,10),label='cut',histtype='step', alpha=0.5, stacked=True, fill=True)
+        plt.yscale('log')
+        plt.xlabel('CTime_ePiCoinTime_ROC2 + Track Cut')
+        plt.ylabel('Count')
+#       c_Track = c.add_cut(tree["CTime_ePiCoinTime_ROC2"], "c_epitrack_lumi")
 
     plt.legend(loc="upper right")
 
@@ -467,7 +532,7 @@ def track_pid_cuts():
     P_gtr_beta = np.asarray(tree['P_gtr_beta'])
     
     T_coin_pEDTM_tdcTimeRaw = np.asarray(tree["T_coin_pEDTM_tdcTimeRaw"])
-    
+    CTime_ePiCoinTime_ROC2 = np.asarray(tree["CTime_ePiCoinTime_ROC2"])
     
     ###########################
     ######## 1D plots  ########
@@ -790,17 +855,43 @@ def analysis():
         #p_goodscinhit = c.add_cut(tree["P_hod_goodscinhit"],"p_%scut_lumi" % SHMS_PID)
         p_etottracknorm = c.add_cut(tree["P_cal_etottracknorm"],"p_%scut_lumi" % SHMS_PID)    
     
+    if (not COIN_PS == None):
+        c_noTrack = c.add_cut(tree["CTime_ePiCoinTime_ROC2"], "c_epi_nt_lumi")
+        c_noTrack_Rand = c.add_cut(tree["CTime_ePiCoinTime_ROC2"], "c_epi_nt_lumi_rand")
+        c_Track = c.add_cut(tree["CTime_ePiCoinTime_ROC2"], "c_epitrack_lumi")
+        c_Track_Rand = c.add_cut(tree["CTime_ePiCoinTime_ROC2"], "c_epitrack_lumi_rand")
+        c_Raw_inside = c.add_cut(tree["CTime_CoinTime_RAW_ROC2"], "c_Raw_inside")
+        c_Raw_total = c.add_cut(tree["CTime_CoinTime_RAW_ROC2"], "c_Raw_total")
     
     # Creates a dictionary for the calculated luminosity values 
     # Seperated this into cases where PS are on
-    if ((not HMS_PS == None) and (not SHMS_PS == None)) or (not COIN_PS == None):
+    if (not COIN_PS == None):
         track_info = {
     
             "tot_events" : len(EventType),
-            "h_int_etotnorm_evts" : scipy.integrate.simps(h_etotnorm),
-            "p_int_etotnorm_evts" : scipy.integrate.simps(p_etotnorm),
-            "h_int_etottracknorm_evts" : scipy.integrate.simps(h_etottracknorm),
-            "p_int_etottracknorm_evts" : scipy.integrate.simps(p_etottracknorm),                
+            "h_int_etotnorm_evts" : len(h_etotnorm),
+            "p_int_etotnorm_evts" : len(p_etotnorm),
+            "h_int_etottracknorm_evts" : len(h_etottracknorm),
+            "p_int_etottracknorm_evts" : len(p_etottracknorm),
+            "c_int_noTrack_events" : len(c_noTrack),
+            "c_int_Track_events" : (len(c_Track)),
+            "c_int_noTrack_Rand_events" : len(c_noTrack_Rand),
+            "c_int_Track_Rand_events" : len(c_Track_Rand),
+            "accp_edtm" : (len(EDTM)),
+            "paccp_edtm" : (len(EDTM_SHMS)),
+            "haccp_edtm" : (len(EDTM_HMS)),
+            "CoinBlocking_Corr" : (len(c_Raw_inside)/len(c_Raw_total)),
+            "CoinBlocking_Total" : (len(c_Raw_total)),
+            "CoinBlocking_Inside" : (len(c_Raw_inside)),    
+        }
+    elif ((not HMS_PS == None) and (not SHMS_PS == None)):
+        track_info = {
+    
+            "tot_events" : len(EventType),
+            "h_int_etotnorm_evts" : len(h_etotnorm),
+            "p_int_etotnorm_evts" : len(p_etotnorm),
+            "h_int_etottracknorm_evts" : len(h_etottracknorm),
+            "p_int_etottracknorm_evts" : len(p_etottracknorm),
             "accp_edtm" : (len(EDTM)),
             "paccp_edtm" : (len(EDTM_SHMS)),
             "haccp_edtm" : (len(EDTM_HMS)),
@@ -811,9 +902,9 @@ def analysis():
             track_info = {
         
                 "tot_events" : len(EventType),
-                "h_int_etotnorm_evts" : scipy.integrate.simps(h_etotnorm),
+                "h_int_etotnorm_evts" : len(h_etotnorm),
                 "p_int_etotnorm_evts" : -1,
-                "h_int_etottracknorm_evts" : scipy.integrate.simps(h_etottracknorm),
+                "h_int_etottracknorm_evts" : len(h_etottracknorm),
                 "p_int_etottracknorm_evts" : -1,                
                 "accp_edtm" : (len(EDTM)),
                 "paccp_edtm" : -1,
@@ -825,9 +916,9 @@ def analysis():
         
                 "tot_events" : len(EventType),
                 "h_int_etotnorm_evts" : -1,
-                "p_int_etotnorm_evts" : scipy.integrate.simps(p_etotnorm),
+                "p_int_etotnorm_evts" : len(p_etotnorm),
                 "h_int_etottracknorm_evts" : -1,
-                "p_int_etottracknorm_evts" : scipy.integrate.simps(p_etottracknorm),                
+                "p_int_etottracknorm_evts" : len(p_etottracknorm),                
                 "accp_edtm" : (len(EDTM)),
                 "paccp_edtm" : (len(EDTM_SHMS)),
                 "haccp_edtm" : -1,
@@ -859,6 +950,7 @@ def analysis():
             print("Calculated HMS tracking efficiency: %f +/- %f\n" % ((track_info['HMS_track']), (track_info['HMS_track_uncern'])))
         if ps == "PS5" or ps == "PS6":
             print("Number of COINTRIG Events: %.0f" % (COIN_PS*track_info['COINTRIG_cut']))
+            print("Number of good coin events: %.0f" % track_info['c_int_Track_events'])
 
     print("============================================================================\n\n")
           
@@ -876,12 +968,22 @@ def main():
 
     # Import dictionaries
     scalers = scaler.scaler(PS_names, HMS_PS, SHMS_PS, COIN_PS, thres_curr, report_current, runNum, MaxEvent, s_tree) 
+    if (not (COIN_PS == None)): 
+        print ("Second loop of scalers to get HMS 3 of 4 eff")
+        hscalers = scaler.scaler(PS_names, HMS_PS, None, COIN_PS, thres_curr, report_current, runNum, MaxEvent, sh_tree) 
+        print(hscalers["HMS3of4ELT"])
+    
     track_info = analysis()
 
     # Merge and sort the two dictionaries of calculations
     data = {}
     for d in (scalers, track_info): 
         data.update(d)
+    
+    if (not (COIN_PS == None)):
+        data["HMS3of4ELT"] = hscalers["HMS3of4ELT"]
+        data["HMS3of4ELT_err"] = hscalers["HMS3of4ELT_err"]
+    
     lumi_data = {i : data[i] for i in sorted(data.keys())}
 
     # Convert merged dictionary to a pandas dataframe then sort it
@@ -897,7 +999,7 @@ def main():
     file_exists = os.path.isfile(out_f)
 
     # Updates csv file with luminosity calculated values for later analysis (see plot_yield.py)
-    if file_exists:
+    if file_exists: 
         try:
             out_data = pd.read_csv(out_f)
         except IOError:
