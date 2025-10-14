@@ -76,7 +76,9 @@ RUNLISTPATH = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_BATCH/InputRunLis
 EFF_CSV     = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/efficiencies" % (USER)
 
 # Define paths SIMC
-physet_dir_name = "_".join(PHY_SETTING.split("_")[:3]) + "_std"
+# Extract the first three words from PHY_SETTING for the CSV file name
+setting_name = "_".join(PHY_SETTING.split("_")[:3])
+physet_dir_name = "%s_std" % (setting_name)
 SIMCPATH = "/volatile/hallc/c-pionlt/%s/OUTPUT/Analysis/SIMC/%s/" % (USER, physet_dir_name)
 
 #################################################################################################################################################
@@ -593,8 +595,6 @@ dN_dummy_norm_yield = N_dummy_norm * ma.sqrt((dN_dummy_error[0]/N_dummy)**2 + (t
 dN_data_dummy_sub_norm_yield = ma.sqrt((dN_data_norm_yield)**2 + (dN_dummy_norm_yield)**2)
 physics_yield_err = dN_data_dummy_sub_norm_yield
 
-
-
 print("="*40)
 print("Data/SIMC ratio MMP = {:.3f} +/- {:.3f}".format(dataSimcRatio_MMP, dataSimcRatio_err))
 print("="*40)
@@ -779,11 +779,8 @@ print("="*40)
 
 #############################################################################################################################################
 
-# Extract the first three words from PHY_SETTING for the CSV file name
-csv_name = "_".join(PHY_SETTING.split("_")[:3])
-
 # Writing Offsets and Cuts to CSV file
-csv_output_path = "%s/LTSep_CSVs/mm_offset_cut_csv/%s_mm_offsets_cuts_parameters.csv" % (UTILPATH, csv_name)
+csv_output_path = "%s/LTSep_CSVs/mm_offset_cut_csv/%s/%s_mm_offsets_cuts_parameters.csv" % (UTILPATH, physet_dir_name, setting_name)
 
 # Data to write
 new_row = [PHY_SETTING, f"{MM_Offset:.6f}", MM_Cut_low, MM_Cut_high]

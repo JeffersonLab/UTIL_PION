@@ -79,14 +79,15 @@ MMCUT_CSV   = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/LTSep_CSVs/m
 DCUT_CSV    = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/LTSep_CSVs/diamond_cut_csv" % (USER)
 TBINCSVPATH = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/LTSep_CSVs/t_binning_csv" % (USER)
 
+# Extract the first three words from PHY_SETTING for the CSV file name
+setting_name = "_".join(PHY_SETTING.split("_")[:3])
+physet_dir_name = "%s_std" % (setting_name)
+
 #################################################################################################################################################
 
 # Output PDF File Name
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, REPLAYPATH))
 #Pion_Analysis_Distributions = "%s/%s_%s_ProdCoin_Pion_Analysis_DataYield_Distributions.pdf" % (OUTPATH, PHY_SETTING, MaxEvent)
-
-# Extract the first three words from PHY_SETTING for the CSV file name
-setting_name = "_".join(PHY_SETTING.split("_")[:3])
 
 # Input file location and variables taking
 rootFile_DATA = "%s/%s_%s_%s.root" % (OUTPATH, PHY_SETTING, MaxEvent, DATA_Suffix)
@@ -94,9 +95,9 @@ rootFile_DUMMY = "%s/%s_%s_%s.root" % (OUTPATH, PHY_SETTING, MaxEvent, DUMMY_Suf
 data_run_list = "%s/%s" % (RUNLISTPATH, DATA_RUN_LIST)
 dummy_run_list = "%s/%s" % (RUNLISTPATH, DUMMY_RUN_LIST)
 eff_csv_file = "%s/%s.csv" % (EFF_CSV, CSV_FILE)
-mmcut_csv_file = "%s/%s_mm_offsets_cuts_parameters.csv" % (MMCUT_CSV, setting_name)
-dcut_csv_file = "%s/%s_diamond_cut_parameters.csv" % (DCUT_CSV, setting_name)
-tbin_csv_file  = "%s/%s_tbinning_yields_pions.csv" % (TBINCSVPATH, setting_name)
+mmcut_csv_file = "%s/%s/%s_mm_offsets_cuts_parameters.csv" % (MMCUT_CSV, physet_dir_name, setting_name)
+dcut_csv_file = "%s/%s/%s_diamond_cut_parameters.csv" % (DCUT_CSV, physet_dir_name, setting_name)
+tbin_csv_file  = "%s/%s/%s_tbinning_yields_pions.csv" % (TBINCSVPATH, physet_dir_name, setting_name)
 
 ###################################################################################################################################################
 
@@ -466,7 +467,7 @@ print("-"*40)
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Define the output CSV file name
-eff_cal_output_csv_path = "%s/LTSep_CSVs/physics_yields_csv/%s_Physics_Norm_Eff_Charge_Calculation.csv" % (UTILPATH, setting_name)
+eff_cal_output_csv_path = "%s/LTSep_CSVs/physics_yields_csv/%s/%s_Physics_Norm_Eff_Charge_Calculation.csv" % (UTILPATH, physet_dir_name, setting_name)
 
 # Prepare the header for the CSV file
 header = [
@@ -876,7 +877,7 @@ for tmin, tmax in zip(t_min_values, t_max_values):
             break
 
 # Define output CSV file path for average kinematics
-avg_kinematics_path = "%s/LTSep_CSVs/physics_yields_csv/%s_Physics_Avg_Data_Kinematics.csv" % (UTILPATH, setting_name)
+avg_kinematics_path = "%s/LTSep_CSVs/physics_yields_csv/%s/%s_Physics_Avg_Data_Kinematics.csv" % (UTILPATH, physet_dir_name, setting_name)
 
 # Define the header
 avg_kin_header = [
@@ -1038,7 +1039,7 @@ print("=" * 40)
 print("Physics Yield Results:")
 for bin_key in dN_data_MMpi:
     # Use the correct key names from dN_data_MMP
-    Y_data = dN_data_MMpi[bin_key]["integral"]
+    Y_data = abs(dN_data_MMpi[bin_key]["integral"])
     dY_data_dummy_sub_norm = dN_error[bin_key]["dN_data_dummy_sub_norm"]
     print(f"Physics Yield: {bin_key} = Yield: {Y_data:.8f}, Error: {dY_data_dummy_sub_norm:.8f}")
 print("=" * 40)
@@ -1046,7 +1047,7 @@ print("=" * 40)
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Define the output CSV file name
-yields_pions_path =  "%s/LTSep_CSVs/physics_yields_csv/%s_Physics_Data_Yield.csv" % (UTILPATH, setting_name)
+yields_pions_path =  "%s/LTSep_CSVs/physics_yields_csv/%s/%s_Physics_Data_Yield.csv" % (UTILPATH, physet_dir_name, setting_name)
 
 # Read the existing CSV file into memory
 rows = []
@@ -1092,7 +1093,7 @@ for tbin_number, (tmin, tmax) in enumerate(tbin_edges, start=1):
                     "phi_min": phimin,
                     "phi_max": phimax,
                     "DummySub_Counts": N_dummysub,
-                    "physics_yield": Y_data,
+                    "physics_yield": abs(Y_data),
                     "physics_yield_error": dY_data_dummy_sub_norm,
                     "%error/yield": (dY_data_dummy_sub_norm/Y_data)*100 if Y_data != 0 else dY_data_dummy_sub_norm
                 })
@@ -1109,7 +1110,7 @@ for tbin_number, (tmin, tmax) in enumerate(tbin_edges, start=1):
                 "phi_min": phimin,
                 "phi_max": phimax,
                 "DummySub_Counts": N_dummysub,
-                "physics_yield": Y_data,
+                "physics_yield": abs(Y_data),
                 "physics_yield_error": dY_data_dummy_sub_norm,
                 "%error/yield": (dY_data_dummy_sub_norm/Y_data)*100 if Y_data != 0 else dY_data_dummy_sub_norm
             })

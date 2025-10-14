@@ -86,9 +86,9 @@ print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, R
 
 # Input file location and variables taking
 rootFile_SIMC = "%s/%s.root" % (SIMCPATH, SIMC_Suffix)
-mmcut_csv_file = "%s/%s_mm_offsets_cuts_parameters.csv" % (MMCUT_CSV, setting_name)
-dcut_csv_file = "%s/%s_diamond_cut_parameters.csv" % (DCUT_CSV, setting_name)
-tbin_csv_file  = "%s/%s_tbinning_yields_pions.csv" % (TBINCSVPATH, setting_name)
+mmcut_csv_file = "%s/%s/%s_mm_offsets_cuts_parameters.csv" % (MMCUT_CSV, physet_dir_name, setting_name)
+dcut_csv_file = "%s/%s/%s_diamond_cut_parameters.csv" % (DCUT_CSV, physet_dir_name, setting_name)
+tbin_csv_file  = "%s/%s/%s_tbinning_yields_pions.csv" % (TBINCSVPATH, physet_dir_name, setting_name)
 
 ###################################################################################################################################################
 
@@ -226,7 +226,7 @@ print ("normfac_simc: ", normfac_simc)
 print("-"*40)
 
 # Define the output CSV file name
-normfact_pions_path =  "%s/LTSep_CSVs/simc_yields_csv/%s_Physics_SIMC_Normfact_Calculation.csv" % (UTILPATH, setting_name)
+normfact_pions_path =  "%s/LTSep_CSVs/simc_yields_csv/%s/%s_Physics_SIMC_Normfact_Calculation.csv" % (UTILPATH, physet_dir_name, setting_name)
 
 # Define CSV header
 header = ["Physics_Setting", "simc_normfactor", "simc_nevents", "normfac_simc"]
@@ -418,7 +418,7 @@ for tmin, tmax in zip(t_min_values, t_max_values):
             break
 
 # Define output CSV file path for average kinematics
-avg_kinematics_path = "%s/LTSep_CSVs/simc_yields_csv/%s_Physics_Avg_SIMC_Kinematics.csv" % (UTILPATH, setting_name)
+avg_kinematics_path = "%s/LTSep_CSVs/simc_yields_csv/%s/%s_Physics_Avg_SIMC_Kinematics.csv" % (UTILPATH, physet_dir_name, setting_name)
 
 # Define the header
 avg_kin_header = [
@@ -585,7 +585,7 @@ for bin_key in dN_simc_MMpi:
 print("=" * 40)
 
 # Define the output CSV file name
-yields_pions_path =  "%s/LTSep_CSVs/simc_yields_csv/%s_Physics_SIMC_Yield.csv" % (UTILPATH, setting_name)
+yields_pions_path =  "%s/LTSep_CSVs/simc_yields_csv/%s/%s_Physics_SIMC_Yield.csv" % (UTILPATH, physet_dir_name, setting_name)
 
 # Updated header with tbin_number and phibin_number included
 header = ["Physics_Setting", "tbin_number", "t_min", "t_max", "phibin_number", "phi_min", "phi_max", "Counts", "simc_yield", "simc_yield_error", "%error/yield"]

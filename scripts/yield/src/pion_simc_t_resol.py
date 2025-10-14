@@ -55,7 +55,6 @@ SIMC_Suffix_highepsright = "Prod_Coin_{}_highepsright".format(SIMC_SETTING)
 SIMC_Suffix_highepscenter = "Prod_Coin_{}_highepscenter".format(SIMC_SETTING)
 SIMC_Suffix_highepsleft = "Prod_Coin_{}_highepsleft".format(SIMC_SETTING)
 
-
 ################################################################################################################################################
 '''
 ltsep package import and pathing definitions
@@ -76,9 +75,10 @@ OUTPATH=lt.OUTPATH
 MMCUT_CSV   = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/LTSep_CSVs/mm_offset_cut_csv" % (USER)
 DCUT_CSV    = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/LTSep_CSVs/diamond_cut_csv" % (USER)
 
-# Define paths SIMC
-physet_dir_name = "_".join(PHY_SETTING.split("_")[:3]) + "_std"
-SIMCPATH = "/volatile/hallc/c-pionlt/%s/worksim/%s" % (USER, physet_dir_name)
+# Extract the first three words from PHY_SETTING for the CSV file name
+setting_name = "_".join(PHY_SETTING.split("_")[:3])
+physet_dir_name = "%s_std" % (setting_name)
+SIMCPATH = "/volatile/hallc/c-pionlt/%s/worksim/%s/" % (USER, physet_dir_name)
 
 #################################################################################################################################################
 
@@ -88,8 +88,8 @@ Pion_Analysis_Distributions = "%s/%s_SIMC_Pion_Analysis_tresolution_Distribution
 
 # Extract the first three words from PHY_SETTING for the CSV file name
 setting_name = "_".join(PHY_SETTING.split("_")[:3])
-mmcut_csv_file = "%s/%s_mm_offsets_cuts_parameters.csv" % (MMCUT_CSV, setting_name)
-dcut_csv_file = "%s/%s_diamond_cut_parameters.csv" % (DCUT_CSV, setting_name)
+mmcut_csv_file = "%s/%s/%s_mm_offsets_cuts_parameters.csv" % (MMCUT_CSV, physet_dir_name, setting_name)
+dcut_csv_file = "%s/%s/%s_diamond_cut_parameters.csv" % (DCUT_CSV, physet_dir_name, setting_name)
 
 # Input file location and variables taking
 #rootFile_SIMC_lowepsright = "%s/%s.root" % (SIMCPATH, SIMC_Suffix_lowepsright)
@@ -347,11 +347,8 @@ c1_delta.Print(Pion_Analysis_Distributions)
 
 #############################################################################################################################################
 
-# Extract the first three words from PHY_SETTING for the CSV file name
-csv_name = "_".join(PHY_SETTING.split("_")[:3])
-
 # Writing the vertices to the CSV file
-csv_output_path = "%s/LTSep_CSVs/t_resolution_csv/%s_simc_t_resolution_parameters.csv" % (UTILPATH, csv_name)
+csv_output_path = "%s/LTSep_CSVs/t_resolution_csv/%s/%s_simc_t_resolution_parameters.csv" % (UTILPATH, physet_dir_name, setting_name)
 
 # Extract the fit parameters for low epsilon
 loweps_value = fit_t_ti_loweps.GetParameter(2)
