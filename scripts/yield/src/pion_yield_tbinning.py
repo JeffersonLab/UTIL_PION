@@ -642,8 +642,8 @@ print("####################################\n")
 #tbin_pions_max = [113,126,138,150,166,186,250]
 
 # 5 t-bins
-tbin_pions_min = [81,119,137,155,178]
-tbin_pions_max = [118,136,154,177,250]
+tbin_pions_min = [81,119,137,156,180]
+tbin_pions_max = [118,136,155,179,250]
 
 dN_data_pions_lowe = np.array([array.array('d', [0.0])] * len(tbin_pions_min))
 dN_data_pions_highe = np.array([array.array('d', [0.0])] * len(tbin_pions_min))
