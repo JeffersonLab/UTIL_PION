@@ -120,11 +120,13 @@ DUMMY_Suffix=ProdCoin_Analysed_Dummy_Data
 SIMC_Suffix="Prod_Coin_${SIMC_SETTING}"
 DATA_RUN_LIST=${PHY_SETTING}
 DUMMY_RUN_LIST=${PHY_SETTING}_dummy
-CSV_FILE=PionLT_coin_production_Prod_efficiency_data_2025_03_08
+#CSV_FILE=PionLT_coin_production_Prod_efficiency_data_2025_10_23
+CSV_FILE=PionLT_coin_production_Prod_efficiency_data_2025_11_21
 
 # Input Arguments for t-resolution and t-binning Scripts
 PHY_SETTING_C=$(echo "${RunList}" | awk -F'_' '{print $1 "_" $2 "_" $3}')
-SIMC_Suffix_C=$(echo "${RunList}" | awk -F'_' '{print $1 $2 $3}')
+SIMC_SETTING_C=$(echo "${RunList}" | awk -F'_' '{print $1 $2 $3}')
+SIMC_Suffix_C="Prod_Coin_${SIMC_SETTING_C}"
 RUN_LIST_C=${PHY_SETTING_C}_Runlist
 
 # Input Arguments for avergae kinematics and yields calculation Script
@@ -135,28 +137,44 @@ SIMC_AVG_KIN_CSV=Physics_Avg_SIMC_Kinematics
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+# Create directories to store CSVs if it doesn't exist
+AVG_KIN_DIR=${UTILPATH}/LTSep_CSVs/avg_kinematics_csv/${PHY_SETTING_C}_std
+RATIO_DIR=${UTILPATH}/LTSep_CSVs/datasimc_ratios_csv/${PHY_SETTING_C}_std
+DIAMOND_DIR=${UTILPATH}/LTSep_CSVs/diamond_cut_csv/${PHY_SETTING_C}_std
+INPUT_DIR=${UTILPATH}/LTSep_CSVs/ltsep_input_csv/${PHY_SETTING_C}_std
+MM_OFFSET_DIR=${UTILPATH}/LTSep_CSVs/mm_offset_cut_csv/${PHY_SETTING_C}_std
+PHYSICS_YIELDS_DIR=${UTILPATH}/LTSep_CSVs/physics_yields_csv/${PHY_SETTING_C}_std
+SIMC_YIELDS_DIR=${UTILPATH}/LTSep_CSVs/simc_yields_csv/${PHY_SETTING_C}_std
+T_BINNING_DIR=${UTILPATH}/LTSep_CSVs/t_binning_csv/${PHY_SETTING_C}_std
+T_RESOLUTION_DIR=${UTILPATH}/LTSep_CSVs/t_resolution_csv/${PHY_SETTING_C}_std
+
+directories=("${AVG_KIN_DIR}" "${RATIO_DIR}" "${DIAMOND_DIR}" "${INPUT_DIR}" "${MM_OFFSET_DIR}" "${PHYSICS_YIELDS_DIR}" "${SIMC_YIELDS_DIR}" "${T_BINNING_DIR}" "${T_RESOLUTION_DIR}")
+# Create all directories
+for dir in "${directories[@]}"; do
+    if [ ! -d "$dir" ]; then
+        echo "Creating directory: $dir"
+        mkdir -p "$dir"
+    fi
+done
+
 # Moving SIMC ROOT files to required standard directory
-SIMC_Suffix_File=Prod_Coin_${SIMC_Suffix_C}
-
-if [ ! -d "${VOLATILEPATH}/worksim/${PHY_SETTING_C}_std" ]; then
-    mkdir -p "${VOLATILEPATH}/worksim/${PHY_SETTING_C}_std"
-fi
-# Only move if destination does NOT already have files
-if ! ls ${VOLATILEPATH}/worksim/${PHY_SETTING_C}_std/${SIMC_Suffix_File}* 1> /dev/null 2>&1; then
-    if ls ${VOLATILEPATH}/worksim/${SIMC_Suffix_File}* 1> /dev/null 2>&1; then
-        mv ${VOLATILEPATH}/worksim/${SIMC_Suffix_File}* "${VOLATILEPATH}/worksim/${PHY_SETTING_C}_std/"
+SIMC_Suffix_File=Prod_Coin_${SIMC_SETTING_C}
+# Define source and destination directories
+simc_dirs=("${VOLATILEPATH}/worksim" "${VOLATILEPATH}/OUTPUT/Analysis/SIMC")
+# Move SIMC files to standard directories
+for base_dir in "${simc_dirs[@]}"; do
+    dest_dir="${base_dir}/${PHY_SETTING_C}_std"
+    # Create destination directory if it doesn't exist
+    if [ ! -d "$dest_dir" ]; then
+        mkdir -p "$dest_dir"
     fi
-fi
-
-if [ ! -d "${VOLATILEPATH}/OUTPUT/Analysis/SIMC/${PHY_SETTING_C}_std" ]; then
-    mkdir -p "${VOLATILEPATH}/OUTPUT/Analysis/SIMC/${PHY_SETTING_C}_std"
-fi
-# Only move if destination does NOT already have files
-if ! ls ${VOLATILEPATH}/OUTPUT/Analysis/SIMC/${PHY_SETTING_C}_std/${SIMC_Suffix_File}* 1> /dev/null 2>&1; then
-    if ls ${VOLATILEPATH}/OUTPUT/Analysis/SIMC/${SIMC_Suffix_File}* 1> /dev/null 2>&1; then
-        mv ${VOLATILEPATH}/OUTPUT/Analysis/SIMC/${SIMC_Suffix_File}* "${VOLATILEPATH}/OUTPUT/Analysis/SIMC/${PHY_SETTING_C}_std/"
+    # Only move if destination does NOT already have files
+    if ! ls ${dest_dir}/${SIMC_Suffix_File}* 1> /dev/null 2>&1; then
+        if ls ${base_dir}/${SIMC_Suffix_File}* 1> /dev/null 2>&1; then
+            mv ${base_dir}/${SIMC_Suffix_File}* "$dest_dir/"
+        fi
     fi
-fi
+done
 
 ################################################################################################################################                                                                                   
 
@@ -214,9 +232,6 @@ sleep 3
 
 # Section for MM Cut Check script
 elif [[ $m_flag == "true" ]]; then
-    if [ ! -d "${UTILPATH}/LTSep_CSVs/mm_offset_cut_csv" ]; then
-    mkdir -p "${UTILPATH}/LTSep_CSVs/mm_offset_cut_csv"
-    fi
     while true; do
         read -p "Do you wish to do Missing Mass cut check for physics setting ${PHY_SETTING}? (Please answer yes or no) " yn
         case $yn in
@@ -263,9 +278,6 @@ sleep 3
 
 # Section for Diamond Cut script
 elif [[ $d_flag == "true" ]]; then
-    if [ ! -d "${UTILPATH}/LTSep_CSVs/diamond_cut_csv" ]; then
-    mkdir -p "${UTILPATH}/LTSep_CSVs/diamond_cut_csv"
-    fi
     while true; do
         read -p "Do you wish to do Diamond cut check for physics setting ${PHY_SETTING}? (Please answer yes or no) " yn
         case $yn in
@@ -312,9 +324,6 @@ sleep 3
 
 # Section for  t-resolution script
 elif [[ $e_flag == "true" ]]; then
-    if [ ! -d "${UTILPATH}/LTSep_CSVs/t_resolution_csv" ]; then
-    mkdir -p "${UTILPATH}/LTSep_CSVs/t_resolution_csv"
-    fi
     while true; do
         read -p "Do you wish to do t-resolution for physics setting ${PHY_SETTING_C}? (Please answer yes or no) " yn
         case $yn in
@@ -327,12 +336,12 @@ elif [[ $e_flag == "true" ]]; then
                     if [[ $option2 =~ ^[Yy](es)?$ ]]; then
                         rm "$output_file"
                         echo "Reprocessing"
-                        python3 ${UTILPATH}/scripts/yield/src/pion_simc_t_resol.py ${PHY_SETTING_C} ${SIMC_Suffix_C}
+                        python3 ${UTILPATH}/scripts/yield/src/pion_simc_t_resol.py ${PHY_SETTING_C} ${SIMC_SETTING_C}
                     else
                         echo "Skipping python t-resolution script step"
                     fi
                 else
-                    python3 ${UTILPATH}/scripts/yield/src/pion_simc_t_resol.py ${PHY_SETTING_C} ${SIMC_Suffix_C}
+                    python3 ${UTILPATH}/scripts/yield/src/pion_simc_t_resol.py ${PHY_SETTING_C} ${SIMC_SETTING_C}
                 fi
 
                 # Directory setup
@@ -361,9 +370,6 @@ sleep 3
 
 # Section for t-binning script
 elif [[ $t_flag == "true" ]]; then
-    if [ ! -d "${UTILPATH}/LTSep_CSVs/t_binning_csv" ]; then
-    mkdir -p "${UTILPATH}/LTSep_CSVs/t_binning_csv"
-    fi
     while true; do
         read -p "Do you wish to do t-binning for physics setting ${PHY_SETTING_C}? (Please answer yes or no) " yn
         case $yn in
@@ -410,9 +416,6 @@ sleep 3
 
 # Section for phi-bining and physics yield calculation Script
 elif [[ $p_flag == "true" ]]; then
-    if [ ! -d "${UTILPATH}/LTSep_CSVs/physics_yields_csv/" ]; then
-    mkdir -p "${UTILPATH}/LTSep_CSVs/physics_yields_csv/"
-    fi
     while true; do
         read -p "Do you wish to do phi binning and calculate yields for physics setting ${PHY_SETTING}? (Please answer yes or no) " yn
         case $yn in
@@ -460,9 +463,6 @@ sleep 3
 
 # Section for phi-bining and simc yield calculation Script
 elif [[ $s_flag == "true" ]]; then
-    if [ ! -d "${UTILPATH}/LTSep_CSVs/simc_yields_csv/" ]; then
-    mkdir -p "${UTILPATH}/LTSep_CSVs/simc_yields_csv/"
-    fi
     while true; do
         read -p "Do you wish to do t & phi binning and calculate yields for simc setting ${PHY_SETTING}? (Please answer yes or no) " yn
         case $yn in
@@ -507,9 +507,6 @@ sleep 3
 #################################################################################################################################
 # Section for Data and SIMC comparison Script
 elif [[ $r_flag == "true" ]]; then
-    if [ ! -d "${UTILPATH}/LTSep_CSVs/datasimc_ratios_csv" ]; then
-        mkdir -p "${UTILPATH}/LTSep_CSVs/datasimc_ratios_csv"
-    fi
     while true; do
         read -p "Do you wish to do Data & SIMC comparison and plotting for physics setting ${PHY_SETTING}? (Please answer yes or no) " yn
         case $yn in
@@ -555,12 +552,6 @@ sleep 3
 #################################################################################################################################
 # Section for Average Kinematics and Yield Calculation Script
 elif [[ $a_flag == "true" ]]; then
-    if [ ! -d "${UTILPATH}/LTSep_CSVs/avg_kinematics_csv" ]; then
-        mkdir -p "${UTILPATH}/LTSep_CSVs/avg_kinematics_csv"
-    fi
-        if [ ! -d "${UTILPATH}/LTSep_CSVs/ltsep_input_csv" ]; then
-        mkdir -p "${UTILPATH}/LTSep_CSVs/ltsep_input_csv"
-    fi
     while true; do
         read -p "Do you wish to calculate average kinematics and yields for physics setting ${PHY_SETTING_C}? (Please answer yes or no) " yn
         case $yn in

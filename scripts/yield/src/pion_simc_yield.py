@@ -86,9 +86,9 @@ print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, R
 
 # Input file location and variables taking
 rootFile_SIMC = "%s/%s.root" % (SIMCPATH, SIMC_Suffix)
-mmcut_csv_file = "%s/%s_mm_offsets_cuts_parameters.csv" % (MMCUT_CSV, setting_name)
-dcut_csv_file = "%s/%s_diamond_cut_parameters.csv" % (DCUT_CSV, setting_name)
-tbin_csv_file  = "%s/%s_tbinning_yields_pions.csv" % (TBINCSVPATH, setting_name)
+mmcut_csv_file = "%s/%s/%s_mm_offsets_cuts_parameters.csv" % (MMCUT_CSV, physet_dir_name, setting_name)
+dcut_csv_file = "%s/%s/%s_diamond_cut_parameters.csv" % (DCUT_CSV, physet_dir_name, setting_name)
+tbin_csv_file  = "%s/%s/%s_tbinning_yields_pions.csv" % (TBINCSVPATH, physet_dir_name, setting_name)
 
 ###################################################################################################################################################
 
@@ -98,6 +98,8 @@ print("-"*40)
 # SIMC Cuts for Pions Selection
 HMS_Acceptance = lambda event: (event.hsdelta >= -8.0) & (event.hsdelta <= 8.0) & (event.hsxpfp >= -0.08) & (event.hsxpfp <= 0.08) & (event.hsypfp >= -0.045) & (event.hsypfp <= 0.045)
 SHMS_Acceptance = lambda event: (event.ssdelta >= -10.0) & (event.ssdelta <= 20.0) & (event.ssxpfp >= -0.06) & (event.ssxpfp <= 0.06) & (event.ssypfp >= -0.04) & (event.ssypfp <= 0.04)
+#SHMS_Aero_Cut = lambda event: (event.paero_x_det > -55.0) & (event.paero_x_det < 55.0) & (event.paero_y_det > -50) & (event.paero_y_det < 50) # Aerogel tray n = 1.030
+SHMS_Aero_Cut = lambda event: (event.paero_x_det > -45.0) & (event.paero_x_det < 45.0) & (event.paero_y_det > -30) & (event.paero_y_det < 30) # Aerogel tray n = 1.011
 
 # Cuts for Pions Selection - Change according to your data
 # Read the vertices from the CSV file
@@ -226,7 +228,7 @@ print ("normfac_simc: ", normfac_simc)
 print("-"*40)
 
 # Define the output CSV file name
-normfact_pions_path =  "%s/LTSep_CSVs/simc_yields_csv/%s_Physics_SIMC_Normfact_Calculation.csv" % (UTILPATH, setting_name)
+normfact_pions_path =  "%s/LTSep_CSVs/simc_yields_csv/%s/%s_Physics_SIMC_Normfact_Calculation.csv" % (UTILPATH, physet_dir_name, setting_name)
 
 # Define CSV header
 header = ["Physics_Setting", "simc_normfactor", "simc_nevents", "normfac_simc"]
@@ -328,7 +330,7 @@ Uncut_Pion_Events_SIMC_tree = infile_SIMC.Get("h10")
 
 # Fill the histograms with the data
 for event in Uncut_Pion_Events_SIMC_tree:
-    if HMS_Acceptance(event) and SHMS_Acceptance(event) and SIMC_MMpi_Cut(event) and Diamond_Cut(event):
+    if HMS_Acceptance(event) and SHMS_Acceptance(event) and SHMS_Aero_Cut(event) and SIMC_MMpi_Cut(event) and Diamond_Cut(event):
         for tbin_cut, (tmin, tmax) in zip(tbin_cuts, zip(t_min_values, t_max_values)):
             if tbin_cut(event):
                 # Fill Q² and W (once per t-bin)
@@ -344,7 +346,9 @@ for event in Uncut_Pion_Events_SIMC_tree:
                             hist_set["simc"]["theta"].Fill(event.thetapq, event.Weight)
                         break  # Only fill Q2/W once for this t-bin
                 # Fill MMπ per t–φ bin
-                phi_deg = event.phipq * (180 / math.pi) + 180  # Convert φ to degrees in [0, 360]
+                phi_deg = event.phipq * (180 / math.pi) # Convert φ to degrees
+                if phi_deg < 0:
+                    phi_deg += 360  # Adjust to [0, 360]
                 for tmin_hist, tmax_hist, phimin_hist, phimax_hist, hist_set in data_histograms_by_tphi_cut:
                     if tmin == tmin_hist and tmax == tmax_hist and phimin_hist <= phi_deg <= phimax_hist:
                         hist_set["simc"]["MMpi"].Fill(event.missmass, event.Weight)
@@ -352,12 +356,14 @@ for event in Uncut_Pion_Events_SIMC_tree:
 
 for event in Uncut_Pion_Events_SIMC_tree:
     # Apply the MMpi cut and Diamond cut
-    if HMS_Acceptance(event) and SHMS_Acceptance(event) and SIMC_MMpi_Cut(event) and Diamond_Cut(event):
+    if HMS_Acceptance(event) and SHMS_Acceptance(event) and SHMS_Aero_Cut(event) and SIMC_MMpi_Cut(event) and Diamond_Cut(event):
         # Loop over t-bins
         for tbin_cut, (tmin, tmax) in zip(tbin_cuts, zip(t_min_values, t_max_values)):
             if tbin_cut(event):  # Apply the t-bin cut
                 # Fill MMπ per t–φ bin
-                phi_deg = event.phipq * (180 / math.pi) + 180  # Convert φ to degrees in [0, 360]
+                phi_deg = event.phipq * (180 / math.pi)  # Convert φ to degrees
+                if phi_deg < 0:
+                    phi_deg += 360  # Adjust to [0, 360]
                 for tmin_hist, tmax_hist, phimin_hist, phimax_hist, hist_set in data_histograms_by_tphi_cut:
                     if tmin == tmin_hist and tmax == tmax_hist and phimin_hist <= phi_deg <= phimax_hist:
                         hist_set["simc_raw"]["MMpi"].Fill(event.missmass)
@@ -418,7 +424,7 @@ for tmin, tmax in zip(t_min_values, t_max_values):
             break
 
 # Define output CSV file path for average kinematics
-avg_kinematics_path = "%s/LTSep_CSVs/simc_yields_csv/%s_Physics_Avg_SIMC_Kinematics.csv" % (UTILPATH, setting_name)
+avg_kinematics_path = "%s/LTSep_CSVs/simc_yields_csv/%s/%s_Physics_Avg_SIMC_Kinematics.csv" % (UTILPATH, physet_dir_name, setting_name)
 
 # Define the header
 avg_kin_header = [
@@ -585,7 +591,7 @@ for bin_key in dN_simc_MMpi:
 print("=" * 40)
 
 # Define the output CSV file name
-yields_pions_path =  "%s/LTSep_CSVs/simc_yields_csv/%s_Physics_SIMC_Yield.csv" % (UTILPATH, setting_name)
+yields_pions_path =  "%s/LTSep_CSVs/simc_yields_csv/%s/%s_Physics_SIMC_Yield.csv" % (UTILPATH, physet_dir_name, setting_name)
 
 # Updated header with tbin_number and phibin_number included
 header = ["Physics_Setting", "tbin_number", "t_min", "t_max", "phibin_number", "phi_min", "phi_max", "Counts", "simc_yield", "simc_yield_error", "%error/yield"]

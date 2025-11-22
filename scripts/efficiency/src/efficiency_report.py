@@ -42,6 +42,13 @@ def dictionary(UTILPATH,ROOTPrefix,runNum,MaxEvent, DEBUG=False):
             'HMS_Run_Length': None,
             'BCM_Cut_SHMS_Run_Length': None,
             'BCM_Cut_HMS_Run_Length': None,
+            'Corrected_Current': None,
+            'Corrected_Current_ERROR': None,
+            'Corrected_Charge': None,
+            'Corrected_Charge_ERROR': None,
+            'Target_BoilingCorr': None,
+            'Target_BoilingCorr_ERROR': None,
+            'Target_BoilingCorr_SysUncer': None,
             'Ps1_factor': None,
             'Ps2_factor': None,
             'Ps3_factor': None,
@@ -79,6 +86,7 @@ def dictionary(UTILPATH,ROOTPrefix,runNum,MaxEvent, DEBUG=False):
             'Non_Scaler_EDTM_Live_Time_ERROR': None,
             'Non_Scaler_EDTM_Live_Time_Corr': None,
             'Non_Scaler_EDTM_Live_Time_Corr_ERROR': None,
+            'Non_Scaler_EDTM_Live_Time_Syst_Uncer': None,
             # CPULT
             'HMS_CPULT': None,
             'HMS_CPULT_ERROR': None,
@@ -86,6 +94,12 @@ def dictionary(UTILPATH,ROOTPrefix,runNum,MaxEvent, DEBUG=False):
             'SHMS_CPULT_ERROR': None,
             'COIN_CPULT': None,
             'COIN_CPULT_ERROR': None,
+            # Coin Blocking Corrections
+            'CoinBlocking': None,
+            'CoinBlocking_ERROR': None,
+            'CoinBlocking_SysUp': None,
+            'CoinBlocking_SysDown': None,
+            'CoinBlocking_Sys': None,
             # Tracking Efficiencies
             "SHMS_Elec_ALL_TRACK_EFF" : None,
             "SHMS_Elec_ALL_TRACK_EFF_ERROR" : None,
@@ -203,36 +217,35 @@ def dictionary(UTILPATH,ROOTPrefix,runNum,MaxEvent, DEBUG=False):
             data = line.split(':')
             if len(data) < 2:
                 continue  # Skip invalid lines
-            for key,val in effDict.items():
+
+            # Normalize key and value: strip PLT_, and unify ± to +-
+            key_field = data[0].strip()
+            if key_field.startswith("PLT_"):
+                key_field = key_field[4:]
+            value_field = data[1].replace("±", "+-")
+
+            for key, val in effDict.items():
+                # Extract error only from the line whose key exactly matches the base (nkey)
                 if "ERROR" in key:
-                    nkey = key.replace("_ERROR","")
-                    if nkey in data[0]:
+                    nkey = key.replace("_ERROR", "")
+                    if key_field == nkey:
                         if DEBUG:
-                            print("ERROR:",nkey,"\t",key)
+                            print("ERROR:", nkey, "\t", key)
                             print(data)
-                        # Try to extract the error part after "+-"
                         try:
-                            effDict[key] = float(re.compile(r'[^\d.]+').sub("", data[1].split("+-")[1]))
+                            effDict[key] = float(re.compile(r'[^\d.]+').sub("", value_field.split("+-")[1]))
                         except IndexError:
-                            effDict[key] = None  # Handle cases where error is missing
-                if key in data[0]:
+                            pass  # leave as None if no "+-"
+
+                # Extract value only when the key matches exactly; prevents SysUncer overwrites
+                if key_field == key:
                     if DEBUG:
                         print(key)
                         print(data)
-                    # Ensure it is an HMS key and not SHMS
-                    if "H" == key[0]:
-                        if "SHMS" not in data[0]:
-                            if "+-" in data[1]:  # Extract the value before "+-"
-                                effDict[key] = float(re.compile(r'[^\d.]+').sub("", data[1].split("+-")[0]))
-                            else:  # If no "+-", just extract the value
-                                effDict[key] = float(re.compile(r'[^\d.]+').sub("", data[1]))
-                        else:
-                            continue  # Skip SHMS keys
-                    # Handle non-HMS keys
-                    elif "+-" in data[1]:
-                        effDict[key] = float(re.compile(r'[^\d.]+').sub("", data[1].split("+-")[0]))
+                    if "+-" in value_field:
+                        effDict[key] = float(re.compile(r'[^\d.]+').sub("", value_field.split("+-")[0]))
                     else:
-                        effDict[key] = float(re.compile(r'[^\d.]+').sub("", data[1]))
+                        effDict[key] = float(re.compile(r'[^\d.]+').sub("", value_field))
 
         if DEBUG:
             for key, val in effDict.items():

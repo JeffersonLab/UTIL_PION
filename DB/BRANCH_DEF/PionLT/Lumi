@@ -85,12 +85,4 @@ T_coin_pFADC_TREF_ROC2_adcPulseTimeRaw
 T_coin_hFADC_TREF_ROC1_adcPulseTimeRaw
 T_coin_pEDTM_tdcTimeRaw
 T_coin_pEDTM_tdcTime
-CTime_ePiCoinTime_ROC1
-CTime_ePiCoinTime_ROC2
-CTime_eKCoinTime_ROC1
-CTime_eKCoinTime_ROC2
-CTime_epCoinTime_ROC1
-CTime_epCoinTime_ROC2
-CTime_CoinTime_RAW_ROC1
-CTime_CoinTime_RAW_ROC2
 EvtType

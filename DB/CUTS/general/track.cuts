@@ -15,8 +15,3 @@ p_track_after = {"P_hod_goodscinhit" : (P_hod_goodscinhit == track.P_hodscin)}, 
 ##################
 h_goodscinhit = {"H_hod_goodscinhit" : (H_hod_goodscinhit == 1)}
 p_goodscinhit = {"P_hod_goodscinhit" : (P_hod_goodscinhit == 1)}
-##################
-# A track        #
-##################
-p_ntrack = {"P_dc_ntrack" : (P_dc_ntrack > track.P_dcn)}
-h_ntrack = {"H_dc_ntrack" : (H_dc_ntrack > track.H_dcn)}

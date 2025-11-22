@@ -59,6 +59,10 @@ DATA_Suffix_highepsright = "{}_higheps_right".format(PHY_SETTING)
 DATA_Suffix_highepscenter = "{}_higheps_center".format(PHY_SETTING)
 DATA_Suffix_highepsleft = "{}_higheps_left".format(PHY_SETTING)
 
+# Extract the first three words from PHY_SETTING for the CSV file name
+setting_name = "_".join(PHY_SETTING.split("_")[:3])
+physet_dir_name = "%s_std" % (setting_name)
+
 ################################################################################################################################################
 '''
 ltsep package import and pathing definitions
@@ -88,10 +92,9 @@ print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, R
 Pion_Analysis_Distributions = "%s/%s_%s_ProdCoin_Pion_Analysis_tbinning_Distributions.pdf" % (OUTPATH, PHY_SETTING, MaxEvent)
 
 # Extract the first three words from PHY_SETTING for the CSV file name
-setting_name = "_".join(PHY_SETTING.split("_")[:3])
-mmcut_csv_file = "%s/%s_mm_offsets_cuts_parameters.csv" % (MMCUT_CSV, setting_name)
-dcut_csv_file = "%s/%s_diamond_cut_parameters.csv" % (DCUT_CSV, setting_name)
-simc_tres_csv_file = "%s/%s_simc_t_resolution_parameters.csv" % (SIMC_tRES_CSV, setting_name)
+mmcut_csv_file = "%s/%s/%s_mm_offsets_cuts_parameters.csv" % (MMCUT_CSV, physet_dir_name, setting_name)
+dcut_csv_file = "%s/%s/%s_diamond_cut_parameters.csv" % (DCUT_CSV, physet_dir_name, setting_name)
+simc_tres_csv_file = "%s/%s/%s_simc_t_resolution_parameters.csv" % (SIMC_tRES_CSV, physet_dir_name, setting_name)
 
 # Input file location and variables taking
 rootFile_DATA_lowepscenter = "%s/%s_%s_%s.root" % (OUTPATH, DATA_Suffix_lowepscenter, MaxEvent, DATA_Suffix)
@@ -639,8 +642,8 @@ print("####################################\n")
 #tbin_pions_max = [113,126,138,150,166,186,250]
 
 # 5 t-bins
-tbin_pions_min = [81,119,136,155,178]
-tbin_pions_max = [118,135,154,177,250]
+tbin_pions_min = [81,119,137,156,180]
+tbin_pions_max = [118,136,155,179,250]
 
 dN_data_pions_lowe = np.array([array.array('d', [0.0])] * len(tbin_pions_min))
 dN_data_pions_highe = np.array([array.array('d', [0.0])] * len(tbin_pions_min))
@@ -661,7 +664,7 @@ print("-"*40)
 print(df_yields_pions.head(8))
 print("-"*40)
 
-yields_pions_path =  "%s/LTSep_CSVs/t_binning_csv/%s_tbinning_yields_pions.csv" % (UTILPATH, PHY_SETTING)
+yields_pions_path =  "%s/LTSep_CSVs/t_binning_csv/%s/%s_tbinning_yields_pions.csv" % (UTILPATH, physet_dir_name, PHY_SETTING)
 df_yields_pions.to_csv(yields_pions_path, encoding='utf-8', index=False, header=True)
 
 #############################################################################################################################################

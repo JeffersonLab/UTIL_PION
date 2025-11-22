@@ -77,8 +77,9 @@ RUNLISTPATH = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_BATCH/InputRunLis
 MMCUT_CSV   = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/LTSep_CSVs/mm_offset_cut_csv" % (USER)
 EFF_CSV     = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/efficiencies" % (USER)
 
-# Define paths SIMC
-physet_dir_name = "_".join(PHY_SETTING.split("_")[:3]) + "_std"
+# Extract the first three words from PHY_SETTING for the CSV file name
+setting_name = "_".join(PHY_SETTING.split("_")[:3])
+physet_dir_name = "%s_std" % (setting_name)
 SIMCPATH = "/volatile/hallc/c-pionlt/%s/OUTPUT/Analysis/SIMC/%s/" % (USER, physet_dir_name)
 
 #################################################################################################################################################
@@ -87,9 +88,6 @@ SIMCPATH = "/volatile/hallc/c-pionlt/%s/OUTPUT/Analysis/SIMC/%s/" % (USER, physe
 print("Running as %s on %s, hallc_replay_lt path assumed as %s" % (USER, HOST, REPLAYPATH))
 Pion_Analysis_Distributions = "%s/%s_%s_ProdCoin_Pion_Analysis_Diamondcut_Distributions.pdf" % (OUTPATH, PHY_SETTING, MaxEvent)
 
-# Extract the first three words from PHY_SETTING for the CSV file name
-setting_name = "_".join(PHY_SETTING.split("_")[:3])
-
 # Input file location and variables taking
 rootFile_DATA = "%s/%s_%s_%s.root" % (OUTPATH, PHY_SETTING, MaxEvent, DATA_Suffix)
 rootFile_DUMMY = "%s/%s_%s_%s.root" % (OUTPATH, PHY_SETTING, MaxEvent, DUMMY_Suffix)
@@ -97,7 +95,7 @@ rootFile_SIMC = "%s/%s.root" % (SIMCPATH, SIMC_Suffix)
 data_run_list = "%s/%s" % (RUNLISTPATH, DATA_RUN_LIST)
 dummy_run_list = "%s/%s" % (RUNLISTPATH, DUMMY_RUN_LIST)
 csv_file = "%s/%s.csv" % (EFF_CSV, CSV_FILE)
-mmcut_csv_file = "%s/%s_mm_offsets_cuts_parameters.csv" % (MMCUT_CSV, setting_name)
+mmcut_csv_file = "%s/%s/%s_mm_offsets_cuts_parameters.csv" % (MMCUT_CSV, physet_dir_name, setting_name)
 
 ###################################################################################################################################################
 
@@ -105,6 +103,8 @@ mmcut_csv_file = "%s/%s_mm_offsets_cuts_parameters.csv" % (MMCUT_CSV, setting_na
 # SIMC Cuts for Pions Selection
 HMS_Acceptance = lambda event: (event.hsdelta >= -8.0) & (event.hsdelta <= 8.0) & (event.hsxpfp >= -0.08) & (event.hsxpfp <= 0.08) & (event.hsypfp >= -0.045) & (event.hsypfp <= 0.045)
 SHMS_Acceptance = lambda event: (event.ssdelta >= -10.0) & (event.ssdelta <= 20.0) & (event.ssxpfp >= -0.06) & (event.ssxpfp <= 0.06) & (event.ssypfp >= -0.04) & (event.ssypfp <= 0.04)
+#SHMS_Aero_Cut = lambda event: (event.paero_x_det > -55.0) & (event.paero_x_det < 55.0) & (event.paero_y_det > -50) & (event.paero_y_det < 50) # Aerogel tray n = 1.030
+SHMS_Aero_Cut = lambda event: (event.paero_x_det > -45.0) & (event.paero_x_det < 45.0) & (event.paero_y_det > -30) & (event.paero_y_det < 30) # Aerogel tray n = 1.011
 
 # Read the MMpi cut values from the CSV file
 try:
@@ -344,7 +344,7 @@ for event in Cut_Pion_Events_Random_Dummy_tree:
 
 # Fill histograms from SIMC ROOT File
 for event in Uncut_Pion_Events_SIMC_tree:
-    if HMS_Acceptance(event) & SHMS_Acceptance(event) & SIMC_MMpi_Cut(event):        
+    if HMS_Acceptance(event) & SHMS_Acceptance(event) & SHMS_Aero_Cut(event) & SIMC_MMpi_Cut(event):        
             Q2_pions_simc_cut_all.Fill(event.Q2, event.Weight)
             W_pions_simc_cut_all.Fill(event.W, event.Weight)
             Q2_vs_W_pions_simc_cut_all.Fill(event.Q2, event.W, event.Weight)
@@ -547,11 +547,8 @@ c1_delta.Print(Pion_Analysis_Distributions)
 
 #############################################################################################################################################
 
-# Extract the first three words from PHY_SETTING for the CSV file name
-csv_name = "_".join(PHY_SETTING.split("_")[:3])
-
 # Writing Offsets and Cuts to CSV file
-csv_output_path = "%s/LTSep_CSVs/diamond_cut_csv/%s_diamond_cut_parameters.csv" % (UTILPATH, csv_name)
+csv_output_path = "%s/LTSep_CSVs/diamond_cut_csv/%s/%s_diamond_cut_parameters.csv" % (UTILPATH, physet_dir_name, setting_name)
 
 # Use the already defined vertices
 vertices = {

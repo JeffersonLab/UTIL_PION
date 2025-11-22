@@ -24,7 +24,7 @@ p_starttime = {"P_hod_goodstarttime" : (P_hod_goodstarttime == misc.goodstarttim
 starttime = {"P_hod_goodstarttime" : (P_hod_goodstarttime == misc.goodstarttime)}, {"H_hod_goodstarttime" : (H_hod_goodstarttime == misc.goodstarttime)}
 goodscinhit = {"P_hod_goodscinhit" : (P_hod_goodscinhit == misc.goodscinhit)}, {"H_hod_goodscinhit" : (H_hod_goodscinhit == misc.goodscinhit)}
 # cal cut
-cal_edtm = {"P_cal_ped" : (P_cal_etottracknorm < 0.02)}, {"H_cal_ped" : (H_cal_etottracknorm < 0.02)}
+cal_edtm = {"P_cal_ped" : (P_cal_etottracknorm == 0)}, {"H_cal_ped" : (H_cal_etottracknorm == 0)}
 # cer cut
 #cer_edtm = {"P_hgcer_ped" : (P_hgcer_npeSum == 0)}, {"P_ngcer_ped" : (P_ngcer_npeSum == 0)},{"P_aero_ped" : (P_aero_npeSum == 0)},{"H_cer_ped" : (H_cer_npeSum == 0)}
 ##############
