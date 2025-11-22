@@ -6,11 +6,13 @@ block H.cer.*
 block P.aero.*
 block P.hgcer.*
 block P.ngcer.*
+block P.hod.goodstarttime
 block P.hod.1x.*
 block P.hod.1y.*
 block P.hod.2x.*
 block P.hod.2y.*
 block P.cal.etotnorm
+block P.dc.ntrack
 block P.dc.1u1.rawtdc
 block P.dc.1u1.nhit
 block P.dc.1u2.rawtdc
@@ -47,10 +49,12 @@ block H.cal.1pr.*
 block H.cal.2ta.*
 block H.cal.3ta.*
 block H.cal.4ta.*
+block H.hod.goodstarttime
 block H.hod.1x.*
 block H.hod.1y.*
 block H.hod.2x.*
 block H.hod.2y.*
+block H.dc.ntrack
 block H.dc.x_fp
 block H.dc.xp_fp
 block H.dc.y_fp

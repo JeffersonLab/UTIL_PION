@@ -832,6 +832,21 @@ class Root():
             if branch == "CTime_epCoinTime_ROC1":
                 CTime_epCoinTime_ROC1 = e_tree["CTime.epCoinTime_ROC1"].array()
                 treeDict.update({"CTime_epCoinTime_ROC1" : CTime_epCoinTime_ROC1})
+            if branch == "CTime_eKCoinTime_ROC2":
+                CTime_eKCoinTime_ROC2 = e_tree["CTime.eKCoinTime_ROC2"].array()
+                treeDict.update({"CTime_eKCoinTime_ROC2" : CTime_eKCoinTime_ROC2})
+            if branch == "CTime_ePiCoinTime_ROC2":
+                CTime_ePiCoinTime_ROC2 = e_tree["CTime.ePiCoinTime_ROC2"].array()
+                treeDict.update({"CTime_ePiCoinTime_ROC2" : CTime_ePiCoinTime_ROC2})
+            if branch == "CTime_epCoinTime_ROC2":
+                CTime_epCoinTime_ROC2 = e_tree["CTime.epCoinTime_ROC2"].array()
+                treeDict.update({"CTime_epCoinTime_ROC2" : CTime_epCoinTime_ROC2})
+            if branch == "CTime_CoinTime_RAW_ROC1":
+                CTime_CoinTime_RAW_ROC1 = e_tree["CTime.CoinTime_RAW_ROC1"].array()
+                treeDict.update({"CTime_CoinTime_RAW_ROC1" : CTime_CoinTime_RAW_ROC1})
+            if branch == "CTime_CoinTime_RAW_ROC2":
+                CTime_CoinTime_RAW_ROC2 = e_tree["CTime.CoinTime_RAW_ROC2"].array()
+                treeDict.update({"CTime_CoinTime_RAW_ROC2" : CTime_CoinTime_RAW_ROC2})
 
             if branch == "P_RF_tdcTime":
                 P_RF_tdcTime = e_tree["T.coin.pRF_tdcTime"].array()
