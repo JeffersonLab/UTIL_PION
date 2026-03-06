@@ -49,7 +49,7 @@ if len(sys.argv)-1!=1:
 # Input params - run number and max number of events
 PHY_SETTING = sys.argv[1]
 # Extract the first three words from PHY_SETTING for the CSV file name
-setting_name = "_".join(PHY_SETTING.split("_")[:4])
+setting_name = "_".join(PHY_SETTING.split("_")[:5])
 
 # Constructing inout file names
 DATA_ROOTFILE_SUFFIX = "%s_-1_ProdCoin_Analysed_Data" % (setting_name)
@@ -86,27 +86,27 @@ rootFile_DUMMY = "%s/%s.root" % (OUTPATH, DUMMY_ROOTFILE_SUFFIX)
 ###################################################################################################################################################
 
 nbins = 200
-RF_min = 0.0
-RF_max = 4.0
+Aero_min = 0.0
+Aero_max = 50.0
 
 # Defining Histograms for Pions
-RF_Eff_Ndid_data_prompt_cut_all = ROOT.TH1D("RF_Eff_Ndid_data_prompt_cut_all", "RF Efficiency Ndid Distribution; RF Time (ns); Counts", nbins, RF_min, RF_max)
-RF_Eff_Ndid_data_random_cut_all = ROOT.TH1D("RF_Eff_Ndid_data_random_cut_all", "RF Efficiency Ndid Distribution; RF Time (ns); Counts", nbins, RF_min, RF_max) 
-RF_Eff_Nshould_data_prompt_cut_all = ROOT.TH1D("RF_Eff_Nshould_data_prompt_cut_all", "RF Efficiency Nshould Distribution; RF Time (ns); Counts", nbins, RF_min, RF_max)
-RF_Eff_Nshould_data_random_cut_all = ROOT.TH1D("RF_Eff_Nshould_data_random_cut_all", "RF Efficiency Nshould Distribution; RF Time (ns); Counts", nbins, RF_min, RF_max)
+Aero_Eff_Ndid_data_prompt_cut_all = ROOT.TH1D("Aero_Eff_Ndid_data_prompt_cut_all", "Aero Efficiency Ndid Distribution; P_aero_npeSum; Counts", nbins, Aero_min, Aero_max)
+Aero_Eff_Ndid_data_random_cut_all = ROOT.TH1D("Aero_Eff_Ndid_data_random_cut_all", "Aero Efficiency Ndid Distribution; P_aero_npeSum; Counts", nbins, Aero_min, Aero_max) 
+Aero_Eff_Nshould_data_prompt_cut_all = ROOT.TH1D("Aero_Eff_Nshould_data_prompt_cut_all", "Aero Efficiency Nshould Distribution; P_aero_npeSum; Counts", nbins, Aero_min, Aero_max)
+Aero_Eff_Nshould_data_random_cut_all = ROOT.TH1D("Aero_Eff_Nshould_data_random_cut_all", "Aero Efficiency Nshould Distribution; P_aero_npeSum; Counts", nbins, Aero_min, Aero_max)
 
-RF_Eff_Ndid_dummy_prompt_cut_all = ROOT.TH1D("RF_Eff_Ndid_dummy_prompt_cut_all", "RF Efficiency Ndid Distribution; RF Time (ns); Counts", nbins, RF_min, RF_max)
-RF_Eff_Ndid_dummy_random_cut_all = ROOT.TH1D("RF_Eff_Ndid_dummy_random_cut_all", "RF Efficiency Ndid Distribution; RF Time (ns); Counts", nbins, RF_min, RF_max) 
-RF_Eff_Nshould_dummy_prompt_cut_all = ROOT.TH1D("RF_Eff_Nshould_dummy_prompt_cut_all", "RF Efficiency Nshould Distribution; RF Time (ns); Counts", nbins, RF_min, RF_max)
-RF_Eff_Nshould_dummy_random_cut_all = ROOT.TH1D("RF_Eff_Nshould_dummy_random_cut_all", "RF Efficiency Nshould Distribution; RF Time (ns); Counts", nbins, RF_min, RF_max)
+Aero_Eff_Ndid_dummy_prompt_cut_all = ROOT.TH1D("Aero_Eff_Ndid_dummy_prompt_cut_all", "Aero Efficiency Ndid Distribution; P_aero_npeSum; Counts", nbins, Aero_min, Aero_max)
+Aero_Eff_Ndid_dummy_random_cut_all = ROOT.TH1D("Aero_Eff_Ndid_dummy_random_cut_all", "Aero Efficiency Ndid Distribution; P_aero_npeSum; Counts", nbins, Aero_min, Aero_max) 
+Aero_Eff_Nshould_dummy_prompt_cut_all = ROOT.TH1D("Aero_Eff_Nshould_dummy_prompt_cut_all", "Aero Efficiency Nshould Distribution; P_aero_npeSum; Counts", nbins, Aero_min, Aero_max)
+Aero_Eff_Nshould_dummy_random_cut_all = ROOT.TH1D("Aero_Eff_Nshould_dummy_random_cut_all", "Aero Efficiency Nshould Distribution; P_aero_npeSum; Counts", nbins, Aero_min, Aero_max)
 
-Rf_Eff_Ndid_randomsub_data_cut_all = ROOT.TH1D("Rf_Eff_Ndid_randomsub_data_cut_all", "RF Efficiency Ndid Distribution; RF Time (ns); Counts", nbins, RF_min, RF_max)
-Rf_Eff_Nshould_randomsub_data_cut_all = ROOT.TH1D("Rf_Eff_Nshould_randomsub_data_cut_all", "RF Efficiency Nshould Distribution; RF Time (ns); Counts", nbins, RF_min, RF_max)
-Rf_Eff_Ndid_randomsub_dummy_cut_all = ROOT.TH1D("Rf_Eff_Ndid_randomsub_dummy_cut_all", "RF Efficiency Ndid Distribution; RF Time (ns); Counts", nbins, RF_min, RF_max)
-Rf_Eff_Nshould_randomsub_dummy_cut_all = ROOT.TH1D("Rf_Eff_Nshould_randomsub_dummy_cut_all", "RF Efficiency Nshould Distribution; RF Time (ns); Counts", nbins, RF_min, RF_max)
+Aero_Eff_Ndid_randomsub_data_cut_all = ROOT.TH1D("Aero_Eff_Ndid_randomsub_data_cut_all", "Aero Efficiency Ndid Distribution; P_aero_npeSum; Counts", nbins, Aero_min, Aero_max)
+Aero_Eff_Nshould_randomsub_data_cut_all = ROOT.TH1D("Aero_Eff_Nshould_randomsub_data_cut_all", "Aero Efficiency Nshould Distribution; P_aero_npeSum; Counts", nbins, Aero_min, Aero_max)
+Aero_Eff_Ndid_randomsub_dummy_cut_all = ROOT.TH1D("Aero_Eff_Ndid_randomsub_dummy_cut_all", "Aero Efficiency Ndid Distribution; P_aero_npeSum; Counts", nbins, Aero_min, Aero_max)
+Aero_Eff_Nshould_randomsub_dummy_cut_all = ROOT.TH1D("Aero_Eff_Nshould_randomsub_dummy_cut_all", "Aero Efficiency Nshould Distribution; P_aero_npeSum; Counts", nbins, Aero_min, Aero_max)
 
-Rf_Eff_Ndid_dummysub_data_cut_all = ROOT.TH1D("Rf_Eff_Ndid_dummysub_data_cut_all", "RF Efficiency Ndid Distribution; RF Time (ns); Counts", nbins, RF_min, RF_max)
-Rf_Eff_Nshould_dummysub_data_cut_all = ROOT.TH1D("Rf_Eff_Nshould_dummysub_data_cut_all", "RF Efficiency Nshould Distribution; RF Time (ns); Counts", nbins, RF_min, RF_max)
+Aero_Eff_Ndid_dummysub_data_cut_all = ROOT.TH1D("Aero_Eff_Ndid_dummysub_data_cut_all", "Aero Efficiency Ndid Distribution; P_aero_npeSum; Counts", nbins, Aero_min, Aero_max)
+Aero_Eff_Nshould_dummysub_data_cut_all = ROOT.TH1D("Aero_Eff_Nshould_dummysub_data_cut_all", "Aero Efficiency Nshould Distribution; P_aero_npeSum; Counts", nbins, Aero_min, Aero_max)
 
 ##########################################################################################################################################################################################################
 
@@ -121,7 +121,7 @@ Cut_Pion_Events_Dummy_tree = infile_DUMMY.Get("Cut_Pion_Events_Accpt")
 ###################################################################################################################################################
 
 # Grab runlist
-runlist_file = "%s/UTIL_BATCH/InputRunLists/PionLT_2021_2022/%s_center" % (REPLAYPATH, setting_name)
+runlist_file = "%s/UTIL_BATCH/InputRunLists/PionLT_2021_2022/%s" % (REPLAYPATH, setting_name)
 
 # Function to read run numbers from a given run list file
 def read_run_numbers(run_list_file):
@@ -203,7 +203,7 @@ CoinTime_Random_Cut = lambda event: ((RandomWindows[0] <= event.CTime_ePiCoinTim
 # RF cut
 RF_Cut_lowvalue = 1.2
 RF_Cut_highvalue = 3.4
-RF_Cut = lambda event: (RF_Cut_lowvalue >= event.P_RF_Dist >= RF_Cut_highvalue)
+RF_Cut = lambda event: (RF_Cut_lowvalue <= event.P_RF_Dist <= RF_Cut_highvalue)
 
 # HMS Detector Cuts
 HMS_Calo_cut = 0.7
@@ -211,38 +211,37 @@ HMS_Cer_cut = 1.5
 HMS_Detector_Cut = lambda event: (event.H_cal_etottracknorm > HMS_Calo_cut and event.H_cer_npeSum > HMS_Cer_cut)
 
 # SHMS Detector Cuts
-SHMS_HGC_Cut = 1.5
-SHMS_Aero_cut = 2.5
-SHMS_Detector_Cut = lambda event: (event.P_hgcer_npeSum > SHMS_HGC_Cut and event.P_aero_npeSum > SHMS_Aero_cut)   
+SHMS_Aero_cut = 0.0
+Aero_Detector_Cut = lambda event: (event.P_aero_npeSum > SHMS_Aero_cut)   
 
 #Fill histograms for Cut All Data
 for event in Cut_Pion_Events_Data_tree:
-    if HMS_Detector_Cut(event) and SHMS_Detector_Cut(event) and CoinTime_Prompt_Cut(event) and RF_Cut(event):
-        RF_Eff_Ndid_data_prompt_cut_all.Fill(event.P_RF_Dist)
+    if HMS_Detector_Cut(event) and CoinTime_Prompt_Cut(event) and Aero_Detector_Cut(event) and RF_Cut(event):
+        Aero_Eff_Ndid_data_prompt_cut_all.Fill(event.P_aero_npeSum)
 for event in Cut_Pion_Events_Data_tree:
-    if HMS_Detector_Cut(event) and SHMS_Detector_Cut(event) and CoinTime_Random_Cut(event) and RF_Cut(event):
-        RF_Eff_Ndid_data_random_cut_all.Fill(event.P_RF_Dist)
+    if HMS_Detector_Cut(event) and CoinTime_Random_Cut(event) and Aero_Detector_Cut(event) and RF_Cut(event):
+        Aero_Eff_Ndid_data_random_cut_all.Fill(event.P_aero_npeSum)
 
 for event in Cut_Pion_Events_Data_tree:
-    if HMS_Detector_Cut(event) and SHMS_Detector_Cut(event) and CoinTime_Prompt_Cut(event):
-        RF_Eff_Nshould_data_prompt_cut_all.Fill(event.P_RF_Dist)
+    if HMS_Detector_Cut(event) and CoinTime_Prompt_Cut(event) and RF_Cut(event):
+        Aero_Eff_Nshould_data_prompt_cut_all.Fill(event.P_aero_npeSum)
 for event in Cut_Pion_Events_Data_tree:
-    if HMS_Detector_Cut(event) and SHMS_Detector_Cut(event) and CoinTime_Random_Cut(event):
-        RF_Eff_Nshould_data_random_cut_all.Fill(event.P_RF_Dist)
+    if HMS_Detector_Cut(event) and CoinTime_Random_Cut(event) and RF_Cut(event):
+        Aero_Eff_Nshould_data_random_cut_all.Fill(event.P_aero_npeSum)
 
 for event in Cut_Pion_Events_Dummy_tree:
-    if HMS_Detector_Cut(event) and SHMS_Detector_Cut(event) and CoinTime_Prompt_Cut(event) and RF_Cut(event):
-        RF_Eff_Ndid_dummy_prompt_cut_all.Fill(event.P_RF_Dist)
+    if HMS_Detector_Cut(event) and CoinTime_Prompt_Cut(event) and Aero_Detector_Cut(event) and RF_Cut(event):
+        Aero_Eff_Ndid_dummy_prompt_cut_all.Fill(event.P_aero_npeSum)
 for event in Cut_Pion_Events_Dummy_tree:
-    if HMS_Detector_Cut(event) and SHMS_Detector_Cut(event) and CoinTime_Random_Cut(event) and RF_Cut(event):
-        RF_Eff_Ndid_dummy_random_cut_all.Fill(event.P_RF_Dist)
+    if HMS_Detector_Cut(event) and CoinTime_Random_Cut(event) and Aero_Detector_Cut(event) and RF_Cut(event):
+        Aero_Eff_Ndid_dummy_random_cut_all.Fill(event.P_aero_npeSum)
 
 for event in Cut_Pion_Events_Dummy_tree:
-    if HMS_Detector_Cut(event) and SHMS_Detector_Cut(event) and CoinTime_Prompt_Cut(event):
-        RF_Eff_Nshould_dummy_prompt_cut_all.Fill(event.P_RF_Dist)
+    if HMS_Detector_Cut(event) and CoinTime_Prompt_Cut(event) and RF_Cut(event):
+        Aero_Eff_Nshould_dummy_prompt_cut_all.Fill(event.P_aero_npeSum)
 for event in Cut_Pion_Events_Dummy_tree:
-    if HMS_Detector_Cut(event) and SHMS_Detector_Cut(event) and CoinTime_Random_Cut(event):
-        RF_Eff_Nshould_dummy_random_cut_all.Fill(event.P_RF_Dist)
+    if HMS_Detector_Cut(event) and CoinTime_Random_Cut(event) and RF_Cut(event):
+        Aero_Eff_Nshould_dummy_random_cut_all.Fill(event.P_aero_npeSum)
 
 print("####################################")
 print("###### Histogram filling done ######")
@@ -251,15 +250,15 @@ print("####################################\n")
 #################################################################################################################################################
 
 # Random subtraction from Histograms
-RF_Eff_Ndid_data_random_cut_all.Scale(1.0/nWindows)
-RF_Eff_Nshould_data_random_cut_all.Scale(1.0/nWindows)
-RF_Eff_Ndid_dummy_random_cut_all.Scale(1.0/nWindows)
-RF_Eff_Nshould_dummy_random_cut_all.Scale(1.0/nWindows)
+Aero_Eff_Ndid_data_random_cut_all.Scale(1.0/nWindows)
+Aero_Eff_Nshould_data_random_cut_all.Scale(1.0/nWindows)
+Aero_Eff_Ndid_dummy_random_cut_all.Scale(1.0/nWindows)
+Aero_Eff_Nshould_dummy_random_cut_all.Scale(1.0/nWindows)
 
-Rf_Eff_Ndid_randomsub_data_cut_all.Add(RF_Eff_Ndid_data_prompt_cut_all, RF_Eff_Ndid_data_random_cut_all, 1, -1)
-Rf_Eff_Nshould_randomsub_data_cut_all.Add(RF_Eff_Nshould_data_prompt_cut_all, RF_Eff_Nshould_data_random_cut_all, 1, -1)
-Rf_Eff_Ndid_randomsub_dummy_cut_all.Add(RF_Eff_Ndid_dummy_prompt_cut_all, RF_Eff_Ndid_dummy_random_cut_all, 1, -1)
-Rf_Eff_Nshould_randomsub_dummy_cut_all.Add(RF_Eff_Nshould_dummy_prompt_cut_all, RF_Eff_Nshould_dummy_random_cut_all, 1, -1)
+Aero_Eff_Ndid_randomsub_data_cut_all.Add(Aero_Eff_Ndid_data_prompt_cut_all, Aero_Eff_Ndid_data_random_cut_all, 1, -1)
+Aero_Eff_Nshould_randomsub_data_cut_all.Add(Aero_Eff_Nshould_data_prompt_cut_all, Aero_Eff_Nshould_data_random_cut_all, 1, -1)
+Aero_Eff_Ndid_randomsub_dummy_cut_all.Add(Aero_Eff_Ndid_dummy_prompt_cut_all, Aero_Eff_Ndid_dummy_random_cut_all, 1, -1)
+Aero_Eff_Nshould_randomsub_dummy_cut_all.Add(Aero_Eff_Nshould_dummy_prompt_cut_all, Aero_Eff_Nshould_dummy_random_cut_all, 1, -1)
 
 print("######################################")
 print("###### Random substraction done ######")
@@ -268,8 +267,8 @@ print("######################################\n")
 ############################################################################################################################################
 
 # Dummy Subtraction
-Rf_Eff_Ndid_dummysub_data_cut_all.Add(Rf_Eff_Ndid_randomsub_data_cut_all, Rf_Eff_Ndid_randomsub_dummy_cut_all, 1, -1)
-Rf_Eff_Nshould_dummysub_data_cut_all.Add(Rf_Eff_Nshould_randomsub_data_cut_all, Rf_Eff_Nshould_randomsub_dummy_cut_all, 1, -1)
+Aero_Eff_Ndid_dummysub_data_cut_all.Add(Aero_Eff_Ndid_randomsub_data_cut_all, Aero_Eff_Ndid_randomsub_dummy_cut_all, 1, -1)
+Aero_Eff_Nshould_dummysub_data_cut_all.Add(Aero_Eff_Nshould_randomsub_data_cut_all, Aero_Eff_Nshould_randomsub_dummy_cut_all, 1, -1)
 
 print("####################################")
 print("###### Dummy subtraction done ######")
@@ -277,29 +276,30 @@ print("####################################\n")
 
 #############################################################################################################################################################
 # RF efficiency calculation
-RF_Ndid = Rf_Eff_Ndid_dummysub_data_cut_all.Integral()
-RF_Nshould = Rf_Eff_Nshould_dummysub_data_cut_all.Integral()
+Aero_Ndid = Aero_Eff_Ndid_dummysub_data_cut_all.Integral()
+Aero_Nshould = Aero_Eff_Nshould_dummysub_data_cut_all.Integral()
 
-RF_Eff = RF_Ndid / RF_Nshould
+Aero_Eff = Aero_Ndid / Aero_Nshould
 
-RF_EFF_Err = ma.sqrt(((RF_Nshould * RF_Ndid) - (RF_Ndid**2)) / (RF_Nshould**3))
+Aero_EFF_Err = ma.sqrt(((Aero_Nshould * Aero_Ndid) - (Aero_Ndid**2)) / (Aero_Nshould**3))
 
 print("="*50)
 print("###### RF Efficiency Calculation #########")
+print("Cut applied on Aerogel detector: P_aero_npeSum > %.2f" % SHMS_Aero_cut)
 print("="*50)
-print("RF Ndid: %.2f" % RF_Ndid)
-print("RF Nshould: %.2f" % RF_Nshould)
-print("RF Efficiency: %.5f +/- %.5f" % (RF_Eff, RF_EFF_Err))
+print("RF Ndid: %.2f" % Aero_Ndid)
+print("RF Nshould: %.2f" % Aero_Nshould)
+print("RF Efficiency: %.5f +/- %.5f" % (Aero_Eff, Aero_EFF_Err))
 print("="*50)
 
 # Writing output to CSV file
-csv_RF_Eff = os.path.join(UTILPATH, "efficiencies", "%s_PionLT_coin_prod_RF_efficiency_data.csv" % setting_name)
+csv_Aero_Eff = os.path.join(UTILPATH, "efficiencies", "%s_PionLT_coin_prod_Aero_efficiency_data.csv" % setting_name)
 try:
-    with open(csv_RF_Eff, mode='w', newline='') as csvfile:
+    with open(csv_Aero_Eff, mode='w', newline='') as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(["physics setting", "RF_eff", "RF_eff_error"])
-        writer.writerow([PHY_SETTING, "{:.5f}".format(RF_Eff), "{:.5f}".format(RF_EFF_Err)])
-    print("Wrote RF efficiency to %s" % csv_RF_Eff)
+        writer.writerow(["physics setting", "Aero_eff", "Aero_eff_error"])
+        writer.writerow([PHY_SETTING, "{:.5f}".format(Aero_Eff), "{:.5f}".format(Aero_EFF_Err)])
+    print("Wrote RF efficiency to %s" % csv_Aero_Eff)
 except Exception as e:
     print("ERROR writing CSV file: %s" % e)
     
@@ -309,18 +309,18 @@ except Exception as e:
 ROOT.gROOT.SetBatch(ROOT.kTRUE) # Set ROOT to batch mode explicitly, does not splash anything to screen
 ###############################################################################################################################################
 # Save histograms to output PDF
-output_pdf_file = os.path.join(UTILPATH, "scripts/efficiency/OUTPUTS/plots", "%s_PionLT_coin_prod_RF_efficiency.pdf" % setting_name)
+output_pdf_file = os.path.join(UTILPATH, "scripts/efficiency/OUTPUTS/plots", "%s_PionLT_coin_prod_Aero_efficiency.pdf" % setting_name)
 
 c1_RF = TCanvas("c1_RF", "RF Efficiency", 100, 0, 800, 1200)
 c1_RF.Divide(1,2)
 c1_RF.cd(1)
-Rf_Eff_Ndid_dummysub_data_cut_all.SetLineColor(kBlue)
-Rf_Eff_Ndid_dummysub_data_cut_all.SetLineWidth(2)
-Rf_Eff_Ndid_dummysub_data_cut_all.Draw()
+Aero_Eff_Ndid_dummysub_data_cut_all.SetLineColor(kBlue)
+Aero_Eff_Ndid_dummysub_data_cut_all.SetLineWidth(2)
+Aero_Eff_Ndid_dummysub_data_cut_all.Draw()
 c1_RF.cd(2)
-Rf_Eff_Nshould_dummysub_data_cut_all.SetLineColor(kRed)
-Rf_Eff_Nshould_dummysub_data_cut_all.SetLineWidth(2)
-Rf_Eff_Nshould_dummysub_data_cut_all.Draw()
+Aero_Eff_Nshould_dummysub_data_cut_all.SetLineColor(kRed)
+Aero_Eff_Nshould_dummysub_data_cut_all.SetLineWidth(2)
+Aero_Eff_Nshould_dummysub_data_cut_all.Draw()
 c1_RF.Print(output_pdf_file)
 
 #############################################################################################################################################################
