@@ -57,7 +57,7 @@ TGraphErrors* ReBase(TGraphErrors *ge1, TF1 *&TFi, bool rate)
     }
     TGraphErrors *ge3 = new TGraphErrors(N, reX2, reBase1, reEX2, ge1->GetEY());
     if(rate){
-        ge3->GetXaxis()->SetTitle("Rate (kHz)");
+        ge3->GetXaxis()->SetTitle("S1X Rate (kHz)");
     }else{
         ge3->GetXaxis()->SetTitle("Current (uA)");
     }
