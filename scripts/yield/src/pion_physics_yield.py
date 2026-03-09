@@ -56,6 +56,9 @@ DATA_RUN_LIST = sys.argv[5]
 DUMMY_RUN_LIST = sys.argv[6]
 CSV_FILE = sys.argv[7]
 
+# Important variables for script
+ntbins = 7
+
 ################################################################################################################################################
 '''
 ltsep package import and pathing definitions
@@ -178,23 +181,13 @@ tbin_df = pd.read_csv(tbin_csv_file)
 t_min_values = tbin_df['t_min'].values
 t_max_values = tbin_df['t_max'].values
 
-# Define the cuts using row 1 and row 3 values
-tbin_Cut1 = lambda event: (t_min_values[0] <= -event.MandelT <= t_max_values[0])  # Row 1
-tbin_Cut2 = lambda event: (t_min_values[1] < -event.MandelT <= t_max_values[1])  # Row 2
-tbin_Cut3 = lambda event: (t_min_values[2] < -event.MandelT <= t_max_values[2])  # Row 3
-tbin_Cut4 = lambda event: (t_min_values[3] < -event.MandelT <= t_max_values[3])  # Row 4
-tbin_Cut5 = lambda event: (t_min_values[4] < -event.MandelT <= t_max_values[4])  # Row 5
-
-# Bundle them into a list
-tbin_cuts = [tbin_Cut1, tbin_Cut2, tbin_Cut3, tbin_Cut4, tbin_Cut5]
+# Define the cuts using a loop
+tbin_cuts = [lambda event, i=i: (t_min_values[i] <= -event.MandelT <= t_max_values[i]) for i in range(ntbins)]
 
 # Print the t-binning cuts with 3 decimal places
 print("\n t-binning cuts:")
-print(f"tbin_Cut1: t_min = {t_min_values[0]:.3f}, t_max = {t_max_values[0]:.3f}")
-print(f"tbin_Cut2: t_min = {t_min_values[1]:.3f}, t_max = {t_max_values[1]:.3f}")
-print(f"tbin_Cut3: t_min = {t_min_values[2]:.3f}, t_max = {t_max_values[2]:.3f}")
-print(f"tbin_Cut4: t_min = {t_min_values[3]:.3f}, t_max = {t_max_values[3]:.3f}")
-print(f"tbin_Cut5: t_min = {t_min_values[4]:.3f}, t_max = {t_max_values[4]:.3f}")
+for i in range(ntbins):
+    print(f"tbin_Cut{i+1}: t_min = {t_min_values[i]:.3f}, t_max = {t_max_values[i]:.3f}")
 print("-"*40)
 
 # Define phi bins (15 bins from 0 to 360 degrees, each 24 degrees wide)

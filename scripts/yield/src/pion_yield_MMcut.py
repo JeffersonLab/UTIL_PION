@@ -55,6 +55,10 @@ DATA_RUN_LIST = sys.argv[6]
 DUMMY_RUN_LIST = sys.argv[7]
 CSV_FILE = sys.argv[8]
 
+# Important Variables for cuts
+MM_Cut_low = 0.9
+MM_Cut_high = 1.06
+
 ################################################################################################################################################
 '''
 ltsep package import and pathing definitions
@@ -79,7 +83,7 @@ EFF_CSV     = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/efficiencies
 # Extract the first three words from PHY_SETTING for the CSV file name
 setting_name = "_".join(PHY_SETTING.split("_")[:3])
 physet_dir_name = "%s_std" % (setting_name)
-SIMCPATH = "/volatile/hallc/c-pionlt/%s/SIMC/worksim/" % (USER)
+SIMCPATH = "/volatile/hallc/c-pionlt/%s/OUTPUT/Analysis/SIMC/%s/" % (USER, physet_dir_name)
 
 #################################################################################################################################################
 
@@ -647,12 +651,10 @@ tmp_b_mean_MMpi_data = fit_gaussian(P_kin_MMpi_pions_normdummysub_data_cut_all,0
 b_mean_MMpi_data = tmp_b_mean_MMpi_data[0]
 b_mean_err_MMpi_data = tmp_b_mean_MMpi_data[1]
 MMpi_pions_simc_cut_all.GetXaxis().SetRangeUser(0.0, 2.2)
-MMpi_pions_simc_cut_all.SetMaximum( 1.1*P_kin_MMpi_pions_normdummysub_data_cut_all.GetBinContent(P_kin_MMpi_pions_normdummysub_data_cut_all.GetMaximumBin()))
 MMpi_pions_simc_cut_all.SetLineColor(kRed)
 MMpi_pions_simc_cut_all.SetMarkerColor(kRed)
 MMpi_pions_simc_cut_all.Draw("E1")
 P_kin_MMpi_pions_normdummysub_data_cut_all.GetXaxis().SetRangeUser(0.0, 2.2)
-P_kin_MMpi_pions_normdummysub_data_cut_all.SetMaximum( 1.1*P_kin_MMpi_pions_normdummysub_data_cut_all.GetBinContent(P_kin_MMpi_pions_normdummysub_data_cut_all.GetMaximumBin()))
 P_kin_MMpi_pions_normdummysub_data_cut_all.SetLineColor(kBlue)
 P_kin_MMpi_pions_normdummysub_data_cut_all.SetMarkerColor(kBlue)
 P_kin_MMpi_pions_normdummysub_data_cut_all.Draw("same, E1")
@@ -681,19 +683,15 @@ for c1_delta_text in c1_delta_text_lines:
     c1_delta_text.Draw()
 c1_delta.cd(3)
 MMpi_pions_simc_cut_all.GetXaxis().SetRangeUser(0.0, 2.2)
-MMpi_pions_simc_cut_all.SetMaximum( 1.1*P_kin_MMpi_pions_normdummysub_data_cut_all.GetBinContent(P_kin_MMpi_pions_normdummysub_data_cut_all.GetMaximumBin()))
-print(1.1*P_kin_MMpi_pions_normdummysub_data_cut_all.GetBinContent(P_kin_MMpi_pions_normdummysub_data_cut_all.GetMaximumBin()))
 MMpi_pions_simc_cut_all.SetLineColor(kRed)
 MMpi_pions_simc_cut_all.SetMarkerColor(kRed)
 MMpi_pions_simc_cut_all.Draw("hist")
 P_kin_MMpi_pions_normdummysub_data_cut_all.GetXaxis().SetRangeUser(0.0, 2.2)
-P_kin_MMpi_pions_normdummysub_data_cut_all.SetMaximum( 1.1*P_kin_MMpi_pions_normdummysub_data_cut_all.GetBinContent(P_kin_MMpi_pions_normdummysub_data_cut_all.GetMaximumBin()))
 P_kin_MMpi_pions_normdummysub_data_cut_all.SetLineColor(kBlue)
 P_kin_MMpi_pions_normdummysub_data_cut_all.SetMarkerColor(kBlue)
 P_kin_MMpi_pions_normdummysub_data_cut_all.Draw("same, hist")
 c1_delta.cd(4)
 MMpi_pions_simc_cut_all.GetXaxis().SetRangeUser(0.8, 1.4)
-MMpi_pions_simc_cut_all.SetMaximum( 1.1*P_kin_MMpi_pions_normdummysub_data_cut_all.GetBinContent(P_kin_MMpi_pions_normdummysub_data_cut_all.GetMaximumBin()))
 MMpi_pions_simc_cut_all.SetLineColor(kRed)
 MMpi_pions_simc_cut_all.SetMarkerColor(kRed)
 MMpi_pions_simc_cut_all.Draw("hist")
@@ -711,17 +709,14 @@ for bin_idx in range(1, P_kin_MMpi_pions_normdummysub_data_cut_all_offset.GetNbi
 # Draw the histogram with the applied offset
 P_kin_MMpi_pions_normdummysub_data_cut_all_offset.SetLineColor(kBlue)
 P_kin_MMpi_pions_normdummysub_data_cut_all_offset.SetMarkerColor(kBlue)
-P_kin_MMpi_pions_normdummysub_data_cut_all_offset.SetMaximum( 1.1*P_kin_MMpi_pions_normdummysub_data_cut_all.GetBinContent(P_kin_MMpi_pions_normdummysub_data_cut_all.GetMaximumBin()))
 P_kin_MMpi_pions_normdummysub_data_cut_all_offset.Draw("same, hist")
 c1_delta.cd(5)
 ROOT.gPad.SetLogy()
 MMpi_pions_simc_cut_all.GetXaxis().SetRangeUser(0.8, 1.4)
-MMpi_pions_simc_cut_all.SetMaximum( 1.1*P_kin_MMpi_pions_normdummysub_data_cut_all.GetBinContent(P_kin_MMpi_pions_normdummysub_data_cut_all.GetMaximumBin()))
 MMpi_pions_simc_cut_all.SetLineColor(kRed)
 MMpi_pions_simc_cut_all.SetMarkerColor(kRed)
 MMpi_pions_simc_cut_all.Draw("hist")
 P_kin_MMpi_pions_normdummysub_data_cut_all_offset.GetXaxis().SetRangeUser(0.8, 1.4)
-P_kin_MMpi_pions_normdummysub_data_cut_all_offset.SetMaximum( 1.1*P_kin_MMpi_pions_normdummysub_data_cut_all.GetBinContent(P_kin_MMpi_pions_normdummysub_data_cut_all.GetMaximumBin()))
 P_kin_MMpi_pions_normdummysub_data_cut_all_offset.SetLineColor(kBlue)
 P_kin_MMpi_pions_normdummysub_data_cut_all_offset.SetMarkerColor(kBlue)
 P_kin_MMpi_pions_normdummysub_data_cut_all_offset.Draw("same, hist")
@@ -729,8 +724,7 @@ c1_delta.cd(6)
 # Clone the histograms
 MMpi_pions_simc_cut_all_MMcut = MMpi_pions_simc_cut_all.Clone("MMpi_pions_simc_cut_all_MMcut")
 P_kin_MMpi_pions_normdummysub_data_cut_all_MMcut = P_kin_MMpi_pions_normdummysub_data_cut_all_offset.Clone("P_kin_MMpi_pions_normdummysub_data_cut_all_MMcut")
-MM_Cut_low = 0.9
-MM_Cut_high = 1.06
+
 # Apply the cut to the cloned histograms
 for bin_idx in range(1, MMpi_pions_simc_cut_all_MMcut.GetNbinsX() + 1):
     bin_center = MMpi_pions_simc_cut_all_MMcut.GetBinCenter(bin_idx)

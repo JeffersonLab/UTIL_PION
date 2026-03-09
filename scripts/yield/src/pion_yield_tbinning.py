@@ -673,7 +673,7 @@ print(df_yields_pions.head(8))
 print("-"*40)
 
 yields_pions_path =  "%s/LTSep_CSVs/t_binning_csv/%s/%s_tbinning_yields_pions.csv" % (UTILPATH, physet_dir_name, PHY_SETTING)
-df_yields_pions.to_csv(yields_pions_path, encoding='utf-8', index=False, header=True)
+df_yields_pions.to_csv(yields_pions_path, encoding='utf-8', index=False, header=True, mode='w')
 
 #############################################################################################################################################
 

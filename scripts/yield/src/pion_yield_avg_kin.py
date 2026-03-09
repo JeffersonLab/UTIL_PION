@@ -65,6 +65,7 @@ if PHY_SETTING == "Q3p85_W2p62_t0p21":
     higheps = "0.779"
     pol = +1
     theta_c = +0.000
+    ntbins = 7
 else:
     print("!!!!! Please declare low/mid/high epsilon values of you physics setting !!!!!")
 
@@ -485,7 +486,7 @@ loweps_df["phi_avg"] = (loweps_df["phi_min"] + loweps_df["phi_max"]) / 2
 loweps_tbins = loweps_df[["t_min", "t_max"]].drop_duplicates().reset_index(drop=True)
 
 # Setup plot grid
-fig_loweps, axs_loweps = plt.subplots(2, 3, figsize=(20, 10), sharey=False)  # sharey=False to show individual y-ticks
+fig_loweps, axs_loweps = plt.subplots(3, 3, figsize=(20, 10), sharey=False)  # sharey=False to show individual y-ticks
 axs_loweps = axs_loweps.flatten()
 
 # First subplot: physics setting text
@@ -495,7 +496,7 @@ axs_loweps[0].text(0.5, 0.5, f"Physics Setting:\n{PHY_SETTING}_loweps",
                    transform=axs_loweps[0].transAxes)
 
 # Plot the 5 t-bins
-for t_idx in range(min(5, len(loweps_tbins))):
+for t_idx in range(min(ntbins, len(loweps_tbins))):
     t_min = loweps_tbins.loc[t_idx, "t_min"]
     t_max = loweps_tbins.loc[t_idx, "t_max"]
     t_df = loweps_df[(loweps_df["t_min"] == t_min) & (loweps_df["t_max"] == t_max)]
@@ -520,7 +521,7 @@ higheps_df["phi_avg"] = (higheps_df["phi_min"] + higheps_df["phi_max"]) / 2
 higheps_tbins = higheps_df[["t_min", "t_max"]].drop_duplicates().reset_index(drop=True)
 
 # Setup plot grid
-fig_higheps, axs_higheps = plt.subplots(2, 3, figsize=(20, 10), sharey=False)  # sharey=False to show individual y-ticks
+fig_higheps, axs_higheps = plt.subplots(3, 3, figsize=(20, 10), sharey=False)  # sharey=False to show individual y-ticks
 axs_higheps = axs_higheps.flatten()
 
 # First subplot: physics setting text
@@ -530,7 +531,7 @@ axs_higheps[0].text(0.5, 0.5, f"Physics Setting:\n{PHY_SETTING}_higheps",
                    transform=axs_higheps[0].transAxes)
 
 # Plot the 5 t-bins
-for t_idx in range(min(5, len(higheps_tbins))):
+for t_idx in range(min(ntbins, len(higheps_tbins))):
     t_min = higheps_tbins.loc[t_idx, "t_min"]
     t_max = higheps_tbins.loc[t_idx, "t_max"]
     t_df = higheps_df[(higheps_df["t_min"] == t_min) & (higheps_df["t_max"] == t_max)]
