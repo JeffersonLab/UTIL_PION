@@ -1,0 +1,16 @@
+VOLATILEPATH=/volatile/hallc/c-kaonlt
+ANALYSISPATH=/group/c-kaonlt
+HCANAPATH=/group/c-kaonlt/hcana
+REPLAYPATH=/group/c-kaonlt/hallc_replay_lt
+UTILPATH=/group/c-kaonlt/hallc_replay_lt/UTIL_KAONLT
+PACKAGEPATH=/home/${USER}/.local/lib/python3.4/site-packages/ltsep
+OUTPATH=/group/c-kaonlt/hallc_replay_lt/UTIL_KAONLT/OUTPUT/Analysis
+ROOTPATH=/group/c-kaonlt/hallc_replay_lt/UTIL_KAONLT/ROOTfiles/Analysis
+REPORTPATH=/group/c-kaonlt/hallc_replay_lt/UTIL_KAONLT/REPORT_OUTPUT/Analysis
+CUTPATH=/group/c-kaonlt/hallc_replay_lt/UTIL_KAONLT/DB/CUTS
+PARAMPATH=/group/c-kaonlt/hallc_replay_lt/UTIL_KAONLT/DB/PARAM
+SCRIPTPATH=/group/c-kaonlt/hallc_replay_lt/UTIL_KAONLT/scripts
+SIMCPATH=/group/c-kaonlt/simc_gfortran
+LTANAPATH=/group/c-kaonlt/lt_analysis
+CACHEPATH=/lustre19/expphy/cache/hallc/kaonlt
+ANATYPE=Kaon
