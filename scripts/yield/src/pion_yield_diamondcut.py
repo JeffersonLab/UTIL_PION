@@ -437,12 +437,33 @@ W_end = W_projection.GetXaxis().GetBinUpEdge(W_end_bin)
 print(f"Q2 distribution starts at: {Q2_start}, ends at: {Q2_end}")
 print(f"W distribution starts at: {W_start}, ends at: {W_end}")
 
-# Hardcoded vertices for the diamond cut
-vertex1 = [3.780, 2.600]  # bottom-left
-vertex2 = [3.180, 2.775]  # top-left
-vertex3 = [3.902, 2.642]  # top-right
-vertex4 = [4.520, 2.452]  # bottom-right
-
+if setting_name == "Q3p85_W2p62_t0p21":
+    # Hardcoded vertices for the diamond cut
+# v1
+#    vertex1 = [3.780, 2.600]  # bottom-left
+#    vertex2 = [3.180, 2.775]  # top-left
+#    vertex3 = [3.902, 2.642]  # top-right
+#    vertex3 = [3.880, 2.642]  # top-right
+#    vertex4 = [4.520, 2.452]  # bottom-right
+# v2
+    vertex1 = [3.780, 2.600]  # bottom-left
+    vertex2 = [3.285, 2.758]  # top-left
+    vertex3 = [3.865, 2.642]  # top-right
+    vertex4 = [4.520, 2.455]  # bottom-right
+elif setting_name == "Q3p85_W2p02_t0p49":
+    # Hardcoded vertices for the diamond cut
+    vertex1 = [3.685, 1.985]  # bottom-left
+    vertex2 = [3.150, 2.265]  # top-left
+    vertex3 = [3.970, 2.065]  # top-right
+    vertex4 = [4.355, 1.835]  # bottom-right
+else:
+    # Calculate the vertices based on the start and end values
+    print("Applying guess for diamond cut vertices based on data distribution")
+    vertex1 = [Q2_start, W_start]  # bottom-left
+    vertex2 = [Q2_start - 0.6, W_end + 0.175]  # top-left
+    vertex3 = [Q2_end - 0.098, W_start + 0.042]  # top-right
+    vertex4 = [Q2_end, W_start - 0.148]  # bottom-right
+    
 # Print vertices
 print("Vertices of the populated area:")
 print(f"Vertex 1 (bottom-left): {vertex1}")

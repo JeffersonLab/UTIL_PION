@@ -150,12 +150,12 @@ c      ppicmg = ppicm/1.e3
       t0 = (pgamx-ppix0)**2 +(pgamy-ppiy0)**2 
      *     +(pgamz-ppiz0)**2 -(nu-epi0)**2
       t1 = (pgamx-ppix1)**2 +(pgamy-ppiy1)**2 
-     *     +(pgamz-ppiz1)**2 -(nu-epi0)**2
+     *     +(pgamz-ppiz1)**2 -(nu-epi1)**2
 !      tg = t/1.e6
       tshift=t1-t0
       tshiftg=tshift/1.e6
       write(6,165)mmshift,tshiftg
- 165  format(' MM shift of ',f5.3,' MeV gives ',f8.5,' GeV^2 shift')
+ 165  format(' MM shift of ',f6.2,' MeV gives ',f8.5,' GeV^2 shift')
          
 ! equation for u: between initial proton and outgoing pion
 !      u = mp**2 + mpi**2 -2.*mp*epi
