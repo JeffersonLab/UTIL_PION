@@ -102,8 +102,6 @@ c_ptrigHMS3 = current.bcm2+misc.c_ptrigHMS3+misc.cal_edtm+misc.evt_type_2
 #c_ptrigCOIN5 = current.bcm2+misc.c_ptrigCOIN5+misc.cal_edtm+misc.evt_type_4
 c_ptrigCOIN6 = current.bcm2
 
-
-
 # EDTM
 c_noedtm = current.bcm2+misc.c_noedtm
 c_edtm = current.bcm2+misc.c_edtm
