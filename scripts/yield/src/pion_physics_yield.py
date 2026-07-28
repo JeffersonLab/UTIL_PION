@@ -155,6 +155,7 @@ try:
         for row in csv_reader:
             if row[csv_reader.fieldnames[0]].strip() == PHY_SETTING:  # Match first column (Physics_Setting)
                 MM_Offset = float(row["MM_Offset"].strip())
+                tshift_Offset = float(row["tshift_Offset"].strip())
                 MM_Cut_lowvalue = float(row["MM_Cut_low"].strip())
                 MM_Cut_highvalue = float(row["MM_Cut_high"].strip())
                 break
@@ -167,6 +168,7 @@ except (FileNotFoundError, ValueError, KeyError) as e:
 
 # Print the assigned values
 #print(f"MMpi_Offset = {MMpi_Offset:.6f}")
+#print(f"tshift_Offset = {tshift_Offset:.6f}")
 #print(f"MMpi_Cut_lowvalue = {MMpi_Cut_lowvalue}")
 #print(f"MMpi_Cut_highvalue = {MMpi_Cut_highvalue}")
 DATA_MMpi_Cut = lambda event: (MM_Cut_lowvalue <= (event.MMpi + MM_Offset) <= MM_Cut_highvalue)
@@ -182,7 +184,7 @@ t_min_values = tbin_df['t_min'].values
 t_max_values = tbin_df['t_max'].values
 
 # Define the cuts using a loop
-tbin_cuts = [lambda event, i=i: (t_min_values[i] <= -event.MandelT <= t_max_values[i]) for i in range(ntbins)]
+tbin_cuts = [lambda event, i=i: (t_min_values[i] <= (-event.MandelT + tshift_Offset) <= t_max_values[i]) for i in range(ntbins)]
 
 # Print the t-binning cuts with 3 decimal places
 print("\n t-binning cuts:")

@@ -153,6 +153,7 @@ try:
         for row in csv_reader:
             if row[csv_reader.fieldnames[0]].strip() == PHY_SETTING:  # Match first column (Physics_Setting)
                 MM_Offset = float(row["MM_Offset"].strip())
+                tshift_Offset = float(row["tshift_Offset"].strip())
                 MM_Cut_lowvalue = float(row["MM_Cut_low"].strip())
                 MM_Cut_highvalue = float(row["MM_Cut_high"].strip())
                 break
@@ -165,6 +166,7 @@ except (FileNotFoundError, ValueError, KeyError) as e:
 
 # Print the assigned values
 print(f"MMpi_Offset = {MM_Offset:.6f}")
+print(f"tshift_Offset = {tshift_Offset:.6f}")
 #print(f"MMpi_Cut_lowvalue = {MMpi_Cut_lowvalue}")
 #print(f"MMpi_Cut_highvalue = {MMpi_Cut_highvalue}")
 DATA_MMpi_Cut = lambda event: (MM_Cut_lowvalue <= (event.MMpi + MM_Offset) <= MM_Cut_highvalue)
@@ -1175,7 +1177,7 @@ for event in Cut_Pion_Events_Accpt_Data_tree:
         W_pions_data_accpt_cut_all.Fill(event.W)
         Q2_pions_data_accpt_cut_all.Fill(event.Q2)
         Epsilon_pions_data_accpt_cut_all.Fill(event.epsilon)
-        t_pions_data_accpt_cut_all.Fill(-event.MandelT)
+        t_pions_data_accpt_cut_all.Fill(-event.MandelT + tshift_Offset)
         ph_q_pions_data_accpt_cut_all.Fill(event.ph_q)
 #    ibin += 1
 '''
@@ -1225,7 +1227,7 @@ for event in Cut_Pion_Events_All_Data_tree:
         W_pions_data_cut_all.Fill(event.W)
         Q2_pions_data_cut_all.Fill(event.Q2)
         Epsilon_pions_data_cut_all.Fill(event.epsilon)
-        t_pions_data_cut_all.Fill(-event.MandelT)
+        t_pions_data_cut_all.Fill(-event.MandelT + tshift_Offset)
         ph_q_pions_data_cut_all.Fill(event.ph_q)
 #    ibin += 1
 '''
@@ -1280,7 +1282,7 @@ for event in Cut_Pion_Events_Prompt_Data_tree:
         ph_q_pions_data_prompt_cut_all.Fill(phi_deg)
         Q2_pions_data_prompt_cut_all.Fill(event.Q2)
         Epsilon_pions_data_prompt_cut_all.Fill(event.epsilon)
-        t_pions_data_prompt_cut_all.Fill(-event.MandelT)
+        t_pions_data_prompt_cut_all.Fill(-event.MandelT + tshift_Offset)
         pmiss_pions_data_prompt_cut_all_error.Fill(event.pmiss)
 #    ibin += 1
 
@@ -1335,7 +1337,7 @@ for event in Cut_Pion_Events_Random_Data_tree:
         ph_q_pions_data_random_cut_all.Fill(phi_deg)
         Q2_pions_data_random_cut_all.Fill(event.Q2)
         Epsilon_pions_data_random_cut_all.Fill(event.epsilon)
-        t_pions_data_random_cut_all.Fill(-event.MandelT)
+        t_pions_data_random_cut_all.Fill(-event.MandelT + tshift_Offset)
         pmiss_pions_data_random_cut_all_error.Fill(event.pmiss)
 #    ibin += 1
 
@@ -1391,7 +1393,7 @@ for event in Cut_Pion_Events_Prompt_Dummy_tree:
         ph_q_pions_dummy_prompt_cut_all.Fill(phi_deg)
         Q2_pions_dummy_prompt_cut_all.Fill(event.Q2)
         Epsilon_pions_dummy_prompt_cut_all.Fill(event.epsilon)
-        t_pions_dummy_prompt_cut_all.Fill(-event.MandelT)
+        t_pions_dummy_prompt_cut_all.Fill(-event.MandelT + tshift_Offset)
         pmiss_pions_dummy_prompt_cut_all_error.Fill(event.pmiss)
 
 #    ibin += 1
@@ -1448,7 +1450,7 @@ for event in Cut_Pion_Events_Random_Dummy_tree:
         ph_q_pions_dummy_random_cut_all.Fill(phi_deg)
         Q2_pions_dummy_random_cut_all.Fill(event.Q2)
         Epsilon_pions_dummy_random_cut_all.Fill(event.epsilon)
-        t_pions_dummy_random_cut_all.Fill(-event.MandelT)
+        t_pions_dummy_random_cut_all.Fill(-event.MandelT + tshift_Offset)
         pmiss_pions_dummy_random_cut_all_error.Fill(event.pmiss)
 #    ibin += 1
 

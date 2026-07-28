@@ -90,7 +90,7 @@ if [[ $s_flag = "true" ]]; then
 
 else
     RUNTYPE=$1
-    TIMESTMP="2024_09_05"
+    TIMESTMP="2025_11_21"
     if [[ $RUNTYPE = "HeePCoin" ]]; then
         ROOTPREFIX=PionLT_HeeP_coin
         python3 plot/plot_heepcoin_efficiency.py ${ROOTPREFIX} ${RUNTYPE} ${TIMESTMP}

@@ -56,8 +56,8 @@ DUMMY_RUN_LIST = sys.argv[7]
 CSV_FILE = sys.argv[8]
 
 # Important Variables for cuts
-MM_Cut_low = 0.9
-MM_Cut_high = 1.06
+MM_Cut_low = 0.90
+MM_Cut_high = 1.00
 
 ################################################################################################################################################
 '''
@@ -83,7 +83,8 @@ EFF_CSV     = "/u/group/c-pionlt/USERS/%s/hallc_replay_lt/UTIL_PION/efficiencies
 # Extract the first three words from PHY_SETTING for the CSV file name
 setting_name = "_".join(PHY_SETTING.split("_")[:3])
 physet_dir_name = "%s_std" % (setting_name)
-SIMCPATH = "/volatile/hallc/c-pionlt/%s/OUTPUT/Analysis/SIMC/%s/" % (USER, physet_dir_name)
+#SIMCPATH = "/volatile/hallc/c-pionlt/%s/OUTPUT/Analysis/SIMC/%s/" % (USER, physet_dir_name)
+SIMCPATH = "/volatile/hallc/c-pionlt/%s/OUTPUT/Analysis/SIMC/%s_iter01" % (USER, setting_name)
 
 #################################################################################################################################################
 
@@ -104,8 +105,10 @@ csv_file = "%s/%s.csv" % (EFF_CSV, CSV_FILE)
 # SIMC Cuts for Pions Selection
 HMS_Acceptance = lambda event: (event.hsdelta >= -8.0) & (event.hsdelta <= 8.0) & (event.hsxpfp >= -0.08) & (event.hsxpfp <= 0.08) & (event.hsypfp >= -0.045) & (event.hsypfp <= 0.045)
 SHMS_Acceptance = lambda event: (event.ssdelta >= -10.0) & (event.ssdelta <= 20.0) & (event.ssxpfp >= -0.06) & (event.ssxpfp <= 0.06) & (event.ssypfp >= -0.04) & (event.ssypfp <= 0.04)
-#SHMS_Aero_Cut = lambda event: (event.paero_x_det > -55.0) & (event.paero_x_det < 55.0) & (event.paero_y_det > -50) & (event.paero_y_det < 50) # Aerogel tray n = 1.030
-SHMS_Aero_Cut = lambda event: (event.paero_x_det > -45.0) & (event.paero_x_det < 45.0) & (event.paero_y_det > -30) & (event.paero_y_det < 30) # Aerogel tray n = 1.011
+# Aerogel tray n = 1.030
+#SHMS_Aero_Cut = lambda event: (event.paero_x_det > -55.0) & (event.paero_x_det < 55.0) & (event.paero_y_det > -50) & (event.paero_y_det < 50) 
+# Aerogel tray n = 1.011
+SHMS_Aero_Cut = lambda event: (event.paero_x_det > -45.0) & (event.paero_x_det < 45.0) & (event.paero_y_det > -30) & (event.paero_y_det < 30) 
 
 ###############################################################################################################################################
 
@@ -361,44 +364,44 @@ print ("normfac_simc: ", normfac_simc)
 print("-"*40)
 
 ###################################################################################################################################################
-nbins_p = 1000
+nbins_p = 800
 
 # Defining Histograms for Pions
 # Histograms having Cuts (Acceptance)
-P_kin_MMpi_pions_data_accpt_cut_all = ROOT.TH1D("P_kin_MMpi_pions_data_accpt_cut_all", "MIssing Mass data (dummysub_accpt_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.2)
+P_kin_MMpi_pions_data_accpt_cut_all = ROOT.TH1D("P_kin_MMpi_pions_data_accpt_cut_all", "MIssing Mass data (dummysub_accpt_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.0)
 
 # Histograms Having Cuts (Acceptance + PID + RF + Prompt Selection) Data
-P_kin_MMpi_pions_data_prompt_cut_all = ROOT.TH1D("P_kin_MMpi_pions_data_prompt_cut_all", "MIssing Mass data (prompt_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.2)
+P_kin_MMpi_pions_data_prompt_cut_all = ROOT.TH1D("P_kin_MMpi_pions_data_prompt_cut_all", "MIssing Mass data (prompt_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.0)
 
 # Histograms Having Cuts (Acceptance + PID + RF + Random Selection) Data
-P_kin_MMpi_pions_data_random_cut_all = ROOT.TH1D("P_kin_MMpi_pions_data_random_cut_all", "MIssing Mass data (random_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.2)
+P_kin_MMpi_pions_data_random_cut_all = ROOT.TH1D("P_kin_MMpi_pions_data_random_cut_all", "MIssing Mass data (random_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.0)
 
 # Histograms Having Cuts (Acceptance + PID + RF + Prompt Selection) Dummy
-P_kin_MMpi_pions_dummy_prompt_cut_all = ROOT.TH1D("P_kin_MMpi_pions_dummy_prompt_cut_all", "MIssing Mass dummy (prompt_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.2)
+P_kin_MMpi_pions_dummy_prompt_cut_all = ROOT.TH1D("P_kin_MMpi_pions_dummy_prompt_cut_all", "MIssing Mass dummy (prompt_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.0)
 
 # Histograms Having Cuts (Acceptance + PID + RF + Random Selection) Dummy
-P_kin_MMpi_pions_dummy_random_cut_all = ROOT.TH1D("P_kin_MMpi_pions_dummy_random_cut_all", "MIssing Mass dummy (random_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.2)
+P_kin_MMpi_pions_dummy_random_cut_all = ROOT.TH1D("P_kin_MMpi_pions_dummy_random_cut_all", "MIssing Mass dummy (random_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.0)
 
 # Histograms having Cuts (Acceptance + PID + RF + RandSub) Data
-P_kin_MMpi_pions_randsub_data_cut_all = ROOT.TH1D("P_kin_MMpi_pions_randsub_data_cut_all", "MIssing Mass data (randsub_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.2)
+P_kin_MMpi_pions_randsub_data_cut_all = ROOT.TH1D("P_kin_MMpi_pions_randsub_data_cut_all", "MIssing Mass data (randsub_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.0)
 
 # Histograms having Cuts (Acceptance + PID + RF + RandSub) Dummy
-P_kin_MMpi_pions_randsub_dummy_cut_all = ROOT.TH1D("P_kin_MMpi_pions_randsub_dummy_cut_all", "MIssing Mass dummy (randsub_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.2)
+P_kin_MMpi_pions_randsub_dummy_cut_all = ROOT.TH1D("P_kin_MMpi_pions_randsub_dummy_cut_all", "MIssing Mass dummy (randsub_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.0)
 
 # Histograms having Cuts (Acceptance + PID + RF + RandSub + DummySub)
-P_kin_MMpi_pions_dummysub_data_cut_all = ROOT.TH1D("P_kin_MMpi_pions_dummysub_data_cut_all", "MIssing Mass data (dummysub_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.2)
+P_kin_MMpi_pions_dummysub_data_cut_all = ROOT.TH1D("P_kin_MMpi_pions_dummysub_data_cut_all", "MIssing Mass data (dummysub_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.0)
 
 # Histograms having Cuts (Acceptance + PID + RF + RandSub + Norm) Data
-P_kin_MMpi_pions_normrandsub_data_cut_all = ROOT.TH1D("P_kin_MMpi_pions_normrandsub_data_cut_all", "MIssing Mass data (datasub_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.2)
+P_kin_MMpi_pions_normrandsub_data_cut_all = ROOT.TH1D("P_kin_MMpi_pions_normrandsub_data_cut_all", "MIssing Mass data (datasub_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.0)
 
 # Histograms having Cuts (Acceptance + PID + RF + RandSub + Norm) Dummy
-P_kin_MMpi_pions_normrandsub_dummy_cut_all = ROOT.TH1D("P_kin_MMpi_pions_normrandsub_dummy_cut_all", "MIssing Mass data (dummysub_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.2)
+P_kin_MMpi_pions_normrandsub_dummy_cut_all = ROOT.TH1D("P_kin_MMpi_pions_normrandsub_dummy_cut_all", "MIssing Mass data (dummysub_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.0)
 
 # Histograms having Cuts (Acceptance + PID + RF + Prompt Selection) Norm Dummy Subtraction Data
-P_kin_MMpi_pions_normdummysub_data_cut_all = ROOT.TH1D("P_kin_MMpi_pions_normdummysub_data_cut_all", "MIssing Mass data (dummysub_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.2)
+P_kin_MMpi_pions_normdummysub_data_cut_all = ROOT.TH1D("P_kin_MMpi_pions_normdummysub_data_cut_all", "MIssing Mass data (dummysub_cut_all); MM_{pi}; Counts", nbins_p, 0, 2.0)
 
 # SIMC Histograms with Cuts
-MMpi_pions_simc_cut_all = ROOT.TH1D("MMpi_pions_simc_cut_all", "MIssing Mass SIMC (cut_all); MM_{pi}; Counts", nbins_p, 0, 2.2)
+MMpi_pions_simc_cut_all = ROOT.TH1D("MMpi_pions_simc_cut_all", "MIssing Mass SIMC (cut_all); MM_{pi}; Counts", nbins_p, 0, 2.0)
 
 # Histograms for Error Calculations
 P_kin_secondary_pmiss_pions_data_prompt_cut_all_error = ROOT.TH1D("P_kin_secondary_pmiss_pions_data_prompt_cut_all_error", "pmiss Distribution; pmiss; Counts", nbins_p, 0.0, 2.0) 
@@ -597,6 +600,7 @@ def fit_gaussian(hist, x_min, x_max, dtype):
     print("max_value", max_value)
     print("bin_center",hist.GetBinCenter(max_bin))
 
+    #half_max = max_value*0.75
     half_max = max_value*0.75
 
     # Find left and right bins closest to half-max value
@@ -629,7 +633,7 @@ def fit_gaussian(hist, x_min, x_max, dtype):
     mean = fit_func.GetParameter(1)
     mean_err = fit_func.GetParError(1)
     print("mean value",mean)
-    print("meean error",mean_err)
+    print("mean error",mean_err)
     print("="*40)
     return [mean, mean_err]
 
@@ -639,15 +643,19 @@ def fit_gaussian(hist, x_min, x_max, dtype):
 
 # Removes stat box
 ROOT.gStyle.SetOptStat(0)
+simc_fitxmin = 0.9
+simc_fitxmax = 1.0
+data_fitxmin = 0.9
+data_fitxmax = 1.0
 
 # Saving histograms in PDF
 c1_delta = TCanvas("c1_delta", "Variables Distributions", 100, 0, 1400, 1800)
 c1_delta.Divide(2,3)
 c1_delta.cd(2)
-tmp_b_mean_MMpi_simc = fit_gaussian(MMpi_pions_simc_cut_all,0.90, 1.0, "simc")
+tmp_b_mean_MMpi_simc = fit_gaussian(MMpi_pions_simc_cut_all,simc_fitxmin, simc_fitxmax, "simc")
 b_mean_MMpi_simc = tmp_b_mean_MMpi_simc[0]
 b_mean_err_MMpi_simc = tmp_b_mean_MMpi_simc[1]
-tmp_b_mean_MMpi_data = fit_gaussian(P_kin_MMpi_pions_normdummysub_data_cut_all,0.90, 1.0, "data")
+tmp_b_mean_MMpi_data = fit_gaussian(P_kin_MMpi_pions_normdummysub_data_cut_all,data_fitxmin, data_fitxmax, "data")
 b_mean_MMpi_data = tmp_b_mean_MMpi_data[0]
 b_mean_err_MMpi_data = tmp_b_mean_MMpi_data[1]
 MMpi_pions_simc_cut_all.GetXaxis().SetRangeUser(0.0, 2.2)
