@@ -14,7 +14,7 @@
 # Created - 10/July/2021, Author - Muhammad Junaid, University of Regina, Canada
 ##################################################################################
 
-while getopts 'cpb' flag; do
+while getopts 'cmr' flag; do
     case "${flag}" in
         h)
         echo "-------------------------------------------------------------------"
@@ -25,15 +25,15 @@ while getopts 'cpb' flag; do
         echo "    -h, help"
         echo "    -c, run cut analyser script to trim down the root file for further analysis"
         echo "        cut -> RunList=arg1 MaxEvents=arg2"        
-        echo "    -p, run plotting script to save output as pdf"
+        echo "    -m, run plotting script to determine mean values and save output as pdf"
         echo "        plot -> RunList=arg1 MaxEvents=arg2"  
-        echo "    -b, run cut analyser and plotting script to save output as pdf for beamenergy"
-        echo "        plot -> RunList=arg1 MaxEvents=arg2"  
+        echo "    -r, compute ratios and save output as pdf for beamenergy"
+        echo "        plot -> RunList=arg1 MaxEvents=arg2"
         exit 0
         ;;
         c) c_flag='true' ;;
-        p) p_flag='true' ;;
-        b) b_flag='true' ;;
+        m) m_flag='true' ;;
+        r) r_flag='true' ;;
         *) print_usage
         exit 1 ;;
     esac
@@ -95,7 +95,8 @@ DUMMY_Suffix=HeePCoin_Analysed_Dummy_Data
 SIMC_Suffix=Heep_Coin_SIMC
 DATA_RUN_LIST=HeePCoin_${BEAM_ENERGY}
 DUMMY_RUN_LIST=HeePCoin_${BEAM_ENERGY}_Dummy
-CSV_FILE=PionLT_HeeP_coin_HeePCoin_efficiency_data_2025_03_08
+#CSV_FILE=PionLT_HeeP_coin_HeePCoin_efficiency_data_2026_09_12
+CSV_FILE=PionLT_HeeP_coin_HeePCoin_efficiency_data_2026_09_28
 
 ################################################################################################################################                                                                                   
 
@@ -155,7 +156,7 @@ sleep 3
 #################################################################################################################################
 # Section for HeeP physics ploting script
 
-elif [[ $p_flag = "true" ]]; then
+elif [[ $m_flag = "true" ]]; then
     while true; do
         read -p "Do you wish to plot the ROOT files with runlist ${inputFile}? (Please answer yes or no) " yn
         case $yn in
@@ -163,17 +164,17 @@ elif [[ $p_flag = "true" ]]; then
                 i=-1
                 (
                 # Section for HeeP physics ploting script
-                if [ -f "${UTILPATH}/OUTPUT/Analysis/HeeP/${BEAM_ENERGY}_${MAXEVENTS}_HeePCoin_Output_Data.root" ]; then
+                if [ -f "${UTILPATH}/OUTPUT/Analysis/HeeP/${BEAM_ENERGY}_${MAXEVENTS}_HeePCoin_MeanOutput_Data.root" ]; then
                     read -p "HeeP coin output plots file already exists, do you want to reprocess it? <Y/N> " option2
                     if [[ $option2 == "y" || $option2 == "Y" || $option2 == "yes" || $option2 == "Yes" ]]; then
-                        rm "${UTILPATH}/OUTPUT/Analysis/HeeP/${BEAM_ENERGY}_${MAXEVENTS}_HeePCoin_Output_Data.root"
+                        rm "${UTILPATH}/OUTPUT/Analysis/HeeP/${BEAM_ENERGY}_${MAXEVENTS}_HeePCoin_MeanOutput_Data.root"
                         echo "Reprocessing"
-                        python3 ${UTILPATH}/scripts/heep/src/plot_heepcoin_comp.py ${BEAM_ENERGY} ${MAXEVENTS} ${DATA_Suffix} ${DUMMY_Suffix} ${SIMC_Suffix} ${DATA_RUN_LIST} ${DUMMY_RUN_LIST} ${CSV_FILE}
+                        python3 ${UTILPATH}/scripts/heep/src/plot_heepcoin_comp_mean.py ${BEAM_ENERGY} ${MAXEVENTS} ${DATA_Suffix} ${DUMMY_Suffix} ${SIMC_Suffix} ${DATA_RUN_LIST} ${DUMMY_RUN_LIST} ${CSV_FILE}
                     else
                         echo "Skipping python HeeP plotting script step"
                     fi
-                elif [ ! -f  "${UTILPATH}/OUTPUT/Analysis/HeeP/${BEAM_ENERGY}_${MAXEVENTS}_HeePCoin_Output_Data.root" ]; then
-                       python3 ${UTILPATH}/scripts/heep/src/plot_heepcoin_comp.py ${BEAM_ENERGY} ${MAXEVENTS} ${DATA_Suffix} ${DUMMY_Suffix} ${SIMC_Suffix} ${DATA_RUN_LIST} ${DUMMY_RUN_LIST} ${CSV_FILE}
+                elif [ ! -f  "${UTILPATH}/OUTPUT/Analysis/HeeP/${BEAM_ENERGY}_${MAXEVENTS}_HeePCoin_MeanOutput_Data.root" ]; then
+                       python3 ${UTILPATH}/scripts/heep/src/plot_heepcoin_comp_mean.py ${BEAM_ENERGY} ${MAXEVENTS} ${DATA_Suffix} ${DUMMY_Suffix} ${SIMC_Suffix} ${DATA_RUN_LIST} ${DUMMY_RUN_LIST} ${CSV_FILE}
                 else echo "HeeP coin output plots file already found in ${UTILPATH}/OUTPUT/Analysis/HeeP/ - Skipped python plotting script step"
                 fi
                 #evince "${UTILPATH}/OUTPUT/Analysis/HeeP/${BEAM_ENERGY}_${MAXEVENTS}_heep_Proton_Analysis_Distributions.pdf" &
@@ -187,72 +188,31 @@ elif [[ $p_flag = "true" ]]; then
 
 sleep 3
 
-#################################################################################################################################################
+########################################################################################################################################################################################################################################
 
-# Section for HeeP physics ploting script for beam energy
-elif [[ $b_flag = "true" ]]; then
+# Section for HeeP physics comparison script
+
+elif [[ $r_flag = "true" ]]; then
     while true; do
-        read -p "Do you wish to analyse and plot the ROOT files for beam energy ${BEAM_ENERGY}? (Please answer yes or no) " yn
+        read -p "Do you wish to plot the ROOT files with runlist ${inputFile}? (Please answer yes or no) " yn
         case $yn in
             [Yy]* )
                 i=-1
                 (
-                ##Reads in input file##
-                while IFS='' read -r line || [[ -n "$line" ]]; do
-                    echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-                    echo "Run number read from file: $line"
-                    echo ""
-                    cd "${UTILPATH}/scripts/heep/src/"
-                    python3 coinyield_heep.py ${ROOTPREFIX_CUT} $line ${MAXEVENTS}
-                done < "$inputFile"
-                cd $REPLAYPATH/OUTPUT/Analysis/HeeP/
-                dir_name="runbyrun"
-                # Check if the directory exists
-                if [ ! -d "$dir_name" ]; then
-                   # If it doesn't exist, create it
-                   mkdir "$dir_name"
-                   echo "Directory '$dir_name' created."
-                else
-                   echo "Directory '$dir_name' already exists."
-                fi
-		if [ -e "${BEAM_ENERGY}_${MAXEVENTS}_HeePCoin_Analysed_Data.root" ]; then
-                     echo "Deleting ${BEAM_ENERGY}_${MAXEVENTS}_HeePCoin_Analysed_Data.root"
-                     rm ${BEAM_ENERGY}_${MAXEVENTS}_HeePCoin_Analysed_Data.root
-                fi
-                hadd ${BEAM_ENERGY}_${MAXEVENTS}_HeePCoin_Analysed_Data.root 1*
-                mv 1* $dir_name
-                cd $REPLAYPATH
-		##Reads in input file for dummy##
-                while IFS='' read -r line || [[ -n "$line" ]]; do
-                    echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-                    echo "Run number read from file: $line"
-                    echo ""
-                    cd "${UTILPATH}/scripts/heep/src/"
-                    python3 coinyield_heep.py ${ROOTPREFIX_CUT} $line ${MAXEVENTS}
-                done < "${inputFile}_Dummy"
-		cd $REPLAYPATH/OUTPUT/Analysis/HeeP/
-                if [ -e "${BEAM_ENERGY}_${MAXEVENTS}_HeePCoin_Analysed_Dummy_Data.root" ]; then
-                        echo "Deleting ${BEAM_ENERGY}_${MAXEVENTS}_HeePCoin_Analysed_Dummy_Data.root"
-                        rm ${BEAM_ENERGY}_${MAXEVENTS}_HeePCoin_Analysed_Dummy_Data.root
-                fi
-                hadd ${BEAM_ENERGY}_${MAXEVENTS}_HeePCoin_Analysed_Dummy_Data.root 1*
-                mv 1* $dir_name
-		cd $REPLAYPATH
-                # Section for HeeP physics ploting script
-                if [ -f "${UTILPATH}/OUTPUT/Analysis/HeeP/${BEAM_ENERGY}_${MAXEVENTS}_HeePCoin_Output_Data.root" ]; then
+                if [ -f "${UTILPATH}/OUTPUT/Analysis/HeeP/${BEAM_ENERGY}_${MAXEVENTS}_Output_Data.root" ]; then
                     read -p "HeeP coin output plots file already exists, do you want to reprocess it? <Y/N> " option2
                     if [[ $option2 == "y" || $option2 == "Y" || $option2 == "yes" || $option2 == "Yes" ]]; then
-                        rm "${UTILPATH}/OUTPUT/Analysis/HeeP/${BEAM_ENERGY}_${MAXEVENTS}_HeePCoin_Output_Data.root"
-                        echo "Reprocessing"
-                        python3 ${UTILPATH}/scripts/heep/src/plot_heepcoin_comp.py ${BEAM_ENERGY} ${MAXEVENTS} ${DATA_Suffix} ${DUMMY_Suffix} ${SIMC_Suffix} ${DATA_RUN_LIST} ${DUMMY_RUN_LIST} ${CSV_FILE}
+                    rm "${UTILPATH}/OUTPUT/Analysis/HeeP/${BEAM_ENERGY}_${MAXEVENTS}_Output_Data.root"
+                    echo "Reprocessing"
+                    python3 ${UTILPATH}/scripts/heep/src/plot_heepcoin_comp.py ${BEAM_ENERGY} ${MAXEVENTS} ${DATA_Suffix} ${DUMMY_Suffix} ${SIMC_Suffix} ${DATA_RUN_LIST} ${DUMMY_RUN_LIST} ${CSV_FILE}
                     else
-                        echo "Skipping python HeeP plotting script step"
+                    echo "Skipping python HeeP plotting script step"
                     fi
-                elif [ ! -f  "${UTILPATH}/OUTPUT/Analysis/HeeP/${BEAM_ENERGY}_${MAXEVENTS}_HeePCoin_Output_Data.root" ]; then
-                       python3 ${UTILPATH}/scripts/heep/src/plot_heepcoin_comp.py ${BEAM_ENERGY} ${MAXEVENTS} ${DATA_Suffix} ${DUMMY_Suffix} ${SIMC_Suffix} ${DATA_RUN_LIST} ${DUMMY_RUN_LIST} ${CSV_FILE}
+                elif [ ! -f  "${UTILPATH}/OUTPUT/Analysis/HeeP/${BEAM_ENERGY}_${MAXEVENTS}_Output_Data.root" ]; then
+                    python3 ${UTILPATH}/scripts/heep/src/plot_heepcoin_comp.py ${BEAM_ENERGY} ${MAXEVENTS} ${DATA_Suffix} ${DUMMY_Suffix} ${SIMC_Suffix} ${DATA_RUN_LIST} ${DUMMY_RUN_LIST} ${CSV_FILE}
                 else echo "HeeP coin output plots file already found in ${UTILPATH}/OUTPUT/Analysis/HeeP/ - Skipped python plotting script step"
                 fi
-                #evince "${UTILPATH}/OUTPUT/Analysis/HeeP/${BEAM_ENERGY}_${MAXEVENTS}_heep_Proton_Analysis_Distributions.pdf" &	
+                #evince "${UTILPATH}/OUTPUT/Analysis/HeeP/${BEAM_ENERGY}_${MAXEVENTS}_heep_Proton_Analysis_Distributions.pdf" &
 	        )
                 break;;
             [Nn]* )
