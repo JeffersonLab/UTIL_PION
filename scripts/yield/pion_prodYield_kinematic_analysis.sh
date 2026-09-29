@@ -121,7 +121,8 @@ SIMC_Suffix="Prod_Coin_${SIMC_SETTING}"
 DATA_RUN_LIST=${PHY_SETTING}
 DUMMY_RUN_LIST=${PHY_SETTING}_dummy
 #CSV_FILE=PionLT_coin_production_Prod_efficiency_data_2025_10_23
-CSV_FILE=PionLT_coin_production_Prod_efficiency_data_2025_11_21
+#CSV_FILE=PionLT_coin_production_Prod_efficiency_data_2025_11_21
+CSV_FILE=Q3p85_W2p62_t0p21_coin_production_Prod_efficiency_data_2026_08_31
 
 # Input Arguments for t-resolution and t-binning Scripts
 PHY_SETTING_C=$(echo "${RunList}" | awk -F'_' '{print $1 "_" $2 "_" $3}')

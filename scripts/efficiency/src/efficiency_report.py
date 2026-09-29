@@ -16,10 +16,10 @@ import re
 def dictionary(UTILPATH,ROOTPrefix,runNum,MaxEvent, DEBUG=False):
 
     # Open report file to grab prescale values and tracking efficiency
-#    report = UTILPATH+"/REPORT_OUTPUT/Analysis/HeeP/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
+    report = UTILPATH+"/REPORT_OUTPUT/Analysis/HeeP/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
 #    report = UTILPATH+"/REPORT_OUTPUT/Analysis/Lumi/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
 #    report = UTILPATH+"/REPORT_OUTPUT/Analysis/pTRIG6/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
-    report = UTILPATH+"/REPORT_OUTPUT/Analysis/PionLT/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
+#    report = UTILPATH+"/REPORT_OUTPUT/Analysis/PionLT/%s_%s_%s.report" % (ROOTPrefix,runNum,MaxEvent)
 
     with open(report) as f:
         effDict = {
@@ -180,9 +180,9 @@ def dictionary(UTILPATH,ROOTPrefix,runNum,MaxEvent, DEBUG=False):
             'SHMS_Hodo_S1XY' : None,
             'SHMS_Hodo_S2XY' : None,
             'SHMS_Hodo_3_of_4_EFF' : None,
-#            'SHMS_Hodo_3_of_4_EFF_ERROR' : None,
+            'SHMS_Hodo_3_of_4_EFF_Uncer' : None,
             'SHMS_Hodo_4_of_4_EFF' : None,
-#            'SHMS_Hodo_4_of_4_EFF_ERROR' : None,
+            'SHMS_Hodo_4_of_4_EFF_Uncer' : None,
             'HMS_Hodo_Plane_1' : None,
             'HMS_Hodo_Plane_2' : None,
             'HMS_Hodo_Plane_3' : None,
@@ -190,9 +190,9 @@ def dictionary(UTILPATH,ROOTPrefix,runNum,MaxEvent, DEBUG=False):
             'HMS_Hodo_S1XY' : None,
             'HMS_Hodo_S2XY' : None,
             'HMS_Hodo_3_of_4_EFF' : None,
-#            'HMS_Hodo_3_of_4_EFF_ERROR' : None,
+            'HMS_Hodo_3_of_4_EFF_Uncer' : None,
             'HMS_Hodo_4_of_4_EFF' : None,
-#            'HMS_Hodo_4_of_4_EFF_ERROR' : None,
+            'HMS_Hodo_4_of_4_EFF_Uncer' : None,
             'SHMS_Hodoscope_S1X_Triggers' : None,
             'HMS_Hodoscope_S1X_Triggers' : None,
             'SHMS_Hodoscope_S1X_Rate' : None,

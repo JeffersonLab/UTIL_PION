@@ -660,28 +660,26 @@ print("####################################\n")
 # 5 t-bins
 #tbin_pions_min = [81,119,137,156,180]
 #tbin_pions_max = [118,136,155,179,250]
-# v2
-#tbin_pions_min = [83,119,134,150,170]
-#tbin_pions_max = [118,133,149,170,230]
 
 # 6 t-bins
 #tbin_pions_min = [81,105,114,133,152,177]
 #tbin_pions_max = [104,113,132,151,176,250]
 
-# 7 t-bins - v1
-#tbin_pions_min = [81,105,114,133,152,176,205]
-#tbin_pions_max = [104,113,132,151,175,204,250]
+# 7 t-bins - old
+tbin_pions_min = [81,105,114,133,152,176,205]
+tbin_pions_max = [104,113,132,151,175,204,250]
 
-tbin_pions_min = [81,105,114,132,150,175,197]
-tbin_pions_max = [104,113,131,149,174,196,245]
+# 7 t-bins - 04-09-2026
+#tbin_pions_min = [81,105,114,133,152,172,201]
+#tbin_pions_max = [104,113,132,151,171,200,250]
 
-# 7 t-bins - v2
-#tbin_pions_min = [83,109,119,134,150,171,187]
-#tbin_pions_max = [108,118,133,149,170,186,230]
+# 7 t-bins with t_shift v1
+#tbin_pions_min = [81,104,114,132,151,176,202]
+#tbin_pions_max = [103,113,131,150,175,201,250]
 
-# 7 t-bins with t_shift - v1
-#tbin_pions_min = [81,104,114,132,151,176,203]
-#tbin_pions_max = [103,113,131,150,175,202,250]
+# 7 t-bins with t_shift v2
+#tbin_pions_min = [81,102,114,132,151,176,202]
+#tbin_pions_max = [101,113,131,150,175,201,250]
 
 dN_data_pions_lowe = np.array([array.array('d', [0.0])] * len(tbin_pions_min))
 dN_data_pions_highe = np.array([array.array('d', [0.0])] * len(tbin_pions_min))

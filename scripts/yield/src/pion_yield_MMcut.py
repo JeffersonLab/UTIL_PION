@@ -57,7 +57,7 @@ CSV_FILE = sys.argv[8]
 
 # Important Variables for cuts
 MM_Cut_low = 0.90
-MM_Cut_high = 1.00
+MM_Cut_high = 1.02
 
 ################################################################################################################################################
 '''
@@ -249,10 +249,10 @@ for index, row in filtered_data_df.iterrows():
 
     data_hms_hodo_3_of_4_efficiency = row['HMS_Hodo_3_of_4_EFF']
     data_shms_hodo_3_of_4_efficiency = row['SHMS_Hodo_3_of_4_EFF']
-    data_hms_hodo_3_of_4_efficiency_error = row['HMS_Elec_SING_TRACK_EFF_ERROR']
-    data_shms_hodo_3_of_4_efficiency_error = row['SHMS_Pion_SING_TRACK_EFF_ERROR']
-#    data_hms_hodo_3_of_4_efficiency_error = row['HMS_Hodo_3_of_4_EFF_ERROR']
-#    data_shms_hodo_3_of_4_efficiency_error = row['SHMS_Hodo_3_of_4_EFF_ERROR']
+#    data_hms_hodo_3_of_4_efficiency_error = row['HMS_Elec_SING_TRACK_EFF_ERROR']
+#    data_shms_hodo_3_of_4_efficiency_error = row['SHMS_Pion_SING_TRACK_EFF_ERROR']
+    data_hms_hodo_3_of_4_efficiency_error = row['HMS_Hodo_3_of_4_EFF_Uncer']
+    data_shms_hodo_3_of_4_efficiency_error = row['SHMS_Hodo_3_of_4_EFF_Uncer']
 
     data_shms_aero_detector_efficiency = row['SHMS_Aero_COIN_Pion_Eff']
     data_shms_aero_detector_efficiency_error = row['SHMS_Aero_COIN_Pion_Eff_ERROR']
@@ -291,10 +291,10 @@ for index, row in filtered_dummy_df.iterrows():
 
     dummy_hms_hodo_3_of_4_efficiency = row['HMS_Hodo_3_of_4_EFF']
     dummy_shms_hodo_3_of_4_efficiency = row['SHMS_Hodo_3_of_4_EFF']
-    dummy_hms_hodo_3_of_4_efficiency_error = row['HMS_Elec_SING_TRACK_EFF_ERROR']
-    dummy_shms_hodo_3_of_4_efficiency_error = row['SHMS_Pion_SING_TRACK_EFF_ERROR']
-#    dummy_hms_hodo_3_of_4_efficiency_error = row['HMS_Hodo_3_of_4_EFF_ERROR']
-#    dummy_shms_hodo_3_of_4_efficiency_error = row['SHMS_Hodo_3_of_4_EFF_ERROR']
+#    dummy_hms_hodo_3_of_4_efficiency_error = row['HMS_Elec_SING_TRACK_EFF_ERROR']
+#    dummy_shms_hodo_3_of_4_efficiency_error = row['SHMS_Pion_SING_TRACK_EFF_ERROR']
+    dummy_hms_hodo_3_of_4_efficiency_error = row['HMS_Hodo_3_of_4_EFF_Uncer']
+    dummy_shms_hodo_3_of_4_efficiency_error = row['SHMS_Hodo_3_of_4_EFF_Uncer']
 
     dummy_shms_aero_detector_efficiency = row['SHMS_Aero_COIN_Pion_Eff']
     dummy_shms_aero_detector_efficiency_error = row['SHMS_Aero_COIN_Pion_Eff_ERROR']

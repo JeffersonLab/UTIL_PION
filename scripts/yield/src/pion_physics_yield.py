@@ -165,10 +165,11 @@ try:
 except (FileNotFoundError, ValueError, KeyError) as e:
     print(f"Error: {e}")
     sys.exit(1)
-
+    tshift_Offset = 0.0  # Default value if not found
+    
 # Print the assigned values
-#print(f"MMpi_Offset = {MMpi_Offset:.6f}")
-#print(f"tshift_Offset = {tshift_Offset:.6f}")
+print(f"MMpi_Offset = {MM_Offset:.6f}")
+print(f"tshift_Offset = {tshift_Offset:.6f}")
 #print(f"MMpi_Cut_lowvalue = {MMpi_Cut_lowvalue}")
 #print(f"MMpi_Cut_highvalue = {MMpi_Cut_highvalue}")
 DATA_MMpi_Cut = lambda event: (MM_Cut_lowvalue <= (event.MMpi + MM_Offset) <= MM_Cut_highvalue)
@@ -184,7 +185,7 @@ t_min_values = tbin_df['t_min'].values
 t_max_values = tbin_df['t_max'].values
 
 # Define the cuts using a loop
-tbin_cuts = [lambda event, i=i: (t_min_values[i] <= (-event.MandelT + tshift_Offset) <= t_max_values[i]) for i in range(ntbins)]
+tbin_cuts = [lambda event, i=i: (t_min_values[i] <= -event.MandelT + tshift_Offset <= t_max_values[i]) for i in range(ntbins)]
 
 # Print the t-binning cuts with 3 decimal places
 print("\n t-binning cuts:")
@@ -339,10 +340,10 @@ for index, row in filtered_data_df.iterrows():
 
     data_hms_hodo_3_of_4_efficiency = row['HMS_Hodo_3_of_4_EFF']
     data_shms_hodo_3_of_4_efficiency = row['SHMS_Hodo_3_of_4_EFF']
-    data_hms_hodo_3_of_4_efficiency_error = row['HMS_Elec_SING_TRACK_EFF_ERROR']
-    data_shms_hodo_3_of_4_efficiency_error = row['SHMS_Pion_SING_TRACK_EFF_ERROR']
-#    data_hms_hodo_3_of_4_efficiency_error = row['HMS_Hodo_3_of_4_EFF_ERROR']
-#    data_shms_hodo_3_of_4_efficiency_error = row['SHMS_Hodo_3_of_4_EFF_ERROR']
+#    data_hms_hodo_3_of_4_efficiency_error = row['HMS_Elec_SING_TRACK_EFF_ERROR']
+#    data_shms_hodo_3_of_4_efficiency_error = row['SHMS_Pion_SING_TRACK_EFF_ERROR']
+    data_hms_hodo_3_of_4_efficiency_error = row['HMS_Hodo_3_of_4_EFF_Uncer']
+    data_shms_hodo_3_of_4_efficiency_error = row['SHMS_Hodo_3_of_4_EFF_Uncer']
 
     data_shms_aero_detector_efficiency = row['SHMS_Aero_COIN_Pion_Eff']
     data_shms_aero_detector_efficiency_error = row['SHMS_Aero_COIN_Pion_Eff_ERROR']
@@ -381,16 +382,17 @@ for index, row in filtered_dummy_df.iterrows():
 
     dummy_hms_hodo_3_of_4_efficiency = row['HMS_Hodo_3_of_4_EFF']
     dummy_shms_hodo_3_of_4_efficiency = row['SHMS_Hodo_3_of_4_EFF']
-    dummy_hms_hodo_3_of_4_efficiency_error = row['HMS_Elec_SING_TRACK_EFF_ERROR']
-    dummy_shms_hodo_3_of_4_efficiency_error = row['SHMS_Pion_SING_TRACK_EFF_ERROR']
-#    dummy_hms_hodo_3_of_4_efficiency_error = row['HMS_Hodo_3_of_4_EFF_ERROR']
-#    dummy_shms_hodo_3_of_4_efficiency_error = row['SHMS_Hodo_3_of_4_EFF_ERROR']
+#    dummy_hms_hodo_3_of_4_efficiency_error = row['HMS_Elec_SING_TRACK_EFF_ERROR']
+#    dummy_shms_hodo_3_of_4_efficiency_error = row['SHMS_Pion_SING_TRACK_EFF_ERROR']
+    dummy_hms_hodo_3_of_4_efficiency_error = row['HMS_Hodo_3_of_4_EFF_Uncer']
+    dummy_shms_hodo_3_of_4_efficiency_error = row['SHMS_Hodo_3_of_4_EFF_Uncer']
 
     dummy_shms_aero_detector_efficiency = row['SHMS_Aero_COIN_Pion_Eff']
     dummy_shms_aero_detector_efficiency_error = row['SHMS_Aero_COIN_Pion_Eff_ERROR']
 
     dummy_product = (dummy_charge * dummy_hms_tracking_efficiency * dummy_shms_tracking_efficiency * RF_efficiency * hms_Cer_detector_efficiency * hms_Cal_detector_efficiency * dummy_hms_hodo_3_of_4_efficiency * dummy_shms_hodo_3_of_4_efficiency * dummy_edtm_livetime_Corr * dummy_shms_aero_detector_efficiency * dummy_coinblocking_factor)
-    dummy_product_error = dummy_product * (math.sqrt(((dummy_charge_error/dummy_charge) ** 2 + dummy_hms_tracking_efficiency_error/dummy_hms_tracking_efficiency) ** 2 + (dummy_shms_tracking_efficiency_error/dummy_shms_tracking_efficiency) ** 2 + (RF_efficiency_error/RF_efficiency) **2 + (dummy_edtm_livetime_Corr_error/dummy_edtm_livetime_Corr)** 2 + (hms_Cer_detector_efficiency_error/hms_Cer_detector_efficiency) ** 2 + (hms_Cal_detector_efficiency_error/hms_Cal_detector_efficiency) ** 2 + (dummy_hms_hodo_3_of_4_efficiency_error/dummy_hms_hodo_3_of_4_efficiency) ** 2 + (dummy_shms_hodo_3_of_4_efficiency_error/dummy_shms_hodo_3_of_4_efficiency) ** 2 + (dummy_shms_aero_detector_efficiency_error/dummy_shms_aero_detector_efficiency) ** 2 + (dummy_coinblocking_factor_error/dummy_coinblocking_factor)**2))
+#    dummy_product_error = dummy_product * (math.sqrt(((dummy_charge_error/dummy_charge) ** 2 + dummy_hms_tracking_efficiency_error/dummy_hms_tracking_efficiency) ** 2 + (dummy_shms_tracking_efficiency_error/dummy_shms_tracking_efficiency) ** 2 + (RF_efficiency_error/RF_efficiency) **2 + (dummy_edtm_livetime_Corr_error/dummy_edtm_livetime_Corr)** 2 + (hms_Cer_detector_efficiency_error/hms_Cer_detector_efficiency) ** 2 + (hms_Cal_detector_efficiency_error/hms_Cal_detector_efficiency) ** 2 + (dummy_hms_hodo_3_of_4_efficiency_error/dummy_hms_hodo_3_of_4_efficiency) ** 2 + (dummy_shms_hodo_3_of_4_efficiency_error/dummy_shms_hodo_3_of_4_efficiency) ** 2 + (dummy_shms_aero_detector_efficiency_error/dummy_shms_aero_detector_efficiency) ** 2 + (dummy_coinblocking_factor_error/dummy_coinblocking_factor)**2))
+    dummy_product_error = dummy_product * math.sqrt((dummy_charge_error / dummy_charge)**2 + (dummy_hms_tracking_efficiency_error / dummy_hms_tracking_efficiency)**2 + (dummy_shms_tracking_efficiency_error / dummy_shms_tracking_efficiency)**2 + (RF_efficiency_error / RF_efficiency)**2 + (dummy_edtm_livetime_Corr_error / dummy_edtm_livetime_Corr)**2 + (hms_Cer_detector_efficiency_error / hms_Cer_detector_efficiency)**2 + (hms_Cal_detector_efficiency_error / hms_Cal_detector_efficiency)**2 + (dummy_hms_hodo_3_of_4_efficiency_error / dummy_hms_hodo_3_of_4_efficiency)**2 + (dummy_shms_hodo_3_of_4_efficiency_error / dummy_shms_hodo_3_of_4_efficiency)**2 + (dummy_shms_aero_detector_efficiency_error / dummy_shms_aero_detector_efficiency)**2 + (dummy_coinblocking_factor_error / dummy_coinblocking_factor)**2)
 
     total_dummy_effective_charge_sum += dummy_product
     total_dummy_effective_charge_error_sum += (dummy_product_error)** 2
